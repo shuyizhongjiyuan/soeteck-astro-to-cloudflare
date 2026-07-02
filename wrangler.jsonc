@@ -1,5 +1,6 @@
 {
   // Cloudflare Workers Static Assets 配置
+  // Last rebuild: 2026-07-02T11:57:22Z — after wp UPLOADS=resources fix
   // 用途：跳过 wrangler 对 Astro SSR adapter 的自动安装，
   //       把 `output: 'static'` 生成的 dist/ 作为静态资源发布。
   // 参考：https://developers.cloudflare.com/workers/static-assets/
