@@ -1,0 +1,351 @@
+---
+/**
+ * ProductSinglePage — Astro 端 1:1 复刻 WP 主题 single-product.php + hero.php + content-sections.php
+ * 数据来自 Content API `/wp-json/soeteck/v1/product?path=...&lang=...`
+ * 参考基线：new-soeteck-wp/wp-content/themes/soeteck/single-product.php
+ */
+
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+const product = page.source.product;
+
+if (!product) {
+  throw new Error('ProductSinglePage: product missing from Content API response');
+}
+
+const gallery = product.gallery ?? [];
+const highlights = (product.highlights ?? []).slice(0, 4);
+const downloads = product.downloads ?? [];
+const specifications = product.specifications ?? [];
+const variations = product.variations;
+const hasModelsTab = product.type === 'variable';
+const primaryCategory = product.primaryCategory;
+const inquiryContext = product.inquiryContext ?? {
+  productId: product.id ?? null,
+  productTitle: product.title,
+  path: page.routePath,
+};
+
+// UI 翻译
+const t = (key: string) => getUITranslation(lang, `product.${key}`);
+const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
+---
+
+<main id="primary" class="content-area soeteck-single-product-page">
+  <div class="soeteck-container soeteck-product-breadcrumbs-wrap">
+    <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+  </div>
+
+  <div class="soeteck-container soeteck-product-content-wrap">
+    {/* ============ HERO ============ */}
+    <section class="soeteck-product-hero" aria-labelledby={`product-title-${productId}`}>
+      <div class="soeteck-product-hero__gallery" data-product-gallery>
+        {gallery.length > 0 ? (
+          <>
+            <div class="soeteck-product-gallery__main">
+              <div class="soeteck-product-gallery__track">
+                {gallery.map((item, index) => (
+                  <figure
+                    class:list={['soeteck-product-gallery__item', { 'is-active': index === 0 }]}
+                    data-gallery-item={index}
+                  >
+                    <img
+                      class="soeteck-product-gallery__image"
+                      src={item.path}
+                      alt={item.alt ?? product.title}
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      fetchpriority={index === 0 ? 'high' : 'auto'}
+                    />
+                  </figure>
+                ))}
+              </div>
+              {gallery.length > 1 && (
+                <>
+                  <button
+                    class="soeteck-product-gallery__nav soeteck-product-gallery__nav--prev"
+                    type="button"
+                    data-gallery-nav="prev"
+                    aria-label={t('prevImage')}
+                  ></button>
+                  <button
+                    class="soeteck-product-gallery__nav soeteck-product-gallery__nav--next"
+                    type="button"
+                    data-gallery-nav="next"
+                    aria-label={t('nextImage')}
+                  ></button>
+                </>
+              )}
+            </div>
+            {gallery.length > 1 && (
+              <div class="soeteck-product-gallery__thumbs" aria-label={t('galleryThumbnails')}>
+                {gallery.map((item, index) => (
+                  <button
+                    class:list={['soeteck-product-gallery__thumb', { 'is-active': index === 0 }]}
+                    type="button"
+                    data-gallery-thumb={index}
+                    aria-label={`${t('galleryThumbnails')} ${index + 1}`}
+                  >
+                    <img src={item.path} alt="" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <div class="soeteck-product-gallery__placeholder">{t('productImageComingSoon')}</div>
+        )}
+      </div>
+
+      <div class="soeteck-product-hero__summary">
+        {primaryCategory && (
+          <p class="soeteck-product-hero__eyebrow">{primaryCategory.name}</p>
+        )}
+        <h1 id={`product-title-${productId}`} class="soeteck-page-title soeteck-product-hero__title">
+          {product.title}
+        </h1>
+        {product.shortOverview && (
+          <div class="soeteck-product-hero__overview" set:html={product.shortOverview}></div>
+        )}
+        {highlights.length > 0 && (
+          <dl class="soeteck-product-highlights">
+            {highlights.map((h) => (
+              <div class="soeteck-product-highlight">
+                <dt>{h.label}</dt>
+                <dd>{h.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+        <div class="soeteck-product-hero__actions">
+          <a class="soeteck-button soeteck-button-primary" href="#product-inquiry">{t('talkToExpert')}</a>
+          <a class="soeteck-button soeteck-button-outline" href="#product-downloads">{t('downloadBrochure')}</a>
+        </div>
+      </div>
+    </section>
+
+    {/* ============ TABS ============ */}
+    <section class="soeteck-product-tabs" data-product-tabs>
+      <div class="soeteck-product-tabs__list" role="tablist" aria-label={t('overview')}>
+        <button class="soeteck-product-tabs__tab is-active" type="button" id="product-tab-overview"
+                role="tab" aria-selected="true" aria-controls="product-panel-overview"
+                data-product-tab="overview">{t('overview')}</button>
+        {hasModelsTab && (
+          <button class="soeteck-product-tabs__tab" type="button" id="product-tab-models"
+                  role="tab" aria-selected="false" aria-controls="product-panel-models"
+                  data-product-tab="models">{t('models')}</button>
+        )}
+        <button class="soeteck-product-tabs__tab" type="button" id="product-tab-specifications"
+                role="tab" aria-selected="false" aria-controls="product-panel-specifications"
+                data-product-tab="specifications">{t('specifications')}</button>
+        <button class="soeteck-product-tabs__tab" type="button" id="product-tab-downloads"
+                role="tab" aria-selected="false" aria-controls="product-panel-downloads"
+                data-product-tab="downloads">{t('downloads')}</button>
+        <button class="soeteck-product-tabs__tab" type="button" id="product-tab-inquiry"
+                role="tab" aria-selected="false" aria-controls="product-panel-inquiry"
+                data-product-tab="inquiry">{t('inquiry')}</button>
+      </div>
+
+      <div class="soeteck-product-tabs__panels">
+        {/* --- Overview panel --- */}
+        <section id="product-panel-overview" class="soeteck-product-tab-panel is-active"
+                 role="tabpanel" tabindex="0" aria-labelledby="product-tab-overview"
+                 data-product-panel="overview">
+          {product.overview && product.overview.trim() !== '' && (
+            <div class="soeteck-product-tab-block">
+              <p class="soeteck-eyebrow">{t('overview')}</p>
+              <div class="soeteck-product-richtext" set:html={product.overview}></div>
+            </div>
+          )}
+          {product.features && product.features.trim() !== '' && (
+            <div class="soeteck-product-tab-block soeteck-product-tab-block--light">
+              <p class="soeteck-eyebrow">{t('keyFeatures')}</p>
+              <div class="soeteck-product-richtext soeteck-product-feature-list" set:html={product.features}></div>
+            </div>
+          )}
+          {product.applications && product.applications.trim() !== '' && (
+            <div class="soeteck-product-tab-block">
+              <p class="soeteck-eyebrow">{t('applications')}</p>
+              <div class="soeteck-product-richtext soeteck-product-applications-list" set:html={product.applications}></div>
+            </div>
+          )}
+          {!product.overview?.trim() && !product.features?.trim() && !product.applications?.trim() && (
+            <p class="soeteck-product-empty-state">{t('overviewComingSoon')}</p>
+          )}
+        </section>
+
+        {/* --- Models panel (variable products only) --- */}
+        {hasModelsTab && (
+          <section id="product-panel-models" class="soeteck-product-tab-panel"
+                   role="tabpanel" tabindex="0" aria-labelledby="product-tab-models"
+                   data-product-panel="models" hidden>
+            <p class="soeteck-eyebrow">{t('modelRange')}</p>
+            {product.modelDescription && product.modelDescription.trim() !== '' && (
+              <div class="soeteck-product-richtext soeteck-product-panel-intro" set:html={product.modelDescription}></div>
+            )}
+            {variations && variations.rows.length > 0 && (
+              <div class="variations-table">
+                <table>
+                  <thead>
+                    <tr>
+                      {variations.headers.map((h) => <th>{h}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {variations.rows.map((row) => (
+                      <tr>
+                        {row.map((cell) => <td>{cell}</td>)}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* --- Specifications panel --- */}
+        <section id="product-panel-specifications" class="soeteck-product-tab-panel"
+                 role="tabpanel" tabindex="0" aria-labelledby="product-tab-specifications"
+                 data-product-panel="specifications" hidden>
+          <p class="soeteck-eyebrow">{t('technicalSpecifications')}</p>
+          {specifications.length > 0 ? (
+            <>
+              <div class="soeteck-product-spec-controls" data-spec-controls>
+                <button type="button" data-spec-expand-all>{t('expandAll')}</button>
+                <button type="button" data-spec-collapse-all>{t('collapseAll')}</button>
+              </div>
+              <div class="soeteck-product-spec-table-wrap" data-spec-table>
+                <table class="soeteck-product-spec-table">
+                  <tbody>
+                    {specifications.map((group, groupIndex) => {
+                      const groupId = `product-spec-group-${productId}-${groupIndex}`;
+                      const groupOpen = groupIndex < 3;
+                      return (
+                        <>
+                          <tr
+                            class:list={['soeteck-product-spec-table__group', { 'is-open': groupOpen }]}
+                            data-spec-group={groupId}
+                          >
+                            <th colspan="2" scope="colgroup">
+                              <button type="button" aria-expanded={groupOpen ? 'true' : 'false'} data-spec-toggle={groupId}>
+                                {group.name}
+                              </button>
+                            </th>
+                          </tr>
+                          {group.details.map((detail) => (
+                            <tr data-spec-row={groupId} hidden={!groupOpen}>
+                              <th scope="row">{detail.name}</th>
+                              <td>{detail.value}</td>
+                            </tr>
+                          ))}
+                        </>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          ) : (
+            <p class="soeteck-product-empty-state">{t('specificationsComingSoon')}</p>
+          )}
+        </section>
+
+        {/* --- Downloads panel --- */}
+        <section id="product-panel-downloads" class="soeteck-product-tab-panel"
+                 role="tabpanel" tabindex="0" aria-labelledby="product-tab-downloads"
+                 data-product-panel="downloads" hidden>
+          <p class="soeteck-eyebrow">{t('resources')}</p>
+          {downloads.length > 0 ? (
+            <div class="soeteck-product-downloads">
+              {downloads.map((d) => (
+                <a class="soeteck-product-download" href={d.file} target="_blank" rel="noopener">
+                  <span>{d.name}</span>
+                  <strong>{t('download')}</strong>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p class="soeteck-product-empty-state">{t('brochuresComingSoon')}</p>
+          )}
+        </section>
+
+        {/* --- Inquiry panel (UI-only, backend TBD) --- */}
+        <section id="product-panel-inquiry" class="soeteck-product-tab-panel soeteck-product-inquiry"
+                 role="tabpanel" tabindex="0" aria-labelledby="product-tab-inquiry"
+                 data-product-panel="inquiry" hidden>
+          <div class="soeteck-product-inquiry__intro">
+            <h2 class="soeteck-section-title">{t('inquiryIntro')}</h2>
+            <p>{t('inquiryDescription')}</p>
+          </div>
+          <form class="soeteck-product-inquiry-form" method="post" action="#product-inquiry" data-product-inquiry-form>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formYourName')} <em>*</em></span>
+              <input class="soeteck-field" type="text" name="name" autocomplete="name" />
+            </label>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formCompany')} <em>*</em></span>
+              <input class="soeteck-field" type="text" name="company" autocomplete="organization" />
+            </label>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formCountry')} <em>*</em></span>
+              <input class="soeteck-field" type="text" name="country" autocomplete="country-name" placeholder={t('formCountryPlaceholder')} />
+            </label>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formPhone')}</span>
+              <input class="soeteck-field" type="tel" name="phone" autocomplete="tel" />
+            </label>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formEmail')} <em>*</em></span>
+              <input class="soeteck-field" type="email" name="email" autocomplete="email" />
+            </label>
+            <label class="soeteck-inquiry-field">
+              <span>{t('formWhatsapp')}</span>
+              <input class="soeteck-field" type="text" name="whatsapp" autocomplete="off" />
+            </label>
+            <label class="soeteck-inquiry-field soeteck-inquiry-field--full">
+              <span>{t('formSubject')} <em>*</em></span>
+              <input class="soeteck-field" type="text" name="subject" value={inquiryContext.productTitle ?? product.title} />
+            </label>
+            <label class="soeteck-inquiry-field soeteck-inquiry-field--full">
+              <span>{t('formMessage')} <em>*</em></span>
+              <textarea class="soeteck-field" name="message" rows="6"></textarea>
+            </label>
+            <fieldset class="soeteck-inquiry-upload soeteck-inquiry-field--full">
+              <legend>{t('formUploadPrompt')}</legend>
+              <label><input type="radio" name="needs_upload" value="yes" /> {t('formYes')}</label>
+              <label><input type="radio" name="needs_upload" value="no" /> {t('formNo')}</label>
+            </fieldset>
+            <input type="hidden" name="product_id" value={inquiryContext.productId ?? ''} data-inquiry-context="product_id" />
+            <input type="hidden" name="product_name" value={inquiryContext.productTitle ?? ''} data-inquiry-context="product_name" />
+            <input type="hidden" name="product_url" value={inquiryContext.path ?? ''} data-inquiry-context="product_url" />
+            <input type="hidden" name="language" value={lang} data-inquiry-context="language" />
+            <input type="hidden" name="utm_source" value="" data-inquiry-context="utm_source" />
+            <input type="hidden" name="utm_medium" value="" data-inquiry-context="utm_medium" />
+            <input type="hidden" name="utm_campaign" value="" data-inquiry-context="utm_campaign" />
+            <input type="hidden" name="utm_term" value="" data-inquiry-context="utm_term" />
+            <input type="hidden" name="utm_content" value="" data-inquiry-context="utm_content" />
+            <button class="soeteck-inquiry-submit" type="submit" data-form-pending-message={t('formSubmitPending')}>{t('formSubmit')}</button>
+            <p class="soeteck-product-inquiry-form__note" aria-live="polite"></p>
+          </form>
+        </section>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  // 客户端交互脚本（gallery 轮播 + tabs + spec 折叠 + inquiry 表单）
+  import './product-single.ts';
+</script>
+
+<style is:global>
+  @import './product-single.css';
+</style>

@@ -1,154 +1,1101 @@
 {
   "ui": {
     "nav": {
-      "home": { "en": "Home", "zh": "首页", "ru": "Главная", "pt": "Início", "es": "Inicio" },
-      "solutions": { "en": "Solutions", "zh": "解决方案", "ru": "Решения", "pt": "Soluções", "es": "Soluciones" },
-      "products": { "en": "Products", "zh": "产品中心", "ru": "Продукция", "pt": "Produtos", "es": "Productos" },
-      "news": { "en": "News & Insights", "zh": "新闻与洞察", "ru": "Новости и аналитика", "pt": "Notícias e Insights", "es": "Noticias e Información" },
-      "about": { "en": "About", "zh": "关于我们", "ru": "О нас", "pt": "Sobre nós", "es": "Sobre nosotros" },
-      "contact": { "en": "Contact", "zh": "联系我们", "ru": "Контакты", "pt": "Contato", "es": "Contacto" }
+      "home": {
+        "en": "Home",
+        "zh": "首页",
+        "ru": "Главная",
+        "pt": "Início",
+        "es": "Inicio"
+      },
+      "solutions": {
+        "en": "Solutions",
+        "zh": "解决方案",
+        "ru": "Решения",
+        "pt": "Soluções",
+        "es": "Soluciones"
+      },
+      "products": {
+        "en": "Products",
+        "zh": "产品中心",
+        "ru": "Продукция",
+        "pt": "Produtos",
+        "es": "Productos"
+      },
+      "news": {
+        "en": "News & Insights",
+        "zh": "新闻与洞察",
+        "ru": "Новости и аналитика",
+        "pt": "Notícias e Insights",
+        "es": "Noticias e Información"
+      },
+      "about": {
+        "en": "About",
+        "zh": "关于我们",
+        "ru": "О нас",
+        "pt": "Sobre nós",
+        "es": "Sobre nosotros"
+      },
+      "contact": {
+        "en": "Contact",
+        "zh": "联系我们",
+        "ru": "Контакты",
+        "pt": "Contato",
+        "es": "Contacto"
+      }
     },
     "megamenu": {
-      "newsSubtitle1": { "en": "Latest updates from Soeteck", "zh": "了解数益科技最新动态", "ru": "Следите за новостями SOETECK", "pt": "Acompanhe as novidades da SOETECK", "es": "Siga las novedades de SOETECK" },
-      "newsSubtitle2": { "en": "Insights | Innovation | Inspiration", "zh": "洞察 | 创新 | 灵感", "ru": "Аналитика | Инновации | Вдохновение", "pt": "Insights | Inovação | Inspiração", "es": "Información | Innovación | Inspiración" },
-      "newsSubtitle3": { "en": "Explore our featured projects", "zh": "探索我们的精选项目", "ru": "Изучите наши избранные проекты", "pt": "Explore nossos projetos em destaque", "es": "Explore nuestros proyectos destacados" },
-      "prefabDC": { "en": "Prefabricated Data Center", "zh": "预制数据中心", "ru": "Префабрикационные дата-центры", "pt": "Data Centers Prefabricados", "es": "Centros de Datos Prefabricados" },
-      "industries": { "en": "Industries", "zh": "行业应用", "ru": "Отрасли", "pt": "Indústrias", "es": "Industrias" },
-      "industryTelecom": { "en": "Telecom & 5G", "zh": "电信与5G", "ru": "Телеком и 5G", "pt": "Telecomunicações e 5G", "es": "Telecomunicaciones y 5G" },
-      "industryFinance": { "en": "Finance & Banking", "zh": "金融与银行", "ru": "Финансы и банки", "pt": "Finanças e Bancos", "es": "Finanzas y Banca" },
-      "industryGovernment": { "en": "Government", "zh": "政府", "ru": "Государственный сектор", "pt": "Governo", "es": "Gobierno" },
-      "industryColocation": { "en": "Colocation", "zh": "托管数据中心", "ru": "Колокация", "pt": "Colocação", "es": "Colocación" },
-      "customSolution": { "en": "Need a custom solution?", "zh": "需要定制方案？", "ru": "Нужно индивидуальное решение?", "pt": "Precisa de uma solução personalizada?", "es": "¿Necesita una solución personalizada?" },
-      "talkToExpert": { "en": "Talk to Expert", "zh": "咨询专家", "ru": "Связаться со специалистом", "pt": "Fale com um Especialista", "es": "Hable con un Experto" },
-      "exploreSolutions": { "en": "Explore solutions", "zh": "探索解决方案", "ru": "Изучить решения", "pt": "Explorar soluções", "es": "Explorar soluciones" }
+      "newsSubtitle1": {
+        "en": "Latest updates from Soeteck",
+        "zh": "了解数益科技最新动态",
+        "ru": "Следите за новостями SOETECK",
+        "pt": "Acompanhe as novidades da SOETECK",
+        "es": "Siga las novedades de SOETECK"
+      },
+      "newsSubtitle2": {
+        "en": "Insights | Innovation | Inspiration",
+        "zh": "洞察 | 创新 | 灵感",
+        "ru": "Аналитика | Инновации | Вдохновение",
+        "pt": "Insights | Inovação | Inspiração",
+        "es": "Información | Innovación | Inspiración"
+      },
+      "newsSubtitle3": {
+        "en": "Explore our featured projects",
+        "zh": "探索我们的精选项目",
+        "ru": "Изучите наши избранные проекты",
+        "pt": "Explore nossos projetos em destaque",
+        "es": "Explore nuestros proyectos destacados"
+      },
+      "prefabDC": {
+        "en": "Prefabricated Data Center",
+        "zh": "预制数据中心",
+        "ru": "Префабрикационные дата-центры",
+        "pt": "Data Centers Prefabricados",
+        "es": "Centros de Datos Prefabricados"
+      },
+      "industries": {
+        "en": "Industries",
+        "zh": "行业应用",
+        "ru": "Отрасли",
+        "pt": "Indústrias",
+        "es": "Industrias"
+      },
+      "industryTelecom": {
+        "en": "Telecom & 5G",
+        "zh": "电信与5G",
+        "ru": "Телеком и 5G",
+        "pt": "Telecomunicações e 5G",
+        "es": "Telecomunicaciones y 5G"
+      },
+      "industryFinance": {
+        "en": "Finance & Banking",
+        "zh": "金融与银行",
+        "ru": "Финансы и банки",
+        "pt": "Finanças e Bancos",
+        "es": "Finanzas y Banca"
+      },
+      "industryGovernment": {
+        "en": "Government",
+        "zh": "政府",
+        "ru": "Государственный сектор",
+        "pt": "Governo",
+        "es": "Gobierno"
+      },
+      "industryColocation": {
+        "en": "Colocation",
+        "zh": "托管数据中心",
+        "ru": "Колокация",
+        "pt": "Colocação",
+        "es": "Colocación"
+      },
+      "customSolution": {
+        "en": "Need a custom solution?",
+        "zh": "需要定制方案？",
+        "ru": "Нужно индивидуальное решение?",
+        "pt": "Precisa de uma solução personalizada?",
+        "es": "¿Necesita una solución personalizada?"
+      },
+      "talkToExpert": {
+        "en": "Talk to Expert",
+        "zh": "咨询专家",
+        "ru": "Связаться со специалистом",
+        "pt": "Fale com um Especialista",
+        "es": "Hable con un Experto"
+      },
+      "exploreSolutions": {
+        "en": "Explore solutions",
+        "zh": "探索解决方案",
+        "ru": "Изучить решения",
+        "pt": "Explorar soluções",
+        "es": "Explorar soluciones"
+      }
     },
     "hero": {
-      "aboutEyebrow": { "en": "Critical Infrastructure Manufacturer", "zh": "关键基础设施制造商", "ru": "Производитель критической инфраструктуры", "pt": "Fabricante de Infraestrutura Crítica", "es": "Fabricante de Infraestructura Crítica" }
+      "aboutEyebrow": {
+        "en": "Critical Infrastructure Manufacturer",
+        "zh": "关键基础设施制造商",
+        "ru": "Производитель критической инфраструктуры",
+        "pt": "Fabricante de Infraestrutura Crítica",
+        "es": "Fabricante de Infraestructura Crítica"
+      }
     },
     "breadcrumb": {
-      "home": { "en": "Home", "zh": "首页", "ru": "Главная", "pt": "Início", "es": "Inicio" },
-      "products": { "en": "Products", "zh": "产品中心", "ru": "Продукция", "pt": "Produtos", "es": "Productos" },
-      "solutions": { "en": "Solutions", "zh": "解决方案", "ru": "Решения", "pt": "Soluções", "es": "Soluciones" },
-      "news": { "en": "News & Insights", "zh": "新闻与洞察", "ru": "Новости и аналитика", "pt": "Notícias e Insights", "es": "Noticias e Información" },
-      "newsReleases": { "en": "News Releases", "zh": "新闻动态", "ru": "Новости", "pt": "Notícias", "es": "Noticias" },
-      "blogs": { "en": "Blogs", "zh": "博客", "ru": "Блог", "pt": "Blog", "es": "Blog" },
-      "clientCaseStudies": { "en": "Client Case Studies", "zh": "客户案例", "ru": "Кейсы клиентов", "pt": "Casos de Clientes", "es": "Casos de Clientes" },
-      "criticalPower": { "en": "Critical Power", "zh": "关键电源", "ru": "Критическое электроснабжение", "pt": "Energia Crítica", "es": "Energía Crítica" },
-      "thermalManagement": { "en": "Thermal Management", "zh": "精密散热", "ru": "Прецизионное охлаждение", "pt": "Refrigeração de Precisão", "es": "Refrigeración de Precisión" },
-      "racksEnclosures": { "en": "Racks & Enclosures", "zh": "机柜与机架", "ru": "Шкафы и стойки", "pt": "Racks e Gabinetes", "es": "Racks y Gabinetes" },
-      "monitoringManagement": { "en": "Monitoring & Management", "zh": "监控与管理", "ru": "Мониторинг и управление", "pt": "Monitoramento e Gestão", "es": "Monitoreo y Gestión" },
-      "ups": { "en": "Uninterruptible Power Supplies", "zh": "不间断电源", "ru": "Источники бесперебойного питания", "pt": "Fontes de Alimentação Ininterrupta", "es": "Fuentes de Alimentación Ininterrumpida" },
-      "dcPowerSystems": { "en": "DC Power Systems", "zh": "直流电源系统", "ru": "Системы постоянного тока", "pt": "Sistemas de Energia CC", "es": "Sistemas de Energía CC" },
-      "powerDistribution": { "en": "Power Distribution", "zh": "电力分配", "ru": "Распределение электроэнергии", "pt": "Distribuição de Energia", "es": "Distribución de Energía" },
-      "staticTransferSwitches": { "en": "Static Transfer Switches", "zh": "静态转换开关", "ru": "Статические переключатели", "pt": "Chaves Estáticas de Transferência", "es": "Conmutadores Estáticos de Transferencia" },
-      "buswayAndBusduct": { "en": "Busway and Busduct", "zh": "母线槽", "ru": "Шинопроводы", "pt": "Dutos e Barramentos", "es": "Canalizaciones y Barrajes" },
-      "battery": { "en": "Battery", "zh": "电池", "ru": "Аккумуляторы", "pt": "Baterias", "es": "Baterías" }
+      "home": {
+        "en": "Home",
+        "zh": "首页",
+        "ru": "Главная",
+        "pt": "Início",
+        "es": "Inicio"
+      },
+      "products": {
+        "en": "Products",
+        "zh": "产品中心",
+        "ru": "Продукция",
+        "pt": "Produtos",
+        "es": "Productos"
+      },
+      "solutions": {
+        "en": "Solutions",
+        "zh": "解决方案",
+        "ru": "Решения",
+        "pt": "Soluções",
+        "es": "Soluciones"
+      },
+      "news": {
+        "en": "News & Insights",
+        "zh": "新闻与洞察",
+        "ru": "Новости и аналитика",
+        "pt": "Notícias e Insights",
+        "es": "Noticias e Información"
+      },
+      "newsReleases": {
+        "en": "News Releases",
+        "zh": "新闻动态",
+        "ru": "Новости",
+        "pt": "Notícias",
+        "es": "Noticias"
+      },
+      "blogs": {
+        "en": "Blogs",
+        "zh": "博客",
+        "ru": "Блог",
+        "pt": "Blog",
+        "es": "Blog"
+      },
+      "clientCaseStudies": {
+        "en": "Client Case Studies",
+        "zh": "客户案例",
+        "ru": "Кейсы клиентов",
+        "pt": "Casos de Clientes",
+        "es": "Casos de Clientes"
+      },
+      "criticalPower": {
+        "en": "Critical Power",
+        "zh": "关键电源",
+        "ru": "Критическое электроснабжение",
+        "pt": "Energia Crítica",
+        "es": "Energía Crítica"
+      },
+      "thermalManagement": {
+        "en": "Thermal Management",
+        "zh": "精密散热",
+        "ru": "Прецизионное охлаждение",
+        "pt": "Refrigeração de Precisão",
+        "es": "Refrigeración de Precisión"
+      },
+      "racksEnclosures": {
+        "en": "Racks & Enclosures",
+        "zh": "机柜与机架",
+        "ru": "Шкафы и стойки",
+        "pt": "Racks e Gabinetes",
+        "es": "Racks y Gabinetes"
+      },
+      "monitoringManagement": {
+        "en": "Monitoring & Management",
+        "zh": "监控与管理",
+        "ru": "Мониторинг и управление",
+        "pt": "Monitoramento e Gestão",
+        "es": "Monitoreo y Gestión"
+      },
+      "ups": {
+        "en": "Uninterruptible Power Supplies",
+        "zh": "不间断电源",
+        "ru": "Источники бесперебойного питания",
+        "pt": "Fontes de Alimentação Ininterrupta",
+        "es": "Fuentes de Alimentación Ininterrumpida"
+      },
+      "dcPowerSystems": {
+        "en": "DC Power Systems",
+        "zh": "直流电源系统",
+        "ru": "Системы постоянного тока",
+        "pt": "Sistemas de Energia CC",
+        "es": "Sistemas de Energía CC"
+      },
+      "powerDistribution": {
+        "en": "Power Distribution",
+        "zh": "电力分配",
+        "ru": "Распределение электроэнергии",
+        "pt": "Distribuição de Energia",
+        "es": "Distribución de Energía"
+      },
+      "staticTransferSwitches": {
+        "en": "Static Transfer Switches",
+        "zh": "静态转换开关",
+        "ru": "Статические переключатели",
+        "pt": "Chaves Estáticas de Transferência",
+        "es": "Conmutadores Estáticos de Transferencia"
+      },
+      "buswayAndBusduct": {
+        "en": "Busway and Busduct",
+        "zh": "母线槽",
+        "ru": "Шинопроводы",
+        "pt": "Dutos e Barramentos",
+        "es": "Canalizaciones y Barrajes"
+      },
+      "battery": {
+        "en": "Battery",
+        "zh": "电池",
+        "ru": "Аккумуляторы",
+        "pt": "Baterias",
+        "es": "Baterías"
+      }
     },
     "product": {
-      "specs": { "en": "Specs", "zh": "产品规格", "ru": "Характеристики", "pt": "Especificações", "es": "Especificaciones" },
-      "inquiry": { "en": "Inquiry", "zh": "询价", "ru": "Запросить цену", "pt": "Solicitar orçamento", "es": "Solicitar presupuesto" },
-      "download": { "en": "Download", "zh": "下载资料", "ru": "Скачать", "pt": "Baixar", "es": "Descargar" },
-      "overview": { "en": "Overview", "zh": "概述", "ru": "Обзор", "pt": "Visão geral", "es": "Descripción general" },
-      "models": { "en": "Models", "zh": "型号", "ru": "Модели", "pt": "Modelos", "es": "Modelos" },
-      "specifications": { "en": "Specifications", "zh": "规格参数", "ru": "Характеристики", "pt": "Especificações", "es": "Especificaciones" },
-      "downloads": { "en": "Downloads", "zh": "下载", "ru": "Загрузки", "pt": "Downloads", "es": "Descargas" },
-      "related": { "en": "Related Products", "zh": "相关产品", "ru": "Похожие продукты", "pt": "Produtos relacionados", "es": "Productos relacionados" },
-      "salesContact": { "en": "Sales Contact", "zh": "询价联系", "ru": "Связаться с отделом продаж", "pt": "Contato Comercial", "es": "Contacto de Ventas" },
-      "viewDetails": { "en": "View Details", "zh": "查看详情", "ru": "Подробнее", "pt": "Ver Detalhes", "es": "Ver Detalles" },
-      "showMore": { "en": "Show more", "zh": "显示更多", "ru": "Показать ещё", "pt": "Mostrar mais", "es": "Mostrar más" },
-      "showLess": { "en": "Show less", "zh": "收起", "ru": "Свернуть", "pt": "Mostrar menos", "es": "Mostrar menos" }
+      "specs": {
+        "en": "Specs",
+        "zh": "产品规格",
+        "ru": "Характеристики",
+        "pt": "Especificações",
+        "es": "Especificaciones"
+      },
+      "inquiry": {
+        "en": "Inquiry",
+        "zh": "询价",
+        "ru": "Запросить цену",
+        "pt": "Solicitar orçamento",
+        "es": "Solicitar presupuesto"
+      },
+      "download": {
+        "en": "Download",
+        "zh": "下载资料",
+        "ru": "Скачать",
+        "pt": "Baixar",
+        "es": "Descargar"
+      },
+      "overview": {
+        "en": "Overview",
+        "zh": "概述",
+        "ru": "Обзор",
+        "pt": "Visão geral",
+        "es": "Descripción general"
+      },
+      "models": {
+        "en": "Models",
+        "zh": "型号",
+        "ru": "Модели",
+        "pt": "Modelos",
+        "es": "Modelos"
+      },
+      "specifications": {
+        "en": "Specifications",
+        "zh": "规格参数",
+        "ru": "Характеристики",
+        "pt": "Especificações",
+        "es": "Especificaciones"
+      },
+      "downloads": {
+        "en": "Downloads",
+        "zh": "下载",
+        "ru": "Загрузки",
+        "pt": "Downloads",
+        "es": "Descargas"
+      },
+      "related": {
+        "en": "Related Products",
+        "zh": "相关产品",
+        "ru": "Похожие продукты",
+        "pt": "Produtos relacionados",
+        "es": "Productos relacionados"
+      },
+      "salesContact": {
+        "en": "Sales Contact",
+        "zh": "询价联系",
+        "ru": "Связаться с отделом продаж",
+        "pt": "Contato Comercial",
+        "es": "Contacto de Ventas"
+      },
+      "viewDetails": {
+        "en": "View Details",
+        "zh": "查看详情",
+        "ru": "Подробнее",
+        "pt": "Ver Detalhes",
+        "es": "Ver Detalles"
+      },
+      "showMore": {
+        "en": "Show more",
+        "zh": "显示更多",
+        "ru": "Показать ещё",
+        "pt": "Mostrar mais",
+        "es": "Mostrar más"
+      },
+      "showLess": {
+        "en": "Show less",
+        "zh": "收起",
+        "ru": "Свернуть",
+        "pt": "Mostrar menos",
+        "es": "Mostrar menos"
+      },
+      "talkToExpert": {
+        "en": "Talk to an Expert",
+        "zh": "咨询专家",
+        "ru": "Связаться со специалистом",
+        "pt": "Fale com um Especialista",
+        "es": "Hable con un Experto"
+      },
+      "downloadBrochure": {
+        "en": "Download Brochure",
+        "zh": "下载手册",
+        "ru": "Скачать брошюру",
+        "pt": "Baixar Brochura",
+        "es": "Descargar Folleto"
+      },
+      "keyFeatures": {
+        "en": "Key Features",
+        "zh": "核心特性",
+        "ru": "Ключевые характеристики",
+        "pt": "Principais Recursos",
+        "es": "Características Clave"
+      },
+      "applications": {
+        "en": "Applications",
+        "zh": "典型应用",
+        "ru": "Применение",
+        "pt": "Aplicações",
+        "es": "Aplicaciones"
+      },
+      "modelRange": {
+        "en": "Model Range",
+        "zh": "型号系列",
+        "ru": "Модельный ряд",
+        "pt": "Gama de Modelos",
+        "es": "Gama de Modelos"
+      },
+      "technicalSpecifications": {
+        "en": "Technical Specifications",
+        "zh": "技术规格",
+        "ru": "Технические характеристики",
+        "pt": "Especificações Técnicas",
+        "es": "Especificaciones Técnicas"
+      },
+      "resources": {
+        "en": "Resources",
+        "zh": "资源下载",
+        "ru": "Ресурсы",
+        "pt": "Recursos",
+        "es": "Recursos"
+      },
+      "expandAll": {
+        "en": "Expand All",
+        "zh": "全部展开",
+        "ru": "Развернуть все",
+        "pt": "Expandir Tudo",
+        "es": "Expandir Todo"
+      },
+      "collapseAll": {
+        "en": "Collapse All",
+        "zh": "全部收起",
+        "ru": "Свернуть все",
+        "pt": "Recolher Tudo",
+        "es": "Contraer Todo"
+      },
+      "overviewComingSoon": {
+        "en": "Overview information coming soon.",
+        "zh": "概述信息即将上线。",
+        "ru": "Информация о продукте скоро появится.",
+        "pt": "Informações de visão geral em breve.",
+        "es": "Información general próximamente."
+      },
+      "specificationsComingSoon": {
+        "en": "Specifications coming soon.",
+        "zh": "规格参数即将上线。",
+        "ru": "Характеристики скоро появятся.",
+        "pt": "Especificações em breve.",
+        "es": "Especificaciones próximamente."
+      },
+      "brochuresComingSoon": {
+        "en": "Brochures coming soon.",
+        "zh": "手册即将上线。",
+        "ru": "Брошюры скоро появятся.",
+        "pt": "Brochuras em breve.",
+        "es": "Folletos próximamente."
+      },
+      "productImageComingSoon": {
+        "en": "Product image coming soon.",
+        "zh": "产品图片即将上线。",
+        "ru": "Изображение продукта скоро появится.",
+        "pt": "Imagem do produto em breve.",
+        "es": "Imagen del producto próximamente."
+      },
+      "inquiryIntro": {
+        "en": "Find supports from SOETECK teams",
+        "zh": "获取 SOETECK 团队支持",
+        "ru": "Получите поддержку от команды SOETECK",
+        "pt": "Encontre suporte das equipes SOETECK",
+        "es": "Obtenga soporte de los equipos SOETECK"
+      },
+      "inquiryDescription": {
+        "en": "If you are interested in this product, please share your industry background and specific requirements, along with your expected services. These will help us provide you with more personalized solutions and accurate quotes.",
+        "zh": "如果您对该产品感兴趣，请分享您的行业背景、具体需求和期望的服务，我们将据此为您提供更精准的解决方案和报价。",
+        "ru": "Если вас заинтересовал этот продукт, поделитесь информацией о своей отрасли, конкретных требованиях и ожидаемых услугах. Это поможет нам предоставить вам более персонализированные решения и точные расценки.",
+        "pt": "Se você tem interesse neste produto, compartilhe seu contexto do setor, requisitos específicos e serviços esperados. Isso nos ajudará a fornecer soluções mais personalizadas e orçamentos precisos.",
+        "es": "Si está interesado en este producto, comparta su experiencia en el sector, requisitos específicos y servicios esperados. Esto nos ayudará a brindarle soluciones más personalizadas y presupuestos precisos."
+      },
+      "formYourName": {
+        "en": "Your Name",
+        "zh": "您的姓名",
+        "ru": "Ваше имя",
+        "pt": "Seu Nome",
+        "es": "Su Nombre"
+      },
+      "formCompany": {
+        "en": "Company Name",
+        "zh": "公司名称",
+        "ru": "Название компании",
+        "pt": "Nome da Empresa",
+        "es": "Nombre de la Empresa"
+      },
+      "formCountry": {
+        "en": "Country",
+        "zh": "国家",
+        "ru": "Страна",
+        "pt": "País",
+        "es": "País"
+      },
+      "formCountryPlaceholder": {
+        "en": "Select Your Country",
+        "zh": "选择您所在的国家",
+        "ru": "Выберите страну",
+        "pt": "Selecione seu país",
+        "es": "Seleccione su país"
+      },
+      "formPhone": {
+        "en": "Phone",
+        "zh": "电话",
+        "ru": "Телефон",
+        "pt": "Telefone",
+        "es": "Teléfono"
+      },
+      "formEmail": {
+        "en": "Email",
+        "zh": "邮箱",
+        "ru": "Электронная почта",
+        "pt": "E-mail",
+        "es": "Correo electrónico"
+      },
+      "formWhatsapp": {
+        "en": "WhatsApp",
+        "zh": "WhatsApp",
+        "ru": "WhatsApp",
+        "pt": "WhatsApp",
+        "es": "WhatsApp"
+      },
+      "formSubject": {
+        "en": "Your Subject",
+        "zh": "咨询主题",
+        "ru": "Тема запроса",
+        "pt": "Assunto",
+        "es": "Asunto"
+      },
+      "formMessage": {
+        "en": "Your Message",
+        "zh": "您的留言",
+        "ru": "Ваше сообщение",
+        "pt": "Sua mensagem",
+        "es": "Su mensaje"
+      },
+      "formUploadPrompt": {
+        "en": "Do you need to upload files?",
+        "zh": "是否需要上传附件？",
+        "ru": "Нужно ли загрузить файлы?",
+        "pt": "Precisa fazer upload de arquivos?",
+        "es": "¿Necesita subir archivos?"
+      },
+      "formYes": {
+        "en": "Yes",
+        "zh": "是",
+        "ru": "Да",
+        "pt": "Sim",
+        "es": "Sí"
+      },
+      "formNo": {
+        "en": "No",
+        "zh": "否",
+        "ru": "Нет",
+        "pt": "Não",
+        "es": "No"
+      },
+      "formSubmit": {
+        "en": "Submit",
+        "zh": "提交",
+        "ru": "Отправить",
+        "pt": "Enviar",
+        "es": "Enviar"
+      },
+      "formSubmitPending": {
+        "en": "Inquiry submission will be connected in the native contact system phase.",
+        "zh": "询价提交功能将在原生联系系统阶段接入。",
+        "ru": "Отправка запросов будет подключена на этапе интеграции контактной системы.",
+        "pt": "O envio de consultas será conectado na fase do sistema de contato nativo.",
+        "es": "El envío de consultas se conectará en la fase del sistema de contacto nativo."
+      },
+      "prevImage": {
+        "en": "Show previous product image",
+        "zh": "上一张图片",
+        "ru": "Показать предыдущее изображение",
+        "pt": "Imagem anterior",
+        "es": "Imagen anterior"
+      },
+      "nextImage": {
+        "en": "Show next product image",
+        "zh": "下一张图片",
+        "ru": "Показать следующее изображение",
+        "pt": "Próxima imagem",
+        "es": "Siguiente imagen"
+      },
+      "galleryThumbnails": {
+        "en": "Product gallery thumbnails",
+        "zh": "产品图片缩略图",
+        "ru": "Миниатюры галереи продукта",
+        "pt": "Miniaturas da galeria",
+        "es": "Miniaturas de la galería"
+      }
     },
     "archive": {
-      "filters": { "en": "Filters", "zh": "筛选", "ru": "Фильтры", "pt": "Filtros", "es": "Filtros" },
-      "clearFilters": { "en": "Clear filters", "zh": "清除筛选", "ru": "Сбросить фильтры", "pt": "Limpar filtros", "es": "Limpiar filtros" },
-      "applyFilters": { "en": "Apply filters", "zh": "应用筛选", "ru": "Применить фильтры", "pt": "Aplicar filtros", "es": "Aplicar filtros" },
-      "clearAll": { "en": "Clear all", "zh": "清除全部", "ru": "Очистить все", "pt": "Limpar tudo", "es": "Limpiar todo" },
-      "resultsPerPage": { "en": "Results per page", "zh": "每页显示", "ru": "На странице", "pt": "Resultados por página", "es": "Resultados por página" },
-      "orderBy": { "en": "Order by", "zh": "排序方式", "ru": "Сортировка", "pt": "Ordenar por", "es": "Ordenar por" },
-      "featured": { "en": "Featured", "zh": "推荐", "ru": "Рекомендуемые", "pt": "Destaque", "es": "Destacados" },
-      "latest": { "en": "Latest", "zh": "最新", "ru": "Новейшие", "pt": "Mais recentes", "es": "Más recientes" },
-      "default": { "en": "Default", "zh": "默认", "ru": "По умолчанию", "pt": "Padrão", "es": "Predeterminado" },
-      "apply": { "en": "Apply", "zh": "应用", "ru": "Применить", "pt": "Aplicar", "es": "Aplicar" },
-      "showingAll": { "en": "Showing all {count} results", "zh": "显示全部 {count} 条结果", "ru": "Показаны все {count} результатов", "pt": "Mostrando todos os {count} resultados", "es": "Mostrando todos los {count} resultados" },
-      "showingRange": { "en": "Showing {start}–{end} of {total} results", "zh": "显示 {start}–{end}，共 {total} 条结果", "ru": "Показаны {start}–{end} из {total} результатов", "pt": "Mostrando {start}–{end} de {total} resultados", "es": "Mostrando {start}–{end} de {total} resultados" },
-      "noResults": { "en": "No products found matching your criteria.", "zh": "没有找到符合条件的产品。", "ru": "Не найдено продуктов, соответствующих вашим критериям.", "pt": "Nenhum produto encontrado correspondente aos seus critérios.", "es": "No se encontraron productos que coincidan con sus criterios." }
+      "filters": {
+        "en": "Filters",
+        "zh": "筛选",
+        "ru": "Фильтры",
+        "pt": "Filtros",
+        "es": "Filtros"
+      },
+      "clearFilters": {
+        "en": "Clear filters",
+        "zh": "清除筛选",
+        "ru": "Сбросить фильтры",
+        "pt": "Limpar filtros",
+        "es": "Limpiar filtros"
+      },
+      "applyFilters": {
+        "en": "Apply filters",
+        "zh": "应用筛选",
+        "ru": "Применить фильтры",
+        "pt": "Aplicar filtros",
+        "es": "Aplicar filtros"
+      },
+      "clearAll": {
+        "en": "Clear all",
+        "zh": "清除全部",
+        "ru": "Очистить все",
+        "pt": "Limpar tudo",
+        "es": "Limpiar todo"
+      },
+      "resultsPerPage": {
+        "en": "Results per page",
+        "zh": "每页显示",
+        "ru": "На странице",
+        "pt": "Resultados por página",
+        "es": "Resultados por página"
+      },
+      "orderBy": {
+        "en": "Order by",
+        "zh": "排序方式",
+        "ru": "Сортировка",
+        "pt": "Ordenar por",
+        "es": "Ordenar por"
+      },
+      "featured": {
+        "en": "Featured",
+        "zh": "推荐",
+        "ru": "Рекомендуемые",
+        "pt": "Destaque",
+        "es": "Destacados"
+      },
+      "latest": {
+        "en": "Latest",
+        "zh": "最新",
+        "ru": "Новейшие",
+        "pt": "Mais recentes",
+        "es": "Más recientes"
+      },
+      "default": {
+        "en": "Default",
+        "zh": "默认",
+        "ru": "По умолчанию",
+        "pt": "Padrão",
+        "es": "Predeterminado"
+      },
+      "apply": {
+        "en": "Apply",
+        "zh": "应用",
+        "ru": "Применить",
+        "pt": "Aplicar",
+        "es": "Aplicar"
+      },
+      "showingAll": {
+        "en": "Showing all {count} results",
+        "zh": "显示全部 {count} 条结果",
+        "ru": "Показаны все {count} результатов",
+        "pt": "Mostrando todos os {count} resultados",
+        "es": "Mostrando todos los {count} resultados"
+      },
+      "showingRange": {
+        "en": "Showing {start}–{end} of {total} results",
+        "zh": "显示 {start}–{end}，共 {total} 条结果",
+        "ru": "Показаны {start}–{end} из {total} результатов",
+        "pt": "Mostrando {start}–{end} de {total} resultados",
+        "es": "Mostrando {start}–{end} de {total} resultados"
+      },
+      "noResults": {
+        "en": "No products found matching your criteria.",
+        "zh": "没有找到符合条件的产品。",
+        "ru": "Не найдено продуктов, соответствующих вашим критериям.",
+        "pt": "Nenhum produto encontrado correspondente aos seus critérios.",
+        "es": "No se encontraron productos que coincidan con sus criterios."
+      }
     },
     "common": {
-      "readmore": { "en": "Learn more", "zh": "了解更多", "ru": "Подробнее", "pt": "Saiba mais", "es": "Más información" },
-      "back": { "en": "Back", "zh": "返回", "ru": "Назад", "pt": "Voltar", "es": "Volver" },
-      "loading": { "en": "Loading...", "zh": "加载中...", "ru": "Загрузка...", "pt": "Carregando...", "es": "Cargando..." },
-      "viewAll": { "en": "View all", "zh": "查看全部", "ru": "Смотреть все", "pt": "Ver todos", "es": "Ver todos" },
-      "contactUs": { "en": "Contact us", "zh": "联系我们", "ru": "Связаться с нами", "pt": "Fale conosco", "es": "Contáctenos" },
-      "requestQuote": { "en": "Request quote", "zh": "获取报价", "ru": "Запросить цену", "pt": "Solicitar orçamento", "es": "Solicitar presupuesto" },
-      "downloadBrochure": { "en": "Download brochure", "zh": "下载手册", "ru": "Скачать брошюру", "pt": "Baixar brochura", "es": "Descargar folleto" },
-      "language": { "en": "Language", "zh": "语言", "ru": "Язык", "pt": "Idioma", "es": "Idioma" },
-      "search": { "en": "Search", "zh": "搜索", "ru": "Поиск", "pt": "Pesquisar", "es": "Buscar" },
-      "searchPlaceholder": { "en": "Search...", "zh": "搜索您需要的内容...", "ru": "Поиск...", "pt": "Pesquisar...", "es": "Buscar..." }
+      "readmore": {
+        "en": "Learn more",
+        "zh": "了解更多",
+        "ru": "Подробнее",
+        "pt": "Saiba mais",
+        "es": "Más información"
+      },
+      "back": {
+        "en": "Back",
+        "zh": "返回",
+        "ru": "Назад",
+        "pt": "Voltar",
+        "es": "Volver"
+      },
+      "loading": {
+        "en": "Loading...",
+        "zh": "加载中...",
+        "ru": "Загрузка...",
+        "pt": "Carregando...",
+        "es": "Cargando..."
+      },
+      "viewAll": {
+        "en": "View all",
+        "zh": "查看全部",
+        "ru": "Смотреть все",
+        "pt": "Ver todos",
+        "es": "Ver todos"
+      },
+      "contactUs": {
+        "en": "Contact us",
+        "zh": "联系我们",
+        "ru": "Связаться с нами",
+        "pt": "Fale conosco",
+        "es": "Contáctenos"
+      },
+      "requestQuote": {
+        "en": "Request quote",
+        "zh": "获取报价",
+        "ru": "Запросить цену",
+        "pt": "Solicitar orçamento",
+        "es": "Solicitar presupuesto"
+      },
+      "downloadBrochure": {
+        "en": "Download brochure",
+        "zh": "下载手册",
+        "ru": "Скачать брошюру",
+        "pt": "Baixar brochura",
+        "es": "Descargar folleto"
+      },
+      "language": {
+        "en": "Language",
+        "zh": "语言",
+        "ru": "Язык",
+        "pt": "Idioma",
+        "es": "Idioma"
+      },
+      "search": {
+        "en": "Search",
+        "zh": "搜索",
+        "ru": "Поиск",
+        "pt": "Pesquisar",
+        "es": "Buscar"
+      },
+      "searchPlaceholder": {
+        "en": "Search...",
+        "zh": "搜索您需要的内容...",
+        "ru": "Поиск...",
+        "pt": "Pesquisar...",
+        "es": "Buscar..."
+      }
     },
     "footer": {
-      "connectWithUs": { "en": "Connect with us", "zh": "联系我们", "ru": "Свяжитесь с нами", "pt": "Fale Conosco", "es": "Contáctenos" },
-      "aboutSoeteck": { "en": "About Soeteck", "zh": "关于数益科技", "ru": "О компании Soeteck", "pt": "Sobre a Soeteck", "es": "Sobre Soeteck" },
-      "siteMap": { "en": "Site Map", "zh": "网站地图", "ru": "Карта сайта", "pt": "Mapa do Site", "es": "Mapa del Sitio" },
-      "termsOfUse": { "en": "Terms of Use", "zh": "使用条款", "ru": "Условия использования", "pt": "Termos de Uso", "es": "Términos de Uso" },
-      "privacyPolicy": { "en": "Privacy Policy", "zh": "隐私政策", "ru": "Политика конфиденциальности", "pt": "Política de Privacidade", "es": "Política de Privacidad" },
-      "cookiePolicy": { "en": "Cookie Policy", "zh": "Cookie 政策", "ru": "Политика Cookie", "pt": "Política de Cookies", "es": "Política de Cookies" }
+      "connectWithUs": {
+        "en": "Connect with us",
+        "zh": "联系我们",
+        "ru": "Свяжитесь с нами",
+        "pt": "Fale Conosco",
+        "es": "Contáctenos"
+      },
+      "aboutSoeteck": {
+        "en": "About Soeteck",
+        "zh": "关于数益科技",
+        "ru": "О компании Soeteck",
+        "pt": "Sobre a Soeteck",
+        "es": "Sobre Soeteck"
+      },
+      "siteMap": {
+        "en": "Site Map",
+        "zh": "网站地图",
+        "ru": "Карта сайта",
+        "pt": "Mapa do Site",
+        "es": "Mapa del Sitio"
+      },
+      "termsOfUse": {
+        "en": "Terms of Use",
+        "zh": "使用条款",
+        "ru": "Условия использования",
+        "pt": "Termos de Uso",
+        "es": "Términos de Uso"
+      },
+      "privacyPolicy": {
+        "en": "Privacy Policy",
+        "zh": "隐私政策",
+        "ru": "Политика конфиденциальности",
+        "pt": "Política de Privacidade",
+        "es": "Política de Privacidad"
+      },
+      "cookiePolicy": {
+        "en": "Cookie Policy",
+        "zh": "Cookie 政策",
+        "ru": "Политика Cookie",
+        "pt": "Política de Cookies",
+        "es": "Política de Cookies"
+      }
     },
     "category": {
-      "criticalPower": { "en": "Critical Power", "zh": "关键电源", "ru": "Критическое электроснабжение", "pt": "Energia Crítica", "es": "Energía Crítica" },
-      "thermalManagement": { "en": "Thermal Management", "zh": "精密散热", "ru": "Прецизионное охлаждение", "pt": "Refrigeração de Precisão", "es": "Refrigeración de Precisión" },
-      "racksEnclosures": { "en": "Racks & Enclosures", "zh": "机柜与机架", "ru": "Шкафы и стойки", "pt": "Racks e Gabinetes", "es": "Racks y Gabinetes" },
-      "monitoringManagement": { "en": "Monitoring & Management", "zh": "监控与管理", "ru": "Мониторинг и управление", "pt": "Monitoramento e Gestão", "es": "Monitoreo y Gestión" },
-      "prefabDC": { "en": "Prefabricated DC", "zh": "预制数据中心", "ru": "Префабрикационные дата-центры", "pt": "Data Centers Prefabricados", "es": "Centros de Datos Prefabricados" },
-      "colocationDC": { "en": "Colocation DC", "zh": "托管数据中心", "ru": "Колокация", "pt": "Data Center de Colocação", "es": "Centro de Datos de Colocación" },
-      "edgeComputing": { "en": "Edge Computing", "zh": "边缘计算", "ru": "Edge-вычисления", "pt": "Computação de Borda", "es": "Computación de Borde" },
-      "newsReleases": { "en": "News Releases", "zh": "新闻动态", "ru": "Новости", "pt": "Notícias", "es": "Noticias" },
-      "blogs": { "en": "Blogs", "zh": "博客", "ru": "Блог", "pt": "Blog", "es": "Blog" },
-      "caseStudies": { "en": "Case Studies", "zh": "客户案例", "ru": "Кейсы клиентов", "pt": "Casos de Clientes", "es": "Casos de Clientes" }
+      "criticalPower": {
+        "en": "Critical Power",
+        "zh": "关键电源",
+        "ru": "Критическое электроснабжение",
+        "pt": "Energia Crítica",
+        "es": "Energía Crítica"
+      },
+      "thermalManagement": {
+        "en": "Thermal Management",
+        "zh": "精密散热",
+        "ru": "Прецизионное охлаждение",
+        "pt": "Refrigeração de Precisão",
+        "es": "Refrigeración de Precisión"
+      },
+      "racksEnclosures": {
+        "en": "Racks & Enclosures",
+        "zh": "机柜与机架",
+        "ru": "Шкафы и стойки",
+        "pt": "Racks e Gabinetes",
+        "es": "Racks y Gabinetes"
+      },
+      "monitoringManagement": {
+        "en": "Monitoring & Management",
+        "zh": "监控与管理",
+        "ru": "Мониторинг и управление",
+        "pt": "Monitoramento e Gestão",
+        "es": "Monitoreo y Gestión"
+      },
+      "prefabDC": {
+        "en": "Prefabricated DC",
+        "zh": "预制数据中心",
+        "ru": "Префабрикационные дата-центры",
+        "pt": "Data Centers Prefabricados",
+        "es": "Centros de Datos Prefabricados"
+      },
+      "colocationDC": {
+        "en": "Colocation DC",
+        "zh": "托管数据中心",
+        "ru": "Колокация",
+        "pt": "Data Center de Colocação",
+        "es": "Centro de Datos de Colocación"
+      },
+      "edgeComputing": {
+        "en": "Edge Computing",
+        "zh": "边缘计算",
+        "ru": "Edge-вычисления",
+        "pt": "Computação de Borda",
+        "es": "Computación de Borde"
+      },
+      "newsReleases": {
+        "en": "News Releases",
+        "zh": "新闻动态",
+        "ru": "Новости",
+        "pt": "Notícias",
+        "es": "Noticias"
+      },
+      "blogs": {
+        "en": "Blogs",
+        "zh": "博客",
+        "ru": "Блог",
+        "pt": "Blog",
+        "es": "Blog"
+      },
+      "caseStudies": {
+        "en": "Case Studies",
+        "zh": "客户案例",
+        "ru": "Кейсы клиентов",
+        "pt": "Casos de Clientes",
+        "es": "Casos de Clientes"
+      }
     },
     "solutions": {
-      "liquidCoolingDC": { "en": "Liquid Cooling DC", "zh": "液冷数据中心", "ru": "Жидкостное охлаждение ДЦ", "pt": "Data Center com Resfriamento Líquido", "es": "Centro de Datos con Enfriamiento Líquido" },
-      "prefabContainerDC": { "en": "Prefab Container DC", "zh": "预制集装箱数据中心", "ru": "Контейнерный ДЦ", "pt": "Data Center Prefabricado em Container", "es": "Centro de Datos Prefabricado en Contenedor" },
-      "cabinetModularDC": { "en": "Cabinet Modular DC", "zh": "柜式模块化数据中心", "ru": "Шкафный модульный ДЦ", "pt": "Data Center Modular em Armário", "es": "Centro de Datos Modular en Gabinete" },
-      "rowModularDC": { "en": "Row Modular DC", "zh": "列式模块化数据中心", "ru": "Рядный модульный ДЦ", "pt": "Data Center Modular em Fileira", "es": "Centro de Datos Modular en Fila" },
-      "aisleModularDC": { "en": "Aisle Modular DC", "zh": "微模块数据中心", "ru": "Проходной модульный ДЦ", "pt": "Data Center Modular em Corredor", "es": "Centro de Datos Modular en Pasillo" }
+      "liquidCoolingDC": {
+        "en": "Liquid Cooling DC",
+        "zh": "液冷数据中心",
+        "ru": "Жидкостное охлаждение ДЦ",
+        "pt": "Data Center com Resfriamento Líquido",
+        "es": "Centro de Datos con Enfriamiento Líquido"
+      },
+      "prefabContainerDC": {
+        "en": "Prefab Container DC",
+        "zh": "预制集装箱数据中心",
+        "ru": "Контейнерный ДЦ",
+        "pt": "Data Center Prefabricado em Container",
+        "es": "Centro de Datos Prefabricado en Contenedor"
+      },
+      "cabinetModularDC": {
+        "en": "Cabinet Modular DC",
+        "zh": "柜式模块化数据中心",
+        "ru": "Шкафный модульный ДЦ",
+        "pt": "Data Center Modular em Armário",
+        "es": "Centro de Datos Modular en Gabinete"
+      },
+      "rowModularDC": {
+        "en": "Row Modular DC",
+        "zh": "列式模块化数据中心",
+        "ru": "Рядный модульный ДЦ",
+        "pt": "Data Center Modular em Fileira",
+        "es": "Centro de Datos Modular en Fila"
+      },
+      "aisleModularDC": {
+        "en": "Aisle Modular DC",
+        "zh": "微模块数据中心",
+        "ru": "Проходной модульный ДЦ",
+        "pt": "Data Center Modular em Corredor",
+        "es": "Centro de Datos Modular en Pasillo"
+      }
     },
     "products": {
-      "uninterruptiblePowerSupplies": { "zh": "不间断电源", "ru": "Источники бесперебойного питания", "pt": "Fontes de Alimentação Ininterrupta", "es": "Fuentes de Alimentación Ininterrumpida" },
-      "dcPowerSystems": { "zh": "直流电源系统", "ru": "Системы постоянного тока", "pt": "Sistemas de Energia CC", "es": "Sistemas de Energía CC" },
-      "powerDistribution": { "zh": "电力分配", "ru": "Распределение электроэнергии", "pt": "Distribuição de Energia", "es": "Distribución de Energía" },
-      "staticTransferSwitches": { "zh": "静态转换开关", "ru": "Статические переключатели", "pt": "Chaves Estáticas de Transferência", "es": "Conmutadores Estáticos de Transferencia" },
-      "buswayAndBusduct": { "zh": "母线槽", "ru": "Шинопроводы", "pt": "Dutos e Barramentos", "es": "Canalizaciones y Barrajes" },
-      "battery": { "zh": "电池", "ru": "Аккумуляторы", "pt": "Baterias", "es": "Baterías" },
-      "liquidCoolingSolutions": { "zh": "液冷解决方案", "ru": "Жидкостное охлаждение", "pt": "Soluções de Resfriamento Líquido", "es": "Soluciones de Enfriamiento Líquido" },
-      "precisionAirConditioning": { "zh": "精密空调", "ru": "Прецизионные кондиционеры", "pt": "Ar-Condicionado de Precisão", "es": "Aire Acondicionado de Precisión" },
-      "roomCooling": { "zh": "房间级冷却", "ru": "Комнатное охлаждение", "pt": "Refrigeração de Sala", "es": "Refrigeración de Sala" },
-      "inRowCooling": { "zh": "列间冷却", "ru": "Межрядное охлаждение", "pt": "Refrigeração entre Fileiras", "es": "Refrigeración entre Filas" },
-      "rackCooling": { "zh": "机架级冷却", "ru": "Охлаждение стойки", "pt": "Refrigeração de Rack", "es": "Refrigeración de Rack" },
-      "pumpedRefrigerantCooling": { "zh": "泵送制冷剂冷却", "ru": "Охлаждение хладагентом", "pt": "Refrigeração com Fluído Bombgeado", "es": "Refrigeración con Fluido Bombeado" },
-      "telecomEnclosureAirConditioner": { "zh": "通信机柜空调", "ru": "Кондиционер для телекоммуникационных шкафов", "pt": "Ar-Condicionado para Gabinetes de Telecomunicações", "es": "Aire Acondicionado para Gabinetes de Telecomunicaciones" },
-      "heatRejection": { "zh": "散热系统", "ru": "Системы отвода тепла", "pt": "Rejeição de Calor", "es": "Rechazo de Calor" },
-      "evaporativeFreeCooling": { "zh": "蒸发式自然冷却", "ru": "Испарительное свободное охлаждение", "pt": "Resfriamento Evaporativo Gratuito", "es": "Enfriamiento Evaporativo Gratuito" },
-      "freeCoolingChillers": { "zh": "自然冷却冷水机组", "ru": "Чиллеры с свободным охлаждением", "pt": "Chillers com Resfriamento Gratuito", "es": "Chillers con Enfriamiento Gratuito" },
-      "integratedContainments": { "zh": "一体化机柜", "ru": "Интегрированные контейнеры", "pt": "Contêineres Integrados", "es": "Contenedores Integrados" },
-      "outdoorEnclosures": { "zh": "户外机柜", "ru": "Уличные шкафы", "pt": "Gabinetes Externos", "es": "Gabinetes Exteriores" },
-      "racksAndCabinets": { "zh": "机柜", "ru": "Стойки и шкафы", "pt": "Racks e Armários", "es": "Racks y Gabinetes" },
-      "monitoringHost": { "zh": "监控主机", "ru": "Мониторинговый хост", "pt": "Host de Monitoramento", "es": "Host de Monitoreo" },
-      "batteryMonitoringSystem": { "zh": "电池监控系统", "ru": "Система мониторинга аккумуляторов", "pt": "Sistema de Monitoramento de Bateria", "es": "Sistema de Monitoreo de Baterías" },
-      "environmentalSensor": { "zh": "环境传感器", "ru": "Датчик окружающей среды", "pt": "Sensor Ambiental", "es": "Sensor Ambiental" },
-      "rackAssetManagement": { "zh": "机架资产管理", "ru": "Управление активами стойки", "pt": "Gestão de Ativos do Rack", "es": "Gestión de Activos del Rack" },
-      "kvm": { "zh": "KVM切换器", "ru": "KVM-коммутатор", "pt": "KVM", "es": "KVM" }
+      "uninterruptiblePowerSupplies": {
+        "en": "Uninterruptible Power Supplies",
+        "zh": "不间断电源",
+        "ru": "Источники бесперебойного питания",
+        "pt": "Fontes de Alimentação Ininterrupta",
+        "es": "Fuentes de Alimentación Ininterrumpida"
+      },
+      "dcPowerSystems": {
+        "zh": "直流电源系统",
+        "ru": "Системы постоянного тока",
+        "pt": "Sistemas de Energia CC",
+        "es": "Sistemas de Energía CC"
+      },
+      "powerDistribution": {
+        "zh": "电力分配",
+        "ru": "Распределение электроэнергии",
+        "pt": "Distribuição de Energia",
+        "es": "Distribución de Energía"
+      },
+      "staticTransferSwitches": {
+        "zh": "静态转换开关",
+        "ru": "Статические переключатели",
+        "pt": "Chaves Estáticas de Transferência",
+        "es": "Conmutadores Estáticos de Transferencia"
+      },
+      "buswayAndBusduct": {
+        "zh": "母线槽",
+        "ru": "Шинопроводы",
+        "pt": "Dutos e Barramentos",
+        "es": "Canalizaciones y Barrajes"
+      },
+      "battery": {
+        "zh": "电池",
+        "ru": "Аккумуляторы",
+        "pt": "Baterias",
+        "es": "Baterías"
+      },
+      "liquidCoolingSolutions": {
+        "zh": "液冷解决方案",
+        "ru": "Жидкостное охлаждение",
+        "pt": "Soluções de Resfriamento Líquido",
+        "es": "Soluciones de Enfriamiento Líquido"
+      },
+      "precisionAirConditioning": {
+        "zh": "精密空调",
+        "ru": "Прецизионные кондиционеры",
+        "pt": "Ar-Condicionado de Precisão",
+        "es": "Aire Acondicionado de Precisión"
+      },
+      "roomCooling": {
+        "zh": "房间级冷却",
+        "ru": "Комнатное охлаждение",
+        "pt": "Refrigeração de Sala",
+        "es": "Refrigeración de Sala"
+      },
+      "inRowCooling": {
+        "zh": "列间冷却",
+        "ru": "Межрядное охлаждение",
+        "pt": "Refrigeração entre Fileiras",
+        "es": "Refrigeración entre Filas"
+      },
+      "rackCooling": {
+        "zh": "机架级冷却",
+        "ru": "Охлаждение стойки",
+        "pt": "Refrigeração de Rack",
+        "es": "Refrigeración de Rack"
+      },
+      "pumpedRefrigerantCooling": {
+        "zh": "泵送制冷剂冷却",
+        "ru": "Охлаждение хладагентом",
+        "pt": "Refrigeração com Fluído Bombgeado",
+        "es": "Refrigeración con Fluido Bombeado"
+      },
+      "telecomEnclosureAirConditioner": {
+        "zh": "通信机柜空调",
+        "ru": "Кондиционер для телекоммуникационных шкафов",
+        "pt": "Ar-Condicionado para Gabinetes de Telecomunicações",
+        "es": "Aire Acondicionado para Gabinetes de Telecomunicaciones"
+      },
+      "heatRejection": {
+        "zh": "散热系统",
+        "ru": "Системы отвода тепла",
+        "pt": "Rejeição de Calor",
+        "es": "Rechazo de Calor"
+      },
+      "evaporativeFreeCooling": {
+        "zh": "蒸发式自然冷却",
+        "ru": "Испарительное свободное охлаждение",
+        "pt": "Resfriamento Evaporativo Gratuito",
+        "es": "Enfriamiento Evaporativo Gratuito"
+      },
+      "freeCoolingChillers": {
+        "zh": "自然冷却冷水机组",
+        "ru": "Чиллеры с свободным охлаждением",
+        "pt": "Chillers com Resfriamento Gratuito",
+        "es": "Chillers con Enfriamiento Gratuito"
+      },
+      "integratedContainments": {
+        "zh": "一体化机柜",
+        "ru": "Интегрированные контейнеры",
+        "pt": "Contêineres Integrados",
+        "es": "Contenedores Integrados"
+      },
+      "outdoorEnclosures": {
+        "zh": "户外机柜",
+        "ru": "Уличные шкафы",
+        "pt": "Gabinetes Externos",
+        "es": "Gabinetes Exteriores"
+      },
+      "racksAndCabinets": {
+        "zh": "机柜",
+        "ru": "Стойки и шкафы",
+        "pt": "Racks e Armários",
+        "es": "Racks y Gabinetes"
+      },
+      "monitoringHost": {
+        "zh": "监控主机",
+        "ru": "Мониторинговый хост",
+        "pt": "Host de Monitoramento",
+        "es": "Host de Monitoreo"
+      },
+      "batteryMonitoringSystem": {
+        "zh": "电池监控系统",
+        "ru": "Система мониторинга аккумуляторов",
+        "pt": "Sistema de Monitoramento de Bateria",
+        "es": "Sistema de Monitoreo de Baterías"
+      },
+      "environmentalSensor": {
+        "zh": "环境传感器",
+        "ru": "Датчик окружающей среды",
+        "pt": "Sensor Ambiental",
+        "es": "Sensor Ambiental"
+      },
+      "rackAssetManagement": {
+        "zh": "机架资产管理",
+        "ru": "Управление активами стойки",
+        "pt": "Gestão de Ativos do Rack",
+        "es": "Gestión de Activos del Rack"
+      },
+      "kvm": {
+        "zh": "KVM切换器",
+        "ru": "KVM-коммутатор",
+        "pt": "KVM",
+        "es": "KVM"
+      }
     }
   },
   "product_attributes": {
-    "pa_cooling-capacity": { "zh": "制冷量", "ru": "Холодильная мощность", "pt": "Capacidade de resfriamento", "es": "Capacidad de refrigeración" },
-    "pa_power-consumption": { "zh": "功耗", "ru": "Потребление энергии", "pt": "Consumo de energia", "es": "Consumo de energía" },
-    "pa_dimensions": { "zh": "尺寸", "ru": "Размеры", "pt": "Dimensões", "es": "Dimensiones" },
-    "pa_weight": { "zh": "重量", "ru": "Вес", "pt": "Peso", "es": "Peso" },
-    "pa_voltage": { "zh": "电压", "ru": "Напряжение", "pt": "Tensão", "es": "Voltaje" },
-    "pa_current": { "zh": "电流", "ru": "Ток", "pt": "Corrente", "es": "Corriente" },
-    "pa_frequency": { "zh": "频率", "ru": "Частота", "pt": "Frequência", "es": "Frecuencia" },
-    "pa_efficiency": { "zh": "效率", "ru": "КПД", "pt": "Eficiência", "es": "Eficiencia" },
-    "pa_operating-temperature": { "zh": "工作温度", "ru": "Рабочая температура", "pt": "Temperatura de operação", "es": "Temperatura de operación" },
-    "pa_noise-level": { "zh": "噪音等级", "ru": "Уровень шума", "pt": "Nível de ruído", "es": "Nivel de ruido" }
+    "pa_cooling-capacity": {
+      "zh": "制冷量",
+      "ru": "Холодильная мощность",
+      "pt": "Capacidade de resfriamento",
+      "es": "Capacidad de refrigeración"
+    },
+    "pa_power-consumption": {
+      "zh": "功耗",
+      "ru": "Потребление энергии",
+      "pt": "Consumo de energia",
+      "es": "Consumo de energía"
+    },
+    "pa_dimensions": {
+      "zh": "尺寸",
+      "ru": "Размеры",
+      "pt": "Dimensões",
+      "es": "Dimensiones"
+    },
+    "pa_weight": {
+      "zh": "重量",
+      "ru": "Вес",
+      "pt": "Peso",
+      "es": "Peso"
+    },
+    "pa_voltage": {
+      "zh": "电压",
+      "ru": "Напряжение",
+      "pt": "Tensão",
+      "es": "Voltaje"
+    },
+    "pa_current": {
+      "zh": "电流",
+      "ru": "Ток",
+      "pt": "Corrente",
+      "es": "Corriente"
+    },
+    "pa_frequency": {
+      "zh": "频率",
+      "ru": "Частота",
+      "pt": "Frequência",
+      "es": "Frecuencia"
+    },
+    "pa_efficiency": {
+      "zh": "效率",
+      "ru": "КПД",
+      "pt": "Eficiência",
+      "es": "Eficiencia"
+    },
+    "pa_operating-temperature": {
+      "zh": "工作温度",
+      "ru": "Рабочая температура",
+      "pt": "Temperatura de operação",
+      "es": "Temperatura de operación"
+    },
+    "pa_noise-level": {
+      "zh": "噪音等级",
+      "ru": "Уровень шума",
+      "pt": "Nível de ruído",
+      "es": "Nivel de ruido"
+    }
   }
 }

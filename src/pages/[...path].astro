@@ -6,6 +6,7 @@ import GenericPocPage from '@/components/poc/GenericPocPage.astro';
 import HomeHero from '@/components/HomeHero.astro';
 import NewsReleasesPage from '@/components/news-releases/NewsReleasesPage.astro';
 import ProductCategoryPage from '@/components/product-category/ProductCategoryPage.astro';
+import ProductSinglePage from '@/components/product-single/ProductSinglePage.astro';
 import { fetchPocRoutes, fetchRouteContent } from '@/lib/content-api';
 import { adaptPage } from '@/lib/page-adapter';
 
@@ -99,6 +100,8 @@ const pathWithoutLang = route.path.replace(/^\/[a-z]{2}\//, '/');
     <NewsReleasesPage page={page} lang={lang} />
   ) : page.kind === 'productCategory' ? (
     <ProductCategoryPage page={page} lang={lang} />
+  ) : page.kind === 'productSingle' ? (
+    <ProductSinglePage page={page} lang={lang} />
   ) : page.kind === 'articleSingle' ? (
     <ArticleSinglePage page={page} lang={lang} />
   ) : (

@@ -1,4 +1,12 @@
-const API_BASE_URL = import.meta.env.CONTENT_API_BASE_URL ?? 'http://soeteck.local';
+// API base URL 来源优先级：
+// 1. `CONTENT_API_BASE_URL` 环境变量（生产/Cloudflare Pages 通过此设置）
+// 2. `PUBLIC_CONTENT_API_BASE_URL`（Astro 客户端可访问变体，见 https://docs.astro.build/en/guides/environment-variables/）
+// 3. 生产站点 `https://cms.soeteck.com`（fallback，防止环境变量遗漏时构建失败）
+// 本地开发请在 `.env` 中设 `CONTENT_API_BASE_URL=http://soeteck.local.test`
+const API_BASE_URL =
+  import.meta.env.CONTENT_API_BASE_URL ??
+  import.meta.env.PUBLIC_CONTENT_API_BASE_URL ??
+  'https://cms.soeteck.com';
 
 export type RouteType = 'home' | 'page' | 'product_category' | 'product' | 'article' | 'article_category_archive';
 
@@ -229,6 +237,33 @@ export interface ContentApiResponse {
     gallery: Array<{ path: string; alt?: string }>;
     summary: string;
     descriptionHtml: string;
+    // 详情页 Hero 使用
+    shortOverview?: string;
+    highlights?: Array<{ label: string; value: string }>;
+    // 详情页 Tabs 使用
+    overview?: string;
+    features?: string;
+    applications?: string;
+    modelDescription?: string;
+    specifications?: Array<{ name: string; details: Array<{ name: string; value: string }> }>;
+    variations?: {
+      productId: string;
+      headers: string[];
+      rows: Array<Array<string | number>>;
+      hasMore: boolean;
+    } | null;
+    downloads?: Array<{ id: number; name: string; file: string }>;
+    primaryCategory?: {
+      id: string;
+      name: string;
+      slug: string;
+      path: string;
+    } | null;
+    inquiryContext?: {
+      productId: string | null;
+      productTitle: string;
+      path: string | null;
+    };
   };
   article?: {
     id: string | null;

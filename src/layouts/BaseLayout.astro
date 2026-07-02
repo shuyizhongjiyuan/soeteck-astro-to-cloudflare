@@ -2411,4 +2411,60 @@ const globalConfig = await fetchGlobalConfig(lang);
       animation: none;
     }
   }
+
+  /* ============================================================
+   * 通用按钮组件（从 WP 主题 assets/css/components.css 移植）
+   * 用于产品详情页 Hero CTA、Contact 页 submit、CTA 卡片等
+   * ============================================================ */
+  .soeteck-button,
+  .soeteck-button-primary,
+  .soeteck-button-outline {
+    display: inline-flex;
+    font-family: var(--soeteck-font-ui);
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 0 24px;
+    border: 1px solid transparent;
+    border-radius: var(--soeteck-radius-sm);
+    font-size: var(--soeteck-text-md);
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color var(--soeteck-transition-fast),
+                color var(--soeteck-transition-fast),
+                border-color var(--soeteck-transition-fast),
+                transform var(--soeteck-transition-fast);
+    cursor: pointer;
+  }
+
+  .soeteck-button:hover,
+  .soeteck-button-primary:hover,
+  .soeteck-button-outline:hover {
+    transform: translateY(-1px);
+  }
+
+  .soeteck-button-primary {
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+    border-color: var(--soeteck-primary);
+  }
+
+  .soeteck-button-primary:hover {
+    background: var(--soeteck-primary-dark);
+    color: var(--soeteck-white);
+    border-color: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-button-outline {
+    background: transparent;
+    color: var(--soeteck-primary);
+    border-color: var(--soeteck-primary);
+  }
+
+  .soeteck-button-outline:hover {
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+  }
 </style>

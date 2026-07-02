@@ -1,6 +1,6 @@
 import type { ContentApiArticleCard, ContentApiResponse, RouteType } from '@/lib/content-api';
 
-export type PageKind = 'home' | 'about' | 'newsReleases' | 'articleSingle' | 'productCategory' | 'generic';
+export type PageKind = 'home' | 'about' | 'newsReleases' | 'articleSingle' | 'productCategory' | 'productSingle' | 'generic';
 
 export interface PageSeo {
   title: string;
@@ -137,6 +137,10 @@ function pageKindFor(content: ContentApiResponse): PageKind {
 
   if (content.route.type === 'product_category') {
     return 'productCategory';
+  }
+
+  if (content.route.type === 'product') {
+    return 'productSingle';
   }
 
   if (content.route.type === 'article' && normalizedPath === '/news-and-insights/blogs/free-cooling-for-data-center-the-energy-savings/') {
