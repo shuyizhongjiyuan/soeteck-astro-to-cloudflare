@@ -1,0 +1,151 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import type { PageBreadcrumb } from '@/lib/page-adapter';
+import { NEWS_RELEASES_HERO } from './news-releases-content';
+
+interface Props {
+  breadcrumbs: PageBreadcrumb[];
+  title?: string;
+  description?: string;
+  lang?: string;
+}
+
+const { breadcrumbs, title = NEWS_RELEASES_HERO.title, description = NEWS_RELEASES_HERO.description, lang = 'en' } = Astro.props;
+---
+<header class="news-archive-hero">
+  <div class="soeteck-container news-archive-hero__inner">
+    <Breadcrumbs items={breadcrumbs} class="news-archive-hero__breadcrumbs" lang={lang} />
+    <p class="news-archive-hero__eyebrow">Newsroom</p>
+    <div class="news-archive-hero__grid">
+      <div class="news-archive-hero__copy">
+        <h1>{title}</h1>
+        {description && <p>{description}</p>}
+      </div>
+      <aside class="news-archive-hero__panel" aria-label={NEWS_RELEASES_HERO.panelLabel}>
+        <p>{NEWS_RELEASES_HERO.panelLabel}</p>
+        <div>
+          {NEWS_RELEASES_HERO.panelItems.map((item) => <span><span>{item}</span></span>)}
+        </div>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<style>
+  .news-archive-hero {
+    background: #fff;
+  }
+
+  .news-archive-hero__inner {
+    position: relative;
+    padding-top: 150px;
+    padding-bottom: clamp(34px, 5vw, 72px);
+  }
+
+  :global(.news-archive-hero__breadcrumbs) {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    margin: 0;
+  }
+
+  :global(.soeteck-breadcrumbs.news-archive-hero__breadcrumbs) {
+    margin: 0;
+  }
+
+  @media (min-width: 481px) {
+    :global(.news-archive-hero__breadcrumbs) {
+      top: 20px;
+    }
+  }
+
+  .news-archive-hero__eyebrow {
+    margin: 0 0 14px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .news-archive-hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    gap: clamp(28px, 5vw, 72px);
+    align-items: end;
+  }
+
+  .news-archive-hero__copy {
+    max-width: 780px;
+  }
+
+  .news-archive-hero__copy h1 {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(2.5rem, 5.5vw, 5.25rem);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.04;
+    letter-spacing: -0.045em;
+  }
+
+  .news-archive-hero__copy p {
+    margin: 22px 0 0;
+    color: var(--soeteck-text-soft);
+    font-size: clamp(1rem, 1.25vw, 1.1875rem);
+    line-height: 1.7;
+  }
+
+  .news-archive-hero__panel {
+    align-self: end;
+    padding: clamp(22px, 3vw, 30px);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    background: linear-gradient(180deg, var(--soeteck-white), var(--soeteck-surface));
+    box-shadow: 0 18px 44px rgba(15, 35, 70, 0.06);
+  }
+
+  .news-archive-hero__panel p {
+    margin: 0 0 18px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .news-archive-hero__panel div {
+    display: grid;
+    gap: 12px;
+  }
+
+  .news-archive-hero__panel span {
+    display: block;
+  }
+
+  .news-archive-hero__panel div > span {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.45;
+  }
+
+  .news-archive-hero__panel div > span::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 8px;
+    height: 8px;
+    margin-top: 6px;
+    border-radius: 999px;
+    background: var(--soeteck-primary);
+  }
+
+  @media (max-width: 991px) {
+    .news-archive-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

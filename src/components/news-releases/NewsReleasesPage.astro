@@ -1,0 +1,59 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import NewsArchiveHero from './NewsArchiveHero.astro';
+import NewsroomFeaturedSlider from './NewsroomFeaturedSlider.astro';
+import NewsroomPressList from './NewsroomPressList.astro';
+import NewsroomSidebar from './NewsroomSidebar.astro';
+import { NEWS_RELEASES_HERO } from './news-releases-content';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+const featuredIds = new Set(page.featuredArticles.map((article) => article.id).filter((id): id is number => typeof id === 'number'));
+const pressArticles = page.articles.filter((article) => !featuredIds.has(article.id ?? -1));
+const fallbackPressArticles = pressArticles.length > 0 ? pressArticles : page.articles;
+const featuredArticles = page.featuredArticles.length > 0 ? page.featuredArticles : page.articles.slice(0, 3);
+const description = page.source.archive?.description || NEWS_RELEASES_HERO.description;
+---
+<main class="news-releases-page">
+  <NewsArchiveHero breadcrumbs={page.breadcrumbs} title={page.title || NEWS_RELEASES_HERO.title} description={description} lang={lang} />
+  <div class="soeteck-container news-releases-page__container">
+    <div class="newsroom-layout">
+      <div class="newsroom-layout__main">
+        <NewsroomFeaturedSlider articles={featuredArticles} />
+        <NewsroomPressList articles={fallbackPressArticles} />
+      </div>
+      <NewsroomSidebar />
+    </div>
+  </div>
+</main>
+
+<style>
+  .news-releases-page {
+    background: var(--soeteck-white);
+  }
+
+  .news-releases-page__container {
+    padding: clamp(36px, 5vw, 72px) 0 clamp(64px, 8vw, 112px);
+  }
+
+  .newsroom-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    gap: clamp(28px, 4vw, 56px);
+    align-items: start;
+  }
+
+  .newsroom-layout__main {
+    min-width: 0;
+  }
+
+  @media (max-width: 991px) {
+    .newsroom-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

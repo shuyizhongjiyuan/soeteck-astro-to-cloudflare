@@ -1,0 +1,104 @@
+---
+interface Crumb {
+  label: string;
+  path: string;
+}
+
+interface Props {
+  items: Crumb[];
+  class?: string;
+  lang?: string;
+}
+
+const { items, class: className = '', lang: langProp } = Astro.props;
+
+// Auto-detect language from breadcrumb paths if not provided
+function detectLang(items: Crumb[]): string {
+  if (langProp) return langProp;
+  for (const item of items) {
+    if (item.path) {
+      const match = item.path.match(/^\/(zh|ru|pt|es)\//);
+      if (match) return match[1];
+    }
+  }
+  return 'en';
+}
+
+const lang = detectLang(items);
+---
+{items.length > 0 && (
+  <nav aria-label="Breadcrumb" class:list={['soeteck-breadcrumbs', 'breadcrumbs', className]}>
+    <ol>
+      {items.map((item, index) => {
+        const label = item.label;
+        return (
+          <li>
+            {index < items.length - 1 && item.path ? <a href={item.path}>{label}</a> : <span aria-current="page">{label}</span>}
+          </li>
+        );
+      })}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .soeteck-breadcrumbs {
+    margin: 15px 0 18px;
+    color: var(--soeteck-muted);
+    font-size: 14px;
+    font-weight: var(--soeteck-weight-medium);
+    line-height: 1.4;
+  }
+
+  @media (min-width: 481px) {
+    .soeteck-breadcrumbs {
+      margin-top: 20px;
+    }
+  }
+
+  .soeteck-breadcrumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .soeteck-breadcrumbs li {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .soeteck-breadcrumbs li + li::before {
+    content: '|';
+    margin: 0 4px;
+    color: currentColor;
+  }
+
+  .soeteck-breadcrumbs a,
+  .soeteck-breadcrumbs span {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .soeteck-breadcrumbs a:hover {
+    color: var(--soeteck-primary);
+  }
+
+  @media (max-width: 480px) {
+    .soeteck-breadcrumbs ol {
+      display: block;
+    }
+
+    .soeteck-breadcrumbs li {
+      display: inline;
+    }
+
+    .soeteck-breadcrumbs a,
+    .soeteck-breadcrumbs span {
+      overflow-wrap: anywhere;
+    }
+  }
+</style>

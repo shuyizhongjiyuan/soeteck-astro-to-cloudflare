@@ -1,0 +1,118 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import type { AdaptedArticleSingle, PageBreadcrumb } from '@/lib/page-adapter';
+
+interface Props {
+  article: AdaptedArticleSingle;
+  breadcrumbs: PageBreadcrumb[];
+  lang?: string;
+}
+
+const { article, breadcrumbs, lang = 'en' } = Astro.props;
+const localeMap: Record<string, string> = { en: 'en-US', zh: 'zh-CN', ru: 'ru-RU', pt: 'pt-BR', es: 'es-ES' };
+const dateLocale = localeMap[lang] ?? 'en-US';
+const displayDate = article.date ? new Date(article.date).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+---
+<div class="container soeteck-single-post__container">
+  <Breadcrumbs items={breadcrumbs} lang={lang} />
+  <header class="soeteck-single-post__hero">
+    <div class="soeteck-single-post__kicker">
+      {article.primaryCategory && <a class="soeteck-single-post__category" href={article.primaryCategory.path}>{article.primaryCategory.name}</a>}
+      {article.date && <time class="soeteck-single-post__date" datetime={article.date}>{displayDate}</time>}
+      <span class="soeteck-single-post__author">Soeteck</span>
+    </div>
+    <h1 class="soeteck-single-post__title">{article.title}</h1>
+  </header>
+  {article.featuredImage && (
+    <figure class="soeteck-single-post__featured-media">
+      <img class="soeteck-single-post__featured-image" src={article.featuredImage.path} alt={article.featuredImage.alt} loading="eager" fetchpriority="high" />
+    </figure>
+  )}
+</div>
+
+<style>
+  .soeteck-single-post__container {
+    padding-top: 0;
+  }
+
+  .soeteck-single-post__hero {
+    padding: clamp(16px, 3vw, 38px) 0 clamp(24px, 3vw, 40px);
+  }
+
+  .soeteck-single-post__kicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 16px;
+    margin-bottom: 28px;
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+  }
+
+  .soeteck-single-post__category {
+    color: var(--soeteck-primary);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .soeteck-single-post__category:hover {
+    color: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-single-post__date,
+  .soeteck-single-post__author {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .soeteck-single-post__date::before,
+  .soeteck-single-post__author::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    margin-right: 16px;
+    border-radius: 999px;
+    background: var(--soeteck-border);
+  }
+
+  .soeteck-single-post__title {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(2.25rem, 5vw, 4.75rem);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+
+  .soeteck-single-post__featured-media {
+    margin: 0 0 clamp(38px, 5vw, 72px);
+    overflow: hidden;
+    border-radius: var(--soeteck-radius-lg);
+    background: var(--soeteck-media-bg);
+  }
+
+  .soeteck-single-post__featured-image {
+    width: 100%;
+    height: auto;
+    max-height: 620px;
+    object-fit: cover;
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-single-post__hero {
+      padding-top: 24px;
+    }
+
+    .soeteck-single-post__title {
+      font-size: clamp(2rem, 10vw, 3rem);
+      letter-spacing: -0.03em;
+    }
+
+    .soeteck-single-post__featured-media {
+      border-radius: var(--soeteck-radius);
+    }
+  }
+</style>

@@ -1,0 +1,406 @@
+---
+import type { AdaptedArticleCard } from '@/lib/page-adapter';
+import { formatDisplayDate } from './news-releases-content';
+
+interface Props {
+  articles: AdaptedArticleCard[];
+}
+
+const { articles } = Astro.props;
+---
+{articles.length > 0 && (
+  <section class="newsroom-featured-slider" aria-labelledby="newsroom-featured-title" data-slider-duration="5600">
+    <div class="newsroom-featured-slider__heading">
+      <p>Featured News</p>
+      <h2 id="newsroom-featured-title">Official updates from Soeteck</h2>
+    </div>
+    <div class="newsroom-featured-slider__viewport">
+      {articles.map((article, index) => (
+        <article class:list={["newsroom-featured-slider__pane", { 'is-active': index === 0 }]} data-slide-index={index} {...(index === 0 ? {} : { 'aria-hidden': 'true' })}>
+          <a class="newsroom-featured-slider__image-link" href={article.path} aria-label={`Read featured release: ${article.title}`}>
+            {article.featuredImage ? (
+              <img class="newsroom-featured-slider__image" src={article.featuredImage.path} alt={article.featuredImage.alt} loading="eager" fetchpriority={index === 0 ? 'high' : 'auto'} />
+            ) : (
+              <span class="newsroom-featured-slider__image newsroom-featured-slider__image--placeholder" aria-hidden="true"></span>
+            )}
+          </a>
+          <div class="newsroom-featured-slider__overlay" aria-hidden="true"></div>
+          <div class="newsroom-featured-slider__content">
+            <span class="newsroom-featured-slider__badge">Featured News</span>
+            {article.date && <time class="newsroom-featured-slider__date" datetime={article.date}>{formatDisplayDate(article.date)}</time>}
+            <h3 class="newsroom-featured-slider__title"><a href={article.path}>{article.title}</a></h3>
+            {article.excerpt && <p class="newsroom-featured-slider__excerpt">{article.excerpt}</p>}
+            <a class="newsroom-featured-slider__cta" href={article.path}>Read release</a>
+          </div>
+        </article>
+      ))}
+    </div>
+    {articles.length > 1 && (
+      <div class="newsroom-featured-slider__nav" aria-label="Featured news navigation">
+        {articles.map((article, index) => (
+          <button class:list={["newsroom-featured-slider__nav-item", { 'is-active': index === 0 }]} type="button" data-slide-index={index} aria-current={index === 0 ? 'true' : undefined} aria-label={`Show featured release: ${article.title}`}>
+            <span class="newsroom-featured-slider__track" aria-hidden="true"><span class="newsroom-featured-slider__progress"></span></span>
+          </button>
+        ))}
+      </div>
+    )}
+  </section>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.newsroom-featured-slider').forEach((slider) => {
+    const panes = [...slider.querySelectorAll<HTMLElement>('.newsroom-featured-slider__pane')];
+    const navItems = [...slider.querySelectorAll<HTMLButtonElement>('.newsroom-featured-slider__nav-item')];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (panes.length < 2 || navItems.length !== panes.length || reduceMotion) {
+      panes[0]?.classList.add('is-active');
+      panes.slice(1).forEach((pane) => pane.setAttribute('aria-hidden', 'true'));
+      navItems[0]?.setAttribute('aria-current', 'true');
+      return;
+    }
+
+    const duration = Number.parseInt(slider.dataset.sliderDuration || '5000', 10);
+    let currentIndex = 0;
+    let startedAt = 0;
+    let elapsedBeforePause = 0;
+    let animationFrame = 0;
+    let isPaused = false;
+
+    slider.style.setProperty('--soeteck-featured-slider-count', String(panes.length));
+
+    const progressFor = (index: number) => navItems[index]?.querySelector<HTMLElement>('.newsroom-featured-slider__progress');
+
+    const setProgress = (index: number, value: number) => {
+      const progress = progressFor(index);
+      if (progress) {
+        progress.style.transform = `scaleX(${Math.max(0, Math.min(value, 1))})`;
+      }
+    };
+
+    const frame = () => {
+      if (!isPaused) {
+        const elapsed = elapsedBeforePause + performance.now() - startedAt;
+        setProgress(currentIndex, elapsed / duration);
+
+        if (elapsed >= duration) {
+          activateSlide((currentIndex + 1) % panes.length);
+          return;
+        }
+      }
+
+      animationFrame = window.requestAnimationFrame(frame);
+    };
+
+    const activateSlide = (index: number) => {
+      window.cancelAnimationFrame(animationFrame);
+      currentIndex = index;
+      startedAt = performance.now();
+      elapsedBeforePause = 0;
+      isPaused = false;
+
+      panes.forEach((pane, paneIndex) => {
+        const isActive = paneIndex === index;
+        pane.classList.toggle('is-active', isActive);
+        if (isActive) {
+          pane.removeAttribute('aria-hidden');
+          pane.getBoundingClientRect();
+        } else {
+          pane.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      navItems.forEach((item, itemIndex) => {
+        item.classList.toggle('is-active', itemIndex === index);
+        item.classList.toggle('is-complete', itemIndex < index);
+        setProgress(itemIndex, itemIndex < index ? 1 : 0);
+        if (itemIndex === index) {
+          item.setAttribute('aria-current', 'true');
+        } else {
+          item.removeAttribute('aria-current');
+        }
+      });
+
+      animationFrame = window.requestAnimationFrame(frame);
+    };
+
+    const pause = () => {
+      if (isPaused) {
+        return;
+      }
+      isPaused = true;
+      elapsedBeforePause += performance.now() - startedAt;
+    };
+
+    const resume = () => {
+      if (!isPaused) {
+        return;
+      }
+      isPaused = false;
+      startedAt = performance.now();
+    };
+
+    navItems.forEach((item, index) => {
+      item.addEventListener('click', () => activateSlide(index));
+      item.addEventListener('mouseenter', () => {
+        if (index === currentIndex) {
+          pause();
+        }
+      });
+      item.addEventListener('mouseleave', () => {
+        if (index === currentIndex) {
+          resume();
+        }
+      });
+    });
+
+    panes.forEach((pane) => {
+      pane.addEventListener('mouseenter', () => {
+        if (pane.classList.contains('is-active')) {
+          pause();
+        }
+      });
+      pane.addEventListener('mouseleave', (event) => {
+        if ((event.relatedTarget as Element | null)?.closest('.newsroom-featured-slider__nav-item')) {
+          return;
+        }
+        if (pane.classList.contains('is-active')) {
+          resume();
+        }
+      });
+    });
+
+    activateSlide(0);
+
+    window.addEventListener('pagehide', () => window.cancelAnimationFrame(animationFrame), { once: true });
+  });
+</script>
+
+<style>
+  .newsroom-featured-slider {
+    position: relative;
+    margin-bottom: clamp(34px, 5vw, 80px);
+  }
+
+  .newsroom-featured-slider__heading {
+    margin-bottom: 18px;
+  }
+
+  .newsroom-featured-slider__heading p {
+    margin: 0 0 8px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .newsroom-featured-slider__heading h2 {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(1.55rem, 2.6vw, 2.15rem);
+    line-height: 1.18;
+  }
+
+  .newsroom-featured-slider__viewport {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: var(--soeteck-radius-lg);
+    background: #0e1624;
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.16);
+  }
+
+  .newsroom-featured-slider__pane {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    min-height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 360ms ease;
+  }
+
+  .newsroom-featured-slider__pane.is-active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .newsroom-featured-slider__image-link,
+  .newsroom-featured-slider__overlay,
+  .newsroom-featured-slider__image,
+  .newsroom-featured-slider__image--placeholder {
+    position: absolute;
+    inset: 0;
+  }
+
+  .newsroom-featured-slider__image-link {
+    display: block;
+    overflow: hidden;
+  }
+
+  .newsroom-featured-slider__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 5200ms linear;
+  }
+
+  .newsroom-featured-slider__image--placeholder {
+    display: block;
+    background: linear-gradient(135deg, #0e1624, #263d5c);
+  }
+
+  .newsroom-featured-slider__pane.is-active .newsroom-featured-slider__image {
+    transform: scale(1.055);
+  }
+
+  .newsroom-featured-slider__overlay {
+    background: linear-gradient(90deg, rgba(4, 10, 18, 0.74), rgba(4, 10, 18, 0.28));
+    pointer-events: none;
+  }
+
+  .newsroom-featured-slider__content {
+    position: relative;
+    z-index: 2;
+    width: min(680px, calc(100% - 96px));
+    margin-left: 32px;
+    padding: clamp(28px, 5vw, 52px) 0 80px;
+    color: var(--soeteck-white);
+  }
+
+  .newsroom-featured-slider__badge {
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding: 7px 13px;
+    background: #ef1738;
+    color: var(--soeteck-white);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.05em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .newsroom-featured-slider__date {
+    display: block;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+  }
+
+  .newsroom-featured-slider__title {
+    margin: 0;
+    color: var(--soeteck-white);
+    font-size: clamp(1.45rem, 2.45vw, 2.25rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.45);
+  }
+
+  .newsroom-featured-slider__title a {
+    color: var(--soeteck-white);
+  }
+
+  .newsroom-featured-slider__excerpt {
+    display: -webkit-box;
+    max-width: 620px;
+    margin: 12px 0 0;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: var(--soeteck-text-md);
+    line-height: 1.7;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .newsroom-featured-slider__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    margin-top: 16px;
+    padding: 10px 18px;
+    border-radius: var(--soeteck-radius-sm);
+    background: #ef1738;
+    color: var(--soeteck-white);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .newsroom-featured-slider__nav {
+    position: absolute;
+    z-index: 3;
+    right: 32px;
+    bottom: 28px;
+    left: 32px;
+    display: grid;
+    grid-template-columns: repeat(var(--soeteck-featured-slider-count, 5), minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .newsroom-featured-slider__nav-item {
+    display: block;
+    width: 100%;
+    height: 18px;
+    padding: 7px 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .newsroom-featured-slider__track {
+    display: block;
+    height: 4px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.32);
+  }
+
+  .newsroom-featured-slider__progress {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #ef1738;
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  .newsroom-featured-slider__nav-item.is-complete .newsroom-featured-slider__progress {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .newsroom-featured-slider__pane,
+    .newsroom-featured-slider__image {
+      transition: none;
+    }
+
+    .newsroom-featured-slider__pane.is-active .newsroom-featured-slider__image {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .newsroom-featured-slider__viewport {
+      min-height: 460px;
+    }
+
+    .newsroom-featured-slider__content {
+      width: calc(100% - 40px);
+      margin-left: 20px;
+      padding-bottom: 70px;
+    }
+
+    .newsroom-featured-slider__nav {
+      right: 20px;
+      left: 20px;
+    }
+  }
+</style>

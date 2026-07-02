@@ -1,0 +1,136 @@
+---
+import { NEWSROOM_FACTS, NEWSROOM_TOPICS } from './news-releases-content';
+---
+<aside class="newsroom-sidebar" aria-label="Newsroom information">
+  <section class="newsroom-sidebar__card">
+    <p class="newsroom-sidebar__label">News Topics</p>
+    <div class="newsroom-topics">
+      {NEWSROOM_TOPICS.map((topic) => <span>{topic}</span>)}
+    </div>
+  </section>
+
+  <section class="newsroom-sidebar__card newsroom-sidebar__card--contact">
+    <p class="newsroom-sidebar__label">Media & Business Inquiries</p>
+    <h2>Need official information from Soeteck?</h2>
+    <p>Contact our team for media requests, partnership discussions, product information, or project cooperation.</p>
+    <a class="newsroom-sidebar__link" href="/en/contact-us/">Contact Soeteck</a>
+  </section>
+
+  <section class="newsroom-sidebar__card">
+    <p class="newsroom-sidebar__label">Company Snapshot</p>
+    <ul class="newsroom-facts">
+      {NEWSROOM_FACTS.map((fact) => <li>{fact}</li>)}
+    </ul>
+  </section>
+</aside>
+
+<style>
+  .newsroom-sidebar {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 18px;
+  }
+
+  .newsroom-sidebar__card {
+    padding: 24px;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    background: var(--soeteck-white);
+    box-shadow: 0 12px 28px rgba(15, 35, 70, 0.05);
+  }
+
+  .newsroom-sidebar__card--contact {
+    background: linear-gradient(180deg, var(--soeteck-white), var(--soeteck-surface));
+  }
+
+  .newsroom-sidebar__label {
+    margin: 0 0 8px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .newsroom-sidebar__card h2 {
+    margin: 0 0 12px;
+    color: var(--soeteck-text);
+    font-size: 1.25rem;
+    line-height: 1.25;
+  }
+
+  .newsroom-sidebar__card p:not(.newsroom-sidebar__label) {
+    margin: 0 0 18px;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.65;
+  }
+
+  .newsroom-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .newsroom-topics span {
+    display: inline-flex;
+    padding: 7px 10px;
+    border: 1px solid rgba(0, 86, 179, 0.18);
+    border-radius: 999px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .newsroom-sidebar__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 11px 18px;
+    border-radius: 999px;
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .newsroom-sidebar__link:hover {
+    background: var(--soeteck-primary-dark);
+    color: var(--soeteck-white);
+  }
+
+  .newsroom-facts {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .newsroom-facts li {
+    display: flex;
+    gap: 10px;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.45;
+  }
+
+  .newsroom-facts li::before {
+    content: '';
+    flex: 0 0 auto;
+    width: 7px;
+    height: 7px;
+    margin-top: 7px;
+    border-radius: 999px;
+    background: var(--soeteck-primary);
+  }
+
+  @media (max-width: 991px) {
+    .newsroom-sidebar {
+      position: static;
+    }
+  }
+</style>

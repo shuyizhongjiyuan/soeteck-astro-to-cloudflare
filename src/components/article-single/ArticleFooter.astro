@@ -1,0 +1,68 @@
+---
+import type { AdaptedArticleSingle } from '@/lib/page-adapter';
+
+interface Props {
+  article: AdaptedArticleSingle;
+}
+
+const { article } = Astro.props;
+---
+<footer class="soeteck-single-post__footer">
+  {article.tags.length > 0 && (
+    <div class="soeteck-single-post__tags" aria-label="Article tags">
+      <span class="soeteck-single-post__tags-label">Tags</span>
+      {article.tags.map((tag) => <a class="soeteck-single-post__tag" href={tag.path}>{tag.name}</a>)}
+    </div>
+  )}
+  <div class="soeteck-single-post__extension-slot" aria-hidden="true"></div>
+</footer>
+
+<style>
+  .soeteck-single-post__footer {
+    margin-top: clamp(46px, 6vw, 80px);
+    padding-top: 80px;
+    border-top: 1px solid var(--soeteck-border-soft);
+  }
+
+  .soeteck-single-post__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .soeteck-single-post__tags-label {
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .soeteck-single-post__tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 13px;
+    border-radius: 999px;
+    background: var(--soeteck-primary-soft);
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+    text-decoration: none;
+  }
+
+  .soeteck-single-post__tag:hover {
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+  }
+
+  .soeteck-single-post__extension-slot {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-single-post__footer {
+      padding-top: 56px;
+    }
+  }
+</style>

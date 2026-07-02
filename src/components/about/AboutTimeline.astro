@@ -1,0 +1,169 @@
+---
+interface Props {
+  milestones: { year: string; event: string }[];
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  visionLabel?: string;
+  visionText?: string;
+  missionLabel?: string;
+  missionText?: string;
+}
+
+const { milestones } = Astro.props;
+const eyebrow = Astro.props.eyebrow ?? "Our Journey";
+const title = Astro.props.title ?? "Milestones shaped by data center and telecom infrastructure demand.";
+const text = Astro.props.text ?? "SOETECK has continued to expand from focused manufacturing into global infrastructure solutions, combining technical expertise with production capability and international service support.";
+const visionLabel = Astro.props.visionLabel ?? "Vision";
+const visionText = Astro.props.visionText ?? "Empowering global clients as the world's premier digital power infrastructure partner";
+const missionLabel = Astro.props.missionLabel ?? "Mission";
+const missionText = Astro.props.missionText ?? "Driving digital power innovation to build a green intelligent future for the Internet of Everything";
+---
+<section class="about-section timeline" aria-labelledby="about-timeline-title">
+  <div class="soeteck-container timeline__grid">
+    <div>
+      <p class="soeteck-eyebrow">{eyebrow}</p>
+      <h2 id="about-timeline-title">{title}</h2>
+      <p>{text}</p>
+      <div class="belief-grid" aria-label="SOETECK vision and mission">
+        <article class="belief-card">
+          <span>{visionLabel}</span>
+          <p>{visionText}</p>
+        </article>
+        <article class="belief-card">
+          <span>{missionLabel}</span>
+          <p>{missionText}</p>
+        </article>
+      </div>
+    </div>
+    <ol class="timeline__list">
+      {milestones.map(({ year, event }) => (
+        <li>
+          <time>{year}</time>
+          <span>{event}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .about-section {
+    padding: clamp(64px, 7vw, 108px) 0;
+  }
+
+  .timeline__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+    gap: clamp(44px, 7vw, 96px);
+    align-items: start;
+  }
+
+  .timeline h2 {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(1.85rem, 3.1vw, 3rem);
+    line-height: 1.14;
+  }
+
+  .timeline p:not(.soeteck-eyebrow) {
+    margin: 22px 0 0;
+    color: var(--soeteck-text-soft);
+    line-height: 1.72;
+  }
+
+  .belief-grid {
+    display: grid;
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  .belief-card {
+    position: relative;
+    padding: 16px 18px 18px;
+    overflow: hidden;
+    border: 1px solid rgba(196, 211, 226, 0.78);
+    border-radius: var(--soeteck-radius-md);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.08), transparent 42%), linear-gradient(180deg, #ffffff, #f8fbff);
+    box-shadow: 0 14px 36px rgba(15, 23, 42, 0.05);
+  }
+
+  .belief-card::after {
+    content: '';
+    position: absolute;
+    right: -24px;
+    bottom: -30px;
+    width: 96px;
+    height: 96px;
+    border: 1px solid rgba(0, 102, 204, 0.14);
+    border-radius: 50%;
+  }
+
+  .belief-card span {
+    display: inline-flex;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .timeline .belief-card p {
+    position: relative;
+    z-index: 1;
+    max-width: 680px;
+    margin: 8px 0 0;
+    color: var(--soeteck-text);
+    font-family: var(--soeteck-font-heading);
+    font-size: clamp(0.98rem, 1.15vw, 1.12rem);
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.3;
+  }
+
+  .timeline__list {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--soeteck-border-soft);
+  }
+
+  .timeline__list li {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 22px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--soeteck-border-soft);
+  }
+
+  .timeline__list time {
+    color: var(--soeteck-primary);
+    font-size: 1.25rem;
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .timeline__list span {
+    color: var(--soeteck-text);
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.45;
+  }
+
+  @media (max-width: 991px) {
+    .timeline__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-section {
+      padding-block: 56px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .timeline__list li {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>

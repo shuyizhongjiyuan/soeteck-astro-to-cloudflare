@@ -1,0 +1,153 @@
+---
+import type { AdaptedArticleCard } from '@/lib/page-adapter';
+import { formatDateParts } from './news-releases-content';
+
+interface Props {
+  articles: AdaptedArticleCard[];
+}
+
+const { articles } = Astro.props;
+---
+<section class="newsroom-press-list" aria-label="News release list">
+  <div class="newsroom-section-heading">
+    <p>Latest Releases</p>
+    <h2>Press archive</h2>
+  </div>
+  <div class="newsroom-press-list__rows">
+    {articles.map((article) => {
+      const date = formatDateParts(article.date);
+      const excerpt = article.compactExcerpt || article.excerpt;
+      return (
+        <article class="newsroom-press-row soeteck-article-archive__row">
+          <time class="newsroom-press-row__date soeteck-article-archive__row-date" datetime={article.date ?? undefined}>
+            <span>{date.month}</span>
+            <strong>{date.day}</strong>
+            <span>{date.year}</span>
+          </time>
+          <div class="newsroom-press-row__body soeteck-article-archive__row-body">
+            <h2 class="newsroom-press-row__title soeteck-article-archive__row-title"><a href={article.path}>{article.title}</a></h2>
+            {excerpt && <p class="newsroom-press-row__excerpt soeteck-article-archive__row-excerpt">{excerpt}</p>}
+          </div>
+          <a class="newsroom-press-row__action soeteck-article-archive__row-action" href={article.path}>Read release</a>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .newsroom-section-heading {
+    margin-bottom: 18px;
+  }
+
+  .newsroom-section-heading p {
+    margin: 0 0 8px;
+    color: var(--soeteck-primary);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .newsroom-section-heading h2 {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1.18;
+  }
+
+  .newsroom-press-list__rows {
+    display: grid;
+    gap: 14px;
+  }
+
+  .newsroom-press-row {
+    position: relative;
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: center;
+    padding: 22px 24px;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius);
+    background: var(--soeteck-white);
+    box-shadow: none;
+  }
+
+  .newsroom-press-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 72px;
+    width: 1px;
+    background: var(--soeteck-border-soft);
+  }
+
+  .newsroom-press-row:hover {
+    border-color: rgba(0, 86, 179, 0.24);
+    background: linear-gradient(90deg, rgba(0, 86, 179, 0.03), var(--soeteck-white));
+  }
+
+  .newsroom-press-row__date {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    justify-items: center;
+    padding: 12px;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius);
+    background: var(--soeteck-white);
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-xs);
+    text-transform: uppercase;
+  }
+
+  .newsroom-press-row__date strong {
+    color: var(--soeteck-text);
+    font-size: 1.75rem;
+    line-height: 1;
+  }
+
+  .newsroom-press-row__title {
+    margin: 0;
+    font-size: clamp(1.15rem, 1.8vw, 1.55rem);
+    line-height: 1.24;
+  }
+
+  .newsroom-press-row__title a {
+    color: var(--soeteck-text);
+    text-decoration: none;
+  }
+
+  .newsroom-press-row__title a:hover {
+    color: var(--soeteck-primary);
+  }
+
+  .newsroom-press-row__excerpt {
+    margin: 8px 0 0;
+    color: var(--soeteck-text-soft);
+    line-height: 1.65;
+  }
+
+  .newsroom-press-row__action {
+    margin-top: 24px;
+    color: var(--soeteck-primary);
+    font-weight: var(--soeteck-weight-bold);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .newsroom-press-row {
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 16px;
+      padding: 18px 0;
+    }
+
+
+    .newsroom-press-row__action {
+      grid-column: 2;
+    }
+  }
+</style>

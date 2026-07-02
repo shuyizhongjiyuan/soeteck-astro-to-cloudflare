@@ -1,0 +1,2392 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import type { ContentApiProductCard, ContentApiArchiveConfig, ContentApiFilterGroup } from '@/lib/content-api';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+const source = page.source;
+const category = source.category;
+const products: ContentApiProductCard[] = source.products ?? [];
+const siblings = source.siblings ?? [];
+const bannerImage = source.bannerImage ? { path: source.bannerImage.path, alt: source.bannerImage.alt ?? '' } : page.heroImage;
+const archiveConfig: ContentApiArchiveConfig | null = source.archiveConfig ?? null;
+
+const title = category?.name ?? page.title;
+const description = category?.description ? category.description.replace(/<[^>]*>/g, '').trim() : '';
+const filters: ContentApiFilterGroup[] = archiveConfig?.filters ?? [];
+const introBlocks = archiveConfig?.introBlocks ?? [];
+const defaultPerPage = archiveConfig?.defaultPerPage ?? 5;
+const allowedPerPage = archiveConfig?.allowedPerPage ?? [5, 10, 20, 50, 100];
+const defaultSort = archiveConfig?.defaultSort ?? 'default';
+const hasFilters = filters.length > 0;
+
+// Filter group order matches WP: category, application, capacity, installation
+const filterGroupOrder = ['category', 'application', 'capacity', 'installation'];
+const orderedFilters = filterGroupOrder
+  .map(key => filters.find(f => f.key === key))
+  .filter((f): f is ContentApiFilterGroup => !!f);
+
+// Translations for product card buttons (must be defined before configJson)
+const salesContactLabel = getUITranslation(lang, 'product.salesContact');
+const viewDetailsLabel = getUITranslation(lang, 'product.viewDetails');
+const modelsLabel = getUITranslation(lang, 'product.models');
+const showMoreLabel = getUITranslation(lang, 'product.showMore');
+const showLessLabel = getUITranslation(lang, 'product.showLess');
+const localizedContactUrl = lang === 'en' ? '/en/contact-us/' : `/${lang}/contact-us/`;
+
+// Archive UI translations
+const filtersLabel = getUITranslation(lang, 'archive.filters');
+const clearFiltersLabel = getUITranslation(lang, 'archive.clearFilters');
+const applyFiltersLabel = getUITranslation(lang, 'archive.applyFilters');
+const clearAllLabel = getUITranslation(lang, 'archive.clearAll');
+const resultsPerPageLabel = getUITranslation(lang, 'archive.resultsPerPage');
+const orderByLabel = getUITranslation(lang, 'archive.orderBy');
+const featuredLabel = getUITranslation(lang, 'archive.featured');
+const latestLabel = getUITranslation(lang, 'archive.latest');
+const defaultLabel = getUITranslation(lang, 'archive.default');
+const applyLabel = getUITranslation(lang, 'archive.apply');
+const noResultsLabel = getUITranslation(lang, 'archive.noResults');
+const showingAllLabel = getUITranslation(lang, 'archive.showingAll');
+const showingRangeLabel = getUITranslation(lang, 'archive.showingRange');
+
+// Prepare JSON for client-side filtering
+const productsJson = JSON.stringify(products);
+const configJson = JSON.stringify({
+  filters: orderedFilters,
+  defaultPerPage,
+  allowedPerPage,
+  defaultSort,
+  contactUrl: localizedContactUrl,
+  labels: {
+    salesContact: salesContactLabel,
+    viewDetails: viewDetailsLabel,
+    models: modelsLabel,
+    showMore: showMoreLabel,
+    showLess: showLessLabel,
+    filters: filtersLabel,
+    clearFilters: clearFiltersLabel,
+    applyFilters: applyFiltersLabel,
+    clearAll: clearAllLabel,
+    resultsPerPage: resultsPerPageLabel,
+    orderBy: orderByLabel,
+    featured: featuredLabel,
+    latest: latestLabel,
+    default: defaultLabel,
+    apply: applyLabel,
+    noResults: noResultsLabel,
+    showingAll: showingAllLabel,
+    showingRange: showingRangeLabel,
+  },
+});
+---
+
+<div id="primary" class="content-area soeteck-product-category-archive">
+  <main id="main" class="site-main">
+    <section class="soeteck-product-cat-hero">
+      {bannerImage && (
+        <img
+          class="soeteck-product-cat-hero__image"
+          src={bannerImage.path}
+          alt={bannerImage.alt}
+          fetchpriority="high"
+          loading="eager"
+        />
+      )}
+      <div class="soeteck-product-cat-hero__overlay"></div>
+      <div class="soeteck-container soeteck-product-cat-hero__breadcrumbs">
+        <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      </div>
+      <div class="soeteck-container soeteck-product-cat-hero__content">
+        <h1 class="soeteck-page-title soeteck-product-cat-hero__title">{title}</h1>
+        {description && (
+          <p class="soeteck-product-cat-hero__lead">{description}</p>
+        )}
+      </div>
+    </section>
+
+    <div class="soeteck-product-category-body">
+      <div class="soeteck-container soeteck-product-category-layout">
+        <aside class="soeteck-product-filters" aria-label="Product filters">
+          <div class="soeteck-product-filters__mobile-bar">
+            <button class="soeteck-product-filters__mobile-toggle" type="button" aria-expanded="false" aria-controls="soeteck-product-filters-panel">
+              {filtersLabel}
+            </button>
+          </div>
+
+          {siblings.length > 0 && (
+            <div class="soeteck-product-category-switcher">
+              <button class="soeteck-product-category-switcher__toggle" type="button" aria-expanded="false" aria-controls="soeteck-product-category-switcher-panel">
+                <span>{title}</span>
+                <span class="soeteck-product-category-switcher__chevron" aria-hidden="true"></span>
+              </button>
+              <div id="soeteck-product-category-switcher-panel" class="soeteck-product-category-switcher__panel">
+                {siblings.map((sibling) => {
+                  // 用 slug 匹配（语言无关），避免路径前缀 /en/ vs /zh/ 导致匹配失败
+                  const isCurrent = sibling.slug === (category?.slug ?? '');
+                  return isCurrent ? (
+                    <span class="soeteck-product-category-switcher__item is-current" aria-current="page">
+                      {category?.name ?? title}
+                    </span>
+                  ) : (
+                    <a class="soeteck-product-category-switcher__item" href={sibling.path} target="_blank" rel="noopener noreferrer">
+                      {sibling.name}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {hasFilters && (
+            <div id="soeteck-product-filters-panel" class="soeteck-product-filters__panel">
+              <div class="soeteck-product-filters__panel-header">
+                <span>{filtersLabel}</span>
+                <button class="soeteck-product-filters__panel-close" type="button" aria-label="Close filters"></button>
+              </div>
+
+              <div class="soeteck-product-filters__actions">
+                <a class="soeteck-product-filters__clear-action" href={page.routePath} data-has-active-filters="false">{clearFiltersLabel}</a>
+                <button class="soeteck-button soeteck-button-primary soeteck-product-filters__submit" type="submit" form="soeteck-product-filters-form">
+                  {applyFiltersLabel}
+                </button>
+              </div>
+
+              <form id="soeteck-product-filters-form" class="soeteck-product-filters__form">
+                <div class="soeteck-product-filters__groups">
+                  {orderedFilters.map((group, groupIndex) => {
+                    const isOpen = group.key === 'category' || groupIndex === 0;
+                    const isLong = group.terms.length > 8;
+                    const panelId = `soeteck-filter-panel-${group.key}`;
+                    return (
+                      <div class={`soeteck-filter-group${isOpen ? ' is-open' : ''}${isLong ? ' is-long' : ''}`} role="group" aria-labelledby={`soeteck-filter-label-${group.key}`}>
+                        <button class="soeteck-filter-group__toggle" type="button" aria-expanded={isOpen ? 'true' : 'false'} aria-controls={panelId} id={`soeteck-filter-label-${group.key}`}>
+                          <span class="soeteck-filter-group__label">{group.label}</span>
+                          <span class="soeteck-filter-group__chevron" aria-hidden="true"></span>
+                        </button>
+                        <div id={panelId} class="soeteck-filter-group__panel">
+                          <div class="soeteck-filter-group__options">
+                            {group.terms.map((term) => (
+                              <label class="soeteck-filter-option">
+                                <input
+                                  type="checkbox"
+                                  name={`${group.queryArg}[]`}
+                                  value={String(term.id)}
+                                  data-filter-group={group.key}
+                                  data-filter-label={term.name}
+                                />
+                                <span>{term.name}</span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </form>
+            </div>
+          )}
+
+          <button class="soeteck-product-filters__overlay" type="button" aria-label="Close filters"></button>
+        </aside>
+
+        <div class="soeteck-product-results" data-products={productsJson} data-config={configJson}>
+          <div class="soeteck-active-filters" id="active-filters" style="display: none;"></div>
+
+          {introBlocks.length > 0 && (
+            <div class="soeteck-product-results__intro">
+              <p>
+                {introBlocks.map((block, index) => (
+                  <>
+                    {index > 0 && <br />}
+                    {block.prefix && <strong>{block.prefix}</strong>}
+                    {block.text ?? ''}
+                  </>
+                ))}
+              </p>
+            </div>
+          )}
+
+          <div class="soeteck-product-toolbar">
+            <div class="soeteck-product-toolbar__count">
+              <p id="product-result-count">Showing {products.length} of {products.length} results</p>
+            </div>
+
+            <div class="soeteck-product-toolbar__controls">
+              <form class="soeteck-product-toolbar__form" onsubmit="return false;">
+                <label class="soeteck-product-toolbar__label soeteck-product-toolbar__label--per-page">
+                  <span class="screen-reader-text">{resultsPerPageLabel}</span>
+                  <select id="product-per-page" name="per_page" class="soeteck-product-toolbar__select" aria-label={resultsPerPageLabel}>
+                    <option value="" selected disabled hidden>{resultsPerPageLabel}</option>
+                    {allowedPerPage.map((pp) => (
+                      <option value={String(pp)}>{String(pp)}</option>
+                    ))}
+                  </select>
+                </label>
+
+                <label class="soeteck-product-toolbar__label">
+                  <span class="screen-reader-text">{orderByLabel}</span>
+                  <select id="product-sort" name="sort" class="soeteck-product-toolbar__select" aria-label={orderByLabel}>
+                    <option value="default" selected disabled hidden>{orderByLabel}</option>
+                    <option value="featured">{featuredLabel}</option>
+                    <option value="latest">{latestLabel}</option>
+                  </select>
+                </label>
+
+                <button class="soeteck-product-toolbar__submit" type="submit">{applyLabel}</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="product-grid-container">
+            <div class="soeteck-product-list">
+              {products.map((product) => {
+                const images = product.gallery && product.gallery.length > 0
+                  ? product.gallery
+                  : (product.featuredImage ? [product.featuredImage] : []);
+                const hasMultiple = images.length > 1;
+                return (
+                  <article class="soeteck-product-list-item" data-product-id={product.id}>
+                    <div class="soeteck-product-list-card">
+                      <div class="soeteck-product-list-card__media soeteck-product-list-card__gallery" role="group" aria-label={product.title}>
+                        {images.length > 0 && (
+                          <>
+                            <span class="soeteck-product-list-card__gallery-viewport">
+                              <span class="soeteck-product-list-card__gallery-track">
+                                {images.map((img, i) => (
+                                  <span class={`soeteck-product-list-card__gallery-slide${i === 0 ? ' is-active' : ''}`} data-gallery-slide={String(i)}>
+                                    <img src={img.path} alt={img.alt || product.title} loading={i === 0 ? 'eager' : 'lazy'} />
+                                  </span>
+                                ))}
+                              </span>
+                            </span>
+                            {hasMultiple && (
+                              <span class="soeteck-product-list-card__media-dots" aria-label="Product gallery images">
+                                {images.map((_, i) => (
+                                  <button class={i === 0 ? 'is-active' : ''} type="button" data-gallery-dot={String(i)} aria-label={`Show image ${i + 1}`} {...(i === 0 ? { 'aria-current': 'true' } : {})}></button>
+                                ))}
+                              </span>
+                            )}
+                          </>
+                        )}
+                      </div>
+                      <div class="soeteck-product-list-card__content">
+                        <h3 class="soeteck-card-title soeteck-product-list-card__title">
+                          <a href={product.path} target="_blank" rel="noopener noreferrer">{product.title}</a>
+                        </h3>
+                        {product.excerpt && (
+                          <p class="soeteck-product-list-card__excerpt">{product.excerpt}</p>
+                        )}
+                      </div>
+                      <div class="soeteck-product-list-card__actions">
+                        <a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href={localizedContactUrl}>{salesContactLabel}</a>
+                        <a class="soeteck-product-list-card__button" href={product.path} target="_blank" rel="noopener noreferrer">{viewDetailsLabel}</a>
+                        {product.type === 'variable' && (
+                          <button class="soeteck-product-list-card__button show-variations" type="button" data-target={`variations-${product.id}`} aria-controls={`variations-${product.id}`} aria-expanded="false">{modelsLabel}</button>
+                        )}
+                      </div>
+                    </div>
+                    {product.variationsTable && (
+                      <div class="soeteck-product-list-item__models">
+                        <div class="variations-table" id={`variations-${product.id}`}>
+                          <table>
+                            <thead><tr>{product.variationsTable.headers.map((h) => <th>{h}</th>)}</tr></thead>
+                            <tbody>
+                              {product.variationsTable.rows.map((row, i) => (
+                                <tr class={`variation-row${i >= 10 ? ' variation-row--extra' : ''}`}>
+                                  {row.map((cell) => <td>{cell}</td>)}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          {product.variationsTable.hasMore && (
+                            <div class="toggle-variations-wrap">
+                              <button class="toggle-variations" data-product-id={String(product.id)}>{showMoreLabel}</button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+
+          <div id="product-pagination"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var resultsEl = document.querySelector('.soeteck-product-results');
+  if (!resultsEl) return;
+
+  var allProducts = JSON.parse(resultsEl.getAttribute('data-products') || '[]');
+  var config = JSON.parse(resultsEl.getAttribute('data-config') || '{}');
+  var filterGroups = config.filters || [];
+  var perPage = config.defaultPerPage || 5;
+  var sort = config.defaultSort || 'default';
+  var contactUrl = config.contactUrl || '/en/contact-us/';
+  var labels = config.labels || {};
+  var salesContactLabel = labels.salesContact || 'Sales Contact';
+  var viewDetailsLabel = labels.viewDetails || 'View Details';
+  var modelsLabel = labels.models || 'Models';
+  var showMoreLabel = labels.showMore || 'Show more';
+  var showLessLabel = labels.showLess || 'Show less';
+  var currentPage = 1;
+
+  var activeFilters = {};
+  filterGroups.forEach(function(g) { activeFilters[g.key] = []; });
+
+  var gridContainer = document.getElementById('product-grid-container');
+  var paginationEl = document.getElementById('product-pagination');
+  var resultCountEl = document.getElementById('product-result-count');
+  var activeFiltersEl = document.getElementById('active-filters');
+  var perPageSelect = document.getElementById('product-per-page');
+  var sortSelect = document.getElementById('product-sort');
+  var filtersContainer = document.querySelector('.soeteck-product-filters');
+
+  function getFilteredProducts() {
+    var filtered = allProducts.filter(function(product) {
+      return filterGroups.every(function(group) {
+        var selected = activeFilters[group.key] || [];
+        if (selected.length === 0) return true;
+        return selected.some(function(termId) {
+          return product.tagIds && product.tagIds.some(function(id) { return String(id) === String(termId); });
+        });
+      });
+    });
+
+    if (sort === 'featured') {
+      filtered.sort(function(a, b) { return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0); });
+    } else if (sort === 'latest') {
+      filtered.sort(function(a, b) { return new Date(b.date || 0) - new Date(a.date || 0); });
+    }
+
+    return filtered;
+  }
+
+  function renderCard(product) {
+    var images = (product.gallery && product.gallery.length > 0)
+      ? product.gallery
+      : (product.featuredImage ? [product.featuredImage] : []);
+    var hasMultiple = images.length > 1;
+
+    var galleryHtml = '';
+    if (images.length > 0) {
+      var slidesHtml = images.map(function(img, i) {
+        return '<span class="soeteck-product-list-card__gallery-slide' + (i === 0 ? ' is-active' : '') + '" data-gallery-slide="' + i + '">' +
+          '<img src="' + img.path + '" alt="' + (img.alt || product.title) + '" loading="' + (i === 0 ? 'eager' : 'lazy') + '">' +
+          '</span>';
+      }).join('');
+
+      var dotsHtml = '';
+      if (hasMultiple) {
+        dotsHtml = '<span class="soeteck-product-list-card__media-dots" aria-label="Product gallery images">' +
+          images.map(function(_, i) {
+            return '<button class="' + (i === 0 ? 'is-active' : '') + '" type="button" data-gallery-dot="' + i + '" aria-label="Show image ' + (i + 1) + '"' + (i === 0 ? ' aria-current="true"' : '') + '></button>';
+          }).join('') +
+          '</span>';
+      }
+
+      galleryHtml = '<span class="soeteck-product-list-card__gallery-viewport"><span class="soeteck-product-list-card__gallery-track">' +
+        slidesHtml + '</span></span>' + dotsHtml;
+    }
+
+    var actionsHtml = '<a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href="' + contactUrl + '">' + salesContactLabel + '</a>' +
+      '<a class="soeteck-product-list-card__button" href="' + product.path + '" target="_blank" rel="noopener noreferrer">' + viewDetailsLabel + '</a>';
+    if (product.type === 'variable') {
+      actionsHtml += '<button class="soeteck-product-list-card__button show-variations" type="button" data-target="variations-' + product.id + '" aria-controls="variations-' + product.id + '" aria-expanded="false">' + modelsLabel + '</button>';
+    }
+
+    var modelsHtml = '';
+    if (product.variationsTable) {
+      var vt = product.variationsTable;
+      var thHtml = vt.headers.map(function(h) { return '<th>' + h + '</th>'; }).join('');
+      var trHtml = vt.rows.map(function(row, i) {
+        var cls = 'variation-row' + (i >= 10 ? ' variation-row--extra' : '');
+        var tdHtml = row.map(function(cell) { return '<td>' + cell + '</td>'; }).join('');
+        return '<tr class="' + cls + '">' + tdHtml + '</tr>';
+      }).join('');
+      var moreHtml = vt.hasMore
+        ? '<div class="toggle-variations-wrap"><button class="toggle-variations" data-product-id="' + product.id + '">' + showMoreLabel + '</button></div>'
+        : '';
+      modelsHtml = '<div class="soeteck-product-list-item__models">' +
+        '<div class="variations-table" id="variations-' + product.id + '">' +
+        '<table><thead><tr>' + thHtml + '</tr></thead><tbody>' + trHtml + '</tbody></table>' +
+        moreHtml + '</div></div>';
+    }
+
+    return '<article class="soeteck-product-list-item" data-product-id="' + product.id + '">' +
+      '<div class="soeteck-product-list-card">' +
+        '<div class="soeteck-product-list-card__media soeteck-product-list-card__gallery" role="group" aria-label="' + product.title.replace(/"/g, '&quot;') + '">' + galleryHtml + '</div>' +
+        '<div class="soeteck-product-list-card__content">' +
+          '<h3 class="soeteck-card-title soeteck-product-list-card__title"><a href="' + product.path + '" target="_blank" rel="noopener noreferrer">' + product.title + '</a></h3>' +
+          (product.excerpt ? '<p class="soeteck-product-list-card__excerpt">' + product.excerpt + '</p>' : '') +
+        '</div>' +
+        '<div class="soeteck-product-list-card__actions">' + actionsHtml + '</div>' +
+      '</div>' +
+      modelsHtml +
+    '</article>';
+  }
+
+  function renderGrid() {
+    var filtered = getFilteredProducts();
+    var totalFiltered = filtered.length;
+    var totalPages = Math.max(1, Math.ceil(totalFiltered / perPage));
+    if (currentPage > totalPages) currentPage = totalPages;
+
+    var start = (currentPage - 1) * perPage;
+    var end = Math.min(start + perPage, totalFiltered);
+    var pageProducts = filtered.slice(start, end);
+
+    if (resultCountEl) {
+      if (totalFiltered <= perPage) {
+        resultCountEl.textContent = (labels.showingAll || 'Showing all {count} results').replace('{count}', totalFiltered);
+      } else {
+        resultCountEl.textContent = (labels.showingRange || 'Showing {start}–{end}, {total} results')
+          .replace('{start}', start + 1).replace('{end}', end).replace('{total}', totalFiltered);
+      }
+    }
+
+    if (gridContainer) {
+      if (pageProducts.length === 0) {
+        gridContainer.innerHTML = '<div class="soeteck-product-empty"><p>' + (labels.noResults || 'No products found matching your criteria.') + '</p></div>';
+      } else {
+        gridContainer.innerHTML = '<div class="soeteck-product-list">' +
+          pageProducts.map(renderCard).join('') +
+          '</div>';
+        initGalleryCarousels();
+        initModelsToggles();
+      }
+    }
+
+    renderPagination(totalPages);
+    renderActiveFilters();
+    updatePendingFilters();
+  }
+
+  function renderPagination(totalPages) {
+    if (!paginationEl) return;
+    if (totalPages <= 1) {
+      paginationEl.innerHTML = '';
+      return;
+    }
+
+    var html = '<nav class="woocommerce-pagination" aria-label="Product pagination"><ul class="page-numbers">';
+
+    if (currentPage > 1) {
+      html += '<li><a class="page-numbers prev" href="#" data-page="' + (currentPage - 1) + '">&laquo;</a></li>';
+    }
+
+    for (var i = 1; i <= totalPages; i++) {
+      if (i === currentPage) {
+        html += '<li><span class="page-numbers current" aria-current="page">' + i + '</span></li>';
+      } else if (i <= 3 || i > totalPages - 2 || Math.abs(i - currentPage) <= 1) {
+        html += '<li><a class="page-numbers" href="#" data-page="' + i + '">' + i + '</a></li>';
+      } else if ((i === 4 && currentPage > 5) || (i === totalPages - 2 && currentPage < totalPages - 4)) {
+        html += '<li><span class="page-numbers dots">&hellip;</span></li>';
+      }
+    }
+
+    if (currentPage < totalPages) {
+      html += '<li><a class="page-numbers next" href="#" data-page="' + (currentPage + 1) + '">&raquo;</a></li>';
+    }
+
+    html += '</ul></nav>';
+    paginationEl.innerHTML = html;
+
+    paginationEl.querySelectorAll('[data-page]').forEach(function(btn) {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        currentPage = parseInt(this.getAttribute('data-page'), 10);
+        renderGrid();
+        var toolbar = document.querySelector('.soeteck-product-toolbar');
+        if (toolbar) toolbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  }
+
+  function renderActiveFilters() {
+    if (!activeFiltersEl) return;
+    var hasAny = filterGroups.some(function(g) { return (activeFilters[g.key] || []).length > 0; });
+    var form = document.getElementById('soeteck-product-filters-form');
+    var clearAction = filtersContainer && filtersContainer.querySelector('.soeteck-product-filters__clear-action');
+    if (clearAction) clearAction.setAttribute('data-has-active-filters', hasAny ? 'true' : 'false');
+    if (!hasAny) {
+      activeFiltersEl.style.display = 'none';
+      if (filtersContainer) {
+        filtersContainer.classList.remove('has-active-filters');
+      }
+      if (form) form.classList.remove('has-active-filters');
+      return;
+    }
+
+    activeFiltersEl.style.display = 'flex';
+    if (filtersContainer) {
+      filtersContainer.classList.add('has-active-filters');
+    }
+    if (form) form.classList.add('has-active-filters');
+
+    var html = '';
+    filterGroups.forEach(function(group) {
+      var selected = activeFilters[group.key] || [];
+      selected.forEach(function(termId) {
+        var term = group.terms.find(function(t) { return String(t.id) === String(termId); });
+        if (term) {
+          html += '<a class="soeteck-active-filter" href="#" data-group="' + group.key + '" data-term="' + termId + '">' +
+            '<span>' + term.name + '</span>' +
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
+            '</a>';
+        }
+      });
+    });
+
+    html += '<a class="soeteck-active-filters__clear" href="#" id="clear-all-filters">' + (labels.clearAll || 'Clear all') + '</a>';
+    activeFiltersEl.innerHTML = html;
+
+    activeFiltersEl.querySelectorAll('.soeteck-active-filter').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        el.classList.add('is-removing');
+        var gKey = el.getAttribute('data-group');
+        var tId = el.getAttribute('data-term');
+        setTimeout(function() {
+          activeFilters[gKey] = (activeFilters[gKey] || []).filter(function(id) { return id !== tId; });
+          var cb = document.querySelector('.soeteck-filter-option input[data-filter-group="' + gKey + '"][value="' + tId + '"]');
+          if (cb) {
+            cb.checked = false;
+            var label = cb.closest('.soeteck-filter-option');
+            if (label) label.classList.remove('is-checked');
+          }
+          /* Sync has-active on group */
+          var groupEl = document.querySelector('.soeteck-filter-group[data-group-key="' + gKey + '"]') ||
+            (cb && cb.closest('.soeteck-filter-group'));
+          if (groupEl) {
+            var groupHasChecked = groupEl.querySelector('input[type="checkbox"]:checked');
+            groupEl.classList.toggle('has-active', !!groupHasChecked);
+          }
+          currentPage = 1;
+          renderGrid();
+        }, 140);
+      });
+    });
+
+    var clearAllBtn = document.getElementById('clear-all-filters');
+    if (clearAllBtn) {
+      clearAllBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        clearAllBtn.classList.add('is-removing');
+        setTimeout(function() {
+          filterGroups.forEach(function(g) { activeFilters[g.key] = []; });
+          document.querySelectorAll('.soeteck-filter-option input[type="checkbox"]').forEach(function(cb) {
+            cb.checked = false;
+            var label = cb.closest('.soeteck-filter-option');
+            if (label) label.classList.remove('is-checked');
+          });
+          document.querySelectorAll('.soeteck-filter-group.has-active').forEach(function(g) {
+            g.classList.remove('has-active');
+          });
+          currentPage = 1;
+          renderGrid();
+        }, 140);
+      });
+    }
+  }
+
+  function updatePendingFilters() {
+    var form = document.getElementById('soeteck-product-filters-form');
+    if (!form || !filtersContainer) return;
+    var checkboxes = form.querySelectorAll('input[type="checkbox"]');
+    var hasPending = false;
+    checkboxes.forEach(function(cb) {
+      if (cb.checked !== cb.defaultChecked) hasPending = true;
+    });
+    form.classList.toggle('has-pending-filters', hasPending);
+    filtersContainer.classList.toggle('has-pending-filters', hasPending);
+  }
+
+  /* === Category Switcher (main.js lines 156-179) === */
+  function closeAllSwitchers() {
+    document.querySelectorAll('.soeteck-product-category-switcher.is-open').forEach(function(el) {
+      el.classList.remove('is-open');
+      var toggle = el.querySelector('.soeteck-product-category-switcher__toggle');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  var switcherToggle = document.querySelector('.soeteck-product-category-switcher__toggle');
+  if (switcherToggle) {
+    switcherToggle.addEventListener('click', function() {
+      var switcher = switcherToggle.closest('.soeteck-product-category-switcher');
+      if (!switcher) return;
+      var isOpen = switcher.classList.contains('is-open');
+      closeAllSwitchers();
+      if (!isOpen) {
+        switcher.classList.add('is-open');
+        switcherToggle.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    /* Close switchers on item click (main.js line 177) */
+    document.querySelectorAll('.soeteck-product-category-switcher__item[href]').forEach(function(item) {
+      item.addEventListener('click', closeAllSwitchers);
+    });
+  }
+
+  /* Close switchers on outside click (main.js lines 1113-1115) */
+  document.addEventListener('click', function(event) {
+    var target = event.target;
+    if (!target.closest('.soeteck-product-category-switcher')) {
+      closeAllSwitchers();
+    }
+  });
+
+  /* Close switchers on Escape key (main.js lines 1132-1140) */
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+      closeAllSwitchers();
+    }
+  });
+
+  /* === Mobile Filter Panel (main.js lines 181-206) === */
+  var mobileToggle = document.querySelector('.soeteck-product-filters__mobile-toggle');
+  var filterPanel = document.getElementById('soeteck-product-filters-panel');
+  var filterClose = document.querySelector('.soeteck-product-filters__panel-close');
+  var filterOverlay = document.querySelector('.soeteck-product-filters__overlay');
+
+  function closeMobilePanel() {
+    if (filtersContainer) filtersContainer.classList.remove('is-mobile-open');
+    if (mobileToggle) mobileToggle.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('has-mobile-product-filters-open');
+  }
+
+  if (mobileToggle) {
+    mobileToggle.addEventListener('click', function() {
+      var isOpen = filtersContainer && filtersContainer.classList.contains('is-mobile-open');
+      if (!isOpen) {
+        if (filtersContainer) filtersContainer.classList.add('is-mobile-open');
+        mobileToggle.setAttribute('aria-expanded', 'true');
+        document.body.classList.add('has-mobile-product-filters-open');
+      } else {
+        closeMobilePanel();
+      }
+    });
+  }
+
+  if (filterClose) filterClose.addEventListener('click', closeMobilePanel);
+  if (filterOverlay) filterOverlay.addEventListener('click', closeMobilePanel);
+
+  /* === Filter Group Accordion — max 2 open (main.js lines 208-238) === */
+  var groupsContainer = document.querySelector('.soeteck-product-filters__groups');
+  if (groupsContainer) {
+    var openedGroups = Array.from(groupsContainer.querySelectorAll('.soeteck-filter-group.is-open'));
+
+    groupsContainer.querySelectorAll('.soeteck-filter-group__toggle').forEach(function(button) {
+      button.addEventListener('click', function() {
+        var group = button.closest('.soeteck-filter-group');
+        if (!group) return;
+        var isOpen = group.classList.contains('is-open');
+
+        if (isOpen) {
+          group.classList.remove('is-open');
+          openedGroups = openedGroups.filter(function(g) { return g !== group; });
+          button.setAttribute('aria-expanded', 'false');
+          return;
+        }
+
+        openedGroups = openedGroups.filter(function(g) { return g.classList.contains('is-open') && g !== group; });
+        if (openedGroups.length >= 2) {
+          var groupToClose = openedGroups.shift();
+          if (groupToClose) {
+            groupToClose.classList.remove('is-open');
+            var toggle = groupToClose.querySelector('.soeteck-filter-group__toggle');
+            if (toggle) toggle.setAttribute('aria-expanded', 'false');
+          }
+        }
+
+        group.classList.add('is-open');
+        openedGroups.push(group);
+        button.setAttribute('aria-expanded', 'true');
+      });
+    });
+  }
+
+  /* === Filter Checkbox Pending State (main.js lines 240-273) === */
+  var filterForm = document.getElementById('soeteck-product-filters-form');
+  if (filterForm) {
+    filterForm.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+      cb.addEventListener('change', function() {
+        var groupKey = cb.getAttribute('data-filter-group');
+        var termId = cb.value;
+        if (cb.checked) {
+          if (activeFilters[groupKey].indexOf(termId) === -1) {
+            activeFilters[groupKey].push(termId);
+          }
+        } else {
+          activeFilters[groupKey] = activeFilters[groupKey].filter(function(id) { return id !== termId; });
+        }
+        /* is-checked on label (main.js line 243) */
+        var label = cb.closest('.soeteck-filter-option');
+        if (label) label.classList.toggle('is-checked', cb.checked);
+        /* has-active on filter group (WP server-side class) */
+        var groupEl = cb.closest('.soeteck-filter-group');
+        if (groupEl) {
+          var groupHasChecked = groupEl.querySelector('input[type="checkbox"]:checked');
+          groupEl.classList.toggle('has-active', !!groupHasChecked);
+        }
+        currentPage = 1;
+        renderGrid();
+      });
+    });
+
+    var clearAction = filtersContainer && filtersContainer.querySelector('.soeteck-product-filters__clear-action');
+    if (clearAction) {
+      clearAction.addEventListener('click', function(event) {
+        if (clearAction.getAttribute('data-has-active-filters') === 'true') return;
+        event.preventDefault();
+        if (filtersContainer) filtersContainer.classList.add('is-resetting');
+        setTimeout(function() {
+          filterForm.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
+            cb.checked = false;
+            var label = cb.closest('.soeteck-filter-option');
+            if (label) label.classList.remove('is-checked');
+          });
+          filterForm.querySelectorAll('.soeteck-filter-group.has-active').forEach(function(g) {
+            g.classList.remove('has-active');
+          });
+          filterGroups.forEach(function(g) { activeFilters[g.key] = []; });
+          currentPage = 1;
+          renderGrid();
+          if (filtersContainer) filtersContainer.classList.remove('is-resetting');
+        }, 120);
+      });
+    }
+  }
+
+  /* === Per-page and Sort (main.js lines 275-299) === */
+  var defaultPerPageValue = config.defaultPerPage || 5;
+  var allowedPerPageValues = config.allowedPerPage || [5, 10, 20, 50, 100];
+
+  function updatePerPageSelect() {
+    if (!perPageSelect) return;
+    var isDefault = perPage === defaultPerPageValue;
+    var options = '<option value=""' + (isDefault ? ' selected' : '') + (isDefault ? ' disabled' : '') + (isDefault ? ' hidden' : '') + '>' + (labels.default || 'Default') + '</option>';
+    allowedPerPageValues.forEach(function(pp) {
+      options += '<option value="' + pp + '"' + (perPage === pp ? ' selected' : '') + '>' + pp + '</option>';
+    });
+    perPageSelect.innerHTML = options;
+  }
+
+  function updateSortSelect() {
+    if (!sortSelect) return;
+    var isDefault = sort === 'default';
+    var options = '<option value="default"' + (isDefault ? ' selected' : '') + (isDefault ? ' disabled' : '') + (isDefault ? ' hidden' : '') + '>' + (labels.orderBy || 'Order by') + '</option>';
+    options += '<option value="featured"' + (sort === 'featured' ? ' selected' : '') + '>' + (labels.featured || 'Featured') + '</option>';
+    options += '<option value="latest"' + (sort === 'latest' ? ' selected' : '') + '>' + (labels.latest || 'Latest') + '</option>';
+    sortSelect.innerHTML = options;
+  }
+
+  if (perPageSelect) {
+    perPageSelect.addEventListener('change', function() {
+      perPage = parseInt(perPageSelect.value, 10) || defaultPerPage;
+      currentPage = 1;
+      updatePerPageSelect();
+      renderGrid();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener('change', function() {
+      sort = sortSelect.value || 'default';
+      currentPage = 1;
+      updateSortSelect();
+      renderGrid();
+    });
+  }
+
+  /* === Gallery Carousel (main.js lines 352-473) === */
+  function initGalleryCarousels() {
+    document.querySelectorAll('.soeteck-product-list-card__gallery').forEach(function(gallery) {
+      var track = gallery.querySelector('.soeteck-product-list-card__gallery-track');
+      var slides = Array.from(gallery.querySelectorAll('[data-gallery-slide]'));
+      var dots = Array.from(gallery.querySelectorAll('[data-gallery-dot]'));
+      var activeIndex = 0;
+      var startX = 0;
+      var dragging = false;
+      var dragOffset = 0;
+      var dragged = false;
+
+      if (slides.length <= 1) return;
+
+      function updateActiveState() {
+        slides.forEach(function(slide, i) {
+          slide.classList.toggle('is-active', i === activeIndex);
+        });
+        dots.forEach(function(dot, i) {
+          var active = i === activeIndex;
+          dot.classList.toggle('is-active', active);
+          if (active) dot.setAttribute('aria-current', 'true');
+          else dot.removeAttribute('aria-current');
+        });
+      }
+
+      function setActive(index) {
+        var nextIndex = (index + slides.length) % slides.length;
+        var isLastToFirst = activeIndex === slides.length - 1 && nextIndex === 0;
+        activeIndex = nextIndex;
+        dragOffset = 0;
+        if (track) {
+          gallery.classList.toggle('is-looping-forward', isLastToFirst);
+          track.style.setProperty('--gallery-index', activeIndex);
+          track.style.setProperty('--gallery-drag-offset', '0px');
+          if (isLastToFirst) {
+            setTimeout(function() { gallery.classList.remove('is-looping-forward'); }, 300);
+          }
+        }
+        updateActiveState();
+      }
+
+      dots.forEach(function(dot, i) {
+        dot.addEventListener('click', function(event) {
+          event.preventDefault();
+          event.stopPropagation();
+          setActive(i);
+        });
+      });
+
+      gallery.addEventListener('pointerdown', function(event) {
+        if ((event.pointerType === 'mouse' && event.button !== 0) || event.target.closest('[data-gallery-dot]')) return;
+        event.preventDefault();
+        dragging = true;
+        dragOffset = 0;
+        startX = event.clientX;
+        if (track) track.style.setProperty('--gallery-drag-offset', '0px');
+        gallery.classList.add('is-dragging');
+        gallery.setPointerCapture(event.pointerId);
+      });
+
+      gallery.addEventListener('pointermove', function(event) {
+        if (!dragging) return;
+        dragOffset = event.clientX - startX;
+        if (Math.abs(dragOffset) > 8) dragged = true;
+        if (track) track.style.setProperty('--gallery-drag-offset', dragOffset + 'px');
+      });
+
+      gallery.addEventListener('pointerup', function(event) {
+        if (!dragging) return;
+        var deltaX = event.clientX - startX;
+        dragging = false;
+        gallery.classList.remove('is-dragging');
+        if (gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId);
+        if (Math.abs(deltaX) > 35) {
+          event.preventDefault();
+          setActive(activeIndex + (deltaX < 0 ? 1 : -1));
+        } else if (track) {
+          dragOffset = 0;
+          track.style.setProperty('--gallery-drag-offset', '0px');
+        }
+        setTimeout(function() { dragged = false; }, 0);
+      });
+
+      gallery.addEventListener('pointercancel', function(event) {
+        dragging = false;
+        dragOffset = 0;
+        gallery.classList.remove('is-dragging');
+        if (track) track.style.setProperty('--gallery-drag-offset', '0px');
+        if (gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId);
+      });
+
+      gallery.addEventListener('click', function(event) {
+        if (dragged) { event.preventDefault(); return; }
+        if (!event.target.closest('[data-gallery-dot]')) event.preventDefault();
+      });
+    });
+  }
+
+  /* === Models Toggle (main.js lines 315-328) === */
+  function initModelsToggles() {
+    document.querySelectorAll('.soeteck-product-list-card__button.show-variations').forEach(function(button) {
+      button.addEventListener('click', function() {
+        var productItem = button.closest('.soeteck-product-list-item');
+        var models = productItem && productItem.querySelector('.soeteck-product-list-item__models');
+        if (!models) return;
+        var isOpen = models.classList.contains('show');
+        models.classList.toggle('show', !isOpen);
+        button.classList.toggle('is-expanded', !isOpen);
+        button.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      });
+    });
+  }
+
+  /* === Toggle Variations "Show more" (WP shortcode JS) === */
+  document.body.addEventListener('click', function(e) {
+    var btn = e.target.closest('.toggle-variations');
+    if (!btn) return;
+    var productId = btn.getAttribute('data-product-id');
+    var table = document.getElementById('variations-' + productId);
+    if (!table) return;
+    var expanded = !table.classList.contains('is-expanded');
+    table.classList.toggle('is-expanded', expanded);
+    btn.textContent = expanded ? showLessLabel : showMoreLabel;
+    btn.classList.toggle('is-expanded', expanded);
+  });
+
+  /* === Initial Render === */
+  renderGrid();
+})();
+</script>
+
+<style>
+/* ========================================
+   Product Category Archive — 1:1 from archive.css
+   ======================================== */
+
+/* Container widths */
+.soeteck-product-category-archive {
+  --soeteck-product-content-width: 1200px;
+  --soeteck-product-content-gutter: 20px;
+  background: var(--soeteck-white);
+}
+
+.soeteck-product-cat-hero__breadcrumbs,
+.soeteck-product-cat-hero__content,
+.soeteck-product-category-layout {
+  width: min(var(--soeteck-product-content-width), calc(100% - (var(--soeteck-product-content-gutter) * 2)));
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* Hero */
+.soeteck-product-cat-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 480px;
+  overflow: hidden;
+  background-color: var(--soeteck-dark);
+  color: var(--soeteck-white);
+}
+
+.soeteck-product-cat-hero > .soeteck-product-cat-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.soeteck-product-cat-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 31, 58, 0.84), rgba(11, 31, 58, 0.42), rgba(11, 31, 58, 0.12));
+}
+
+.soeteck-product-cat-hero__content {
+  position: relative;
+  z-index: 1;
+  padding-block: 72px;
+}
+
+.soeteck-product-cat-hero__breadcrumbs {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 481px) {
+  .soeteck-product-cat-hero__breadcrumbs {
+    top: 20px;
+  }
+}
+
+.soeteck-product-cat-hero__breadcrumbs :global(.soeteck-breadcrumbs--hero) {
+  margin: 0;
+}
+
+.soeteck-product-cat-hero .soeteck-eyebrow {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.soeteck-product-cat-hero__title {
+  font-family: var(--soeteck-font-heading);
+  margin: 0;
+  color: var(--soeteck-white);
+  font-size: var(--soeteck-heading-lg);
+  font-weight: var(--soeteck-weight-bold);
+  line-height: 1.08;
+}
+
+.soeteck-product-cat-hero__lead {
+  font-family: var(--soeteck-font-body);
+  margin: 22px 0 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--soeteck-text-lg);
+  line-height: 1.65;
+}
+
+/* Body and Layout */
+.soeteck-product-category-body {
+  padding-block: 110px 80px;
+  background: var(--soeteck-white);
+}
+
+.soeteck-product-category-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+/* Filters Container */
+.soeteck-product-filters {
+  position: sticky;
+  top: 96px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 140px);
+  min-height: 0;
+}
+
+body:global(.has-mobile-product-filters-open) {
+  overflow: hidden;
+}
+
+.soeteck-product-filters__mobile-bar,
+.soeteck-product-filters__panel-header,
+.soeteck-product-filters__overlay {
+  display: none;
+}
+
+/* Category Switcher */
+.soeteck-product-category-switcher {
+  position: relative;
+}
+
+.soeteck-product-category-switcher__toggle {
+  display: flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #a8aeb5;
+  border-radius: 0;
+  background: var(--soeteck-white);
+  color: var(--soeteck-text);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-regular);
+  text-align: left;
+  cursor: pointer;
+}
+
+.soeteck-product-category-switcher__toggle[aria-expanded="true"] {
+  border-color: #565c62;
+  background: #565c62;
+  color: var(--soeteck-white);
+  font-weight: var(--soeteck-weight-semibold);
+}
+
+.soeteck-product-category-switcher__chevron {
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--soeteck-transition-fast);
+}
+
+.soeteck-product-category-switcher__toggle[aria-expanded="true"] .soeteck-product-category-switcher__chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.soeteck-product-category-switcher__panel {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 20;
+  display: grid;
+  gap: 3px;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: max-height 260ms ease, opacity 180ms ease, transform 220ms ease;
+}
+
+.soeteck-product-category-switcher.is-open .soeteck-product-category-switcher__panel {
+  max-height: 420px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.soeteck-product-category-switcher__item {
+  display: flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  min-height: 34px;
+  padding: 0 14px;
+  background: #565c62;
+  color: var(--soeteck-white);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-semibold);
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.soeteck-product-category-switcher__item:hover {
+  background: var(--soeteck-primary);
+  color: var(--soeteck-white);
+}
+
+.soeteck-product-category-switcher__item.is-current {
+  background: #4d5359;
+  color: var(--soeteck-white);
+}
+
+/* Clear/Active filters clear */
+:global(.soeteck-product-filters__clear),
+:global(.soeteck-active-filters__clear) {
+  display: inline-flex;
+  color: var(--soeteck-primary);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-medium);
+  text-decoration: none;
+  transition: color var(--soeteck-transition-fast), opacity 160ms ease, transform 160ms ease;
+}
+
+:global(.soeteck-active-filters__clear):active,
+:global(.soeteck-active-filters__clear):global(.is-removing) {
+  opacity: 0.72;
+  transform: scale(0.97);
+}
+
+/* Filter Form */
+.soeteck-product-filters__form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  padding-top: 10px;
+}
+
+.soeteck-product-filters__groups {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+/* Filter Group */
+.soeteck-filter-group {
+  margin: 0 0 6px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(16, 24, 40, 0.12);
+  border-radius: 4px;
+  background: var(--soeteck-white);
+}
+
+.soeteck-filter-group__toggle {
+  display: flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  background: #e7e7e7;
+  color: var(--soeteck-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.soeteck-filter-group__toggle:hover,
+.soeteck-filter-group:global(.has-active) .soeteck-filter-group__toggle {
+  background: #ddeeff;
+}
+
+.soeteck-filter-group__label {
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-semibold);
+  line-height: 1.2;
+}
+
+.soeteck-filter-group__chevron {
+  margin-left: auto;
+  width: 8px;
+  height: 8px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--soeteck-transition-fast);
+}
+
+.soeteck-filter-group.is-open .soeteck-filter-group__chevron {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.soeteck-filter-group__panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 240ms ease;
+}
+
+.soeteck-filter-group.is-open .soeteck-filter-group__panel {
+  max-height: 420px;
+}
+
+.soeteck-filter-group__options {
+  min-height: 0;
+  overflow: hidden;
+  padding: 5px 6px 8px;
+  border-top: 1px solid rgba(16, 24, 40, 0.08);
+}
+
+.soeteck-filter-group.is-open:global(.is-long) .soeteck-filter-group__options {
+  padding-right: 8px;
+}
+
+.soeteck-filter-option {
+  display: flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  color: var(--soeteck-text);
+  font-size: 13px;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+}
+
+.soeteck-filter-option:hover,
+.soeteck-filter-option:global(.is-checked) {
+  background: rgba(30, 144, 255, 0.08);
+  color: var(--soeteck-primary-dark);
+}
+
+.soeteck-filter-option input {
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--soeteck-primary);
+}
+
+/* Filter Actions */
+.soeteck-product-filters__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px;
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 200ms ease;
+}
+
+.soeteck-product-filters:global(.has-active-filters) .soeteck-product-filters__actions,
+.soeteck-product-filters:global(.has-pending-filters) .soeteck-product-filters__actions {
+  max-height: 48px;
+  margin-top: 10px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.soeteck-product-filters__clear-action {
+  display: inline-flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 6px;
+  background: #e8eef5;
+  color: #1f2937;
+  font-size: 14px;
+  font-weight: var(--soeteck-weight-medium);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast), transform 120ms ease;
+}
+
+.soeteck-product-filters__clear-action:hover {
+  background: #dbe5ef;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.soeteck-product-filters__clear-action:active,
+.soeteck-product-filters:global(.is-resetting) .soeteck-product-filters__clear-action {
+  background: #cbd8e6;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.18);
+  transform: translateY(1px);
+}
+
+.soeteck-product-filters__submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 24px;
+  border: 1px solid var(--soeteck-primary);
+  border-radius: 0;
+  background: var(--soeteck-primary);
+  color: var(--soeteck-white);
+  font-family: var(--soeteck-font-ui);
+  font-size: 14px;
+  font-weight: var(--soeteck-weight-semibold);
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast), transform var(--soeteck-transition-fast);
+}
+
+.soeteck-product-filters__submit:hover {
+  background: var(--soeteck-primary-dark);
+  border-color: var(--soeteck-primary-dark);
+  transform: translateY(-1px);
+}
+
+.soeteck-product-filters__submit:focus-visible {
+  outline: 2px solid var(--soeteck-primary);
+  outline-offset: 2px;
+}
+
+.soeteck-product-filters__submit:active {
+  background: var(--soeteck-primary-dark);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.2);
+  transform: translateY(1px);
+}
+
+/* Active Filters */
+:global(.soeteck-active-filters) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+:global(.soeteck-active-filter) {
+  display: inline-flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--soeteck-primary-soft);
+  color: var(--soeteck-primary-dark);
+  font-size: var(--soeteck-text-sm);
+  font-weight: var(--soeteck-weight-medium);
+  text-decoration: none;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), opacity 160ms ease, transform 160ms ease;
+}
+
+:global(.soeteck-active-filter):hover {
+  background: var(--soeteck-primary);
+  color: var(--soeteck-white);
+}
+
+:global(.soeteck-active-filter):global(.is-removing) {
+  background: #fee2e2;
+  color: #991b1b;
+  opacity: 0.9;
+  transform: scale(0.97);
+}
+
+:global(.soeteck-active-filter):active,
+:global(.soeteck-active-filter):global(.is-removing):hover {
+  background: #dc2626;
+  color: var(--soeteck-white);
+}
+
+/* Intro Blocks */
+.soeteck-product-results__intro {
+  margin: 0 0 25px;
+}
+
+.soeteck-product-results__intro p {
+  margin: 0;
+  font-family: var(--soeteck-font-body);
+  color: var(--soeteck-text);
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.soeteck-product-results__intro strong {
+  font-weight: var(--soeteck-weight-bold);
+}
+
+/* Toolbar */
+.soeteck-product-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 62px;
+  margin-bottom: 18px;
+}
+
+.soeteck-product-toolbar__count p {
+  margin: 0;
+  color: var(--soeteck-text);
+  font-size: 14px;
+}
+
+.soeteck-product-toolbar__form,
+.soeteck-product-toolbar__controls {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.soeteck-product-toolbar__label {
+  display: block;
+  font-family: var(--soeteck-font-ui);
+  color: var(--soeteck-text);
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.soeteck-product-toolbar__select {
+  min-width: 146px;
+  font-family: var(--soeteck-font-ui);
+  min-height: 36px;
+  padding: 0 40px 0 12px;
+  border: 1px solid rgba(16, 24, 40, 0.16);
+  border-radius: 3px;
+  appearance: none;
+  background-color: var(--soeteck-white);
+  background-image: linear-gradient(45deg, transparent 50%, #1f2937 50%), linear-gradient(135deg, #1f2937 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+  color: var(--soeteck-text);
+  font-size: 13px;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.soeteck-product-toolbar__select:hover {
+  border-color: rgba(16, 24, 40, 0.34);
+}
+
+.soeteck-product-toolbar__select:focus {
+  border-color: var(--soeteck-primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.12);
+  outline: none;
+}
+
+.soeteck-product-toolbar__select option:disabled {
+  color: #64748b;
+  font-weight: var(--soeteck-weight-semibold);
+}
+
+.soeteck-product-toolbar__submit {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+/* Product List */
+:global(.soeteck-product-list) {
+  display: grid;
+  gap: 18px;
+}
+
+:global(.soeteck-product-list-item) {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  border: 1px solid #aeb4bb;
+  background: #f7f7f7;
+  box-shadow: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+:global(.soeteck-product-list-item:hover),
+:global(.soeteck-product-list-item:focus-within) {
+  border-color: var(--soeteck-primary);
+  box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.22);
+}
+
+/* Product Card — 3-column horizontal */
+:global(.soeteck-product-list-card) {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr) 172px;
+  align-items: center;
+  min-height: 245px;
+  background: #f7f7f7;
+}
+
+/* Card Media / Gallery */
+:global(.soeteck-product-list-card__media) {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 245px;
+  padding: 30px 14px 42px;
+  overflow: visible;
+  background: transparent;
+  cursor: grab;
+  user-select: none;
+}
+
+:global(.soeteck-product-list-card__media.is-dragging) {
+  cursor: grabbing;
+}
+
+:global(.soeteck-product-list-card__gallery-viewport) {
+  display: block;
+  width: calc(100% - 28px);
+  overflow: hidden;
+}
+
+:global(.soeteck-product-list-card__gallery-track) {
+  display: flex;
+  width: 100%;
+  height: 150px;
+  transform: translateX(calc((var(--gallery-index, 0) * -100%) + var(--gallery-drag-offset, 0px)));
+  transition: transform 220ms ease;
+}
+
+:global(.soeteck-product-list-card__media.is-dragging) :global(.soeteck-product-list-card__gallery-track) {
+  transition: none;
+}
+
+:global(.soeteck-product-list-card__gallery.is-looping-forward) :global(.soeteck-product-list-card__gallery-track) {
+  transition-duration: 286ms;
+}
+
+:global(.soeteck-product-list-card__gallery-slide) {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  pointer-events: none;
+}
+
+:global(.soeteck-product-list-card__media) img {
+  display: block;
+  width: auto;
+  max-width: 205px;
+  max-height: 155px;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* Gallery Dots */
+:global(.soeteck-product-list-card__media-dots) {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  transform: translateX(-50%);
+}
+
+:global(.soeteck-product-list-card__media-dots) button {
+  position: relative;
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+:global(.soeteck-product-list-card__media-dots) button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b8b8b8;
+  transform: translate(-50%, -50%);
+}
+
+:global(.soeteck-product-list-card__media-dots) button:global(.is-active)::before,
+:global(.soeteck-product-list-card__media-dots) button:hover::before {
+  background: #000;
+}
+
+/* Card Content */
+:global(.soeteck-product-list-card__content) {
+  min-width: 0;
+  padding: 46px 10px 44px 0;
+}
+
+:global(.soeteck-product-list-card__title) {
+  margin: 0;
+  font-family: var(--soeteck-font-heading);
+  color: var(--soeteck-text);
+  font-size: 18px;
+  font-weight: var(--soeteck-weight-bold);
+  line-height: 1.35;
+}
+
+:global(.soeteck-product-list-card__title a) {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+:global(.soeteck-product-list-card__title a:hover) {
+  color: var(--soeteck-primary) !important;
+}
+
+:global(.soeteck-product-list-card__excerpt) {
+  display: -webkit-box;
+  margin: 16px 0 0;
+  overflow: hidden;
+  font-family: var(--soeteck-font-body);
+  color: var(--soeteck-text);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Card Actions */
+:global(.soeteck-product-list-card__actions) {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  min-height: 170px;
+  padding: 24px 16px;
+  background: #d7d7d7;
+}
+
+:global(.soeteck-product-list-card__button) {
+  display: inline-flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--soeteck-primary);
+  color: var(--soeteck-white);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-semibold);
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+:global(.soeteck-product-list-card__button):hover {
+  background: var(--soeteck-primary-dark);
+  color: var(--soeteck-white);
+}
+
+/* Models */
+:global(.soeteck-product-list-item__models) {
+  display: grid;
+  grid-template-rows: 0fr;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: hidden;
+  padding: 0 10px;
+  border-top: 1px solid transparent;
+  background: var(--soeteck-white);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    grid-template-rows 260ms ease,
+    padding 260ms ease,
+    border-color 260ms ease,
+    opacity 180ms ease,
+    transform 260ms ease;
+}
+
+:global(.soeteck-product-list-item__models):global(.show) {
+  grid-template-rows: 1fr;
+  padding: 10px 10px 0;
+  border-top-color: rgba(16, 24, 40, 0.14);
+  opacity: 1;
+  transform: translateY(0);
+}
+
+:global(.soeteck-product-list-card__button):global(.show-variations)::after {
+  content: '';
+  display: block;
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-right: 1.35px solid currentColor;
+  border-bottom: 1.35px solid currentColor;
+  transform: translateX(-1px) rotate(-45deg);
+  transform-origin: center;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+:global(.soeteck-product-list-card__button):global(.show-variations)[aria-expanded="true"]::after,
+:global(.soeteck-product-list-card__button):global(.show-variations):global(.is-expanded)::after {
+  transform: translateY(-2px) rotate(45deg);
+}
+
+:global(.soeteck-product-list-card__button):global(.show-variations) i {
+  display: none;
+}
+
+:global(.soeteck-product-list-item__models) :global(.variations-table) {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 0;
+  max-width: 100%;
+  margin: 0;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.14);
+  background: var(--soeteck-white);
+}
+
+:global(.soeteck-product-list-item__models) :global(table) {
+  width: max-content;
+  font-family: var(--soeteck-font-ui);
+  min-width: 100%;
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  color: var(--soeteck-text);
+}
+
+:global(.soeteck-product-list-item__models) :global(th),
+:global(.soeteck-product-list-item__models) :global(td),
+:global(.soeteck-product-list-item__models) :global(.variations-table) :global(th),
+:global(.soeteck-product-list-item__models) :global(.variations-table) :global(td) {
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.1);
+  font-size: 12px;
+  line-height: 1.35;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+:global(.soeteck-product-list-item__models) :global(th),
+:global(.soeteck-product-list-item__models) :global(.variations-table) :global(th) {
+  background: #e8eef5;
+  color: #1f2937;
+  font-weight: var(--soeteck-weight-semibold);
+}
+
+:global(.soeteck-product-list-item__models) :global(td):first-child,
+:global(.soeteck-product-list-item__models) :global(.variations-table) :global(td):first-child {
+  color: #0f172a;
+  font-weight: var(--soeteck-weight-semibold);
+}
+
+:global(.soeteck-product-list-item__models) :global(tbody) :global(tr):hover :global(td) {
+  background: rgba(232, 238, 245, 0.55);
+}
+
+:global(.soeteck-product-list-item__models) :global(.variation-row--extra) {
+  display: none;
+}
+
+:global(.soeteck-product-list-item__models) :global(.variations-table.is-expanded) :global(.variation-row--extra) {
+  display: table-row;
+}
+
+:global(.soeteck-product-list-item__models) :global(.toggle-variations-wrap) {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding: 0 22px 0;
+  background: var(--soeteck-white);
+}
+
+:global(.soeteck-product-list-item__models) :global(.toggle-variations) {
+  display: inline-flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  gap: 6px;
+  min-height: 22px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--soeteck-primary);
+  font-size: 12px;
+  font-weight: var(--soeteck-weight-medium);
+  cursor: pointer;
+}
+
+:global(.soeteck-product-list-item__models) :global(.toggle-variations)::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform var(--soeteck-transition-fast);
+}
+
+:global(.soeteck-product-list-item__models) :global(.toggle-variations.is-expanded)::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+:global(.soeteck-product-list-item__models) :global(.toggle-variations):hover {
+  color: var(--soeteck-primary-dark);
+}
+
+/* Empty state */
+:global(.soeteck-product-empty) {
+  padding: 48px 0;
+  text-align: center;
+  color: var(--soeteck-text-soft);
+  font-size: 16px;
+}
+
+/* Pagination */
+.soeteck-product-results :global(.woocommerce-pagination) {
+  margin-top: clamp(40px, 6vw, 72px);
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  list-style: none;
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers li) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers li::before),
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers li::after),
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers li + li::before) {
+  display: none;
+  content: none;
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .page-numbers) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: var(--soeteck-radius-sm);
+  background: transparent;
+  box-shadow: none;
+  color: var(--soeteck-text);
+  font-family: var(--soeteck-font-ui);
+  font-size: var(--soeteck-text-sm);
+  font-weight: var(--soeteck-weight-medium);
+  line-height: 1;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color var(--soeteck-transition-fast), background-color var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .prev),
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .next) {
+  font-size: 16px;
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .page-numbers.current),
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .page-numbers:hover) {
+  border-color: var(--soeteck-primary);
+  background: var(--soeteck-primary);
+  box-shadow: none;
+  color: var(--soeteck-white);
+}
+
+.soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .page-numbers.dots) {
+  border-color: transparent;
+  background: transparent;
+  color: var(--soeteck-muted);
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  :global(.soeteck-product-list-item__models),
+  .soeteck-product-category-switcher__panel,
+  .soeteck-product-filters__panel,
+  .soeteck-product-filters__overlay,
+  .soeteck-product-filters__actions,
+  .soeteck-filter-group__panel,
+  .soeteck-filter-group__chevron,
+  :global(.soeteck-product-list-card__gallery-slide),
+  :global(.soeteck-product-list-card__gallery-track) {
+    transition: none;
+  }
+}
+
+/* ========================================
+   Responsive Breakpoints
+   ======================================== */
+
+@media (max-width: 1200px) {
+  .soeteck-product-category-layout {
+    grid-template-columns: 250px minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  :global(.soeteck-product-list-card) {
+    grid-template-columns: 210px minmax(0, 1fr) 164px;
+  }
+
+  :global(.soeteck-product-list-card__media) img {
+    max-width: 188px;
+  }
+}
+
+@media (max-width: 991px) {
+  .soeteck-product-cat-hero {
+    min-height: 420px;
+  }
+
+  .soeteck-product-category-body {
+    padding-top: 80px;
+  }
+
+  .soeteck-product-category-layout {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+  }
+
+  .soeteck-product-results,
+  :global(.soeteck-product-list),
+  :global(.soeteck-product-list-item),
+  :global(.soeteck-product-list-card) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .soeteck-product-filters {
+    position: static;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    max-height: none;
+  }
+
+  .soeteck-product-filters__mobile-bar {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .soeteck-product-category-switcher {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .soeteck-product-filters__mobile-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid var(--soeteck-primary);
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+    font-size: 0;
+    cursor: pointer;
+  }
+
+  .soeteck-product-filters__mobile-toggle::before,
+  .soeteck-product-filters__mobile-toggle::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .soeteck-product-filters__mobile-toggle::before {
+    top: 12px;
+    box-shadow: 0 14px 0 currentColor;
+  }
+
+  .soeteck-product-filters__mobile-toggle::after {
+    top: 19px;
+    width: 14px;
+  }
+
+  .soeteck-product-filters__panel {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: min(82vh, 680px);
+    padding: 16px 16px 0;
+    border-radius: 18px 18px 0 0;
+    background: var(--soeteck-white);
+    box-shadow: 0 -18px 40px rgba(15, 23, 42, 0.22);
+    transform: translateY(105%);
+    transition: transform 280ms ease;
+  }
+
+  .soeteck-product-filters:global(.is-mobile-open) .soeteck-product-filters__panel {
+    transform: translateY(0);
+  }
+
+  .soeteck-product-filters__panel-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding-top: 12px;
+    color: var(--soeteck-text);
+    font-size: 18px;
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .soeteck-product-filters__panel-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 42px;
+    height: 4px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transform: translateX(-50%);
+  }
+
+  .soeteck-product-filters__panel-close {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 1px solid rgba(16, 24, 40, 0.14);
+    background: #f8fafc;
+    cursor: pointer;
+  }
+
+  .soeteck-product-filters__panel-close::before,
+  .soeteck-product-filters__panel-close::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 1.5px;
+    background: #1f2937;
+  }
+
+  .soeteck-product-filters__panel-close::before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  .soeteck-product-filters__panel-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  .soeteck-product-filters__form {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 0 74px;
+  }
+
+  .soeteck-product-filters__groups {
+    overflow-y: auto;
+    margin-inline: -4px;
+    padding: 6px 4px 20px;
+  }
+
+  .soeteck-filter-group {
+    background: var(--soeteck-white);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  }
+
+  .soeteck-filter-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .soeteck-product-filters__actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    flex: 0 0 auto;
+    order: 2;
+    max-height: none;
+    margin: 12px -16px 0;
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
+    border-top: 1px solid rgba(16, 24, 40, 0.12);
+    background: var(--soeteck-white);
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .soeteck-product-filters:global(.has-active-filters) .soeteck-product-filters__actions,
+  .soeteck-product-filters:global(.has-pending-filters) .soeteck-product-filters__actions {
+    max-height: none;
+    margin-top: 12px;
+  }
+
+  .soeteck-product-filters__overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: rgba(15, 23, 42, 0.48);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 220ms ease;
+  }
+
+  .soeteck-product-filters:global(.is-mobile-open) .soeteck-product-filters__overlay {
+    display: block;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  :global(.soeteck-product-list-card) {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  :global(.soeteck-product-list-card__actions) {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding: 16px;
+  }
+
+  :global(.soeteck-product-list-item__models) {
+    padding-inline: 0;
+  }
+
+  .soeteck-product-results :global(.woocommerce-pagination) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .soeteck-product-cat-hero {
+    min-height: 380px;
+  }
+
+  .soeteck-product-cat-hero__content {
+    padding-block: 56px;
+  }
+
+  .soeteck-product-cat-hero__lead {
+    font-size: var(--soeteck-text-md);
+  }
+
+  :global(.soeteck-product-list-card__excerpt) {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    margin-top: 12px;
+  }
+
+  :global(.soeteck-product-list-card__actions) {
+    background: transparent;
+    min-height: 0;
+    padding: 0 20px 20px;
+  }
+
+  :global(.soeteck-product-list-card__actions) :global(.soeteck-product-list-card__button):not(:global(.show-variations)) {
+    display: none;
+  }
+
+  :global(.soeteck-product-list-card__actions) :global(.show-variations) {
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    white-space: normal;
+  }
+
+  .soeteck-product-toolbar {
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 6px;
+    min-width: 0;
+    min-height: 40px;
+  }
+
+  .soeteck-product-toolbar__count {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .soeteck-product-toolbar__count p {
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soeteck-product-toolbar__controls,
+  .soeteck-product-toolbar__form {
+    flex: 0 1 auto;
+    align-items: center;
+    flex-direction: row;
+    gap: 4px;
+    min-width: 0;
+    width: auto;
+  }
+
+  .soeteck-product-toolbar__label {
+    min-width: 0;
+  }
+
+  .soeteck-product-toolbar__select {
+    min-width: 72px;
+    width: 72px;
+    min-height: 34px;
+    padding: 0 20px 0 6px;
+    background-position: calc(100% - 11px) 50%, calc(100% - 6px) 50%;
+    font-size: 11px;
+  }
+
+  :global(.soeteck-product-list) {
+    justify-items: center;
+  }
+
+  :global(.soeteck-product-list-item) {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  :global(.soeteck-product-list-item):hover,
+  :global(.soeteck-product-list-item):focus-within {
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
+  }
+
+  :global(.soeteck-product-list-card) {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    min-height: 0;
+  }
+
+  :global(.soeteck-product-list-card__content),
+  :global(.soeteck-product-list-card__actions) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  :global(.soeteck-product-list-card__title),
+  :global(.soeteck-product-list-card__excerpt),
+  :global(.soeteck-product-list-card__button) {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  :global(.soeteck-product-list-card__media) {
+    min-height: 190px;
+    padding: 24px 24px 40px;
+    touch-action: pan-y;
+  }
+
+  :global(.soeteck-product-list-card__gallery-track) {
+    height: 130px;
+  }
+
+  :global(.soeteck-product-list-card__media-dots) {
+    bottom: 22px;
+  }
+
+  :global(.soeteck-product-list-card__content) {
+    padding: 0 20px 20px;
+  }
+
+  :global(.soeteck-product-list-card__actions) {
+    grid-template-columns: 1fr;
+  }
+
+  :global(.soeteck-product-list-item__models):global(.show) {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .soeteck-product-cat-hero__lead {
+    display: none;
+  }
+
+  .soeteck-product-toolbar__select {
+    width: 68px;
+    min-width: 68px;
+  }
+
+  .soeteck-product-results :global(.woocommerce-pagination ul.page-numbers > li > .page-numbers) {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    padding: 0;
+    font-size: 12px;
+  }
+}
+</style>

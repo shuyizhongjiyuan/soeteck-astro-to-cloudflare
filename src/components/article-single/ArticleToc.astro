@@ -1,0 +1,329 @@
+<aside class="soeteck-article-toc" data-toc-min-headings="3" aria-label="Article table of contents">
+  <button class="soeteck-article-toc__toggle" type="button" aria-expanded="false">In this article</button>
+  <div class="soeteck-article-toc__panel">
+    <p class="soeteck-article-toc__title">On this page</p>
+    <nav class="soeteck-article-toc__nav" aria-label="On this page"></nav>
+  </div>
+</aside>
+
+<script>
+  const slugifyHeading = (text: string, index: number) => {
+    const slug = text
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    return slug || `section-${index + 1}`;
+  };
+
+  document.querySelectorAll<HTMLElement>('.soeteck-article-toc').forEach((toc) => {
+    const content = document.querySelector<HTMLElement>('.soeteck-single-post__content');
+    const nav = toc.querySelector<HTMLElement>('.soeteck-article-toc__nav');
+    const toggle = toc.querySelector<HTMLButtonElement>('.soeteck-article-toc__toggle');
+    const minHeadings = Number(toc.dataset.tocMinHeadings || 3);
+
+    if (!content || !nav) {
+      return;
+    }
+
+    const headings = [...content.querySelectorAll<HTMLElement>('h2, h3')].filter((heading) => heading.textContent?.trim() !== '');
+    const h2Headings = headings.filter((heading) => heading.tagName.toLowerCase() === 'h2');
+
+    if (h2Headings.length < minHeadings) {
+      toc.remove();
+      return;
+    }
+
+    const usedIds = new Set<string>();
+    headings.forEach((heading, index) => {
+      if (heading.id) {
+        usedIds.add(heading.id);
+        return;
+      }
+
+      const baseId = slugifyHeading(heading.textContent || '', index);
+      let id = baseId;
+      let duplicateIndex = 2;
+      while (usedIds.has(id)) {
+        id = `${baseId}-${duplicateIndex}`;
+        duplicateIndex += 1;
+      }
+
+      heading.id = id;
+      usedIds.add(id);
+    });
+
+    const list = document.createElement('ol');
+    list.className = 'soeteck-article-toc__list';
+    const headingItems = new Map<string, { item: HTMLLIElement; link: HTMLAnchorElement; heading: HTMLElement; level: string }>();
+    let currentH2Item: HTMLLIElement | null = null;
+
+    headings.forEach((heading) => {
+      const level = heading.tagName.toLowerCase();
+      const item = document.createElement('li');
+      const link = document.createElement('a');
+      item.className = `soeteck-article-toc__item soeteck-article-toc__item--${level}`;
+      link.className = `soeteck-article-toc__link soeteck-article-toc__link--${level === 'h3' ? 'child' : 'parent'}`;
+      link.href = `#${heading.id}`;
+      link.textContent = heading.textContent?.trim() || '';
+      item.append(link);
+      headingItems.set(heading.id, { item, link, heading, level });
+
+      if (level === 'h2') {
+        currentH2Item = item;
+        list.append(item);
+        return;
+      }
+
+      if (currentH2Item) {
+        let childList = currentH2Item.querySelector<HTMLOListElement>('.soeteck-article-toc__children');
+        if (!childList) {
+          childList = document.createElement('ol');
+          childList.className = 'soeteck-article-toc__children';
+          currentH2Item.append(childList);
+        }
+        childList.append(item);
+      }
+    });
+
+    nav.append(list);
+    toc.classList.add('is-ready');
+
+    toggle?.addEventListener('click', () => {
+      const isOpen = toc.classList.contains('is-open');
+      toc.classList.toggle('is-open', !isOpen);
+      toggle.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    });
+
+    nav.querySelectorAll('a[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => {
+        toc.classList.remove('is-open');
+        toggle?.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    const setActiveHeading = (heading: HTMLElement) => {
+      headingItems.forEach(({ item, link }) => {
+        item.classList.remove('is-active');
+        link.classList.remove('is-active');
+        link.removeAttribute('aria-current');
+      });
+
+      const active = headingItems.get(heading.id);
+      if (!active) {
+        return;
+      }
+
+      active.item.classList.add('is-active');
+      active.link.classList.add('is-active');
+      active.link.setAttribute('aria-current', 'true');
+
+      if (active.level === 'h3') {
+        active.item.closest('.soeteck-article-toc__item--h2')?.classList.add('is-active');
+      }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+      if (visibleEntries[0]) {
+        setActiveHeading(visibleEntries[0].target as HTMLElement);
+      }
+    }, {
+      rootMargin: '-18% 0px -65% 0px',
+      threshold: 0,
+    });
+
+    headings.forEach((heading) => observer.observe(heading));
+    setActiveHeading(h2Headings[0]);
+
+    const updateTocBoundary = () => {
+      const bodyShell = toc.closest<HTMLElement>('.soeteck-single-post__body-shell');
+      const articleContent = document.querySelector<HTMLElement>('.entry-content.soeteck-single-post__content');
+
+      if (!bodyShell || !articleContent || !window.matchMedia('(min-width: 1820px)').matches) {
+        toc.classList.remove('is-docked');
+        toc.style.removeProperty('--soeteck-toc-dock-top');
+        toc.style.removeProperty('--soeteck-toc-dock-left');
+        return;
+      }
+
+      toc.classList.remove('is-docked');
+      toc.style.removeProperty('--soeteck-toc-dock-top');
+      toc.style.removeProperty('--soeteck-toc-dock-left');
+
+      const tocHeight = toc.offsetHeight;
+      const contentRect = articleContent.getBoundingClientRect();
+      const shouldDock = contentRect.bottom <= tocHeight + 180;
+
+      if (!shouldDock) {
+        return;
+      }
+
+      toc.style.setProperty('--soeteck-toc-dock-top', `${articleContent.offsetTop + articleContent.offsetHeight - tocHeight}px`);
+      toc.style.setProperty('--soeteck-toc-dock-left', `${toc.getBoundingClientRect().left - bodyShell.getBoundingClientRect().left}px`);
+      toc.classList.add('is-docked');
+    };
+
+    updateTocBoundary();
+    window.addEventListener('scroll', updateTocBoundary, { passive: true });
+    window.addEventListener('resize', updateTocBoundary);
+    window.addEventListener('pagehide', () => observer.disconnect(), { once: true });
+  });
+</script>
+
+<style>
+  .soeteck-article-toc {
+    display: none;
+  }
+
+  .soeteck-article-toc.is-ready {
+    display: block;
+  }
+
+  .soeteck-article-toc__toggle {
+    display: none;
+  }
+
+  .soeteck-article-toc__panel {
+    border-left: 2px solid var(--soeteck-border-soft);
+  }
+
+  .soeteck-article-toc__title {
+    margin: 0 0 12px;
+    padding-left: 14px;
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .soeteck-article-toc__nav {
+    max-height: min(58vh, 580px);
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  :global(.soeteck-article-toc__list),
+  :global(.soeteck-article-toc__children) {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :global(.soeteck-article-toc__item) {
+    margin: 0;
+  }
+
+  :global(.soeteck-article-toc__children) {
+    display: none;
+    padding: 6px 0 8px 15px;
+  }
+
+  :global(.soeteck-article-toc__item.is-active > .soeteck-article-toc__children) {
+    display: block;
+  }
+
+  :global(.soeteck-article-toc__link) {
+    display: block;
+    padding: 6px 14px;
+    border-left: 2px solid transparent;
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+    line-height: 1.45;
+    text-decoration: none;
+    transform: translateX(-2px);
+    transition: color var(--soeteck-transition-fast), background-color var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast);
+  }
+
+  :global(.soeteck-article-toc__link:hover),
+  :global(.soeteck-article-toc__link.is-active) {
+    border-left-color: var(--soeteck-primary);
+    background: var(--soeteck-primary-soft);
+    color: var(--soeteck-primary);
+  }
+
+  :global(.soeteck-article-toc__link--child) {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: var(--soeteck-text-xs);
+    line-height: 1.4;
+  }
+
+  @media (min-width: 1820px) {
+    :global(.soeteck-single-post.single-post--blogs) .soeteck-article-toc.is-ready {
+      position: fixed;
+      z-index: 5;
+      top: 180px;
+      left: max(32px, calc((100vw - var(--soeteck-container)) / 2 - 300px));
+      width: 250px;
+    }
+
+    :global(.soeteck-single-post.single-post--blogs) .soeteck-article-toc.is-docked {
+      position: absolute;
+      top: var(--soeteck-toc-dock-top);
+      left: var(--soeteck-toc-dock-left);
+    }
+  }
+
+  @media (max-width: 1819px) {
+    .soeteck-article-toc.is-ready {
+      margin-bottom: 28px;
+    }
+
+    .soeteck-article-toc__toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      min-height: 48px;
+      padding: 0 16px;
+      border: 1px solid var(--soeteck-border-soft);
+      border-radius: var(--soeteck-radius);
+      background: var(--soeteck-surface);
+      color: var(--soeteck-text);
+      font-weight: var(--soeteck-weight-bold);
+    }
+
+    .soeteck-article-toc__toggle::after {
+      content: '';
+      width: 9px;
+      height: 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg) translateY(-2px);
+      transition: transform var(--soeteck-transition-medium);
+    }
+
+    .soeteck-article-toc.is-open .soeteck-article-toc__toggle::after {
+      transform: rotate(225deg) translate(-2px, -1px);
+    }
+
+    .soeteck-article-toc__panel {
+      display: none;
+      margin-top: 10px;
+      padding: 16px;
+      border: 1px solid var(--soeteck-border-soft);
+      border-radius: var(--soeteck-radius);
+      background: var(--soeteck-white);
+    }
+
+    .soeteck-article-toc__title {
+      display: none;
+    }
+
+    .soeteck-article-toc.is-open .soeteck-article-toc__panel {
+      display: block;
+    }
+
+    .soeteck-article-toc__nav {
+      max-height: 42vh;
+      padding-right: 0;
+    }
+  }
+</style>

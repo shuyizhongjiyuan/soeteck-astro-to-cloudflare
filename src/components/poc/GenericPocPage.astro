@@ -1,0 +1,118 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import type { AdaptedPage } from '@/lib/page-adapter';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+const content = page.source;
+---
+<main class="poc-page">
+  <div class="poc-panel">
+    <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+
+    <article>
+      <p class="soeteck-eyebrow">{page.routeType}</p>
+      <h1>{page.title}</h1>
+      <p class="route-path">{page.routePath}</p>
+
+      {page.heroImage && <img class="lead-media" src={page.heroImage.path} alt={page.heroImage.alt} loading="eager" />}
+
+      {content.page && <section class="content-html" set:html={content.page.contentHtml} />}
+
+      {content.product && (
+        <section class="content-html">
+          <p><strong>Type:</strong> {content.product.type}</p>
+          {content.product.sku && <p><strong>SKU:</strong> {content.product.sku}</p>}
+          <div set:html={content.product.summary} />
+          <div set:html={content.product.descriptionHtml} />
+        </section>
+      )}
+
+      {content.category && (
+        <section>
+          <div class="content-html" set:html={content.category.description} />
+          <p>{content.category.count} products in current WordPress category.</p>
+          <div class="cards">
+            {content.products?.map((product) => (
+              <article>
+                {product.featuredImage && <img src={product.featuredImage.path} alt={product.featuredImage.alt ?? ''} loading="lazy" />}
+                <h2>{product.title}</h2>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {content.article && (
+        <section class="content-html">
+          {content.article.date && <p>{new Date(content.article.date).toLocaleDateString('en-US')}</p>}
+          <p>{content.article.excerpt}</p>
+          <div set:html={content.article.contentHtml} />
+        </section>
+      )}
+
+      {content.archive && (
+        <section>
+          <div class="content-html" set:html={content.archive.description} />
+          <p>{content.archive.count} articles in current WordPress category.</p>
+          <div class="cards">
+            {content.articles?.map((article) => (
+              <article>
+                {article.featuredImage && <img src={article.featuredImage.path} alt={article.featuredImage.alt ?? ''} loading="lazy" />}
+                <h2>{article.title}</h2>
+                <p>{article.excerpt}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+    </article>
+  </div>
+</main>
+
+<style>
+  h1 {
+    margin: 8px 0 12px;
+    color: var(--soeteck-navy);
+    font-size: clamp(2.3rem, 5vw, 4rem);
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+  }
+
+  .route-path {
+    color: var(--soeteck-muted);
+    margin-bottom: 28px;
+  }
+
+  .lead-media {
+    width: 100%;
+    max-height: 520px;
+    margin-bottom: 32px;
+    border-radius: 18px;
+    object-fit: cover;
+    background: var(--soeteck-media-bg);
+  }
+
+  .content-html :global(img) {
+    border-radius: 14px;
+  }
+
+  .cards {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: 24px;
+  }
+
+  .cards article {
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    background: #fff;
+    box-shadow: var(--soeteck-shadow);
+    padding: 24px;
+  }
+</style>

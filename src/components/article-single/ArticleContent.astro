@@ -1,0 +1,78 @@
+---
+interface Props {
+  contentHtml: string;
+}
+
+const { contentHtml } = Astro.props;
+---
+<div class="entry-content soeteck-single-post__content" set:html={contentHtml} />
+
+<style>
+  .soeteck-single-post__content {
+    color: var(--soeteck-text-soft);
+    font-size: clamp(1rem, 1.2vw, 1.125rem);
+    line-height: 1.82;
+  }
+
+  .soeteck-single-post__content :global(> *) {
+    scroll-margin-top: 110px;
+  }
+
+  .soeteck-single-post__content :global(> * + *) {
+    margin-top: 1.2rem;
+  }
+
+  .soeteck-single-post__content :global(h2) {
+    margin-top: clamp(42px, 5vw, 68px);
+    margin-bottom: 18px;
+    color: var(--soeteck-text);
+    font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+    line-height: 1.16;
+    letter-spacing: -0.025em;
+  }
+
+  .soeteck-single-post__content :global(h3) {
+    margin-top: clamp(28px, 4vw, 44px);
+    margin-bottom: 12px;
+    color: var(--soeteck-text);
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    line-height: 1.22;
+  }
+
+  .soeteck-single-post__content :global(p) {
+    margin-bottom: 0;
+  }
+
+  .soeteck-single-post__content :global(ul),
+  .soeteck-single-post__content :global(ol) {
+    padding-left: 1.4rem;
+    list-style-position: outside;
+  }
+
+  .soeteck-single-post__content :global(li + li) {
+    margin-top: 0.55rem;
+  }
+
+  .soeteck-single-post__content :global(a) {
+    color: var(--soeteck-primary);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .soeteck-single-post__content :global(a:hover) {
+    color: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-single-post__content :global(img),
+  .soeteck-single-post__content :global(figure) {
+    border-radius: var(--soeteck-radius);
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-single-post__content {
+      font-size: 1rem;
+      line-height: 1.78;
+    }
+  }
+</style>

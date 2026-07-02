@@ -1,0 +1,342 @@
+---
+import AboutHero from './AboutHero.astro';
+import AboutSectionHeading from './AboutSectionHeading.astro';
+import AboutCardGrid from './AboutCardGrid.astro';
+import AboutFactoryWall from './AboutFactoryWall.astro';
+import AboutCertificates from './AboutCertificates.astro';
+import AboutGlobalNetwork from './AboutGlobalNetwork.astro';
+import AboutTimeline from './AboutTimeline.astro';
+import AboutCta from './AboutCta.astro';
+import type { AdaptedPage, PageImage } from '@/lib/page-adapter';
+import {
+  ABOUT_HERO_FALLBACK,
+  ABOUT_WORLD_MAP,
+  CERTIFICATE_IMAGES,
+  FACTORY_CAPABILITIES,
+  FACTORY_IMAGES,
+  INTRO_PROOFS,
+  MILESTONES,
+  NETWORK_NODES,
+  PROJECT_STEPS,
+  QUALITY_POINTS,
+  SERVICES,
+  SOLUTION_SCOPES,
+  TRUST_METRICS,
+} from './about-content';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+const aboutSections = page.sections?.about ?? {};
+const heroEyebrow = page.sections?.hero?.eyebrow ?? 'Critical Infrastructure Manufacturer';
+const heroTitle = page.sections?.hero?.title ?? page.title;
+const heroImage: PageImage = page.heroImage ?? ABOUT_HERO_FALLBACK;
+
+// Use translation values with English hardcoded fallbacks
+const lead = aboutSections.lead ?? 'SOETECK is a professional manufacturer of critical infrastructure solutions in China, specializing in critical power and precision cooling systems for data centers and Telecom.';
+const introEyebrow = aboutSections.introEyebrow ?? 'Who We Are';
+const introTitle = aboutSections.introTitle ?? 'Power and cooling infrastructure built for critical environments.';
+const introP1 = aboutSections.introP1 ?? 'SOETECK, also known as SHUYI in Chinese, is a professional manufacturer of critical infrastructure solutions in China, specializing in critical power and precision cooling systems for data centers and telecom.';
+const introP2 = aboutSections.introP2 ?? 'We design and supply integrated data center solutions, including prefabricated containerized, micro modular, and rack data centers. Our products include precision air conditioners, UPS systems, PDUs, VRLA batteries, and other equipment used in critical environments.';
+const introProofs = aboutSections.introProofs ?? INTRO_PROOFS;
+const deliverEyebrow = aboutSections.deliverEyebrow ?? 'What We Deliver';
+const deliverTitle = aboutSections.deliverTitle ?? 'Critical infrastructure systems buyers can evaluate in one place.';
+const deliverText = aboutSections.deliverText ?? 'SOETECK helps customers combine power, cooling, data center, telecom, and supporting infrastructure into practical configurations for real project conditions.';
+const deliverCards = aboutSections.deliverCards ?? SOLUTION_SCOPES.map(([title, text]) => ({ title, text }));
+const proofEyebrow = aboutSections.proofEyebrow ?? 'Why Buyers Trust SOETECK';
+const proofTitle = aboutSections.proofTitle ?? 'A manufacturing-backed partner for power, cooling, and data center infrastructure.';
+const trustCards = aboutSections.trustCards ?? TRUST_METRICS.map(([value, label, text]) => ({ value, label, title: label, text }));
+const serviceEyebrow = aboutSections.serviceEyebrow ?? 'How We Reduce Project Risk';
+const serviceTitle = aboutSections.serviceTitle ?? 'Support that helps buyers move from requirements to reliable operation.';
+const serviceCards = aboutSections.serviceCards ?? SERVICES.map(([eyebrow, title, text]) => ({ eyebrow, title, text }));
+const factoryEyebrow = aboutSections.factoryEyebrow ?? 'Manufacturing & Testing Capability';
+const factoryTitle = aboutSections.factoryTitle ?? 'Factory-backed production and validation for critical infrastructure systems.';
+const factoryP1 = aboutSections.factoryP1 ?? 'At SOETECK, product innovation and research are supported by advanced facilities that include laboratories for electromagnetic compatibility, enthalpy difference analysis, environmental reliability, noise and vibration testing, power measurement, and IP protection.';
+const factoryP2 = aboutSections.factoryP2 ?? 'These facilities help us verify that critical infrastructure products meet demanding performance and reliability standards before they enter the field.';
+const factoryCapabilities = aboutSections.factoryCapabilities ?? FACTORY_CAPABILITIES;
+const processEyebrow = aboutSections.processEyebrow ?? 'How We Support Your Project';
+const processTitle = aboutSections.processTitle ?? 'A clear path from inquiry to operation support.';
+const processText = aboutSections.processText ?? 'International infrastructure buyers need more than product names. SOETECK helps turn project requirements into a configuration, proposal, manufacturing plan, delivery coordination, and support path.';
+const processCards = aboutSections.processCards ?? PROJECT_STEPS.map(([eyebrow, title, text]) => ({ eyebrow, title, text }));
+const networkCards = aboutSections.networkNodes ?? NETWORK_NODES.map(([eyebrow, title, text]) => ({ eyebrow, title, text }));
+const milestones = aboutSections.milestones ?? MILESTONES.map(([year, event]) => ({ year, event }));
+const timelineEyebrow = aboutSections.timelineEyebrow ?? 'Our Journey';
+const timelineTitle = aboutSections.timelineTitle ?? 'Milestones shaped by data center and telecom infrastructure demand.';
+const timelineText = aboutSections.timelineText ?? 'SOETECK has continued to expand from focused manufacturing into global infrastructure solutions, combining technical expertise with production capability and international service support.';
+const visionLabel = aboutSections.visionLabel ?? 'Vision';
+const visionText = aboutSections.visionText ?? "Empowering global clients as the world's premier digital power infrastructure partner";
+const missionLabel = aboutSections.missionLabel ?? 'Mission';
+const missionText = aboutSections.missionText ?? 'Driving digital power innovation to build a green intelligent future for the Internet of Everything';
+const certificatesEyebrow = aboutSections.certificatesEyebrow ?? 'Featured Certificates';
+const certificatesTitle = aboutSections.certificatesTitle ?? 'Quality systems for safety, sustainability, and excellence.';
+const certificatesText = aboutSections.certificatesText ?? 'We maintain rigorous quality and environmental management practices, including ISO9001, ISO14001, ISO45001, and product certifications such as CE, reinforcing our commitment to international standards.';
+const certificatesPoints = aboutSections.certificatesPoints ?? QUALITY_POINTS;
+const networkEyebrow = aboutSections.networkEyebrow ?? 'Global Network & Industrial Partners';
+const networkTitle = aboutSections.networkTitle ?? 'Regional presence and partner coverage for international infrastructure projects.';
+const networkText = aboutSections.networkText ?? 'With branches and offices in over 50 countries and a presence in 86 markets, SOETECK combines manufacturing capability with regional communication channels and partner relationships.';
+const ctaEyebrow = aboutSections.ctaEyebrow ?? 'Talk to an Engineer';
+const ctaTitle = aboutSections.ctaTitle ?? 'Share your facility requirements and get a practical solution path.';
+const ctaText = aboutSections.ctaText ?? 'Tell us your facility type, load, cooling requirement, project timeline, and target region. Our team will help identify the right power, cooling, or modular data center configuration.';
+const ctaChecks = aboutSections.ctaChecks ?? ['Project consultation', 'Technical configuration support', 'Regional communication follow-up'];
+const ctaButton = aboutSections.ctaButton ?? 'Request Project Consultation';
+---
+<div class="about-page">
+  <AboutHero title={heroTitle} lead={lead} image={heroImage} breadcrumbs={page.breadcrumbs} eyebrow={heroEyebrow} lang={lang} />
+
+  <section class="about-section intro" aria-labelledby="about-intro-title">
+    <div class="soeteck-container intro__grid">
+      <div class="intro__copy">
+        <p class="soeteck-eyebrow">{introEyebrow}</p>
+        <h2 id="about-intro-title">{introTitle}</h2>
+        <p>{introP1}</p>
+        <p>{introP2}</p>
+        <div class="intro__proofs" aria-label="SOETECK trust highlights">
+          {introProofs.map((proof: string) => <span>{proof}</span>)}
+        </div>
+      </div>
+      <div class="intro__video" aria-label="SOETECK company video">
+        <iframe src="https://www.youtube-nocookie.com/embed/s5zYTa9BSfo" title="SOETECK company video" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="about-section deliver" aria-labelledby="about-deliver-title">
+    <div class="soeteck-container">
+      <AboutSectionHeading eyebrow={deliverEyebrow} title={deliverTitle} text={deliverText} id="about-deliver-title" />
+      <AboutCardGrid cards={deliverCards} variant="deliver" />
+    </div>
+  </section>
+
+  <section class="about-section proof" aria-labelledby="about-proof-title">
+    <div class="soeteck-container">
+      <div class="proof__header">
+        <p class="soeteck-eyebrow">{proofEyebrow}</p>
+        <h2 id="about-proof-title">{proofTitle}</h2>
+      </div>
+      <AboutCardGrid cards={trustCards} variant="proof" />
+    </div>
+  </section>
+
+  <section class="about-section service" aria-labelledby="about-service-title">
+    <div class="soeteck-container">
+      <AboutSectionHeading eyebrow={serviceEyebrow} title={serviceTitle} id="about-service-title" />
+      <AboutCardGrid cards={serviceCards} variant="service" />
+    </div>
+  </section>
+
+  <section class="about-section factory" aria-labelledby="about-factory-title">
+    <div class="soeteck-container factory__grid">
+      <div class="factory__media">
+        <AboutFactoryWall images={FACTORY_IMAGES} />
+      </div>
+      <div class="factory__copy">
+        <p class="soeteck-eyebrow">{factoryEyebrow}</p>
+        <h2 id="about-factory-title">{factoryTitle}</h2>
+        <p>{factoryP1}</p>
+        <p>{factoryP2}</p>
+        <ul class="factory__capabilities">
+          {factoryCapabilities.map((capability: string) => <li>{capability}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <AboutCertificates images={CERTIFICATE_IMAGES} points={certificatesPoints} eyebrow={certificatesEyebrow} title={certificatesTitle} text={certificatesText} />
+
+  <section class="about-section process" aria-labelledby="about-process-title">
+    <div class="soeteck-container">
+      <AboutSectionHeading eyebrow={processEyebrow} title={processTitle} text={processText} id="about-process-title" />
+      <AboutCardGrid cards={processCards} variant="process" />
+    </div>
+  </section>
+
+  <AboutGlobalNetwork image={ABOUT_WORLD_MAP} nodes={networkCards} eyebrow={networkEyebrow} title={networkTitle} text={networkText} />
+  <AboutTimeline milestones={milestones} eyebrow={timelineEyebrow} title={timelineTitle} text={timelineText} visionLabel={visionLabel} visionText={visionText} missionLabel={missionLabel} missionText={missionText} />
+  <AboutCta href="/en/contact-us/" eyebrow={ctaEyebrow} title={ctaTitle} text={ctaText} checks={ctaChecks} button={ctaButton} />
+</div>
+
+<style>
+  .about-page {
+    --about-content-width: 1200px;
+    --about-content-gutter: 20px;
+    background: #fff;
+  }
+
+  .about-page :global(.soeteck-container) {
+    width: min(var(--about-content-width), calc(100% - (var(--about-content-gutter) * 2)));
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  .about-section {
+    padding: clamp(64px, 7vw, 108px) 0;
+  }
+
+  .factory,
+  .global {
+    background: var(--soeteck-surface);
+  }
+
+  .intro__grid,
+  .factory__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+    gap: clamp(44px, 7vw, 96px);
+    align-items: center;
+  }
+
+  .factory__grid {
+    grid-template-columns: minmax(0, 0.96fr) minmax(0, 1fr);
+  }
+
+  .intro h2,
+  .factory h2,
+  .proof h2 {
+    margin: 0;
+    color: var(--soeteck-text);
+    font-size: clamp(1.85rem, 3.1vw, 3rem);
+    line-height: 1.14;
+  }
+
+  .intro p:not(.soeteck-eyebrow),
+  .factory p:not(.soeteck-eyebrow) {
+    margin: 22px 0 0;
+    color: var(--soeteck-text-soft);
+    line-height: 1.72;
+  }
+
+  .intro__video {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: var(--soeteck-radius-lg);
+    background: var(--soeteck-dark);
+    box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+  }
+
+  .intro__video::before {
+    content: '';
+    display: block;
+    aspect-ratio: 16 / 9;
+  }
+
+  .intro__video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .intro__proofs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .intro__proofs span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 102, 204, 0.16);
+    border-radius: 999px;
+    background: rgba(0, 102, 204, 0.06);
+    color: var(--soeteck-primary-dark);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+  }
+
+  .proof {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f8fbff 0%, #eef5fb 100%);
+  }
+
+  .proof::before {
+    content: '';
+    position: absolute;
+    top: -120px;
+    right: -80px;
+    width: 360px;
+    height: 360px;
+    border-radius: 50%;
+    background: rgba(0, 102, 204, 0.08);
+  }
+
+  .proof__header {
+    position: relative;
+    max-width: 860px;
+    margin-bottom: clamp(30px, 4vw, 46px);
+  }
+
+  .factory__capabilities {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 28px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .factory__capabilities li {
+    position: relative;
+    padding: 13px 14px 13px 38px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: var(--soeteck-radius);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.4;
+  }
+
+  .factory__capabilities li::before {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--soeteck-primary);
+    box-shadow: 0 0 0 5px rgba(0, 102, 204, 0.12);
+  }
+
+  @media (max-width: 991px) {
+    .intro__grid,
+    .factory__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .factory__media {
+      order: 2;
+    }
+
+    .factory__copy {
+      order: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .about-section {
+      padding-block: 56px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .factory__capabilities {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .about-page {
+      --about-content-gutter: 16px;
+    }
+  }
+</style>

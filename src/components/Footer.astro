@@ -1,0 +1,238 @@
+---
+import type { GlobalConfigResponse } from '@/lib/content-api'
+import { getUITranslation } from '@/lib/translations'
+
+interface Props {
+  globalConfig: GlobalConfigResponse
+  lang?: string
+}
+
+const { globalConfig, lang = 'en' } = Astro.props
+
+// 将 API 返回的 /en/ 路径转为当前语言路径
+function localizePath(apiPath: string): string {
+  if (lang === 'en') return apiPath;
+  return apiPath.replace(/^\/en\//, `/${lang}/`);
+}
+
+// Translate footer section/link titles from English
+const footerTitleMap: Record<string, string> = {
+  'Products': 'category.criticalPower', // section title uses nav key
+  'Critical Power': 'category.criticalPower',
+  'Thermal Management': 'category.thermalManagement',
+  'Racks & Enclosures': 'category.racksEnclosures',
+  'Monitoring & Management': 'category.monitoringManagement',
+  'Solutions': 'nav.solutions',
+  'Prefabricated Data Center': 'category.prefabDC',
+  'Colocation Data Center': 'category.colocationDC',
+  'Edge Computing': 'category.edgeComputing',
+  'News & Insights': 'nav.news',
+  'News Releases': 'category.newsReleases',
+  'Blog': 'category.blogs',
+  'Case Studies': 'category.caseStudies',
+  'Site Map': 'footer.siteMap',
+  'Terms of Use': 'footer.termsOfUse',
+  'Privacy Policy': 'footer.privacyPolicy',
+  'Cookie Policy': 'footer.cookiePolicy',
+}
+function translateFooterTitle(title: string): string {
+  if (lang === 'en') return title;
+  const key = footerTitleMap[title];
+  if (!key) return title;
+  return getUITranslation(lang, key);
+}
+
+// Use data from API, fall back to defaults if not available
+const logoUrl = globalConfig.site.logoWhite?.path || '/resources/soeteck-logo-2-1.webp'
+const footerSections = (globalConfig.footer.navigation || []).map(section => ({
+  title: translateFooterTitle(section.title),
+  path: section.items?.[0]?.path || '#',
+  children: (section.items || []).map(item => ({
+    title: translateFooterTitle(item.title),
+    path: item.path,
+  })),
+}))
+const legalLinks = (globalConfig.footer.legalLinks || []).map(link => ({
+  label: translateFooterTitle(link.title),
+  path: link.path,
+}))
+const socialLinks = globalConfig.footer.socialLinks || [
+  { name: 'Facebook', url: 'https://www.facebook.com/soeteck123', icon: 'facebook' },
+  { name: 'YouTube', url: 'https://www.youtube.com/@Soeteck', icon: 'youtube' },
+  { name: 'LinkedIn', url: 'https://www.linkedin.com/company/soeteck/', icon: 'linkedin' },
+]
+---
+
+<footer id="colophon" class="site-footer">
+  <div class="footer-main">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <a class="footer-logo" href={localizePath("/en/")} rel="home" aria-label="Soeteck">
+          <img src={logoUrl} alt="Soeteck" width="240" height="59">
+        </a>
+        <div class="footer-social-block footer-social-block-desktop">
+          <h2 class="footer-social-title">{getUITranslation(lang, 'footer.connectWithUs')}</h2>
+          <div class="footer-social-links">
+            {socialLinks.map(social => (
+              <a href={social.url} aria-label={social.name} target="_blank" rel="noopener noreferrer">
+                {social.icon === 'facebook' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M14.2 8.3V6.7c0-.8.5-1 1-1h1.4V3.1L14.5 3c-2.5 0-4.1 1.5-4.1 4.2v1.1H7.8v3h2.6V21h3.1v-9.7h2.6l.4-3h-3.1z"/>
+                  </svg>
+                )}
+                {social.icon === 'youtube' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4 0-1.3 0-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.9v1.7c0 1.8.2 3.7.2 3.7s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.7.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4 0 1.3 0 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.7v-1.7c0-1.9-.2-3.7-.2-3.7zM10.2 14.7V8.3l5.9 3.2z"/>
+                  </svg>
+                )}
+                {social.icon === 'linkedin' && (
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6.9 21H3.6V9h3.3zM5.2 7.4A1.9 1.9 0 1 1 5.2 3.6a1.9 1.9 0 0 1 0 3.8zM21 21h-3.3v-5.8c0-1.4-.5-2.4-1.8-2.4-1 0-1.6.7-1.9 1.3-.1.2-.1.5-.1.8V21h-3.3V9h3.2v1.6c.4-.7 1.2-1.9 3-1.9 2.2 0 4.1 1.4 4.1 4.7z"/>
+                  </svg>
+                )}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <nav class="footer-desktop-nav" aria-label="Footer navigation">
+        {footerSections.map(section => (
+          <div class="footer-column">
+            <h2 class="footer-column-title">{section.title}</h2>
+            {section.children && (
+              <ul>
+                {section.children.map(link => (
+                  <li><a href={localizePath(link.path)}>{link.title}</a></li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      <nav class="footer-mobile-nav" aria-label="Footer mobile navigation">
+        {footerSections.map(section => {
+          const hasChildren = !!(section.children && section.children.length)
+
+          return (
+            <section class={`footer-accordion-section${hasChildren ? ' footer-has-nested' : ''}`}>
+              <div class="footer-accordion-header">
+                <a href={localizePath(section.path)}>{section.title}</a>
+                {hasChildren && (
+                  <button class="footer-accordion-toggle" type="button" aria-expanded="false" aria-label={`Toggle ${section.title} section`}>
+                    <svg class="footer-accordion-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">
+                      <path d="m19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                )}
+              </div>
+              {hasChildren && (
+                <div class="footer-accordion-panel">
+                  {section.children.map(link => (
+                    <a class="footer-accordion-sub-link" href={localizePath(link.path)}>{link.title}</a>
+                  ))}
+                </div>
+              )}
+            </section>
+          )
+        })}
+        <a class="footer-mobile-link" href={localizePath(globalConfig.urls.about || '/en/about-soeteck/')}>{getUITranslation(lang, 'footer.aboutSoeteck')}</a>
+        <a class="footer-mobile-link" href={localizePath(globalConfig.urls.contact || '/en/contact-us/')}>{getUITranslation(lang, 'common.contactUs')}</a>
+      </nav>
+
+      <div class="footer-social-block footer-social-block-mobile">
+        <div class="footer-social-links">
+          {socialLinks.map(social => (
+            <a href={social.url} aria-label={social.name} target="_blank" rel="noopener noreferrer">
+              {typeof social.icon === 'string' ? (
+                // Fallback for hardcoded string icons
+                <>
+                  {social.icon === 'facebook' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M14.2 8.3V6.7c0-.8.5-1 1-1h1.4V3.1L14.5 3c-2.5 0-4.1 1.5-4.1 4.2v1.1H7.8v3h2.6V21h3.1v-9.7h2.6l.4-3h-3.1z"/>
+                    </svg>
+                  )}
+                  {social.icon === 'youtube' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4 0-1.3 0-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.9v1.7c0 1.8.2 3.7.2 3.7s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.7.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4 0 1.3 0 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.7v-1.7c0-1.9-.2-3.7-.2-3.7zM10.2 14.7V8.3l5.9 3.2z"/>
+                    </svg>
+                  )}
+                  {social.icon === 'linkedin' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M6.9 21H3.6V9h3.3zM5.2 7.4A1.9 1.9 0 1 1 5.2 3.6a1.9 1.9 0 0 1 0 3.8zM21 21h-3.3v-5.8c0-1.4-.5-2.4-1.8-2.4-1 0-1.6.7-1.9 1.3-.1.2-.1.5-.1.8V21h-3.3V9h3.2v1.6c.4-.7 1.2-1.9 3-1.9 2.2 0 4.1 1.4 4.1 4.7z"/>
+                    </svg>
+                  )}
+                </>
+              ) : (
+                // Use platform to determine which icon to show for API data
+                <>
+                  {social.platform === 'facebook' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M14.2 8.3V6.7c0-.8.5-1 1-1h1.4V3.1L14.5 3c-2.5 0-4.1 1.5-4.1 4.2v1.1H7.8v3h2.6V21h3.1v-9.7h2.6l.4-3h-3.1z"/>
+                    </svg>
+                  )}
+                  {social.platform === 'youtube' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M21.6 7.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C15.8 4 12 4 12 4s-3.8 0-6.7.2c-.4 0-1.3 0-2.1.9-.6.6-.8 2.1-.8 2.1S2.2 9 2.2 10.9v1.7c0 1.8.2 3.7.2 3.7s.2 1.5.8 2.1c.8.8 1.9.8 2.4.9 1.7.2 6.4.2 6.4.2s3.8 0 6.7-.2c.4 0 1.3 0 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.7v-1.7c0-1.9-.2-3.7-.2-3.7zM10.2 14.7V8.3l5.9 3.2z"/>
+                    </svg>
+                  )}
+                  {social.platform === 'linkedin' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M6.9 21H3.6V9h3.3zM5.2 7.4A1.9 1.9 0 1 1 5.2 3.6a1.9 1.9 0 0 1 0 3.8zM21 21h-3.3v-5.8c0-1.4-.5-2.4-1.8-2.4-1 0-1.6.7-1.9 1.3-.1.2-.1.5-.1.8V21h-3.3V9h3.2v1.6c.4-.7 1.2-1.9 3-1.9 2.2 0 4.1 1.4 4.1 4.7z"/>
+                    </svg>
+                  )}
+                  {social.platform === 'twitter' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07c.53 1.66 2.07 2.87 3.89 2.9-1.47 1.16-3.32 1.84-5.33 1.84-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                    </svg>
+                  )}
+                  {social.platform === 'instagram' && (
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  )}
+                </>
+              )}
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-inner">
+      <p class="footer-copyright">{globalConfig.footer.copyrightText || `&copy; ${new Date().getFullYear()} HEFEI SHUYI DIGITAL POWER CO., LTD. All rights reserved.`}</p>
+      <nav class="footer-legal-nav" aria-label="Legal links">
+        {legalLinks.map((link, index) => (
+          <>
+            {index > 0 && <span aria-hidden="true">·</span>}
+            <a href={link.path}>{link.label}</a>
+          </>
+        ))}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+// Footer accordion interactions
+document.addEventListener('DOMContentLoaded', function() {
+  const footer = document.querySelector('.site-footer')
+  if (!footer) return
+
+  // Footer accordion toggles for mobile
+  footer.querySelectorAll('.footer-accordion-toggle').forEach(button => {
+    button.addEventListener('click', function() {
+      const isExpanded = this.getAttribute('aria-expanded') === 'true'
+      this.setAttribute('aria-expanded', isExpanded ? 'false' : 'true')
+
+      const section = this.closest('.footer-accordion-section')
+      if (section) {
+        section.classList.toggle('is-open', !isExpanded)
+      }
+    })
+  })
+})
+</script>
