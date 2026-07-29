@@ -1,0 +1,383 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import type { AdaptedPage, PageBreadcrumb } from '@/lib/page-adapter';
+import {
+  PRODUCTS_EN,
+  type ProductsContent,
+} from './products-content';
+import { PRODUCTS_ZH } from './products-content-zh';
+import { PRODUCTS_RU } from './products-content-ru';
+import { PRODUCTS_PT } from './products-content-pt';
+import { PRODUCTS_ES } from './products-content-es';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+
+const contentMap: Record<string, ProductsContent> = {
+  en: PRODUCTS_EN,
+  zh: PRODUCTS_ZH,
+  ru: PRODUCTS_RU,
+  pt: PRODUCTS_PT,
+  es: PRODUCTS_ES,
+};
+const content = contentMap[lang] ?? PRODUCTS_EN;
+
+// 给路径添加语言前缀（content 文件中存的是不带前缀的路径）
+const localizePath = (path: string) => `/${lang}${path}`;
+
+// 使用 API 返回的面包屑（带语言前缀），或构造默认面包屑
+const breadcrumbs: PageBreadcrumb[] = page.breadcrumbs.length > 0
+  ? page.breadcrumbs
+  : [
+      { label: 'Home', path: `/${lang}/` },
+      { label: content.heroTitle, path: `/${lang}/products/` },
+    ];
+---
+
+<div class="soeteck-products-page">
+    <!-- Hero -->
+    <section class="soeteck-products-hero">
+      <div class="soeteck-products-hero__overlay"></div>
+      <div class="soeteck-container soeteck-products-hero__content">
+        <Breadcrumbs items={breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+
+        <div class="soeteck-products-hero__body">
+          <h1 class="soeteck-page-title soeteck-products-hero__title">{content.heroTitle}</h1>
+          {content.heroDescription && (
+            <p class="soeteck-products-hero__lead">{content.heroDescription}</p>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Cards Grid -->
+    <section class="soeteck-products-body">
+      <div class="soeteck-container">
+        <div class="soeteck-products-grid">
+          {content.categories.map((category) => (
+            <article class="soeteck-products-card">
+              <a href={localizePath(category.viewAllUrl)} class="soeteck-products-card__image-link" tabindex="-1" aria-hidden="true">
+                <img
+                  class="soeteck-products-card__image"
+                  src={category.image}
+                  alt={category.imageAlt}
+                  loading="lazy"
+                  width="768"
+                  height="538"
+                />
+              </a>
+
+              <div class="soeteck-products-card__body">
+                <h2 class="soeteck-products-card__title">
+                  <a href={localizePath(category.viewAllUrl)}>{category.title}</a>
+                </h2>
+
+                <p class="soeteck-products-card__description">{category.description}</p>
+
+                <ul class="soeteck-products-card__links">
+                  {category.subcategories.map((sub) => (
+                    <li>
+                      <a class="soeteck-products-card__link" href={localizePath(sub.path)}>
+                        {sub.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+
+                <a class="soeteck-products-card__cta" href={localizePath(category.viewAllUrl)}>
+                  {category.viewAllLabel}
+                  <span class="soeteck-products-card__cta-arrow" aria-hidden="true">→</span>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+</div>
+
+<style>
+/* ========================================
+   Products Page — Hero
+   ======================================== */
+
+.soeteck-products-page {
+  --soeteck-products-content-width: 1200px;
+  --soeteck-products-content-gutter: 20px;
+  background: var(--soeteck-white);
+}
+
+.soeteck-products-hero__content,
+.soeteck-products-body .soeteck-container {
+  width: min(var(--soeteck-products-content-width), calc(100% - (var(--soeteck-products-content-gutter) * 2)));
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* Hero */
+.soeteck-products-hero {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--soeteck-dark);
+  color: var(--soeteck-white);
+  background-image: url('/resources/soeteck-products-hero-bg.webp');
+  background-size: cover;
+  background-position: center center;
+}
+
+.soeteck-products-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 31, 58, 0.84), rgba(11, 31, 58, 0.42), rgba(11, 31, 58, 0.12));
+}
+
+.soeteck-products-hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+}
+
+.soeteck-products-hero__content :global(.soeteck-breadcrumbs--hero) {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.soeteck-products-hero__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 0;
+  min-height: 480px;
+}
+
+.soeteck-products-hero__title {
+  font-family: var(--soeteck-font-heading);
+  margin: 0;
+  color: var(--soeteck-white);
+  font-size: var(--soeteck-heading-lg);
+  font-weight: var(--soeteck-weight-bold);
+  line-height: 1.08;
+}
+
+.soeteck-products-hero__lead {
+  font-family: var(--soeteck-font-body);
+  margin: 22px 0 0;
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--soeteck-text-lg);
+  line-height: 1.65;
+}
+
+/* ========================================
+   Products Page — Category Grid
+   ======================================== */
+
+.soeteck-products-body {
+  padding-block: var(--soeteck-section-y);
+  background: var(--soeteck-white);
+}
+
+.soeteck-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* Category Card */
+.soeteck-products-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: var(--soeteck-radius-lg);
+  background: var(--soeteck-white);
+  overflow: hidden;
+  transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.soeteck-products-card:hover {
+  border-color: var(--soeteck-primary);
+  box-shadow: var(--soeteck-shadow);
+}
+
+.soeteck-products-card__image-link {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.soeteck-products-card__image {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 280ms ease;
+}
+
+.soeteck-products-card:hover .soeteck-products-card__image {
+  transform: scale(1.05);
+}
+
+.soeteck-products-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 20px 24px;
+}
+
+.soeteck-products-card__title {
+  margin: 0;
+  font-family: var(--soeteck-font-heading);
+  font-weight: var(--soeteck-weight-bold);
+}
+
+.soeteck-products-card__title a {
+  color: var(--soeteck-text);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.soeteck-products-card__title a:hover {
+  color: var(--soeteck-primary);
+}
+
+.soeteck-products-card__description {
+  margin: 12px 0 0;
+  font-family: var(--soeteck-font-body);
+  color: var(--soeteck-text-soft);
+  font-size: var(--soeteck-text-sm);
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* Subcategory links */
+.soeteck-products-card__links {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.soeteck-products-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--soeteck-font-ui);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-medium);
+  color: var(--soeteck-primary);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.soeteck-products-card__link::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+  margin-right: 6px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.soeteck-products-card__link:hover {
+  color: var(--soeteck-primary-dark);
+  text-decoration: underline;
+}
+
+/* CTA */
+.soeteck-products-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 16px;
+  font-family: var(--soeteck-font-ui);
+  font-size: 13px;
+  font-weight: var(--soeteck-weight-semibold);
+  color: var(--soeteck-primary);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.soeteck-products-card__cta:hover {
+  color: var(--soeteck-primary-dark);
+  text-decoration: underline;
+}
+
+.soeteck-products-card__cta-arrow {
+  transition: transform 180ms ease;
+}
+
+.soeteck-products-card__cta:hover .soeteck-products-card__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 991px) {
+  .soeteck-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .soeteck-products-hero__content {
+    min-height: 420px;
+  }
+
+  .soeteck-products-hero__body {
+    min-height: 420px;
+  }
+
+  .soeteck-products-body {
+    padding-top: 60px;
+  }
+}
+
+@media (max-width: 640px) {
+  .soeteck-products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .soeteck-products-hero__content {
+    min-height: 360px;
+  }
+
+  .soeteck-products-hero__body {
+    min-height: 360px;
+  }
+
+  .soeteck-products-hero__lead {
+    font-size: var(--soeteck-text-md);
+  }
+
+  .soeteck-products-card__image {
+    height: 180px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soeteck-products-card__image,
+  .soeteck-products-card__cta-arrow {
+    transition: none;
+  }
+}
+</style>

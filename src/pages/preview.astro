@@ -1,0 +1,49 @@
+---
+// Preview route — SSR-only, fetches draft/any-status content from Content API.
+// Access: http://localhost:4321/preview?id=<post_id>&lang=<lang>&token=<hmac>
+export const prerender = false;
+
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import PageDispatcher from '@/components/PageDispatcher.astro';
+import { fetchPreviewContent } from '@/lib/content-api';
+import { adaptPage } from '@/lib/page-adapter';
+
+const url = new URL(Astro.request.url);
+const postId = url.searchParams.get('id');
+const lang = url.searchParams.get('lang') || 'en';
+const token = url.searchParams.get('token') || '';
+
+// Validate required params
+if (!postId || !token) {
+  return new Response('Missing required parameters: id and token', { status: 400 });
+}
+
+// Validate postId is numeric
+if (!/^\d+$/.test(postId)) {
+  return new Response('Invalid post ID', { status: 400 });
+}
+
+let page;
+try {
+  const content = await fetchPreviewContent(postId, lang, token);
+  page = adaptPage(content);
+} catch (e) {
+  return new Response(
+    `Preview not available: ${e instanceof Error ? e.message : 'Unknown error'}`,
+    { status: 404 }
+  );
+}
+
+// Preview pages should never be indexed
+const localizedPaths = page.source?.route?.localizedPaths;
+---
+
+<BaseLayout
+  lang={lang}
+  title={page.seo.title}
+  canonical={page.seo.canonical}
+  robots="noindex,nofollow"
+  localizedPaths={localizedPaths}
+>
+  <PageDispatcher page={page} lang={lang} />
+</BaseLayout>

@@ -44,10 +44,10 @@ const lang = detectLang(items);
 <style>
   .soeteck-breadcrumbs {
     margin: 15px 0 18px;
-    color: var(--soeteck-muted);
     font-size: 14px;
     font-weight: var(--soeteck-weight-medium);
     line-height: 1.4;
+    color: var(--soeteck-muted);
   }
 
   @media (min-width: 481px) {
@@ -84,6 +84,15 @@ const lang = detectLang(items);
   }
 
   .soeteck-breadcrumbs a:hover {
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-breadcrumbs--hero,
+  .soeteck-breadcrumbs--hero a {
+    color: #fff;
+  }
+
+  .soeteck-breadcrumbs--hero a:hover {
     color: var(--soeteck-primary);
   }
 

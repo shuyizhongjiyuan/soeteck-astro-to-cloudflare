@@ -10,7 +10,7 @@ interface Props {
 const { page, lang = 'en' } = Astro.props;
 const content = page.source;
 ---
-<main class="poc-page">
+<div class="soeteck-poc-page">
   <div class="poc-panel">
     <Breadcrumbs items={page.breadcrumbs} lang={lang} />
 
@@ -21,20 +21,20 @@ const content = page.source;
 
       {page.heroImage && <img class="lead-media" src={page.heroImage.path} alt={page.heroImage.alt} loading="eager" />}
 
-      {content.page && <section class="content-html" set:html={content.page.contentHtml} />}
+      {content.page && <section class="content-html" set:html={content.page.contentHtml}></section>}
 
       {content.product && (
         <section class="content-html">
           <p><strong>Type:</strong> {content.product.type}</p>
           {content.product.sku && <p><strong>SKU:</strong> {content.product.sku}</p>}
-          <div set:html={content.product.summary} />
-          <div set:html={content.product.descriptionHtml} />
+          <div set:html={content.product.summary}></div>
+          <div set:html={content.product.descriptionHtml}></div>
         </section>
       )}
 
       {content.category && (
         <section>
-          <div class="content-html" set:html={content.category.description} />
+          <div class="content-html" set:html={content.category.description}></div>
           <p>{content.category.count} products in current WordPress category.</p>
           <div class="cards">
             {content.products?.map((product) => (
@@ -51,13 +51,13 @@ const content = page.source;
         <section class="content-html">
           {content.article.date && <p>{new Date(content.article.date).toLocaleDateString('en-US')}</p>}
           <p>{content.article.excerpt}</p>
-          <div set:html={content.article.contentHtml} />
+          <div set:html={content.article.contentHtml}></div>
         </section>
       )}
 
       {content.archive && (
         <section>
-          <div class="content-html" set:html={content.archive.description} />
+          <div class="content-html" set:html={content.archive.description}></div>
           <p>{content.archive.count} articles in current WordPress category.</p>
           <div class="cards">
             {content.articles?.map((article) => (
@@ -72,7 +72,7 @@ const content = page.source;
       )}
     </article>
   </div>
-</main>
+</div>
 
 <style>
   h1 {

@@ -39,7 +39,7 @@ const t = (key: string) => getUITranslation(lang, `product.${key}`);
 const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
 ---
 
-<main id="primary" class="content-area soeteck-single-product-page">
+<div class="soeteck-single-product-page">
   <div class="soeteck-container soeteck-product-breadcrumbs-wrap">
     <Breadcrumbs items={page.breadcrumbs} lang={lang} />
   </div>
@@ -67,7 +67,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                   </figure>
                 ))}
               </div>
-              {gallery.length > 1 && (
+              {gallery.length > 0 && (
                 <>
                   <button
                     class="soeteck-product-gallery__nav soeteck-product-gallery__nav--prev"
@@ -84,7 +84,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                 </>
               )}
             </div>
-            {gallery.length > 1 && (
+            {gallery.length > 0 && (
               <div class="soeteck-product-gallery__thumbs" aria-label={t('galleryThumbnails')}>
                 {gallery.map((item, index) => (
                   <button
@@ -160,19 +160,19 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                  data-product-panel="overview">
           {product.overview && product.overview.trim() !== '' && (
             <div class="soeteck-product-tab-block">
-              <p class="soeteck-eyebrow">{t('overview')}</p>
+              <p class="soeteck-product-section__label">{t('overview')}</p>
               <div class="soeteck-product-richtext" set:html={product.overview}></div>
             </div>
           )}
           {product.features && product.features.trim() !== '' && (
             <div class="soeteck-product-tab-block soeteck-product-tab-block--light">
-              <p class="soeteck-eyebrow">{t('keyFeatures')}</p>
+              <p class="soeteck-product-section__label">{t('keyFeatures')}</p>
               <div class="soeteck-product-richtext soeteck-product-feature-list" set:html={product.features}></div>
             </div>
           )}
           {product.applications && product.applications.trim() !== '' && (
             <div class="soeteck-product-tab-block">
-              <p class="soeteck-eyebrow">{t('applications')}</p>
+              <p class="soeteck-product-section__label">{t('applications')}</p>
               <div class="soeteck-product-richtext soeteck-product-applications-list" set:html={product.applications}></div>
             </div>
           )}
@@ -186,7 +186,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
           <section id="product-panel-models" class="soeteck-product-tab-panel"
                    role="tabpanel" tabindex="0" aria-labelledby="product-tab-models"
                    data-product-panel="models" hidden>
-            <p class="soeteck-eyebrow">{t('modelRange')}</p>
+            <p class="soeteck-product-section__label">{t('modelRange')}</p>
             {product.modelDescription && product.modelDescription.trim() !== '' && (
               <div class="soeteck-product-richtext soeteck-product-panel-intro" set:html={product.modelDescription}></div>
             )}
@@ -215,7 +215,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
         <section id="product-panel-specifications" class="soeteck-product-tab-panel"
                  role="tabpanel" tabindex="0" aria-labelledby="product-tab-specifications"
                  data-product-panel="specifications" hidden>
-          <p class="soeteck-eyebrow">{t('technicalSpecifications')}</p>
+          <p class="soeteck-product-section__label">{t('technicalSpecifications')}</p>
           {specifications.length > 0 ? (
             <>
               <div class="soeteck-product-spec-controls" data-spec-controls>
@@ -262,7 +262,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
         <section id="product-panel-downloads" class="soeteck-product-tab-panel"
                  role="tabpanel" tabindex="0" aria-labelledby="product-tab-downloads"
                  data-product-panel="downloads" hidden>
-          <p class="soeteck-eyebrow">{t('resources')}</p>
+          <p class="soeteck-product-section__label">{t('resources')}</p>
           {downloads.length > 0 ? (
             <div class="soeteck-product-downloads">
               {downloads.map((d) => (
@@ -323,6 +323,18 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
               <label><input type="radio" name="needs_upload" value="yes" /> {t('formYes')}</label>
               <label><input type="radio" name="needs_upload" value="no" /> {t('formNo')}</label>
             </fieldset>
+            <!-- 文件上传区域（与 ContactPage 一致） -->
+            <div class="soeteck-product-inquiry__file" aria-hidden="true" style="display:none;">
+              <span class="soeteck-product-inquiry__file-label">{t('uploadFiles')}</span>
+              <span class="soeteck-product-inquiry__file-control">
+                <button class="soeteck-product-inquiry__file-add" type="button" data-product-file-trigger tabindex="-1">
+                  <span class="soeteck-product-inquiry__file-icon" aria-hidden="true">+</span>
+                  <span class="soeteck-product-inquiry__file-action">{t('addFiles')}</span>
+                </button>
+                <span class="soeteck-product-inquiry__file-name" data-product-file-list>{t('noFilesSelected')}</span>
+              </span>
+              <input type="file" name="file_upload[]" multiple tabindex="-1" />
+            </div>
             <input type="hidden" name="product_id" value={inquiryContext.productId ?? ''} data-inquiry-context="product_id" />
             <input type="hidden" name="product_name" value={inquiryContext.productTitle ?? ''} data-inquiry-context="product_name" />
             <input type="hidden" name="product_url" value={inquiryContext.path ?? ''} data-inquiry-context="product_url" />
@@ -339,7 +351,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
       </div>
     </section>
   </div>
-</main>
+</div>
 
 <script>
   // 客户端交互脚本（gallery 轮播 + tabs + spec 折叠 + inquiry 表单）

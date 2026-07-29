@@ -1,0 +1,1017 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import {
+  AICOOLIT_NAV_SECTIONS, AICOOLIT_STATS, AICOOLIT_COMPARISON_CARDS,
+  AICOOLIT_PRODUCT_SERIES, AICOOLIT_LAYER_SPECS, AICOOLIT_LAYER_EXTRA_SPEC,
+  AICOOLIT_CDU_TABS,
+  AICOOLIT_TRUST_BADGES, AICOOLIT_SUPPLY_CHAIN, AICOOLIT_FAQ,
+  AICOOLIT_CTA_OFFERS, AICOOLIT_GPU_BADGES,
+} from './aicoolit-content';
+import series1Svg from './aicoolit-svg/1-40-Foot-AI-Container-Data-Center-100kW-per-Rack.svg?raw';
+import series2Svg from './aicoolit-svg/2-40-Foot-AI-Container-Data-Center-60kW-per-Rack.svg?raw';
+import series3Svg from './aicoolit-svg/3-20-Foot-AI-Container-Data-Center-50kW-per-Rack.svg?raw';
+import series4Svg from './aicoolit-svg/4-40-Foot-AI-Container-Data-Center-50kW-per-Rack-Immersion-Cooling.svg?raw';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+const pdfUrl = '/resources/SOETECK-AICoolit-Series-Liquid-Cooling-Data-Center-Solutions.pdf';
+
+const SERIES_SVG_HTML = [series1Svg, series2Svg, series3Svg, series4Svg].map((raw) => {
+  const cleaned = raw.replace(/^<\?xml[^>]*\?>/, '').replace(/<style>.*?<\/style>/, '');
+  return cleaned;
+});
+---
+
+<div class="soeteck-aicoolit-solution" data-aicoolit-solution>
+  <!-- Sticky Nav -->
+  <nav class="soeteck-aicoolit-sticky-nav" data-aicoolit-nav aria-label="Page sections">
+    <div class="soeteck-container soeteck-aicoolit-sticky-nav__inner">
+      <span class="soeteck-aicoolit-sticky-nav__brand">
+        <strong>AICoolit&trade;</strong>
+        <span class="soeteck-aicoolit-sticky-nav__divider" aria-hidden="true">|</span>
+        <span>Liquid Cooling Data Center</span>
+      </span>
+      <ul class="soeteck-aicoolit-sticky-nav__list">
+        {AICOOLIT_NAV_SECTIONS.map((section) => (
+          <li><a href={`#${section.id}`} class="soeteck-aicoolit-sticky-nav__link">{section.label}</a></li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="soeteck-aicoolit-hero" id="aicoolit-hero" aria-labelledby="aicoolit-hero-title">
+    <div class="soeteck-container soeteck-aicoolit-hero__breadcrumbs">
+      <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+    </div>
+    <div class="soeteck-container soeteck-aicoolit-hero__inner">
+      <div class="soeteck-aicoolit-hero__content">
+        <span class="soeteck-aicoolit-hero__eyebrow">Prefabricated AI Infrastructure</span>
+        <h1 id="aicoolit-hero-title" class="soeteck-page-title soeteck-aicoolit-hero__title">Liquid Cooling Data Center</h1>
+        <p class="soeteck-aicoolit-hero__subtitle">Delivered <em>Anywhere.</em></p>
+        <p class="soeteck-aicoolit-hero__intro">Liquid Cooling has been the next-gen thermal management solution for data centers in the AI era. Soeteck <strong>AICoolit&trade;</strong> integrates Direct-to-Chip or Immersion cooling into ISO standard containers, enabling 100kW per rack density. Bypass lengthy construction cycles and get your compute cluster operational in weeks.</p>
+        <div class="soeteck-aicoolit-hero__ctas">
+          <a class="soeteck-button soeteck-button--primary" href="#aicoolit-models">
+            View Models
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/></svg>
+          </a>
+          <a class="soeteck-button soeteck-button--outline" href={pdfUrl} target="_blank" rel="noopener">Get Whitepaper</a>
+        </div>
+        <div class="soeteck-aicoolit-hero__badges">
+          <span class="soeteck-aicoolit-hero__badges-label">Engineering validated for</span>
+          {AICOOLIT_GPU_BADGES.map((badge) => (
+            <span class="soeteck-aicoolit-hero__badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+              {badge}
+            </span>
+          ))}
+        </div>
+      </div>
+      {page.heroImage && (
+        <div class="soeteck-aicoolit-hero__media">
+          <div class="soeteck-aicoolit-hero__glow" aria-hidden="true"></div>
+          <img src="/resources/full-range-of-aicoolit-series-liquid-cooling-products-2-1.webp" alt="AICoolit Liquid Cooling Data Center Series" loading="eager" fetchpriority="high" />
+        </div>
+      )}
+    </div>
+    <!-- Stats Bar - overlaps hero/competitive boundary -->
+    <div class="soeteck-container soeteck-aicoolit-stats__grid">
+      {AICOOLIT_STATS.map((stat) => (
+        <div class="soeteck-aicoolit-stats__card">
+          <div class="soeteck-aicoolit-stats__value">
+            <span class="soeteck-aicoolit-stats__number">{stat.value}</span>
+            {stat.unit && <span class="soeteck-aicoolit-stats__unit">{stat.unit}</span>}
+          </div>
+          <div class="soeteck-aicoolit-stats__label">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Why Section -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-competitive" id="aicoolit-why" aria-labelledby="aicoolit-competitive-title">
+    <div class="soeteck-container">
+      <span class="soeteck-eyebrow">The Competitive Edge</span>
+      <h2 id="aicoolit-competitive-title" class="soeteck-section-title">Why Liquid + Container?</h2>
+      <p class="soeteck-section-lead">In the AI boom, traditional infrastructure is the bottleneck. AICoolit fuses "Container Flexibility" with "Liquid Cooling Density," offering a superior third option.</p>
+      <div class="soeteck-aicoolit-competitive__grid">
+        {AICOOLIT_COMPARISON_CARDS.map((card) => (
+          <article class="soeteck-aicoolit-compare-card">
+            <h3 class="soeteck-aicoolit-compare-card__title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              {card.title}
+            </h3>
+            <p class="soeteck-aicoolit-compare-card__desc">{card.description}</p>
+            {card.features.map((feature) => (
+              <div class="soeteck-aicoolit-compare-card__feature">
+                <strong>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                  {feature.title}
+                </strong>
+                <p>{feature.text}</p>
+              </div>
+            ))}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Lineup -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-models" id="aicoolit-models" aria-labelledby="aicoolit-models-title">
+    <div class="soeteck-container">
+      <span class="soeteck-eyebrow">The Product Lineup</span>
+      <h2 id="aicoolit-models-title" class="soeteck-section-title">Choose Your Scale</h2>
+      <div class="soeteck-aicoolit-models__badges">
+        <span>ISO Standard Containers</span>
+        <span>Factory Prefabricated</span>
+      </div>
+    </div>
+    {AICOOLIT_PRODUCT_SERIES.map((series, index) => (
+      <article class={`soeteck-aicoolit-series ${index % 2 === 0 ? 'soeteck-aicoolit-series--text-first' : 'soeteck-aicoolit-series--image-first'}`}>
+        <div class="soeteck-container soeteck-aicoolit-series__grid">
+          <div class="soeteck-aicoolit-series__content">
+            <span class="soeteck-aicoolit-series__label">{series.label}</span>
+            <h3 class="soeteck-subsection-title soeteck-aicoolit-series__title">{series.title}</h3>
+            <p class="soeteck-aicoolit-series__desc">{series.description}</p>
+            <div class="soeteck-aicoolit-series__specs">
+              {series.specs.map((spec) => (
+                <div class="soeteck-aicoolit-series__spec">
+                  <span class="soeteck-aicoolit-series__spec-label">{spec.label}</span>
+                  <span class="soeteck-aicoolit-series__spec-value">{spec.value}</span>
+                </div>
+              ))}
+            </div>
+            <div class="soeteck-aicoolit-series__features">
+              {series.features.map((feature) => (
+                <p class="soeteck-aicoolit-series__feature">{feature}</p>
+              ))}
+            </div>
+            <a class="soeteck-aicoolit-series__download" href={pdfUrl} target="_blank" rel="noopener">
+              <span>Download {series.label} Specs</span>
+              <span class="soeteck-aicoolit-series__download-icon" aria-hidden="true">&darr;</span>
+            </a>
+          </div>
+          <div class="soeteck-aicoolit-series__media">
+            <img src={series.image} alt={series.title} class="soeteck-aicoolit-series__image" loading="lazy" />
+            <div class="soeteck-aicoolit-series__layout" set:html={SERIES_SVG_HTML[index]}></div>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <!-- Engineering Core -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-components" id="aicoolit-components">
+    <div class="soeteck-container">
+      <span class="soeteck-eyebrow">The Featured Components</span>
+      <h2 class="soeteck-section-title">Engineering Core</h2>
+      <p class="soeteck-section-lead">A seamless integration of industrial ruggedness and microscopic precision. Designed as a unified system, not just a collection of parts.</p>
+    </div>
+
+    <div class="soeteck-container">
+      <div class="soeteck-aicoolit-layer">
+        <div class="soeteck-aicoolit-layer__grid">
+          <div class="soeteck-aicoolit-layer__main">
+            <span class="soeteck-aicoolit-layer__badge">LAYER 01: THE FORTRESS</span>
+            <h3 class="soeteck-aicoolit-layer__title">Industrial-Grade ISO Shell</h3>
+            <p class="soeteck-aicoolit-layer__desc">The container is not just a box; it's the primary defense line. We re-engineer standard ISO shipping containers with reinforced steel, creating a hermetically sealed environment that protects high-value compute assets from extreme external conditions.</p>
+            <div class="soeteck-aicoolit-layer__specs">
+              {AICOOLIT_LAYER_SPECS.map((spec) => (
+                <div class="soeteck-aicoolit-layer__spec">
+                  <span class="soeteck-aicoolit-layer__spec-icon">
+                    {spec.icon === 'shield' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>}
+                    {spec.icon === 'temperature' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4.5 4.5 0 105 0z"/></svg>}
+                    {spec.icon === 'globe' && <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>}
+                  </span>
+                  <span class="soeteck-aicoolit-layer__spec-label">{spec.label}</span>
+                  <span class="soeteck-aicoolit-layer__spec-value">{spec.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="soeteck-aicoolit-layer__media-col">
+            <div class="soeteck-aicoolit-layer__media">
+              <img src="/resources/application-of-container-data-center-1.png.webp" alt="Container data center" class="soeteck-aicoolit-layer__image" loading="lazy" />
+            </div>
+            <div class="soeteck-aicoolit-layer__extra">
+              <div class="soeteck-aicoolit-layer__spec">
+                <span class="soeteck-aicoolit-layer__spec-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 3v18"/></svg>
+                </span>
+                <span class="soeteck-aicoolit-layer__spec-label">{AICOOLIT_LAYER_EXTRA_SPEC.label}</span>
+                <span class="soeteck-aicoolit-layer__spec-value">{AICOOLIT_LAYER_EXTRA_SPEC.value}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="soeteck-aicoolit-shell-divider" aria-hidden="true">
+      <div class="soeteck-aicoolit-shell-divider__line"></div>
+      <span class="soeteck-aicoolit-shell-divider__text">
+        <span class="soeteck-aicoolit-shell-divider__icon">&darr;</span>
+        INSIDE THE SHELL
+      </span>
+      <div class="soeteck-aicoolit-shell-divider__line"></div>
+    </div>
+
+    <div class="soeteck-container">
+      <span class="soeteck-aicoolit-layer__badge">LAYER 02: THE INTERNAL SYSTEM</span>
+      <h3 class="soeteck-aicoolit-layer__title">Precision Liquid Loop</h3>
+      <p class="soeteck-aicoolit-layer__desc">Controlling the manufacturing of CDUs, Manifolds, and Tanks in-house, <strong>AICoolit&trade;</strong> series guarantee seamless compatibility and supply chain security for your critical infrastructure.</p>
+    </div>
+    <div class="soeteck-container">
+      <div class="soeteck-aicoolit-layer" data-aicoolit-tabs>
+  <!-- Tab Navigation -->
+  <div class="aicoolit-cdu__nav" role="tablist" aria-label="Component details">
+    {AICOOLIT_CDU_TABS.map((tab, tabIndex) => (
+      <button class={`aicoolit-cdu__tab${tabIndex === 0 ? ' is-active' : ''}`} role="tab" type="button" data-tab-target={tab.id} aria-selected={tabIndex === 0 ? 'true' : 'false'}>
+        <svg class="aicoolit-cdu__tab-icon" width="8" height="8" viewBox="0 0 8 8" fill="currentColor" aria-hidden="true"><circle cx="4" cy="4" r="3"/></svg>
+        <span class="aicoolit-cdu__tab-text">
+          <span class="aicoolit-cdu__tab-title">{tab.title}</span>
+          <span class="aicoolit-cdu__tab-subtitle">{tab.subtitle}</span>
+        </span>
+      </button>
+    ))}
+  </div>
+  <!-- Tab Panels -->
+  <div class="aicoolit-cdu__panels">
+    {AICOOLIT_CDU_TABS.map((tab, tabIndex) => (
+      <div class={`aicoolit-cdu__panel${tabIndex === 0 ? ' is-active' : ''}`} role="tabpanel" data-tab-panel={tab.id} { ...(tabIndex !== 0 && { hidden: true }) }>
+        <div class="aicoolit-cdu__products">
+          {tab.products.map((product) => (
+            <div class="aicoolit-cdu__product">
+              <a href={product.url} class="aicoolit-cdu__product-link">
+                <img src={product.image} alt={product.alt} class="aicoolit-cdu__product-img" />
+              </a>
+              <a href={product.url} class="aicoolit-cdu__product-name">{product.title}</a>
+            </div>
+          ))}
+        </div>
+        <div class="aicoolit-cdu__info">
+          <div class="aicoolit-cdu__info-header">
+            <h4 class="aicoolit-cdu__info-title">{tab.contentTitle}</h4>
+            <span class="aicoolit-cdu__badge">{tab.badge}</span>
+          </div>
+          <p class="aicoolit-cdu__info-desc">{tab.description}</p>
+          <div class="aicoolit-cdu__tags">
+            {tab.tags.map((tag) => (
+              <span class="aicoolit-cdu__tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    ))}
+    </div>
+    </div>
+    </div>
+  </section>
+
+  </div>
+
+  <!-- Trust Badges -->
+  <section class="soeteck-aicoolit-trust" aria-label="Certifications and standards">
+    <div class="soeteck-container">
+      <p class="soeteck-aicoolit-trust__heading">Trusted by Global Leaders &amp; Standards</p>
+      <div class="soeteck-aicoolit-trust__grid">
+        {AICOOLIT_TRUST_BADGES.map((badge) => (
+          <div class="soeteck-aicoolit-trust__badge">
+            <span class="soeteck-aicoolit-trust__icon" aria-hidden="true">
+              {badge.icon === 'medal' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg>}
+              {badge.icon === 'check' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>}
+              {badge.icon === 'lightbulb' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0018 8 6 6 0 006 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 018.91 14"/></svg>}
+              {badge.icon === 'trending' && <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"/><path d="M17 6h6v6"/></svg>}
+            </span>
+            <span>{badge.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Supply Chain -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-supply">
+    <div class="soeteck-container soeteck-aicoolit-supply__grid">
+      <div class="soeteck-aicoolit-supply__content">
+        <span class="soeteck-eyebrow">Supply Chain Security</span>
+        <h2 class="soeteck-section-title">Built for Scale.<br />Delivered Globally.</h2>
+        <p>In the AI race, supply chain certainty is everything. SOETECK owns the entire manufacturing process—from sheet metal fabrication to precision liquid loop assembly. We guarantee capacity when you need it most.</p>
+        <div class="soeteck-aicoolit-supply__items">
+          {AICOOLIT_SUPPLY_CHAIN.map((item) => (
+            <div class="soeteck-aicoolit-supply__item">
+              <strong>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                {item.title}
+              </strong>
+              <p>{item.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="soeteck-aicoolit-supply__media">
+        <img src="/resources/data-center-container-in-soeteck-factory-1.jpg" alt="SOETECK factory production line" class="soeteck-aicoolit-supply__image" loading="lazy" />
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-faq" id="aicoolit-faq">
+    <div class="soeteck-container">
+      <span class="soeteck-eyebrow">Common Questions</span>
+      <h2 class="soeteck-section-title">Expert Answers</h2>
+      <p class="soeteck-section-lead">Everything you need to know about deploying liquid-cooled modular data centers.</p>
+      <div class="soeteck-aicoolit-faq__list" data-aicoolit-faq>
+        {AICOOLIT_FAQ.map((faq, faqIndex) => (
+          <details class="soeteck-aicoolit-faq__item">
+            <summary class="soeteck-aicoolit-faq__question">
+              <span>{faq.question}</span>
+              <span class="soeteck-aicoolit-faq__chevron" aria-hidden="true"></span>
+            </summary>
+            <div class="soeteck-aicoolit-faq__answer">
+              <p set:html={faq.answer}></p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="soeteck-aicoolit-section soeteck-aicoolit-cta" id="aicoolit-contact">
+    <div class="soeteck-container soeteck-aicoolit-cta__grid">
+      <div class="soeteck-aicoolit-cta__content">
+        <h2 class="soeteck-section-title">Start Your AI Journey Today</h2>
+        <p>Don't let infrastructure be your bottleneck. Configure your liquid-cooled data center and get a preliminary engineering layout within 24 hours.</p>
+        <div class="soeteck-aicoolit-cta__offers">
+          {AICOOLIT_CTA_OFFERS.map((offer) => (
+            <div class="soeteck-aicoolit-cta__offer">
+              <span class="soeteck-aicoolit-cta__offer-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+              </span>
+              <span>{offer.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="soeteck-aicoolit-cta__form">
+        <div class="soeteck-aicoolit-cta__form-header">Request A Quote</div>
+        <form class="soeteck-aicoolit-cta__form-body" action={`/${lang}/contact/`} method="GET">
+          <div class="soeteck-aicoolit-cta__form-field">
+            <label for="aicoolit-subject" class="soeteck-aicoolit-cta__form-label">Your Subject:</label>
+            <input id="aicoolit-subject" name="subject" type="text" class="soeteck-aicoolit-cta__form-input" placeholder="e.g., AICoolit Series I Quote Request" />
+          </div>
+          <div class="soeteck-aicoolit-cta__form-field">
+            <label for="aicoolit-message" class="soeteck-aicoolit-cta__form-label">Your Message:</label>
+            <textarea id="aicoolit-message" name="message" class="soeteck-aicoolit-cta__form-textarea" rows="3" placeholder="Tell us about your project requirements..."></textarea>
+          </div>
+          <button type="submit" class="soeteck-aicoolit-cta__form-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  (function() {
+    var root = document.querySelector('[data-aicoolit-solution]');
+    if (!root) return;
+
+    /* ── CDU Component Tabs ── */
+    var tabContainer = root.querySelector('[data-aicoolit-tabs]');
+    if (tabContainer) {
+      var tabButtons = tabContainer.querySelectorAll('[data-tab-target]');
+      var tabPanels = tabContainer.querySelectorAll('[data-tab-panel]');
+      var panelsWrap = tabContainer.querySelector('.aicoolit-cdu__panels');
+
+      /* Fix panel height: measure tallest panel, apply as min-height */
+      function syncPanelHeight() {
+        if (!panelsWrap) return;
+        var maxH = 0;
+        tabPanels.forEach(function(panel) {
+          panel.style.minHeight = '';
+          panel.hidden = false;
+          panel.classList.add('is-active');
+          var h = panel.offsetHeight;
+          if (h > maxH) maxH = h;
+          panel.hidden = true;
+          panel.classList.remove('is-active');
+        });
+        /* Re-activate the current active tab (no scroll — initial sizing only) */
+        var activeBtn = tabContainer.querySelector('[data-tab-target].is-active');
+        if (activeBtn) activateTab(activeBtn.getAttribute('data-tab-target'), false);
+        if (maxH > 0) panelsWrap.style.minHeight = maxH + 'px';
+      }
+
+      function activateTab(tabId, shouldScroll) {
+        tabButtons.forEach(function(btn) {
+          var isActive = btn.getAttribute('data-tab-target') === tabId;
+          btn.classList.toggle('is-active', isActive);
+          btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          if (isActive && shouldScroll) {
+            btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+          }
+        });
+        tabPanels.forEach(function(panel) {
+          var isActive = panel.getAttribute('data-tab-panel') === tabId;
+          panel.classList.toggle('is-active', isActive);
+          panel.hidden = !isActive;
+        });
+      }
+
+      tabButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          activateTab(this.getAttribute('data-tab-target'), true);
+        });
+      });
+
+      /* Measure after fonts/images settle */
+      if (document.readyState === 'complete') {
+        syncPanelHeight();
+      } else {
+        window.addEventListener('load', syncPanelHeight);
+      }
+      /* Re-measure on resize */
+      var resizeTimer;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(syncPanelHeight, 200);
+      });
+    }
+  })();
+</script>
+
+<style is:global>
+  /* ── Root ── */
+  .soeteck-aicoolit-solution {
+    --aicoolit-ink: var(--soeteck-text, #111827);
+    --aicoolit-muted: var(--soeteck-muted, #6b7280);
+    --aicoolit-blue: var(--soeteck-primary, #1a85e5);
+    --aicoolit-blue-dark: var(--soeteck-primary-dark, #0067c5);
+    --aicoolit-border: var(--soeteck-border-soft, #e5e7eb);
+    --aicoolit-panel: var(--soeteck-surface, #f5f7fa);
+    --aicoolit-navy: var(--soeteck-navy, #0b1f3a);
+    --aicoolit-dark: var(--soeteck-dark, #1a1a2e);
+    --aicoolit-shadow: var(--soeteck-shadow, 0 8px 24px rgba(15, 23, 42, 0.08));
+    color: var(--aicoolit-ink);
+  }
+
+  .soeteck-aicoolit-solution .soeteck-container {
+    width: min(1200px, calc(100% - 40px));
+    margin-inline: auto;
+  }
+
+  .soeteck-aicoolit-section { padding-block: var(--soeteck-section-y); }
+  .soeteck-aicoolit-section .soeteck-eyebrow { display: block; padding-bottom: 20px; color: var(--aicoolit-blue); }
+  .soeteck-aicoolit-section .soeteck-section-lead { max-width: 680px; color: var(--soeteck-text-soft); margin-bottom: 40px; }
+  .soeteck-aicoolit-section .soeteck-section-title {
+    font-size: clamp(1.85rem, 3.1vw, 3rem);
+    line-height: 1.14;
+    padding-bottom: 20px;
+  }
+
+  /* ── Sticky Nav ── */
+  .soeteck-aicoolit-sticky-nav {
+    position: sticky; top: 0; z-index: 90; background: #f3f3f3; border-bottom: 1px solid var(--aicoolit-border);
+  }
+  .soeteck-aicoolit-sticky-nav__inner {
+    display: flex; align-items: center; justify-content: space-between; height: 52px; overflow-x: auto;
+  }
+  .soeteck-aicoolit-sticky-nav__inner::-webkit-scrollbar { display: none; }
+  .soeteck-aicoolit-sticky-nav__brand { display: flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 14px; opacity: 0.7; flex-shrink: 0; }
+  .soeteck-aicoolit-sticky-nav__brand strong { color: var(--aicoolit-blue); opacity: 1; }
+  .soeteck-aicoolit-sticky-nav__divider { opacity: 0.3; }
+  .soeteck-aicoolit-sticky-nav__list { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+  .soeteck-aicoolit-sticky-nav__link { display: block; padding: 6px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--soeteck-primary); text-decoration: none; white-space: nowrap; }
+  .soeteck-aicoolit-sticky-nav__link:hover { background: rgba(0,0,0,0.05); color: var(--soeteck-primary-dark); }
+
+  /* ── Hero ── */
+  .soeteck-aicoolit-hero {
+    position: relative; overflow: visible; background: #f8fafc; color: #363636; padding: 100px 0 60px;
+  }
+  .soeteck-aicoolit-hero__breadcrumbs {
+    position: absolute; top: 20px; left: 0; right: 0; z-index: 2;
+  }
+  /* 绝对定位后，<nav> 的 margin 由 absolute 容器管理，覆盖默认间距避免双倍偏移 */
+  .soeteck-aicoolit-hero__breadcrumbs .soeteck-breadcrumbs { margin: 0; }
+  .soeteck-aicoolit-hero__inner {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; position: relative; z-index: 2;
+  }
+  .soeteck-aicoolit-hero__content { text-align: left; }
+  .soeteck-aicoolit-hero__eyebrow {
+    display: inline-block; padding: 6px 16px; border-radius: 4px;
+    background: rgba(26,133,229,0.08); border: 1px solid rgba(26,133,229,0.15);
+    color: var(--aicoolit-blue); font-size: 17px; font-weight: 600;
+    letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px;
+  }
+  .soeteck-aicoolit-hero__title {
+    font-size: var(--soeteck-heading-lg);
+    line-height: 1.08;
+    color: #363636;
+    margin-bottom: 8px;
+  }
+  .soeteck-aicoolit-hero__subtitle {
+    font-size: clamp(24px, 4vw, 40px); font-weight: 300; color: #363636;
+    opacity: 0.85; margin-bottom: 20px;
+  }
+  .soeteck-aicoolit-hero__subtitle em { font-style: italic; color: var(--aicoolit-blue); }
+  .soeteck-aicoolit-hero__intro {
+    max-width: 620px; font-size: 16px; line-height: 1.7; color: var(--soeteck-text-soft); margin-bottom: 32px;
+  }
+  .soeteck-aicoolit-hero__ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 40px; }
+  .soeteck-aicoolit-hero__ctas .soeteck-button--primary { background: var(--aicoolit-blue); color: #fff; }
+  .soeteck-aicoolit-hero__ctas .soeteck-button--outline { border-color: #ccc; color: #363636; }
+  .soeteck-aicoolit-hero__ctas .soeteck-button--outline:hover { border-color: var(--aicoolit-blue); color: var(--aicoolit-blue); }
+  .soeteck-aicoolit-hero__badges { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .soeteck-aicoolit-hero__badges-label {
+    font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 0.05em;
+    flex: 0 0 100%;
+  }
+  .soeteck-aicoolit-hero__badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px; background: #fff;
+    border: 1px solid var(--aicoolit-border);
+    font-size: 12px; font-weight: 600; color: #363636; letter-spacing: 0.03em;
+  }
+  .soeteck-aicoolit-hero__badge svg { color: var(--aicoolit-blue); flex-shrink: 0; }
+  .soeteck-aicoolit-hero__media {
+    text-align: right; display: flex; align-items: flex-end; justify-content: flex-end;
+    justify-self: stretch; position: relative; z-index: 1; margin-top: 50px;
+  }
+  .soeteck-aicoolit-hero__media img { position: relative; z-index: 1; max-width: 100%; height: auto; object-fit: contain; }
+  .soeteck-aicoolit-hero__glow {
+    position: absolute;
+    background: linear-gradient(90deg, rgba(59,130,246,.5), rgba(6,182,212,.5));
+    filter: blur(80px); width: 80%; height: 80%;
+    top: 30px; right: 50px; pointer-events: none;
+  }
+
+  /* ── Stats ── */
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; text-align: center;
+    margin-top: 60px; margin-bottom: -120px; position: relative; z-index: 3;
+    max-width: 960px; margin-inline: auto;
+  }
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__card {
+    padding: 24px 20px 20px; border-radius: 16px; background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__value { margin-bottom: 6px; }
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__number {
+    font-size: clamp(22px, 3.5vw, 36px); font-weight: 800; color: var(--aicoolit-blue); line-height: 1;
+  }
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__unit { font-size: var(--soeteck-text-sm); font-weight: 400; color: var(--soeteck-muted); margin-left: 4px; }
+  .soeteck-aicoolit-hero .soeteck-aicoolit-stats__label { font-size: var(--soeteck-text-xs); color: var(--soeteck-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .soeteck-aicoolit-stats__value { margin-bottom: 8px; }
+  .soeteck-aicoolit-stats__number {
+    font-size: clamp(32px, 5vw, 48px); font-weight: 800; color: var(--aicoolit-blue); line-height: 1;
+  }
+  .soeteck-aicoolit-stats__unit { font-size: var(--soeteck-text-sm); font-weight: 400; color: var(--soeteck-muted); margin-left: 4px; }
+  .soeteck-aicoolit-stats__label { font-size: var(--soeteck-text-xs); color: var(--soeteck-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ── Competitive Edge ── */
+  .soeteck-aicoolit-competitive { background: #fff; text-align: center; padding-top: 180px; }
+  .soeteck-aicoolit-competitive .soeteck-section-lead { margin-inline: auto; }
+  .soeteck-aicoolit-competitive__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; text-align: left; }
+  .soeteck-aicoolit-compare-card { padding: 32px; border: 1px solid var(--aicoolit-border); border-radius: 12px; background: #fff; }
+  .soeteck-aicoolit-compare-card__title {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 15px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.04em; color: var(--aicoolit-blue); margin: 0 0 12px;
+  }
+  .soeteck-aicoolit-compare-card__title svg { flex-shrink: 0; }
+  .soeteck-aicoolit-compare-card__desc { font-size: 14px; color: var(--soeteck-text-soft); line-height: 1.6; margin-bottom: 24px; }
+  .soeteck-aicoolit-compare-card__feature { padding-top: 16px; border-top: 1px solid var(--aicoolit-border); margin-top: 16px; }
+  .soeteck-aicoolit-compare-card__feature strong { display: flex; align-items: center; gap: 6px; font-size: 16px; margin-bottom: 4px; }
+  .soeteck-aicoolit-compare-card__feature strong svg { color: var(--aicoolit-blue); flex-shrink: 0; }
+  .soeteck-aicoolit-compare-card__feature p { font-size: 14px; color: var(--soeteck-text-soft); line-height: 1.6; margin: 0; }
+
+  /* ── Product Lineup ── */
+  .soeteck-aicoolit-models {
+    background: #121b2d; color: #fff; padding-block: var(--soeteck-section-y);
+  }
+  .soeteck-aicoolit-models .soeteck-eyebrow { color: rgba(255,255,255,0.5); }
+  .soeteck-aicoolit-models .soeteck-section-title { color: #fff; }
+  .soeteck-aicoolit-models__badges { display: flex; gap: 12px; margin-bottom: 48px; }
+  .soeteck-aicoolit-models__badges span {
+    display: inline-block; padding: 6px 16px; border-radius: 20px;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.7); font-size: 13px; font-weight: 500;
+  }
+  .soeteck-aicoolit-series { padding: var(--soeteck-section-y-sm) 0; border-top: 1px solid rgba(255,255,255,0.1); }
+  .soeteck-aicoolit-series__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .soeteck-aicoolit-series--image-first .soeteck-aicoolit-series__grid { direction: rtl; }
+  .soeteck-aicoolit-series--image-first .soeteck-aicoolit-series__grid > * { direction: ltr; }
+  .soeteck-aicoolit-series__label {
+    display: inline-block; padding: 4px 12px; border-radius: 4px;
+    background: var(--aicoolit-blue); color: #fff;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 12px;
+  }
+  .soeteck-aicoolit-series__title {
+    font-size: clamp(1.12rem, 1.35vw, 1.36rem);
+    line-height: 1.25;
+    color: #fff; margin-bottom: 16px;
+  }
+  .soeteck-aicoolit-series__desc { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+  .soeteck-aicoolit-series__specs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+  .soeteck-aicoolit-series__spec {
+    padding: 12px 16px; border-radius: 8px; background: rgba(255,255,255,0.06);
+  }
+  .soeteck-aicoolit-series__spec-label {
+    display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.5); margin-bottom: 4px;
+  }
+  .soeteck-aicoolit-series__spec-value { display: block; font-size: 16px; font-weight: 700; color: #fff; }
+  .soeteck-aicoolit-series__features { margin-bottom: 24px; }
+  .soeteck-aicoolit-series__feature {
+    font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 4px; line-height: 1.5;
+  }
+  .soeteck-aicoolit-series__download { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--aicoolit-blue); text-decoration: none; transition: color var(--soeteck-transition-fast); }
+  .soeteck-aicoolit-series__download:hover { color: var(--soeteck-primary-dark); }
+  .soeteck-aicoolit-series__image { display: block; width: 100%; height: auto; border-radius: 12px; object-fit: contain; }
+  .soeteck-aicoolit-series__media { display: flex; flex-direction: column; align-items: stretch; justify-content: center; gap: 24px; padding: 15px; background: rgba(255,255,255,0.04); border-radius: 12px; overflow: hidden; }
+  .soeteck-aicoolit-series__layout { display: flex; align-items: center; justify-content: center; padding: 0; }
+  /* Inline SVG styling for technical layout drawings */
+  .soeteck-aicoolit-series__layout svg * { fill: #1a85e5; stroke: #1a85e5; }
+  .soeteck-aicoolit-series__layout .cls-1,
+  .soeteck-aicoolit-series__layout .cls-2,
+  .soeteck-aicoolit-series__layout .cls-3 { fill: none; }
+  .soeteck-aicoolit-series__layout .cls-4 { fill: rgba(26,133,229,0.15); }
+  .soeteck-aicoolit-series__layout .cls-1,
+  .soeteck-aicoolit-series__layout .cls-2,
+  .soeteck-aicoolit-series__layout .cls-4 { stroke-miterlimit: 10; }
+  .soeteck-aicoolit-series__layout .cls-3 { stroke-linecap: round; stroke-linejoin: round; }
+  /* Consistent image height for first 3 series so 20ft doesn't appear oversized */
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(-n+2) .soeteck-aicoolit-series__image {
+    width: auto; height: 200px; align-self: center;
+  }
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(3) .soeteck-aicoolit-series__image {
+    width: auto; height: 165px; align-self: center;
+  }
+  /* SVGs match the rendering width of their corresponding image */
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(-n+3) .soeteck-aicoolit-series__layout {
+    width: auto; align-self: center;
+  }
+  .soeteck-aicoolit-series__layout svg { display: block; width: 100%; height: auto; }
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(1) .soeteck-aicoolit-series__layout svg { width: auto; height: 190px; }
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(2) .soeteck-aicoolit-series__layout svg { width: auto; height: 210px; }
+  .soeteck-aicoolit-models > .soeteck-aicoolit-series:nth-of-type(3) .soeteck-aicoolit-series__layout svg { width: auto; height: 175px; }
+
+  /* ── Engineering Core (redesigned) ── */
+  .soeteck-aicoolit-components { background: #fff; }
+  .soeteck-aicoolit-components > .soeteck-container:first-child { text-align: center; }
+  .soeteck-aicoolit-components > .soeteck-container:first-child .soeteck-section-lead { margin-inline: auto; }
+  /* Center LAYER 02 badge/title/desc */
+  .soeteck-aicoolit-components > .soeteck-container:nth-child(4) { text-align: center; }
+  .soeteck-aicoolit-components > .soeteck-container:nth-child(4) .soeteck-aicoolit-layer__desc { max-width: 680px; margin-inline: auto; }
+  .soeteck-aicoolit-layer {
+    background: #f8fafc; border-radius: 16px;
+    padding: 40px; margin-bottom: 48px;
+    border: 0.5px solid rgba(175,175,175,0.34);
+  }
+  .soeteck-aicoolit-layer:last-child { margin-bottom: 0; }
+  [data-aicoolit-tabs] {
+    margin-bottom: 0; padding: 32px;
+  }
+  .soeteck-aicoolit-layer__grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+  }
+  .soeteck-aicoolit-layer__main { min-width: 0; }
+  .soeteck-aicoolit-layer__badge {
+    display: inline-block; padding: 4px 14px; border-radius: 6px;
+    background: #0b1f3a; color: #fff;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; margin-bottom: 16px;
+  }
+  .soeteck-aicoolit-layer__title {
+    font-size: clamp(1.12rem, 1.35vw, 1.36rem);
+    line-height: 1.25;
+    margin: 0 0 16px; color: #1e293b;
+  }
+  .soeteck-aicoolit-layer__desc {
+    font-size: 15px; line-height: 1.7; color: var(--soeteck-text-soft); margin-bottom: 28px;
+  }
+  .soeteck-aicoolit-layer__specs {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+  }
+  .soeteck-aicoolit-layer__spec {
+    padding: 16px 12px; border-radius: 10px; background: #fff;
+    border: 1px solid #e2e8f0; text-align: center;
+  }
+  .soeteck-aicoolit-layer__spec-icon {
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 8px; color: #1a85e5;
+  }
+  .soeteck-aicoolit-layer__spec-label {
+    display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: #94a3b8; margin-bottom: 4px;
+  }
+  .soeteck-aicoolit-layer__spec-value {
+    display: block; font-size: 14px; font-weight: 700; color: #334155;
+  }
+  .soeteck-aicoolit-layer__media-col {
+    position: relative; min-width: 0;
+  }
+  .soeteck-aicoolit-layer__media {
+    border-radius: 12px; overflow: hidden; background: #e2e8f0;
+  }
+  .soeteck-aicoolit-layer__image { display: block; width: 100%; height: auto; }
+  .soeteck-aicoolit-layer__extra {
+    position: absolute; top: -12px; right: -12px; z-index: 2;
+  }
+  .soeteck-aicoolit-layer__extra .soeteck-aicoolit-layer__spec {
+    background: #fff; padding: 14px 20px; max-width: 240px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+  }
+
+  .soeteck-aicoolit-shell-divider {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    padding-block: 40px;
+    max-width: 1200px; margin-inline: auto; padding-inline: 20px;
+  }
+  /* Vertical connector line through the center */
+  .soeteck-aicoolit-shell-divider::before {
+    content: '';
+    position: absolute; inset: 0;
+    left: 50%; width: 1px;
+    background: linear-gradient(to bottom, transparent 0%, #d1d5db 15%, #d1d5db 85%, transparent 100%);
+    z-index: 0;
+  }
+  .soeteck-aicoolit-shell-divider__line { display: none; }
+  .soeteck-aicoolit-shell-divider__text {
+    position: relative; z-index: 1;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 24px;
+    border: 1px solid #d1d5db; border-radius: 30px;
+    background: #fff;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--aicoolit-blue); white-space: nowrap;
+  }
+  .soeteck-aicoolit-shell-divider__icon {
+    font-size: 14px; line-height: 1;
+    transform: translateY(1px);
+    animation: aicoolitFloat 2.5s ease-in-out infinite;
+  }
+  @keyframes aicoolitFloat {
+    0%, 100% { transform: translateY(1px); }
+    50% { transform: translateY(-4px); }
+  }
+
+  /* ── CDU Tabs (redesigned) ── */
+  [data-aicoolit-tabs] {
+    display: flex; flex-direction: row; gap: 0;
+    background: #f8fafc; border-radius: 16px;
+    padding: 32px;
+  }
+  .aicoolit-cdu__nav {
+    flex: 0 0 220px; display: flex; flex-direction: column;
+    justify-content: space-evenly;
+    padding: 0 24px 0 0; border-right: 1px solid #eef0f2;
+  }
+  .aicoolit-cdu__tab {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; padding: 14px 16px; border: none;
+    background: transparent; font-size: 14px; font-weight: 600;
+    color: #64748b; text-align: left; cursor: pointer;
+    transition: all 200ms ease;
+  }
+  .aicoolit-cdu__tab:hover { background: #f8fafc; color: #334155; }
+  .aicoolit-cdu__tab.is-active {
+    background: #eef2ff; color: #1a85e5;
+    box-shadow: inset 3px 0 0 #1a85e5;
+  }
+  .aicoolit-cdu__tab-icon { flex-shrink: 0; color: #94a3b8; width: 8px; height: 8px; }
+  .aicoolit-cdu__tab.is-active .aicoolit-cdu__tab-icon { color: #1a85e5; }
+  .aicoolit-cdu__tab-text { display: flex; flex-direction: column; gap: 1px; }
+  .aicoolit-cdu__tab-title { font-size: 14px; font-weight: 600; }
+  .aicoolit-cdu__tab-subtitle { font-size: 11px; font-weight: 400; color: #94a3b8; }
+  .aicoolit-cdu__panels { flex: 1; min-width: 0; padding: 0 0 0 32px; }
+  .aicoolit-cdu__panel { animation: aicoolitCDUFade 280ms ease-out; }
+  .aicoolit-cdu__panel[hidden],
+  .aicoolit-cdu__panel:not(.is-active) { display: none; }
+  @keyframes aicoolitCDUFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  .aicoolit-cdu__products {
+    display: flex; flex-direction: row; gap: 16px;
+    margin-bottom: 24px; flex-wrap: wrap;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .aicoolit-cdu__product {
+    display: flex; flex-direction: column; align-items: center;
+    flex: 1 1 0; min-width: 120px; max-width: 190px;
+    border-radius: 12px; overflow: hidden;
+    background: #fff; border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 240ms ease, border-color 240ms ease;
+  }
+  .aicoolit-cdu__product:hover {
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+    border-color: #cbd5e1;
+  }
+  .aicoolit-cdu__product-link { display: block; width: 100%; line-height: 0; }
+  .aicoolit-cdu__product-img {
+    display: block; width: 100%; height: auto;
+    transition: transform 300ms ease;
+  }
+  .aicoolit-cdu__product-link:hover .aicoolit-cdu__product-img { transform: scale(1.05); }
+  .aicoolit-cdu__product-name {
+    display: block; width: 100%; padding: 10px 12px;
+    font-size: 13px; font-weight: 600; color: var(--soeteck-primary);
+    text-align: center; text-decoration: none;
+    border-top: 1px solid #eef0f2;
+  }
+  .aicoolit-cdu__product-name:hover { color: var(--soeteck-primary-dark); text-decoration: underline; }
+
+  .aicoolit-cdu__info { padding: 4px 0 0; }
+  .aicoolit-cdu__info-header { margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
+  .aicoolit-cdu__badge {
+    display: inline-block; padding: 3px 12px; border-radius: 4px;
+    background: #eef2ff; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.08em; color: #1a85e5;
+    text-transform: uppercase; flex-shrink: 0;
+  }
+  .aicoolit-cdu__info-title { font-size: 1rem; margin: 0; color: #1e293b; }
+  .aicoolit-cdu__info-desc { font-size: 14px; line-height: 1.7; color: var(--soeteck-text-soft); margin: 0 0 20px; }
+  .aicoolit-cdu__tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .aicoolit-cdu__tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px; border-radius: 20px;
+    background: #f1f5f9; border: 1px solid #e2e8f0;
+    font-size: 12px; font-weight: 500; color: #475569;
+  }
+  .aicoolit-cdu__tag svg { color: #1a85e5; flex-shrink: 0; }
+
+  /* ── Trust ── */
+  .soeteck-aicoolit-trust { background: #fff; padding: var(--soeteck-section-y-sm) 0; text-align: center; }
+  .soeteck-aicoolit-trust__heading {
+    font-size: 14px; color: #999; text-transform: uppercase;
+    letter-spacing: 0.08em; margin-bottom: 24px;
+  }
+  .soeteck-aicoolit-trust__grid { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+  .soeteck-aicoolit-trust__badge {
+    display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 600; color: #363636;
+  }
+  .soeteck-aicoolit-trust__icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px; color: var(--aicoolit-blue);
+  }
+
+  /* ── Supply Chain ── */
+  .soeteck-aicoolit-supply { background: #f8fafc; }
+  .soeteck-aicoolit-supply__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .soeteck-aicoolit-supply__content .soeteck-section-title { margin-bottom: 16px; }
+  .soeteck-aicoolit-supply__content > p { font-size: 15px; line-height: 1.7; color: var(--soeteck-text-soft); margin-bottom: 32px; }
+  .soeteck-aicoolit-supply__items { display: flex; flex-direction: column; gap: 20px; }
+  .soeteck-aicoolit-supply__item strong { display: flex; align-items: center; gap: 6px; font-size: 15px; margin-bottom: 4px; }
+  .soeteck-aicoolit-supply__item strong svg { color: var(--aicoolit-blue); flex-shrink: 0; }
+  .soeteck-aicoolit-supply__item p { font-size: 14px; color: var(--soeteck-text-soft); margin: 0; line-height: 1.6; }
+  .soeteck-aicoolit-supply__media { border-radius: 12px; overflow: hidden; }
+  .soeteck-aicoolit-supply__image { display: block; width: 100%; height: auto; object-fit: cover; }
+
+  /* ── FAQ ── */
+  .soeteck-aicoolit-faq { background: #fff; }
+  .soeteck-aicoolit-faq__list { max-width: 800px; display: grid; gap: 0; }
+  .soeteck-aicoolit-faq__item { border-bottom: 1px solid var(--aicoolit-border); }
+  .soeteck-aicoolit-faq__item:first-child { border-top: 1px solid var(--aicoolit-border); }
+  .soeteck-aicoolit-faq__question {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    width: 100%; padding: 20px 0; border: none; background: none;
+    font-size: 16px; font-weight: 600; color: #363636; cursor: pointer; text-align: left;
+    transition: color 200ms;
+  }
+  .soeteck-aicoolit-faq__question:hover { color: var(--aicoolit-blue); }
+  .soeteck-aicoolit-faq__question::-webkit-details-marker { display: none; }
+  .soeteck-aicoolit-faq__chevron { flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; transition: transform 240ms ease-out; }
+  .soeteck-aicoolit-faq__chevron::before { content: ""; width: 8px; height: 8px; border-right: 2px solid var(--aicoolit-muted); border-bottom: 2px solid var(--aicoolit-muted); transform: rotate(45deg); display: block; margin-top: -4px; }
+
+  details[open] .soeteck-aicoolit-faq__chevron { transform: rotate(180deg); }
+  .soeteck-aicoolit-faq__answer { padding: 0 0 24px; font-size: 15px; line-height: 1.7; color: var(--soeteck-text-soft); }
+
+  /* ── CTA ── */
+  .soeteck-aicoolit-cta { background: #fff; }
+  .soeteck-aicoolit-cta__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+  .soeteck-aicoolit-cta__content .soeteck-section-title { margin-bottom: 16px; }
+  .soeteck-aicoolit-cta__content > p { font-size: 15px; line-height: 1.7; color: var(--soeteck-text-soft); margin-bottom: 32px; }
+  .soeteck-aicoolit-cta__offers { display: flex; flex-direction: column; gap: 16px; }
+  .soeteck-aicoolit-cta__offer {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 15px; font-weight: 500; color: #363636;
+  }
+  .soeteck-aicoolit-cta__offer-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(26,133,229,0.15); flex-shrink: 0; color: var(--aicoolit-blue);
+  }
+  .soeteck-aicoolit-cta__form {
+    background: #fff; border: 1px solid var(--aicoolit-border); border-radius: 12px; overflow: hidden;
+    text-align: left;
+  }
+  .soeteck-aicoolit-cta__form-header {
+    padding: 20px 24px; font-size: 18px; font-weight: 700;
+    border-bottom: 1px solid var(--aicoolit-border);
+  }
+  .soeteck-aicoolit-cta__form-body { padding: 24px; }
+  .soeteck-aicoolit-cta__form-field { margin-bottom: 16px; }
+  .soeteck-aicoolit-cta__form-label { display: block; font-size: 13px; font-weight: 600; color: #363636; margin-bottom: 6px; }
+  .soeteck-aicoolit-cta__form-input,
+  .soeteck-aicoolit-cta__form-textarea {
+    width: 100%; padding: 10px 14px; border: 1px solid #d7dce3; border-radius: 6px;
+    font-size: 14px; font-family: inherit; color: #363636; background: #f9fafb;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .soeteck-aicoolit-cta__form-input:focus,
+  .soeteck-aicoolit-cta__form-textarea:focus {
+    border-color: var(--aicoolit-blue); outline: none; box-shadow: 0 0 0 3px rgba(26,133,229,0.12);
+  }
+  .soeteck-aicoolit-cta__form-textarea { resize: vertical; min-height: 80px; }
+  .soeteck-aicoolit-cta__form-submit {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; padding: 0 28px; border: none; border-radius: 6px;
+    background: var(--aicoolit-blue); color: #fff; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 180ms ease;
+  }
+  .soeteck-aicoolit-cta__form-submit:hover { background: var(--aicoolit-blue-dark); }
+
+  /* ── Responsive ── */
+  @media (max-width: 991px) {
+    .soeteck-aicoolit-hero__inner,
+    .soeteck-aicoolit-series__grid,
+    .soeteck-aicoolit-competitive__grid,
+    .soeteck-aicoolit-supply__grid,
+    .soeteck-aicoolit-cta__grid { grid-template-columns: 1fr; }
+    .soeteck-aicoolit-hero__media { order: -1; margin-top: 0; }
+    .soeteck-aicoolit-hero .soeteck-aicoolit-stats__grid { grid-template-columns: repeat(2, 1fr); }
+    .soeteck-aicoolit-series--image-first .soeteck-aicoolit-series__grid { direction: ltr; }
+  }
+
+  @media (max-width: 768px) {
+    /* section padding 已统一到 --soeteck-section-y 变量 */
+    .soeteck-aicoolit-hero { padding-block: 64px 40px; }
+    .soeteck-aicoolit-hero__breadcrumbs { top: 15px; }
+    /* series padding 已统一到 --soeteck-section-y-sm 变量 */
+    .soeteck-aicoolit-series__specs { grid-template-columns: 1fr; }
+    .soeteck-aicoolit-layer { padding: 28px; }
+    .soeteck-aicoolit-layer__grid { grid-template-columns: 1fr; gap: 32px; }
+    .soeteck-aicoolit-layer__specs { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .soeteck-aicoolit-layer__extra { position: static; }
+    .soeteck-aicoolit-trust__grid { gap: 24px; }
+    [data-aicoolit-tabs] { flex-direction: column; padding: 24px; }
+    .aicoolit-cdu__nav {
+      flex: none; width: auto; flex-direction: row;
+      padding: 0 0 16px; border-right: none; border-bottom: 1px solid #eef0f2;
+      overflow-x: auto; gap: 4px;
+    }
+    .aicoolit-cdu__tab { padding: 10px 14px; white-space: nowrap; font-size: 13px; }
+    .aicoolit-cdu__tab-icon { display: none; }
+    .aicoolit-cdu__panels { padding: 20px 0 0; }
+    .aicoolit-cdu__info-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .aicoolit-cdu__info-header .aicoolit-cdu__badge { order: -1; }
+    /* Stats grid single column on mobile */
+    .soeteck-aicoolit-hero .soeteck-aicoolit-stats__grid { grid-template-columns: 1fr; gap: 12px; }
+    .soeteck-aicoolit-hero .soeteck-aicoolit-stats__card { padding: 20px 16px; }
+    /* Sticky nav: collapse to icon+name only */
+    .soeteck-aicoolit-sticky-nav__brand > span:not(:first-child) { display: none; }
+    .soeteck-aicoolit-sticky-nav__divider { display: none; }
+    /* Competition cards tighter padding */
+    .soeteck-aicoolit-compare-card { padding: 20px; }
+    /* CDU products: horizontal slide on mobile */
+    .aicoolit-cdu__products {
+      display: flex; flex-direction: row; flex-wrap: nowrap; gap: 12px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px; margin-bottom: 20px;
+      border-bottom: none;
+    }
+    .aicoolit-cdu__products::-webkit-scrollbar { height: 4px; }
+    .aicoolit-cdu__products::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+    .aicoolit-cdu__product {
+      flex: 0 0 200px; max-width: none;
+      scroll-snap-align: start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .soeteck-aicoolit-hero__ctas { flex-direction: column; }
+    .soeteck-aicoolit-hero__ctas .soeteck-button { text-align: center; }
+    .soeteck-aicoolit-models__badges { flex-direction: column; gap: 8px; }
+    .soeteck-aicoolit-trust__grid { flex-direction: column; align-items: center; gap: 16px; }
+    /* Layer 01 specs: single column */
+    .soeteck-aicoolit-layer__specs { grid-template-columns: 1fr; }
+    /* Shell divider: allow text wrap */
+    .soeteck-aicoolit-shell-divider__text { font-size: 10px; white-space: normal; gap: 6px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aicoolit-cdu__panel { animation: none; }
+  }
+</style>

@@ -190,6 +190,7 @@ export interface ContentApiFilterGroup {
 
 export interface ContentApiArchiveConfig {
   introBlocks: Array<{ text: string; prefix?: string }>;
+  heroSubtitle?: string | null;
   defaultSort: string;
   defaultPerPage: number;
   allowedPerPage: number[];
@@ -202,6 +203,7 @@ export interface ContentApiResponse {
     path: string;
     language: string;
     localizedPaths: Record<string, { path: string | null; status: string }>;
+    codeEmbeddedType?: string;
   };
   seo: {
     title: string;
@@ -217,6 +219,7 @@ export interface ContentApiResponse {
     title: string;
     contentHtml: string;
     featuredImage?: { path: string; alt?: string } | null;
+    modified?: string | null;
   };
   category?: {
     id?: string | null;
@@ -225,8 +228,9 @@ export interface ContentApiResponse {
     count: number;
   };
   products?: ContentApiProductCard[];
-  children?: Array<{ id: string; name: string; slug: string; count: number; path: string }>;
-  siblings?: Array<{ id: string; name: string; slug: string; count: number; path: string }>;
+  children?: Array<{ id: string; name: string; slug: string; count: number; path: string; description?: string; image?: ContentApiImage | null }>;
+  landingChildren?: Array<{ id: string; name: string; slug: string; count: number; path: string; description: string; image: ContentApiImage | null }>;
+  siblings?: Array<{ id: string; name: string; slug: string; count: number; path: string; description?: string; image?: ContentApiImage | null }>;
   bannerImage?: ContentApiImage | null;
   archiveConfig?: ContentApiArchiveConfig | null;
   product?: {
@@ -291,6 +295,23 @@ export interface ContentApiResponse {
       slug: string;
       path?: string;
     }>;
+    author?: {
+      id: number;
+      name: string;
+      description?: string;
+      avatar?: string | null;
+    } | null;
+    prevPost?: {
+      id: string;
+      title: string;
+      path: string;
+    } | null;
+    nextPost?: {
+      id: string;
+      title: string;
+      path: string;
+    } | null;
+    relatedArticles?: ContentApiArticleCard[];
   };
   archive?: {
     id?: string | null;
@@ -303,7 +324,7 @@ export interface ContentApiResponse {
 }
 
 export async function fetchPocRoutes(): Promise<PocRoute[]> {
-  const response = await fetch(`${API_BASE_URL}/wp-json/soeteck/v1/routes?fixture=poc`);
+  const response = await fetch(`${API_BASE_URL}/wp-json/soeteck/v1/routes?dynamic=1`);
   if (!response.ok) {
     throw new Error(`Failed to fetch PoC routes: ${response.status}`);
   }
@@ -338,6 +359,24 @@ export async function fetchGlobalConfig(lang?: string): Promise<GlobalConfigResp
   }
 
   return (await response.json()) as GlobalConfigResponse;
+}
+
+/**
+ * Fetch preview content for a post by ID (any status, draft included).
+ * Requires a valid HMAC token for authentication.
+ */
+export async function fetchPreviewContent(
+  postId: string,
+  lang: string = 'en',
+  token: string
+): Promise<ContentApiResponse> {
+  const params = new URLSearchParams({ id: postId, lang, token });
+  const url = `${API_BASE_URL}/wp-json/soeteck/v1/preview?${params}`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Preview fetch failed for post ${postId}: ${response.status}`);
+  }
+  return (await response.json()) as ContentApiResponse;
 }
 
 function endpointForRouteType(routeType: RouteType): string {

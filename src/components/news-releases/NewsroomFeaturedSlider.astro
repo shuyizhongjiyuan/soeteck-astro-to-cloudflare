@@ -1,23 +1,41 @@
 ---
 import type { AdaptedArticleCard } from '@/lib/page-adapter';
 import { formatDisplayDate } from './news-releases-content';
+import { ARCHIVE_EN } from './news-releases-content';
+import { ARCHIVE_ZH } from './news-releases-content-zh';
+import { ARCHIVE_RU } from './news-releases-content-ru';
+import { ARCHIVE_PT } from './news-releases-content-pt';
+import { ARCHIVE_ES } from './news-releases-content-es';
+import type { SliderContent } from './news-releases-content';
 
 interface Props {
   articles: AdaptedArticleCard[];
+  lang?: string;
 }
 
-const { articles } = Astro.props;
+const { articles, lang = 'en' } = Astro.props;
+
+const contentMap: Record<string, SliderContent> = {
+  en: ARCHIVE_EN.slider,
+  zh: ARCHIVE_ZH.slider,
+  ru: ARCHIVE_RU.slider,
+  pt: ARCHIVE_PT.slider,
+  es: ARCHIVE_ES.slider,
+};
+const t = contentMap[lang] ?? ARCHIVE_EN.slider;
+
+const dateLocale = lang === 'zh' ? 'zh-CN' : lang === 'ru' ? 'ru-RU' : lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-US';
 ---
 {articles.length > 0 && (
   <section class="newsroom-featured-slider" aria-labelledby="newsroom-featured-title" data-slider-duration="5600">
     <div class="newsroom-featured-slider__heading">
-      <p>Featured News</p>
-      <h2 id="newsroom-featured-title">Official updates from Soeteck</h2>
+      <p>{t.headingEyebrow}</p>
+      <h2 id="newsroom-featured-title">{t.headingTitle}</h2>
     </div>
     <div class="newsroom-featured-slider__viewport">
       {articles.map((article, index) => (
         <article class:list={["newsroom-featured-slider__pane", { 'is-active': index === 0 }]} data-slide-index={index} {...(index === 0 ? {} : { 'aria-hidden': 'true' })}>
-          <a class="newsroom-featured-slider__image-link" href={article.path} aria-label={`Read featured release: ${article.title}`}>
+          <a class="newsroom-featured-slider__image-link" href={article.path} aria-label={`${t.cta}: ${article.title}`}>
             {article.featuredImage ? (
               <img class="newsroom-featured-slider__image" src={article.featuredImage.path} alt={article.featuredImage.alt} loading="eager" fetchpriority={index === 0 ? 'high' : 'auto'} />
             ) : (
@@ -26,19 +44,19 @@ const { articles } = Astro.props;
           </a>
           <div class="newsroom-featured-slider__overlay" aria-hidden="true"></div>
           <div class="newsroom-featured-slider__content">
-            <span class="newsroom-featured-slider__badge">Featured News</span>
-            {article.date && <time class="newsroom-featured-slider__date" datetime={article.date}>{formatDisplayDate(article.date)}</time>}
+            <span class="newsroom-featured-slider__badge">{t.badge}</span>
+            {article.date && <time class="newsroom-featured-slider__date" datetime={article.date}>{formatDisplayDate(article.date, dateLocale)}</time>}
             <h3 class="newsroom-featured-slider__title"><a href={article.path}>{article.title}</a></h3>
-            {article.excerpt && <p class="newsroom-featured-slider__excerpt">{article.excerpt}</p>}
-            <a class="newsroom-featured-slider__cta" href={article.path}>Read release</a>
+            {article.compactExcerpt && <p class="newsroom-featured-slider__excerpt">{article.compactExcerpt}</p>}
+            <a class="newsroom-featured-slider__cta" href={article.path}>{t.cta}</a>
           </div>
         </article>
       ))}
     </div>
     {articles.length > 1 && (
-      <div class="newsroom-featured-slider__nav" aria-label="Featured news navigation">
+      <div class="newsroom-featured-slider__nav" aria-label={t.headingEyebrow}>
         {articles.map((article, index) => (
-          <button class:list={["newsroom-featured-slider__nav-item", { 'is-active': index === 0 }]} type="button" data-slide-index={index} aria-current={index === 0 ? 'true' : undefined} aria-label={`Show featured release: ${article.title}`}>
+          <button class:list={["newsroom-featured-slider__nav-item", { 'is-active': index === 0 }]} type="button" data-slide-index={index} aria-current={index === 0 ? 'true' : undefined} aria-label={`${t.cta}: ${article.title}`}>
             <span class="newsroom-featured-slider__track" aria-hidden="true"><span class="newsroom-featured-slider__progress"></span></span>
           </button>
         ))}
@@ -187,9 +205,9 @@ const { articles } = Astro.props;
   }
 
   .newsroom-featured-slider__heading p {
-    margin: 0 0 8px;
+    margin: 0 0 14px;
     color: var(--soeteck-primary);
-    font-size: var(--soeteck-text-xs);
+    font-size: var(--soeteck-text-sm);
     font-weight: var(--soeteck-weight-bold);
     letter-spacing: 0.08em;
     line-height: 1.2;
@@ -199,8 +217,6 @@ const { articles } = Astro.props;
   .newsroom-featured-slider__heading h2 {
     margin: 0;
     color: var(--soeteck-text);
-    font-size: clamp(1.55rem, 2.6vw, 2.15rem);
-    line-height: 1.18;
   }
 
   .newsroom-featured-slider__viewport {

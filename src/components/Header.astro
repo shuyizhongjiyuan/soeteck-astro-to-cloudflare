@@ -78,6 +78,15 @@ function translateCategoryTitle(title: string): string {
   return key ? getUITranslation(lang, key) : title;
 }
 
+// 解决方案卡片描述映射：title → shared.json key
+const solutionDescMap: Record<string, string> = {
+  'Liquid Cooling Data Center': 'solutions.liquidCoolingDCDesc',
+  'Prefabricated Container Data Center': 'solutions.prefabContainerDCDesc',
+  'Cabinet Modular Data Center': 'solutions.cabinetModularDCDesc',
+  'Row Modular Data Center': 'solutions.rowModularDCDesc',
+  'Aisle Modular Data Center': 'solutions.aisleModularDCDesc',
+};
+
 // Detect menu variant type from URL path (fallback when API type is 'default')
 function detectMenuType(item: { path?: string; type?: string; children?: unknown[] }): string {
   if (item.type && item.type !== 'default') return item.type;
@@ -108,6 +117,7 @@ const languages = globalConfig.languages || [
 const currentLanguage = globalConfig.currentLanguage || languages[0];
 const logoUrl = globalConfig.site.logo?.path || '/resources/soeteck-logo-2.webp';
 const contactUrl = localizePath(globalConfig.urls.contact || '/en/contact-us/');
+const searchUrl = localizePath('/en/search/');
 ---
 
 <header id="masthead" class="site-header">
@@ -226,7 +236,7 @@ const contactUrl = localizePath(globalConfig.urls.contact || '/en/contact-us/');
                                   )}
                                 </span>
                                 <span class="solutions-card-title">{translateCategoryTitle(solution.title)}</span>
-                                <span class="solutions-card-description">{(solution as any).postExcerpt || solution.excerpt || `Explore ${solution.title} solutions.`}</span>
+                                <span class="solutions-card-description">{getUITranslation(lang, solutionDescMap[solution.title] || 'solutions.prefabContainerDCDesc')}</span>
                               </a>
                             ))}
                           </div>

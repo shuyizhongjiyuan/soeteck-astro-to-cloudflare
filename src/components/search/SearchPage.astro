@@ -1,0 +1,260 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+const t = (key: string): string => getUITranslation(lang, key);
+
+// Search query from URL or API
+const searchQuery = Astro.url.searchParams.get('s') || Astro.url.searchParams.get('q') || '';
+const totalResults = page.source?.searchResults?.total ?? 0;
+const results = page.source?.searchResults?.items ?? [];
+const currentPage = Number(Astro.url.searchParams.get('page')) || 1;
+const perPage = 10;
+const totalPages = Math.ceil(totalResults / perPage);
+---
+
+<div class="soeteck-search-page">
+    <section class="soeteck-search-header">
+      <div class="soeteck-container">
+        <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+        <h1 class="soeteck-page-title">
+          {t('common.searchResultsFor')}: <span>{searchQuery}</span>
+        </h1>
+        <p class="soeteck-search-count">
+          {totalResults} {t('common.resultsFound')}
+        </p>
+      </div>
+    </section>
+
+    <div class="soeteck-container soeteck-search-results">
+      {results.length > 0 ? (
+        <>
+          <div class="soeteck-search-results__list">
+            {results.map((result: any) => (
+              <article class="soeteck-search-result-card">
+                <div class="soeteck-search-result-card__type">
+                  {result.type === 'product' ? t('nav.products') : result.type === 'page' ? t('nav.home') : t('common.post')}
+                </div>
+                <h2 class="soeteck-search-result-card__title">
+                  <a href={result.path || result.url}>{result.title}</a>
+                </h2>
+                {result.excerpt && (
+                  <p class="soeteck-search-result-card__excerpt">{result.excerpt}</p>
+                )}
+                <a class="soeteck-search-result-card__link" href={result.path || result.url}>
+                  {t('common.readmore')} &rarr;
+                </a>
+              </article>
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <nav class="soeteck-search-pagination" aria-label="Search results pagination">
+              {currentPage > 1 && (
+                <a class="soeteck-search-pagination__prev" href={`?s=${encodeURIComponent(searchQuery)}&page=${currentPage - 1}`}>
+                  &larr; {t('common.previous')}
+                </a>
+              )}
+              <span class="soeteck-search-pagination__info">
+                {t('common.page')} {currentPage} / {totalPages}
+              </span>
+              {currentPage < totalPages && (
+                <a class="soeteck-search-pagination__next" href={`?s=${encodeURIComponent(searchQuery)}&page=${currentPage + 1}`}>
+                  {t('common.next')} &rarr;
+                </a>
+              )}
+            </nav>
+          )}
+        </>
+      ) : (
+        <div class="soeteck-search-no-results">
+          <div class="soeteck-search-no-results__icon" aria-hidden="true">🔍</div>
+          <h2>{t('common.noResultsFound')}</h2>
+          <p>{t('common.noResultsDesc')}</p>
+          <form class="soeteck-search-form" action={`/${lang}/`} method="get" role="search">
+            <label class="soeteck-search-form__field">
+              <input type="search" name="s" placeholder={t('common.search')} aria-label={t('common.search')} />
+            </label>
+            <button class="soeteck-button soeteck-button-primary" type="submit">{t('common.search')}</button>
+          </form>
+        </div>
+      )}
+    </div>
+</div>
+
+<style is:global>
+  .soeteck-search-page {
+    background: var(--soeteck-white);
+  }
+
+  .soeteck-search-header {
+    padding: var(--soeteck-section-y-sm) 0;
+    background: var(--soeteck-surface);
+  }
+
+  .soeteck-search-header .soeteck-page-title {
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  .soeteck-search-header .soeteck-page-title span {
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-search-count {
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-md);
+    margin: 0;
+  }
+
+  .soeteck-search-results {
+    padding: 40px 0;
+  }
+
+  .soeteck-search-results__list {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .soeteck-search-result-card {
+    padding: 24px;
+    background: var(--soeteck-white);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .soeteck-search-result-card__type {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--soeteck-primary);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .soeteck-search-result-card__title {
+    font-size: 1.25rem;
+    margin: 0 0 12px;
+  }
+
+  .soeteck-search-result-card__title a {
+    color: var(--soeteck-text);
+    text-decoration: none;
+  }
+
+  .soeteck-search-result-card__title a:hover {
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-search-result-card__excerpt {
+    color: var(--soeteck-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .soeteck-search-result-card__link {
+    display: inline-block;
+    margin-top: 12px;
+    color: var(--soeteck-primary);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .soeteck-search-result-card__link:hover {
+    color: var(--soeteck-primary-dark);
+    text-decoration: underline;
+  }
+
+  .soeteck-search-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 48px;
+    padding: 24px 0;
+  }
+
+  .soeteck-search-pagination__prev,
+  .soeteck-search-pagination__next {
+    color: var(--soeteck-primary);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .soeteck-search-pagination__prev:hover,
+  .soeteck-search-pagination__next:hover {
+    color: var(--soeteck-primary-dark);
+    text-decoration: underline;
+  }
+
+  .soeteck-search-pagination__info {
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+  }
+
+  .soeteck-search-no-results {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .soeteck-search-no-results__icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+  }
+
+  .soeteck-search-no-results h2 {
+    margin-bottom: 16px;
+    color: var(--soeteck-text);
+  }
+
+  .soeteck-search-no-results p {
+    color: var(--soeteck-muted);
+    margin-bottom: 24px;
+  }
+
+  .soeteck-search-form {
+    display: flex;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .soeteck-search-form__field {
+    flex: 1;
+  }
+
+  .soeteck-search-form__field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 8px 14px;
+    border: 1px solid var(--soeteck-border);
+    border-radius: var(--soeteck-radius-sm);
+    font-size: var(--soeteck-text-md);
+  }
+
+  .soeteck-search-form__field input:focus-visible {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.14);
+    outline: none;
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-search-form {
+      flex-direction: column;
+    }
+
+    .soeteck-search-pagination {
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
+</style>

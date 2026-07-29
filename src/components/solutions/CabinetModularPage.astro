@@ -1,0 +1,981 @@
+﻿---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import {
+  CABINET_HERO_SUBTITLE, CABINET_OVERVIEW_PARAGRAPHS, CABINET_OVERVIEW_IMAGE,
+  CABINET_HOTSPOTS, CABINET_HOTSPOT_IMAGE, CABINET_KEY_FEATURES,
+  CABINET_FEATURED_MODELS, CABINET_MODELS_INTRO, CABINET_MODELS_OUTRO,
+  CABINET_CORE_MODULES,
+  CABINET_CRITICAL_POWER_TEXT, CABINET_CRITICAL_POWER_PRODUCTS,
+  CABINET_THERMAL_MANAGEMENT_TEXT, CABINET_THERMAL_PRODUCTS,
+  CABINET_SPEC_COLUMNS, CABINET_SPEC_ROWS,
+  CABINET_SCENARIOS,
+} from './cabinet-modular-content';
+import { PREFAB_CLIENT_CASES } from './prefab-content';
+import '@/styles/product-gallery.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+const brochureUrl = '/resources/Soeteck-Data-Center-Solution-Micro-Data-Center.pdf';
+const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
+---
+
+<div class="soeteck-cabinet-modular-page" data-cabinet-solution>
+  <!-- Banner Hero -->
+  <section class="soeteck-prefab-banner" aria-labelledby="cabinet-hero-title">
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt="Cabinet modular data center" width="1920" height="600" loading="eager" fetchpriority="high" />
+    <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-prefab-banner__inner">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-prefab-banner__body">
+        <h1 id="cabinet-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">Cabinet Modular Data Center</h1>
+        <p class="soeteck-cabinet-banner__subtitle">{CABINET_HERO_SUBTITLE}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview: 2-column (text left, image right) -->
+  <section class="soeteck-prefab-section soeteck-prefab-overview">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Smart, Efficient, and Scalable Cabinet Data Center</h2>
+      <div class="soeteck-cabinet-overview__grid">
+        <div class="soeteck-cabinet-overview__text">
+          {CABINET_OVERVIEW_PARAGRAPHS.map((p) => (
+            <div set:html={p}></div>
+          ))}
+        </div>
+        <div class="soeteck-cabinet-overview__media">
+          <img src={CABINET_OVERVIEW_IMAGE} alt="Cabinet modular data center overview" width="1024" height="798" loading="lazy" />
+        </div>
+      </div>
+      <div class="soeteck-prefab-cta-row">
+        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">GET BROCHURE</a>
+        <a class="soeteck-button-outline" href={`/${lang}/contact/`}>CONTACT US</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closer Look -->
+  <section class="soeteck-prefab-section soeteck-prefab-closer">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Take a Closer Look at Our CMDCs</h2>
+
+      <!-- 1 - Typical Design -->
+      <article class="soeteck-prefab-detail-block">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>1 - </span>Typical Designs of CMDCs</h3>
+        <div class="soeteck-prefab-hotspot" data-prefab-hotspots>
+          <div class="soeteck-prefab-hotspot__media">
+            <img class="soeteck-prefab-hotspot__image" src={CABINET_HOTSPOT_IMAGE} alt="Typical design of a cabinet modular data center" width="800" height="500" loading="lazy" />
+            {CABINET_HOTSPOTS.map((hotspot, index) => (
+              <button class="soeteck-prefab-hotspot__pin" type="button" data-hotspot-index={index} style={{ '--x': hotspot.x, '--y': hotspot.y } as any} aria-expanded="false" aria-label={hotspot.label}>
+                <span class="soeteck-prefab-hotspot__pulse" aria-hidden="true"></span>
+                <span class="soeteck-prefab-hotspot__core" aria-hidden="true">+</span>
+                <span class="soeteck-prefab-hotspot__tooltip" role="tooltip">{hotspot.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div class="soeteck-prefab-rich-text soeteck-prefab-detail-block__copy">
+          <p>The cabinet modular data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.</p>
+          <p><strong>Key Features:</strong></p>
+          <ul>
+            {CABINET_KEY_FEATURES.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2 - Featured Models: 3-column grid, each = image + accordion -->
+      <article class="soeteck-prefab-detail-block soeteck-cabinet-models">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>2 - </span>Featured Models</h3>
+        <div class="soeteck-prefab-rich-text soeteck-cabinet-models__intro">
+          <p>{CABINET_MODELS_INTRO}</p>
+        </div>
+        <div class="soeteck-cabinet-model-grid">
+          {CABINET_FEATURED_MODELS.map((model, i) => (
+            <div class="soeteck-cabinet-model-item">
+              <div class="soeteck-cabinet-model-item__image-wrapper">
+                <img class="soeteck-cabinet-model-item__image" src={model.image} alt={model.hotspotLabel} width="284" height="284" loading="lazy" />
+                <button class="soeteck-cabinet-model-item__pin" type="button" style={{ '--x': model.hotspotPin.x, '--y': model.hotspotPin.y } as any} aria-expanded="false" aria-label={model.hotspotLabel}>
+                  <span class="soeteck-cabinet-model-item__pulse" aria-hidden="true"></span>
+                  <span class="soeteck-cabinet-model-item__core" aria-hidden="true">+</span>
+                  <span class="soeteck-cabinet-model-item__tooltip" role="tooltip">{model.hotspotLabel}</span>
+                </button>
+              </div>
+              <div class="soeteck-cabinet-accordion" data-cabinet-accordion>
+                <div class="soeteck-cabinet-accordion__item" data-accordion-item>
+                  <button class="soeteck-cabinet-accordion__header" type="button" aria-expanded="true" data-accordion-trigger={i}>
+                    <span class="soeteck-cabinet-accordion__title">{model.accordionTitle}</span>
+                    <span class="soeteck-cabinet-accordion__icon" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="icon-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="icon-minus"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </span>
+                  </button>
+                  <div class="soeteck-cabinet-accordion__content" data-accordion-content={i}>
+                    <div class="soeteck-cabinet-accordion__content-inner">
+                      <p class="soeteck-cabinet-accordion__subhead">Integrated Systems:</p>
+                      <ul class="soeteck-cabinet-check-list">
+                        {model.integrated_systems.map((item) => (
+                          <li><span class="soeteck-cabinet-check" aria-hidden="true">✓</span> {item}</li>
+                        ))}
+                      </ul>
+                      <p class="soeteck-cabinet-accordion__subhead">Key Advantages:</p>
+                      <ul class="soeteck-cabinet-bullet-list">
+                        {model.key_advantages.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div class="soeteck-prefab-rich-text soeteck-cabinet-models__outro">
+          <p>{CABINET_MODELS_OUTRO}</p>
+        </div>
+      </article>
+
+      <!-- 3 - Core Infrastructure Modules + Critical Power + Thermal Management -->
+      <article class="soeteck-prefab-detail-block soeteck-prefab-modules">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>3 - </span>Core Infrastructure Modules</h3>
+        <div class="soeteck-prefab-rich-text soeteck-prefab-modules__lead">
+          <p>The SOETECK cabinet modular data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.</p>
+        </div>
+        <div class="soeteck-prefab-module-grid">
+          {CABINET_CORE_MODULES.map((module) => (
+            <article class="soeteck-prefab-module-card">
+              <span class={`soeteck-prefab-module-card__icon soeteck-prefab-module-card__icon--${module.icon}`} aria-hidden="true"></span>
+              <h3 class="soeteck-card-title">{module.title}</h3>
+              <p>{module.text}</p>
+            </article>
+          ))}
+        </div>
+
+        <!-- Critical Power — Product Gallery Grid -->
+        <section class="soeteck-prefab-product-group" aria-labelledby="cabinet-critical-power-title">
+          <div class="soeteck-prefab-rich-text">
+            <h4 id="cabinet-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">Critical Power</h4>
+            <p>{CABINET_CRITICAL_POWER_TEXT}</p>
+          </div>
+          <div class="soeteck-prefab-product-gallery-grid" data-cabinet-gallery>
+            {CABINET_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
+              const panelId = `cabinet-critical-power-${pIdx}`;
+              return (
+                <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
+                  <div class="soeteck-prefab-product-gallery__stage">
+                    {product.images.slice(0, 4).map((img, iIdx) => (
+                      <a class={`soeteck-prefab-product-gallery__item${iIdx === 0 ? ' is-active' : ''}`}
+                         href={`/${lang}/products/${product.slug}/`}
+                         target="_blank" rel="noopener"
+                         data-product-gallery-item={`${panelId}-${iIdx}`}>
+                        <img src={img} alt={product.title} class="soeteck-prefab-product-gallery__image" loading="lazy" />
+                      </a>
+                    ))}
+                  </div>
+                  {product.images.slice(0, 4).length > 1 && (
+                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                      {product.images.slice(0, 4).map((img, iIdx) => (
+                        <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
+                                type="button"
+                                data-product-gallery-target={`${panelId}-${iIdx}`}
+                                aria-selected={iIdx === 0 ? 'true' : 'false'}>
+                          <img src={img} alt="" class="soeteck-prefab-product-gallery__thumb-image" loading="lazy" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div class="soeteck-prefab-product-gallery__copy">
+                    <a class="soeteck-card-title soeteck-prefab-product-gallery__title" href={`/${lang}/products/${product.slug}/`} target="_blank" rel="noopener">{product.title}</a>
+                    <p class="soeteck-prefab-product-gallery__excerpt">{product.excerpt}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+
+        <!-- Thermal Management — Product Gallery Grid -->
+        <section class="soeteck-prefab-product-group" aria-labelledby="cabinet-thermal-title">
+          <div class="soeteck-prefab-rich-text">
+            <h4 id="cabinet-thermal-title" class="soeteck-minor-title soeteck-title-bordered">Thermal Management</h4>
+            <p>{CABINET_THERMAL_MANAGEMENT_TEXT}</p>
+          </div>
+          <div class="soeteck-prefab-product-gallery-grid" data-cabinet-gallery>
+            {CABINET_THERMAL_PRODUCTS.map((product, pIdx) => {
+              const panelId = `cabinet-thermal-${pIdx}`;
+              return (
+                <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
+                  <div class="soeteck-prefab-product-gallery__stage">
+                    {product.images.slice(0, 4).map((img, iIdx) => (
+                      <a class={`soeteck-prefab-product-gallery__item${iIdx === 0 ? ' is-active' : ''}`}
+                         href={`/${lang}/products/${product.slug}/`}
+                         target="_blank" rel="noopener"
+                         data-product-gallery-item={`${panelId}-${iIdx}`}>
+                        <img src={img} alt={product.title} class="soeteck-prefab-product-gallery__image" loading="lazy" />
+                      </a>
+                    ))}
+                  </div>
+                  {product.images.slice(0, 4).length > 1 && (
+                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                      {product.images.slice(0, 4).map((img, iIdx) => (
+                        <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
+                                type="button"
+                                data-product-gallery-target={`${panelId}-${iIdx}`}
+                                aria-selected={iIdx === 0 ? 'true' : 'false'}>
+                          <img src={img} alt="" class="soeteck-prefab-product-gallery__thumb-image" loading="lazy" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  <div class="soeteck-prefab-product-gallery__copy">
+                    <a class="soeteck-card-title soeteck-prefab-product-gallery__title" href={`/${lang}/products/${product.slug}/`} target="_blank" rel="noopener">{product.title}</a>
+                    <p class="soeteck-prefab-product-gallery__excerpt">{product.excerpt}</p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <!-- Specs Table -->
+  <section class="soeteck-prefab-section soeteck-prefab-specs">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Featured Models and Specifications</h2>
+      <div class="soeteck-prefab-table-wrap">
+        <table class="soeteck-prefab-spec-table">
+          <thead>
+            <tr class="soeteck-prefab-spec-table__images">
+              <th scope="col"></th>
+              {CABINET_SPEC_COLUMNS.map((col) => (
+                <th scope="col">
+                  <img src={col.image} alt={col.model} width="249" height="282" loading="lazy" />
+                </th>
+              ))}
+            </tr>
+            <tr>
+              <th scope="col">Models</th>
+              {CABINET_SPEC_COLUMNS.map((col) => (
+                <th scope="col">{col.model}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {CABINET_SPEC_ROWS.map((row) => (
+              <tr>
+                <th scope="row">{row[0]}</th>
+                {row.slice(1).map((cell) => (
+                  <td>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>SOETECK Cabinet Data Center Solution.pdf</a></p>
+    </div>
+  </section>
+
+
+  <!-- Scenarios -->
+  <section class="soeteck-prefab-section soeteck-prefab-scenarios">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Who Might Need Our CMDCs?</h2>
+      <p class="soeteck-prefab-section__subtitle">Application Scenarios: An integration of Power, Cooling &amp; Infrastructure Modules Supporting Reliable IT Operations &ndash; Where Cabinet Modular DC Delivers Unique Value</p>
+      <div class="soeteck-prefab-scenario-grid">
+        {CABINET_SCENARIOS.map((scenario) => (
+          <article class="soeteck-prefab-scenario-card" data-scenario-card>
+            <img class="soeteck-prefab-scenario-card__image" src={scenario.image} alt={scenario.title} width="436" height="237" loading="lazy" />
+            <div class="soeteck-prefab-scenario-card__body">
+              <h3 class="soeteck-card-title">{scenario.title}</h3>
+              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={`${scenario.title} details`}>
+                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">Solution Benefits</button>
+                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">Critical Pain Points</button>
+              </div>
+              <div class="soeteck-prefab-scenario-card__panel is-active" data-scenario-panel="benefits">
+                <div class="soeteck-prefab-scenario-card__tags">
+                  {scenario.benefits.map((tag) => (
+                    <span>{tag}</span>
+                  ))}
+                </div>
+                <p>{scenario.solution}</p>
+              </div>
+              <div class="soeteck-prefab-scenario-card__panel" data-scenario-panel="pain" hidden>
+                <div class="soeteck-prefab-scenario-card__tags">
+                  {scenario.pain_points.map((tag) => (
+                    <span>{tag}</span>
+                  ))}
+                </div>
+                <p>{scenario.problem}</p>
+              </div>
+              <p><strong>{scenario.application}</strong></p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Client Cases -->
+  <section class="soeteck-prefab-section soeteck-prefab-cases">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Check Our Featured Client Cases</h2>
+      <div class="soeteck-prefab-case-grid">
+        {PREFAB_CLIENT_CASES.map((c) => (
+          <article class="soeteck-prefab-case-card">
+            <a class="soeteck-prefab-case-card__media" href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>
+              <img class="soeteck-prefab-case-card__image" src={c.imgSrc} alt={c.title} width="436" height="240" loading="lazy" />
+            </a>
+            <div class="soeteck-prefab-case-card__body">
+              <h3 class="soeteck-card-title"><a href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>{c.title}</a></h3>
+              <p>{c.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="soeteck-cta" id="cabinet-inquiry">
+    <div class="soeteck-container soeteck-cta__inner">
+      <div>
+        <p class="soeteck-eyebrow">Talk to an Engineer</p>
+        <h2>Get in Touch with SOETECK</h2>
+        <p>Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.</p>
+        <ul class="soeteck-cta__checks">
+          <li>Project consultation</li>
+          <li>Technical configuration support</li>
+          <li>Regional follow-up</li>
+        </ul>
+      </div>
+      <div class="soeteck-cta__actions">
+        <a class="soeteck-cta__button" href={`/${lang}/contact/`}>Contact Us</a>
+        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">Download Brochure</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style is:global>
+  .soeteck-cabinet-modular-page {
+    color: var(--soeteck-text);
+    background: #fff;
+  }
+
+  /* Banner subtitle */
+  .soeteck-cabinet-banner__subtitle {
+    max-width: 800px;
+    margin: 16px 0 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: var(--soeteck-text-lg, clamp(1rem, 1.6vw, 1.2rem));
+    font-weight: 400;
+    line-height: 1.6;
+  }
+
+  /* Overview: 2-column grid */
+  .soeteck-cabinet-overview__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 3vw, 40px);
+    align-items: center;
+  }
+
+  .soeteck-cabinet-overview__text p {
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-md);
+    margin-bottom: 16px;
+  }
+
+  .soeteck-cabinet-overview__text strong {
+    color: var(--soeteck-text);
+  }
+
+  .soeteck-cabinet-overview__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--soeteck-radius-md);
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-cabinet-overview__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Featured Models: 3-column grid with image + accordion */
+  .soeteck-cabinet-models__intro {
+    margin: 0 0 24px;
+  }
+
+  .soeteck-cabinet-model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .soeteck-cabinet-model-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .soeteck-cabinet-model-item__image-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .soeteck-cabinet-model-item__image-wrapper {
+    position: relative;
+    padding: 20px 0;
+  }
+
+  .soeteck-cabinet-model-item__image {
+    width: 284px;
+    height: 284px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+
+  /* Hotspot pins on model images — unified with main hotspot style */
+  .soeteck-cabinet-model-item__pin {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .soeteck-cabinet-model-item__core {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(75, 211, 170, 0.9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: 0 0 0 4px rgba(75, 211, 170, 0.2);
+    transition: background-color var(--soeteck-transition-medium), box-shadow var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+  }
+
+  .soeteck-cabinet-model-item__pulse {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: 2px solid rgba(75, 211, 170, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: soeteck-prefab-hotspot-pulse 2000ms ease infinite;
+  }
+
+  .soeteck-cabinet-model-item__tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    z-index: 4;
+    width: max-content;
+    max-width: min(320px, calc(100vw - 40px));
+    padding: 5px 9px;
+    border-radius: var(--soeteck-radius-sm);
+    background: var(--soeteck-primary);
+    color: #fff;
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.35;
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+    transform: translate(-50%, 6px);
+    transition: opacity var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+  }
+
+  .soeteck-cabinet-model-item__tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-top: 6px solid var(--soeteck-primary);
+    transform: translateX(-50%);
+  }
+
+  .soeteck-cabinet-model-item__pin:hover .soeteck-cabinet-model-item__core { transform-origin: center;
+    background: rgba(75, 211, 170, 1);
+    box-shadow: 0 0 0 6px rgba(75, 211, 170, 0.35);
+    transform: scale(1.06);
+  }
+
+  .soeteck-cabinet-model-item__pin[aria-expanded="true"] .soeteck-cabinet-model-item__core {
+    background: var(--soeteck-primary);
+    box-shadow: 0 0 0 4px rgba(26, 133, 229, 0.2);
+  }
+
+  .soeteck-cabinet-model-item__pin[aria-expanded="true"] .soeteck-cabinet-model-item__pulse {
+    border-color: rgba(26, 133, 229, 0.5);
+  }
+
+  .soeteck-cabinet-model-item__pin[aria-expanded="true"] .soeteck-cabinet-model-item__tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* Accordion */
+  .soeteck-cabinet-accordion {
+    width: 350px;
+    margin: 0 auto;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-md);
+    overflow: hidden;
+  }
+
+  .soeteck-cabinet-accordion__item {
+    border-bottom: 1px solid var(--soeteck-border-soft);
+  }
+
+  .soeteck-cabinet-accordion__item:last-child {
+    border-bottom: 0;
+  }
+
+  .soeteck-cabinet-accordion__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 16px;
+    border: 0;
+    background: #f5f5f5;
+    cursor: pointer;
+    transition: background 200ms ease;
+  }
+
+  .soeteck-cabinet-accordion__header:hover {
+    background: #f8f9fa;
+  }
+
+  .soeteck-cabinet-accordion__title {
+    color: var(--soeteck-text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .soeteck-cabinet-accordion__icon {
+    flex: 0 0 auto;
+    display: inline-flex;
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-cabinet-accordion__icon .icon-minus { display: none; }
+  .soeteck-cabinet-accordion__header[aria-expanded="true"] .icon-plus { display: none; }
+  .soeteck-cabinet-accordion__header[aria-expanded="true"] .icon-minus { display: block; }
+
+  .soeteck-cabinet-accordion__content {
+    max-height: none;
+    overflow: visible;
+    transition: max-height 300ms ease;
+  }
+
+  .soeteck-cabinet-accordion__header[aria-expanded="false"] + .soeteck-cabinet-accordion__content {
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .soeteck-cabinet-accordion__content-inner {
+    padding: 0 16px 16px;
+  }
+
+  .soeteck-cabinet-accordion__subhead {
+    margin: 10px 0 4px;
+    color: var(--soeteck-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .soeteck-cabinet-check-list,
+  .soeteck-cabinet-bullet-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .soeteck-cabinet-check-list li {
+    padding: 2px 0;
+    color: var(--soeteck-text-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .soeteck-cabinet-check {
+    color: #28a745;
+    font-weight: 700;
+  }
+
+  .soeteck-cabinet-bullet-list li {
+    position: relative;
+    padding-left: 14px;
+    color: var(--soeteck-text-soft);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  .soeteck-cabinet-bullet-list li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+  }
+
+  .soeteck-cabinet-models__outro {
+    margin: 24px 0 0;
+  }
+
+
+  .soeteck-prefab-scenario-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--soeteck-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card:hover {
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .soeteck-prefab-scenario-card__image {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 19.75vw, 237px);
+    object-fit: cover;
+  }
+
+  .soeteck-prefab-scenario-card__body {
+    flex: 1;
+    padding: clamp(18px, 2vw, 24px);
+  }
+
+  .soeteck-prefab-scenario-card__body p {
+    margin: 14px 0 0;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.62;
+  }
+
+  .soeteck-prefab-scenario-card__tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 18px;
+    border-bottom: 1px solid #d7dce3;
+  }
+
+  .soeteck-prefab-scenario-card__tab {
+    position: relative;
+    min-height: 30px;
+    padding: 0 0 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #697386;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card__tab::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: transparent;
+    transition: background-color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card__tab:hover,
+  .soeteck-prefab-scenario-card__tab.is-active { color: var(--soeteck-primary-dark); }
+
+  .soeteck-prefab-scenario-card__tab.is-active::after { background: var(--soeteck-primary); }
+
+  .soeteck-prefab-scenario-card__panel { margin-top: 14px; }
+
+  .soeteck-prefab-scenario-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .soeteck-prefab-scenario-card__tags span {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #e8f3ff;
+    color: var(--soeteck-primary-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-prefab-scenario-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-prefab-scenario-grid { grid-template-columns: 1fr; }
+  }
+
+  /* CTA — dark gradient */
+  .soeteck-cta {
+    position: relative;
+    overflow: hidden;
+    padding: var(--soeteck-section-y) 0;
+    background: radial-gradient(circle at 78% 18%, rgba(0, 102, 204, 0.28), transparent 34%), linear-gradient(135deg, #061529 0%, #0a2749 56%, #061529 100%);
+    color: #fff;
+  }
+
+  .soeteck-cta::before {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+
+  .soeteck-cta__inner {
+    position: relative;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .soeteck-cta h2 {
+    margin: 0;
+    color: #fff;
+  }
+
+  .soeteck-cta p:not(.soeteck-eyebrow) {
+    max-width: 820px;
+    margin: 22px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .soeteck-cta__checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .soeteck-cta__checks li {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+  }
+
+  .soeteck-cta__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  .soeteck-cta__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--soeteck-primary);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 16px 36px rgba(0, 102, 204, 0.28);
+    transition: background 200ms ease;
+  }
+
+  .soeteck-cta__button:hover {
+    color: #fff;
+    background: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-cta__button--outline {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+  }
+
+  .soeteck-cta__button--outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-cta__inner {
+      display: grid;
+      justify-items: start;
+    }
+    .soeteck-cta__actions {
+      flex-direction: row;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-cta {
+      padding-block: 56px;
+    }
+    .soeteck-cta::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-cta__actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    .soeteck-cta__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  (function initCabinetGallery() {
+    var root = document.querySelector('[data-cabinet-solution]');
+    if (!root) return;
+
+    /* ── Product Gallery thumbnail switching ── */
+    var galleries = root.querySelectorAll('[data-cabinet-gallery]');
+    galleries.forEach(function(grid) {
+      var thumbs = grid.querySelectorAll('[data-product-gallery-target]');
+      thumbs.forEach(function(thumb) {
+        thumb.addEventListener('click', function() {
+          var target = this.getAttribute('data-product-gallery-target');
+          if (!target) return;
+
+          // Find parent product panel
+          var panel = this.closest('[data-product-panel]');
+          if (!panel) return;
+
+          // Deactivate all thumbs in this panel
+          panel.querySelectorAll('[data-product-gallery-target]').forEach(function(t) {
+            t.classList.remove('is-active');
+            t.setAttribute('aria-selected', 'false');
+          });
+
+          // Activate clicked thumb
+          this.classList.add('is-active');
+          this.setAttribute('aria-selected', 'true');
+
+          // Switch main image
+          panel.querySelectorAll('[data-product-gallery-item]').forEach(function(item) {
+            item.classList.remove('is-active');
+          });
+          var activeItem = panel.querySelector('[data-product-gallery-item="' + target + '"]');
+          if (activeItem) activeItem.classList.add('is-active');
+        });
+      });
+    });
+  })();
+
+  (function initCabinetPage() {
+    const container = document.querySelector('[data-cabinet-solution]');
+    if (!container) return;
+
+    // --- Hotspot interaction ---
+    // Hover → tooltip + core 变主题色（纯 CSS），无需点击状态
+    const hotspotMedia = container.querySelector('[data-prefab-hotspots]');
+    const pins = hotspotMedia?.querySelectorAll('[data-hotspot-index]');
+    pins?.forEach((pin) => {
+      pin.addEventListener('click', () => {});
+    });
+
+    // --- Model image hotspot pins ---
+    const modelPins = container.querySelectorAll('.soeteck-cabinet-model-item__pin');
+    modelPins.forEach((pin) => {
+      pin.addEventListener('click', () => {
+        const expanded = pin.getAttribute('aria-expanded') === 'true';
+        pin.setAttribute('aria-expanded', String(!expanded));
+      });
+      pin.addEventListener('mouseenter', () => pin.setAttribute('aria-expanded', 'true'));
+      pin.addEventListener('mouseleave', () => pin.setAttribute('aria-expanded', 'false'));
+    });
+
+    // --- Accordion ---
+    const accordionItems = container.querySelectorAll('[data-accordion-item]');
+    accordionItems.forEach((item) => {
+      const trigger = item.querySelector('[data-accordion-trigger]');
+      if (!trigger) return;
+      trigger.addEventListener('click', () => {
+        const expanded = trigger.getAttribute('aria-expanded') === 'true';
+        trigger.setAttribute('aria-expanded', String(!expanded));
+      });
+    });
+
+    // --- Scenario card tabs ---
+    const scenarioCards = container.querySelectorAll('[data-scenario-card]');
+    scenarioCards.forEach(function(card) {
+      card.querySelectorAll('[data-scenario-tab]').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var target = tab.getAttribute('data-scenario-tab');
+          if (!target) return;
+          card.querySelectorAll('[data-scenario-tab]').forEach(function(node) {
+            var isActive = node === tab;
+            node.classList.toggle('is-active', isActive);
+            node.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          });
+          card.querySelectorAll('[data-scenario-panel]').forEach(function(panel) {
+            var isActive = panel.getAttribute('data-scenario-panel') === target;
+            panel.classList.toggle('is-active', isActive);
+            panel.hidden = !isActive;
+          });
+        });
+      });
+    });
+  })();
+</script>

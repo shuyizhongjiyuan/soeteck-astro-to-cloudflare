@@ -1,8 +1,20 @@
-<aside class="soeteck-article-toc" data-toc-min-headings="3" aria-label="Article table of contents">
-  <button class="soeteck-article-toc__toggle" type="button" aria-expanded="false">In this article</button>
+---
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+const title = getUITranslation(lang, 'toc.title');
+const toggleText = getUITranslation(lang, 'toc.toggleButton');
+const ariaLabel = getUITranslation(lang, 'toc.ariaLabel');
+---
+<aside class="soeteck-article-toc" data-toc-min-headings="3" aria-label={ariaLabel}>
+  <button class="soeteck-article-toc__toggle" type="button" aria-expanded="false">{toggleText}</button>
   <div class="soeteck-article-toc__panel">
-    <p class="soeteck-article-toc__title">On this page</p>
-    <nav class="soeteck-article-toc__nav" aria-label="On this page"></nav>
+    <p class="soeteck-article-toc__title">{title}</p>
+    <nav class="soeteck-article-toc__nav" aria-label={title}></nav>
   </div>
 </aside>
 

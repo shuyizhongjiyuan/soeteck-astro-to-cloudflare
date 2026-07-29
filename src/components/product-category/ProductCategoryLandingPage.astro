@@ -1,0 +1,374 @@
+---
+import type { AdaptedPage, PageBreadcrumb } from '@/lib/page-adapter';
+import type { ContentApiImage } from '@/lib/content-api';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const page = Astro.props.page as AdaptedPage;
+const { lang = 'en' } = Astro.props;
+const source = page.source;
+const category = source.category;
+
+// landingChildren is the enhanced list from the API (with description + image).
+// Fallback to children if landingChildren is not available.
+const landingChildren = source.landingChildren ?? source.children ?? [];
+
+const title = category?.name ?? page.title;
+const heroSubtitle = source.archiveConfig?.heroSubtitle
+  || category?.description
+  || (category?.slug === 'critical-power'
+    ? 'Uninterruptible power supplies, DC power systems, power distribution, static transfer switches, busway, and battery solutions to ensure continuous operation of critical equipment.'
+    : null);
+const bannerImage = source.bannerImage ?? page.heroImage;
+
+const breadcrumbs: PageBreadcrumb[] = page.breadcrumbs.length > 0
+  ? page.breadcrumbs
+  : [
+      { label: 'Home', path: `/${lang}/` },
+      { label: 'Products', path: `/${lang}/products/` },
+      { label: title, path: page.routePath },
+    ];
+
+const productCategoriesLabel = getUITranslation(lang, 'archive.productCategories');
+
+interface LandingChild {
+  id: string;
+  name: string;
+  slug: string;
+  count: number;
+  path: string;
+  description: string;
+  image: ContentApiImage | null;
+}
+
+const children: LandingChild[] = landingChildren.map((c: any) => ({
+  id: c.id,
+  name: c.name,
+  slug: c.slug,
+  count: c.count,
+  path: c.path,
+  description: c.description ?? '',
+  image: c.image ?? null,
+}));
+---
+
+<div class="soeteck-product-cat-landing">
+    <!-- Hero: dark banner + overlay (matching ProductsPage.astro style) -->
+    <section class="soeteck-product-cat-landing__hero">
+      {bannerImage && (
+        <>
+          <img class="soeteck-product-cat-landing__hero-image" src={bannerImage.path ?? bannerImage.url ?? ''} alt={bannerImage.alt ?? title} fetchpriority="high" loading="eager" />
+          <div class="soeteck-product-cat-landing__hero-overlay"></div>
+        </>
+      )}
+      <div class="soeteck-container soeteck-product-cat-landing__hero-content">
+        <Breadcrumbs items={breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+        <div class="soeteck-product-cat-landing__hero-body">
+          <h1 class="soeteck-page-title soeteck-product-cat-landing__hero-title">{title}</h1>
+          {heroSubtitle && (
+            <p class="soeteck-product-cat-landing__hero-lead">{heroSubtitle}</p>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- Subcategory cards grid -->
+    <section class="soeteck-product-cat-landing__body">
+      <div class="soeteck-container">
+        <h2 class="soeteck-product-cat-landing__section-title">{productCategoriesLabel}</h2>
+
+        <div class="soeteck-product-cat-landing__grid">
+          {children.map((child) => (
+            <article class="soeteck-product-cat-landing__card">
+              <a href={child.path} class="soeteck-product-cat-landing__card-image-link" tabindex="-1" aria-hidden="true">
+                {child.image ? (
+                  <img
+                    class="soeteck-product-cat-landing__card-image"
+                    src={child.image.path ?? child.image.url ?? ''}
+                    alt={child.image.alt ?? child.name}
+                    loading="lazy"
+                    width="768"
+                    height="538"
+                  />
+                ) : (
+                  <div class="soeteck-product-cat-landing__card-image soeteck-product-cat-landing__card-image--placeholder">
+                    <span>{child.name}</span>
+                  </div>
+                )}
+              </a>
+
+              <div class="soeteck-product-cat-landing__card-body">
+                <h3 class="soeteck-product-cat-landing__card-title">
+                  <a href={child.path}>{child.name}</a>
+                </h3>
+                {child.description && (
+                  <div class="soeteck-product-cat-landing__card-desc" set:html={child.description}></div>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+</div>
+
+<style>
+/* ========================================
+   Product Category Landing Page
+   Matches Bricks template (ID: 24306 / 24413)
+   ======================================== */
+
+.soeteck-product-cat-landing {
+  --soeteck-cat-landing-width: 1200px;
+  --soeteck-cat-landing-gutter: 20px;
+  background: var(--soeteck-white);
+}
+
+.soeteck-product-cat-landing__body .soeteck-container {
+  width: min(var(--soeteck-cat-landing-width), calc(100% - (var(--soeteck-cat-landing-gutter) * 2)));
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* Hero — dark banner + overlay (matching ProductsPage.astro) */
+.soeteck-product-cat-landing__hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--soeteck-dark) 0%, #1a2d47 100%);
+  color: var(--soeteck-white);
+}
+
+.soeteck-product-cat-landing__hero > .soeteck-product-cat-landing__hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.soeteck-product-cat-landing__hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(11, 31, 58, 0.84), rgba(11, 31, 58, 0.42), rgba(11, 31, 58, 0.12));
+}
+
+.soeteck-product-cat-landing__hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
+  width: min(var(--soeteck-cat-landing-width), calc(100% - (var(--soeteck-cat-landing-gutter) * 2)));
+  max-width: none;
+  padding-inline: 0;
+}
+
+.soeteck-product-cat-landing__hero-content :global(.soeteck-breadcrumbs--hero) {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.soeteck-product-cat-landing__hero-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 0;
+  min-height: 480px;
+}
+
+.soeteck-product-cat-landing__hero-title {
+  font-family: var(--soeteck-font-heading);
+  margin: 0;
+  color: var(--soeteck-white);
+  font-size: var(--soeteck-heading-lg);
+  font-weight: var(--soeteck-weight-bold);
+  line-height: 1.08;
+}
+
+.soeteck-product-cat-landing__hero-lead {
+  font-family: var(--soeteck-font-body);
+  margin: 22px 0 0;
+  max-width: 760px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--soeteck-text-lg);
+  line-height: 1.65;
+}
+
+/* Body */
+.soeteck-product-cat-landing__body {
+  padding-block: var(--soeteck-section-y);
+  background: var(--soeteck-white);
+}
+
+.soeteck-product-cat-landing__section-title {
+  font-family: var(--soeteck-font-heading);
+  margin: 0 0 32px;
+  color: var(--soeteck-text);
+}
+
+/* Grid */
+.soeteck-product-cat-landing__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* Card */
+.soeteck-product-cat-landing__card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: var(--soeteck-radius-lg);
+  background: var(--soeteck-white);
+  overflow: hidden;
+  transition: box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.soeteck-product-cat-landing__card:hover {
+  border-color: var(--soeteck-primary);
+  box-shadow: var(--soeteck-shadow);
+}
+
+/* Card Image */
+.soeteck-product-cat-landing__card-image-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  line-height: 0;
+  background: #f8f9fa;
+}
+
+.soeteck-product-cat-landing__card-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 16px;
+  transition: transform 280ms ease;
+}
+
+.soeteck-product-cat-landing__card:hover .soeteck-product-cat-landing__card-image {
+  transform: scale(1.05);
+}
+
+.soeteck-product-cat-landing__card-image--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--soeteck-text-soft);
+  font-size: 14px;
+  font-weight: var(--soeteck-weight-medium);
+  background: #f1f3f5;
+}
+
+/* Card Body */
+.soeteck-product-cat-landing__card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px 24px;
+}
+
+.soeteck-product-cat-landing__card-title {
+  margin: 0;
+  font-family: var(--soeteck-font-heading);
+  font-weight: var(--soeteck-weight-bold);
+}
+
+.soeteck-product-cat-landing__card-title a {
+  color: var(--soeteck-text);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+
+.soeteck-product-cat-landing__card-title a:hover {
+  color: var(--soeteck-primary);
+}
+
+.soeteck-product-cat-landing__card-desc {
+  margin: 12px 0 0;
+  font-family: var(--soeteck-font-body);
+  color: var(--soeteck-text-soft);
+  font-size: var(--soeteck-text-sm);
+}
+
+.soeteck-product-cat-landing__card-desc :global(p) {
+  margin: 0;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 991px) {
+  .soeteck-product-cat-landing__hero-content {
+    min-height: 420px;
+  }
+  .soeteck-product-cat-landing__hero-body {
+    min-height: 420px;
+  }
+
+  .soeteck-product-cat-landing__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .soeteck-product-cat-landing__body {
+    padding-top: 16px;
+    padding-bottom: 60px;
+  }
+
+  .soeteck-product-cat-landing__section-title {
+    margin-bottom: 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .soeteck-product-cat-landing__hero-content {
+    min-height: 360px;
+  }
+  .soeteck-product-cat-landing__hero-body {
+    min-height: 360px;
+  }
+  .soeteck-product-cat-landing__hero-lead {
+    font-size: var(--soeteck-text-md);
+  }
+
+  .soeteck-product-cat-landing__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .soeteck-product-cat-landing__section-title {
+    margin-bottom: 20px;
+  }
+
+  .soeteck-product-cat-landing__card-image-link {
+    height: 180px;
+  }
+
+  .soeteck-product-cat-landing__card-body {
+    padding: 16px 20px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soeteck-product-cat-landing__card-image {
+    transition: none;
+  }
+}
+</style>

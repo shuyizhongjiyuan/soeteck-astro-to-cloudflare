@@ -18,7 +18,7 @@ const bannerImage = source.bannerImage ? { path: source.bannerImage.path, alt: s
 const archiveConfig: ContentApiArchiveConfig | null = source.archiveConfig ?? null;
 
 const title = category?.name ?? page.title;
-const description = category?.description ? category.description.replace(/<[^>]*>/g, '').trim() : '';
+const description = archiveConfig?.heroSubtitle ?? (category?.description ? category.description.replace(/<[^>]*>/g, '').trim() : '');
 const filters: ContentApiFilterGroup[] = archiveConfig?.filters ?? [];
 const introBlocks = archiveConfig?.introBlocks ?? [];
 const defaultPerPage = archiveConfig?.defaultPerPage ?? 5;
@@ -42,8 +42,6 @@ const localizedContactUrl = lang === 'en' ? '/en/contact-us/' : `/${lang}/contac
 
 // Archive UI translations
 const filtersLabel = getUITranslation(lang, 'archive.filters');
-const clearFiltersLabel = getUITranslation(lang, 'archive.clearFilters');
-const applyFiltersLabel = getUITranslation(lang, 'archive.applyFilters');
 const clearAllLabel = getUITranslation(lang, 'archive.clearAll');
 const resultsPerPageLabel = getUITranslation(lang, 'archive.resultsPerPage');
 const orderByLabel = getUITranslation(lang, 'archive.orderBy');
@@ -70,8 +68,6 @@ const configJson = JSON.stringify({
     showMore: showMoreLabel,
     showLess: showLessLabel,
     filters: filtersLabel,
-    clearFilters: clearFiltersLabel,
-    applyFilters: applyFiltersLabel,
     clearAll: clearAllLabel,
     resultsPerPage: resultsPerPageLabel,
     orderBy: orderByLabel,
@@ -86,8 +82,7 @@ const configJson = JSON.stringify({
 });
 ---
 
-<div id="primary" class="content-area soeteck-product-category-archive">
-  <main id="main" class="site-main">
+<div class="soeteck-product-category-archive">
     <section class="soeteck-product-cat-hero">
       {bannerImage && (
         <img
@@ -99,14 +94,15 @@ const configJson = JSON.stringify({
         />
       )}
       <div class="soeteck-product-cat-hero__overlay"></div>
-      <div class="soeteck-container soeteck-product-cat-hero__breadcrumbs">
-        <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
-      </div>
       <div class="soeteck-container soeteck-product-cat-hero__content">
-        <h1 class="soeteck-page-title soeteck-product-cat-hero__title">{title}</h1>
-        {description && (
-          <p class="soeteck-product-cat-hero__lead">{description}</p>
-        )}
+        <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+
+        <div class="soeteck-product-cat-hero__body">
+          <h1 class="soeteck-page-title soeteck-product-cat-hero__title">{title}</h1>
+          {description && (
+            <p class="soeteck-product-cat-hero__lead">{description}</p>
+          )}
+        </div>
       </div>
     </section>
 
@@ -150,17 +146,10 @@ const configJson = JSON.stringify({
                 <button class="soeteck-product-filters__panel-close" type="button" aria-label="Close filters"></button>
               </div>
 
-              <div class="soeteck-product-filters__actions">
-                <a class="soeteck-product-filters__clear-action" href={page.routePath} data-has-active-filters="false">{clearFiltersLabel}</a>
-                <button class="soeteck-button soeteck-button-primary soeteck-product-filters__submit" type="submit" form="soeteck-product-filters-form">
-                  {applyFiltersLabel}
-                </button>
-              </div>
-
               <form id="soeteck-product-filters-form" class="soeteck-product-filters__form">
                 <div class="soeteck-product-filters__groups">
                   {orderedFilters.map((group, groupIndex) => {
-                    const isOpen = group.key === 'category' || groupIndex === 0;
+                    const isOpen = groupIndex < 2;
                     const isLong = group.terms.length > 8;
                     const panelId = `soeteck-filter-panel-${group.key}`;
                     return (
@@ -201,15 +190,19 @@ const configJson = JSON.stringify({
 
           {introBlocks.length > 0 && (
             <div class="soeteck-product-results__intro">
-              <p>
-                {introBlocks.map((block, index) => (
-                  <>
-                    {index > 0 && <br />}
-                    {block.prefix && <strong>{block.prefix}</strong>}
-                    {block.text ?? ''}
-                  </>
-                ))}
-              </p>
+              {introBlocks.map((block, index) => (
+                <>
+                  {index > 0 && <br />}
+                  {block.html ? (
+                    <span set:html={block.html}></span>
+                  ) : (
+                    <>
+                      {block.prefix && <strong>{block.prefix}</strong>}
+                      {block.text ?? ''}
+                    </>
+                  )}
+                </>
+              ))}
             </div>
           )}
 
@@ -323,7 +316,6 @@ const configJson = JSON.stringify({
         </div>
       </div>
     </div>
-  </main>
 </div>
 
 <script>
@@ -523,8 +515,6 @@ const configJson = JSON.stringify({
     if (!activeFiltersEl) return;
     var hasAny = filterGroups.some(function(g) { return (activeFilters[g.key] || []).length > 0; });
     var form = document.getElementById('soeteck-product-filters-form');
-    var clearAction = filtersContainer && filtersContainer.querySelector('.soeteck-product-filters__clear-action');
-    if (clearAction) clearAction.setAttribute('data-has-active-filters', hasAny ? 'true' : 'false');
     if (!hasAny) {
       activeFiltersEl.style.display = 'none';
       if (filtersContainer) {
@@ -752,48 +742,27 @@ const configJson = JSON.stringify({
       });
     });
 
-    var clearAction = filtersContainer && filtersContainer.querySelector('.soeteck-product-filters__clear-action');
-    if (clearAction) {
-      clearAction.addEventListener('click', function(event) {
-        if (clearAction.getAttribute('data-has-active-filters') === 'true') return;
-        event.preventDefault();
-        if (filtersContainer) filtersContainer.classList.add('is-resetting');
-        setTimeout(function() {
-          filterForm.querySelectorAll('input[type="checkbox"]').forEach(function(cb) {
-            cb.checked = false;
-            var label = cb.closest('.soeteck-filter-option');
-            if (label) label.classList.remove('is-checked');
-          });
-          filterForm.querySelectorAll('.soeteck-filter-group.has-active').forEach(function(g) {
-            g.classList.remove('has-active');
-          });
-          filterGroups.forEach(function(g) { activeFilters[g.key] = []; });
-          currentPage = 1;
-          renderGrid();
-          if (filtersContainer) filtersContainer.classList.remove('is-resetting');
-        }, 120);
-      });
-    }
   }
 
   /* === Per-page and Sort (main.js lines 275-299) === */
   var defaultPerPageValue = config.defaultPerPage || 5;
   var allowedPerPageValues = config.allowedPerPage || [5, 10, 20, 50, 100];
+  var perPageReset = true; // 初始/重置时显示 placeholder 标签
 
   function updatePerPageSelect() {
     if (!perPageSelect) return;
-    var isDefault = perPage === defaultPerPageValue;
-    var options = '<option value=""' + (isDefault ? ' selected' : '') + (isDefault ? ' disabled' : '') + (isDefault ? ' hidden' : '') + '>' + (labels.default || 'Default') + '</option>';
+    // placeholder 可见可点击；perPageReset= true 时 placeholder 选中
+    var options = '<option value="">' + (labels.resultsPerPage || 'Results per page') + '</option>';
     allowedPerPageValues.forEach(function(pp) {
-      options += '<option value="' + pp + '"' + (perPage === pp ? ' selected' : '') + '>' + pp + '</option>';
+      options += '<option value="' + pp + '"' + (perPage === pp && !perPageReset ? ' selected' : '') + '>' + pp + '</option>';
     });
     perPageSelect.innerHTML = options;
   }
 
   function updateSortSelect() {
     if (!sortSelect) return;
-    var isDefault = sort === 'default';
-    var options = '<option value="default"' + (isDefault ? ' selected' : '') + (isDefault ? ' disabled' : '') + (isDefault ? ' hidden' : '') + '>' + (labels.orderBy || 'Order by') + '</option>';
+    // placeholder 始终可见（可点击），恢复到默认值时对应选项被选中
+    var options = '<option value="default">' + (labels.orderBy || 'Order by') + '</option>';
     options += '<option value="featured"' + (sort === 'featured' ? ' selected' : '') + '>' + (labels.featured || 'Featured') + '</option>';
     options += '<option value="latest"' + (sort === 'latest' ? ' selected' : '') + '>' + (labels.latest || 'Latest') + '</option>';
     sortSelect.innerHTML = options;
@@ -801,7 +770,14 @@ const configJson = JSON.stringify({
 
   if (perPageSelect) {
     perPageSelect.addEventListener('change', function() {
-      perPage = parseInt(perPageSelect.value, 10) || defaultPerPage;
+      if (perPageSelect.value === '') {
+        // 点击 "Results per page" → 重置
+        perPage = defaultPerPageValue;
+        perPageReset = true;
+      } else {
+        perPage = parseInt(perPageSelect.value, 10) || defaultPerPageValue;
+        perPageReset = false;
+      }
       currentPage = 1;
       updatePerPageSelect();
       renderGrid();
@@ -961,7 +937,6 @@ const configJson = JSON.stringify({
   background: var(--soeteck-white);
 }
 
-.soeteck-product-cat-hero__breadcrumbs,
 .soeteck-product-cat-hero__content,
 .soeteck-product-category-layout {
   width: min(var(--soeteck-product-content-width), calc(100% - (var(--soeteck-product-content-gutter) * 2)));
@@ -972,9 +947,6 @@ const configJson = JSON.stringify({
 /* Hero */
 .soeteck-product-cat-hero {
   position: relative;
-  display: flex;
-  align-items: center;
-  min-height: 480px;
   overflow: hidden;
   background-color: var(--soeteck-dark);
   color: var(--soeteck-white);
@@ -999,30 +971,31 @@ const configJson = JSON.stringify({
 .soeteck-product-cat-hero__content {
   position: relative;
   z-index: 1;
-  padding-block: 72px;
+  display: flex;
+  flex-direction: column;
+  min-height: 480px;
 }
-
-.soeteck-product-cat-hero__breadcrumbs {
+/* :global() 让样式作用到子组件Breadcrumbs内部的类 */
+.soeteck-product-cat-hero__content :global(.soeteck-breadcrumbs--hero) {
   position: absolute;
-  top: 15px;
-  left: 50%;
-  z-index: 2;
-  transform: translateX(-50%);
-}
-
-@media (min-width: 481px) {
-  .soeteck-product-cat-hero__breadcrumbs {
-    top: 20px;
-  }
-}
-
-.soeteck-product-cat-hero__breadcrumbs :global(.soeteck-breadcrumbs--hero) {
+  top: 20px;
+  left: 0;
+  width: 100%;
   margin: 0;
 }
 
+.soeteck-product-cat-hero__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-block: 0;
+  min-height: 480px;
+}
 .soeteck-product-cat-hero .soeteck-eyebrow {
   color: rgba(255, 255, 255, 0.82);
 }
+
 
 .soeteck-product-cat-hero__title {
   font-family: var(--soeteck-font-heading);
@@ -1043,7 +1016,7 @@ const configJson = JSON.stringify({
 
 /* Body and Layout */
 .soeteck-product-category-body {
-  padding-block: 110px 80px;
+  padding-block: var(--soeteck-section-y);
   background: var(--soeteck-white);
 }
 
@@ -1056,11 +1029,8 @@ const configJson = JSON.stringify({
 
 /* Filters Container */
 .soeteck-product-filters {
-  position: sticky;
-  top: 96px;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 140px);
   min-height: 0;
 }
 
@@ -1298,94 +1268,6 @@ body:global(.has-mobile-product-filters-open) {
 }
 
 /* Filter Actions */
-.soeteck-product-filters__actions {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 6px;
-  max-height: 0;
-  margin-top: 0;
-  overflow: hidden;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-4px);
-  transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 200ms ease;
-}
-
-.soeteck-product-filters:global(.has-active-filters) .soeteck-product-filters__actions,
-.soeteck-product-filters:global(.has-pending-filters) .soeteck-product-filters__actions {
-  max-height: 48px;
-  margin-top: 10px;
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-.soeteck-product-filters__clear-action {
-  display: inline-flex;
-  font-family: var(--soeteck-font-ui);
-  align-items: center;
-  justify-content: center;
-  min-height: 34px;
-  padding: 0 6px;
-  background: #e8eef5;
-  color: #1f2937;
-  font-size: 14px;
-  font-weight: var(--soeteck-weight-medium);
-  line-height: 1.2;
-  text-align: center;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast), transform 120ms ease;
-}
-
-.soeteck-product-filters__clear-action:hover {
-  background: #dbe5ef;
-  color: #0f172a;
-  text-decoration: none;
-}
-
-.soeteck-product-filters__clear-action:active,
-.soeteck-product-filters:global(.is-resetting) .soeteck-product-filters__clear-action {
-  background: #cbd8e6;
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.18);
-  transform: translateY(1px);
-}
-
-.soeteck-product-filters__submit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 38px;
-  padding: 0 24px;
-  border: 1px solid var(--soeteck-primary);
-  border-radius: 0;
-  background: var(--soeteck-primary);
-  color: var(--soeteck-white);
-  font-family: var(--soeteck-font-ui);
-  font-size: 14px;
-  font-weight: var(--soeteck-weight-semibold);
-  line-height: 1.2;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast), transform var(--soeteck-transition-fast);
-}
-
-.soeteck-product-filters__submit:hover {
-  background: var(--soeteck-primary-dark);
-  border-color: var(--soeteck-primary-dark);
-  transform: translateY(-1px);
-}
-
-.soeteck-product-filters__submit:focus-visible {
-  outline: 2px solid var(--soeteck-primary);
-  outline-offset: 2px;
-}
-
-.soeteck-product-filters__submit:active {
-  background: var(--soeteck-primary-dark);
-  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.2);
-  transform: translateY(1px);
-}
 
 /* Active Filters */
 :global(.soeteck-active-filters) {
@@ -1622,7 +1504,7 @@ body:global(.has-mobile-product-filters-open) {
   transform: translateX(-50%);
 }
 
-:global(.soeteck-product-list-card__media-dots) button {
+:global(.soeteck-product-list-card__media-dots button) {
   position: relative;
   width: 12px;
   height: 12px;
@@ -1633,7 +1515,7 @@ body:global(.has-mobile-product-filters-open) {
   cursor: pointer;
 }
 
-:global(.soeteck-product-list-card__media-dots) button::before {
+:global(.soeteck-product-list-card__media-dots button::before) {
   content: '';
   position: absolute;
   top: 50%;
@@ -1641,12 +1523,12 @@ body:global(.has-mobile-product-filters-open) {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #b8b8b8;
+  background: #787878;
   transform: translate(-50%, -50%);
 }
 
-:global(.soeteck-product-list-card__media-dots) button:global(.is-active)::before,
-:global(.soeteck-product-list-card__media-dots) button:hover::before {
+:global(.soeteck-product-list-card__media-dots button.is-active::before),
+:global(.soeteck-product-list-card__media-dots button:hover::before) {
   background: #000;
 }
 
@@ -1680,8 +1562,7 @@ body:global(.has-mobile-product-filters-open) {
   overflow: hidden;
   font-family: var(--soeteck-font-body);
   color: var(--soeteck-text);
-  font-size: 14px;
-  line-height: 1.55;
+  font-size: var(--soeteck-text-sm);
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
@@ -1961,7 +1842,6 @@ body:global(.has-mobile-product-filters-open) {
   .soeteck-product-category-switcher__panel,
   .soeteck-product-filters__panel,
   .soeteck-product-filters__overlay,
-  .soeteck-product-filters__actions,
   .soeteck-filter-group__panel,
   .soeteck-filter-group__chevron,
   :global(.soeteck-product-list-card__gallery-slide),
@@ -1983,16 +1863,21 @@ body:global(.has-mobile-product-filters-open) {
   :global(.soeteck-product-list-card) {
     grid-template-columns: 210px minmax(0, 1fr) 164px;
   }
-
-  :global(.soeteck-product-list-card__media) img {
-    max-width: 188px;
-  }
-}
-
 @media (max-width: 991px) {
-  .soeteck-product-cat-hero {
+  .soeteck-product-cat-hero__content {
     min-height: 420px;
   }
+  .soeteck-product-cat-hero__body {
+    min-height: 420px;
+  }
+  .soeteck-product-category-body {
+
+@media (max-width: 991px) {
+  .soeteck-product-cat-hero__content {
+    min-height: 420px;
+  }
+
+
 
   .soeteck-product-category-body {
     padding-top: 80px;
@@ -2164,28 +2049,6 @@ body:global(.has-mobile-product-filters-open) {
     margin-bottom: 0;
   }
 
-  .soeteck-product-filters__actions {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
-    flex: 0 0 auto;
-    order: 2;
-    max-height: none;
-    margin: 12px -16px 0;
-    padding: 12px 16px max(12px, env(safe-area-inset-bottom));
-    border-top: 1px solid rgba(16, 24, 40, 0.12);
-    background: var(--soeteck-white);
-    opacity: 1;
-    pointer-events: auto;
-    transform: none;
-  }
-
-  .soeteck-product-filters:global(.has-active-filters) .soeteck-product-filters__actions,
-  .soeteck-product-filters:global(.has-pending-filters) .soeteck-product-filters__actions {
-    max-height: none;
-    margin-top: 12px;
-  }
-
   .soeteck-product-filters__overlay {
     position: fixed;
     inset: 0;
@@ -2215,28 +2078,19 @@ body:global(.has-mobile-product-filters-open) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
     padding: 16px;
   }
-
   :global(.soeteck-product-list-item__models) {
     padding-inline: 0;
   }
-
-  .soeteck-product-results :global(.woocommerce-pagination) {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .soeteck-product-cat-hero {
-    min-height: 380px;
-  }
-
-  .soeteck-product-cat-hero__content {
-    padding-block: 56px;
-  }
-
-  .soeteck-product-cat-hero__lead {
-    font-size: var(--soeteck-text-md);
+  @media (max-width: 640px) {
+    .soeteck-product-cat-hero__content :global(.soeteck-breadcrumbs--hero) {
+      top: 15px;
+    }
+    .soeteck-product-cat-hero__body {
+      min-height: 360px;
+    }
+    .soeteck-product-cat-hero__lead {
+      font-size: var(--soeteck-text-md);
+    }
   }
 
   :global(.soeteck-product-list-card__excerpt) {

@@ -1,0 +1,1644 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import {
+  PREFAB_OVERVIEW_PARAGRAPHS, PREFAB_HOTSPOTS, PREFAB_HOTSPOT_IMAGE,
+  PREFAB_CORE_MODULES, PREFAB_MODEL_VIEWS_20FT, PREFAB_MODEL_VIEWS_40FT,
+  PREFAB_SPEC_COLUMNS, PREFAB_SPEC_ROWS, PREFAB_SCENARIOS, PREFAB_CLIENT_CASES,
+  PREFAB_CRITICAL_POWER_TEXT, PREFAB_CRITICAL_POWER_PRODUCTS,
+  PREFAB_THERMAL_MANAGEMENT_TEXT, PREFAB_THERMAL_PRODUCTS,
+} from './prefab-content';
+import '@/styles/product-gallery.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+const brochureUrl = '/resources/Soeteck-Data-Center-Solution-Prefabricated-Container-Data-Center.pdf';
+const bannerImage = '/resources/soeteck-prefab-container-data-center-qatar-project-3.webp';
+const videoThumb = '/resources/prefab-modular-data-center-of-Saudi-Telecom-01.webp';
+const videoId = 'lKo6rY0jVm4';
+---
+
+<div class="soeteck-prefab-solution" data-prefab-solution>
+  <!-- Banner Hero -->
+  <section class="soeteck-prefab-banner" aria-labelledby="prefab-hero-title">
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt="Prefabricated container data center project" width="1920" height="600" loading="eager" fetchpriority="high" />
+    <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-prefab-banner__inner">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-prefab-banner__body">
+        <h1 id="prefab-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">Prefabricated Container Data Center</h1>
+      </div>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="soeteck-prefab-section soeteck-prefab-overview">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Dynamic Solutions for Evolving Needs</h2>
+      <div class="soeteck-prefab-overview__grid">
+        <div class="soeteck-prefab-rich-text">
+          {PREFAB_OVERVIEW_PARAGRAPHS.map((p) => (
+            <p set:html={p}></p>
+          ))}
+        </div>
+        <div class="soeteck-prefab-video" data-prefab-video>
+          <a class="soeteck-prefab-video__button" data-youtube-id={videoId} href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener" aria-label="Play Prefabricated Container Data Center video">
+            <img class="soeteck-prefab-video__image" src={videoThumb} alt="Prefab modular data center project video preview" width="640" height="360" loading="lazy" />
+            <span class="soeteck-prefab-video__play" aria-hidden="true"></span>
+          </a>
+        </div>
+      </div>
+      <div class="soeteck-prefab-cta-row">
+        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">GET BROCHURE</a>
+        <a class="soeteck-button-outline" href={`/${lang}/contact/`}>CONTACT US</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closer Look -->
+  <section class="soeteck-prefab-section soeteck-prefab-closer">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Take a Closer Look at Our Container Data Center</h2>
+
+      <!-- 1 - Typical Design -->
+      <article class="soeteck-prefab-detail-block">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>1 - </span>A typical design of PCDCs</h3>
+        <div class="soeteck-prefab-hotspot" data-prefab-hotspots>
+          <div class="soeteck-prefab-hotspot__media">
+            <img class="soeteck-prefab-hotspot__image" src={PREFAB_HOTSPOT_IMAGE} alt="Typical design of a prefabricated container data center" width="800" height="500" loading="lazy" />
+            {PREFAB_HOTSPOTS.map((hotspot, index) => (
+              <button class="soeteck-prefab-hotspot__pin" type="button" data-hotspot-index={index} style={{ '--x': hotspot.x, '--y': hotspot.y } as any} aria-expanded="false" aria-label={hotspot.label}>
+                <span class="soeteck-prefab-hotspot__pulse" aria-hidden="true"></span>
+                <span class="soeteck-prefab-hotspot__core" aria-hidden="true">+</span>
+                <span class="soeteck-prefab-hotspot__tooltip" role="tooltip">{hotspot.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+        <div class="soeteck-prefab-rich-text soeteck-prefab-detail-block__copy">
+          <p>The containerized data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.</p>
+          <p><strong>Key Features:</strong></p>
+          <ul>
+            <li>Safety and Reliability: Built to high safety standards with multiple protective measures, including fire resistance, water resistance, and enhanced security features.</li>
+            <li>Rapid Deployment: The design enables quick setup and installation, allowing for operational readiness in a short timeframe.</li>
+            <li>Flexible Scalability: Modular architecture supports easy expansion to accommodate changing requirements.</li>
+            <li>High Density and Efficiency: Efficient use of space allows for high computing power while minimizing resource consumption.</li>
+            <li>Intelligent Management: Equipped with monitoring and management systems for effective oversight and maintenance.</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- 2 - Models -->
+      <article class="soeteck-prefab-detail-block soeteck-prefab-models">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>2 - </span>Meet with two typical models</h3>
+        <div class="soeteck-prefab-rich-text soeteck-prefab-models__intro">
+          <p>SOETECK prefabricated container data centers come in various sizes to accommodate differing business needs. Here, we introduce two typical dimensions: the 20-foot and the 40-foot containers, each designed to deliver efficient and flexible computing solutions.</p>
+        </div>
+
+        <!-- 20ft Model -->
+        <section class="soeteck-prefab-model">
+          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">20ft container data center</h4>
+          <div class="soeteck-prefab-model__grid">
+            <div class="soeteck-prefab-model__full-view">
+              <img class="soeteck-prefab-model__image" src="/resources/20ft-container-data-center-3-1024x683.webp" alt="20ft container data center" width="400" height="300" loading="lazy" />
+              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>Full View</div>
+              <p>The 20-foot container data center is a compact solution ideal for businesses with moderate computing requirements. Its small footprint allows for easy deployment in both urban and remote locations.</p>
+            </div>
+            {PREFAB_MODEL_VIEWS_20FT.map((view) => (
+              <div class="soeteck-prefab-view" data-prefab-view>
+                <div class="soeteck-prefab-view__media">
+                  <img class="soeteck-prefab-view__image" src={view.image} alt={view.title} width="400" height="300" loading="lazy" />
+                  <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>{view.title}</div>
+                  {view.items.map((item, i) => (
+                    <button class="soeteck-prefab-view__pin" type="button" data-view-target={i} style={{ '--x': item.x, '--y': item.y } as any} aria-label={item.label} aria-expanded="false">
+                      <span class="soeteck-prefab-view__core">{i + 1}</span>
+                      <span class="soeteck-prefab-view__pulse" aria-hidden="true"></span>
+                    </button>
+                  ))}
+                </div>
+                <div class="soeteck-prefab-view__accordion">
+                  {view.items.map((item, i) => (
+                    <div class="soeteck-prefab-view__item" data-view-item={i}>
+                      <button class="soeteck-prefab-view__title" type="button" aria-expanded="false">{item.label}</button>
+                      <div class="soeteck-prefab-view__content"><div class="soeteck-prefab-view__content-inner">{item.text}</div></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- 40ft Model -->
+        <section class="soeteck-prefab-model">
+          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">40ft container data center</h4>
+          <div class="soeteck-prefab-model__grid">
+            <div class="soeteck-prefab-model__full-view">
+              <img class="soeteck-prefab-model__image" src="/resources/40ft-container-data-center-3-1024x683.webp" alt="40ft container data center" width="400" height="300" loading="lazy" />
+              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>Full View</div>
+              <p>The 40-foot container data center is designed for larger-scale deployments, offering expanded capacity for high-density computing while maintaining the same rapid deployment benefits.</p>
+            </div>
+            {PREFAB_MODEL_VIEWS_40FT.map((view) => (
+              <div class="soeteck-prefab-view" data-prefab-view>
+                <div class="soeteck-prefab-view__media">
+                  <img class="soeteck-prefab-view__image" src={view.image} alt={view.title} width="400" height="300" loading="lazy" />
+                  <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>{view.title}</div>
+                  {view.items.map((item, i) => (
+                    <button class="soeteck-prefab-view__pin" type="button" data-view-target={i} style={{ '--x': item.x, '--y': item.y } as any} aria-label={item.label} aria-expanded="false">
+                      <span class="soeteck-prefab-view__core">{i + 1}</span>
+                      <span class="soeteck-prefab-view__pulse" aria-hidden="true"></span>
+                    </button>
+                  ))}
+                </div>
+                <div class="soeteck-prefab-view__accordion">
+                  {view.items.map((item, i) => (
+                    <div class="soeteck-prefab-view__item" data-view-item={i}>
+                      <button class="soeteck-prefab-view__title" type="button" aria-expanded="false">{item.label}</button>
+                      <div class="soeteck-prefab-view__content"><div class="soeteck-prefab-view__content-inner">{item.text}</div></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </article>
+
+      <!-- 3 - Core Modules -->
+      <article class="soeteck-prefab-detail-block soeteck-prefab-modules">
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>3 - </span>Core Infrastructure Modules</h3>
+        <div class="soeteck-prefab-rich-text soeteck-prefab-modules__lead">
+          <p>The SOETECK containerized data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.</p>
+        </div>
+        <div class="soeteck-prefab-module-grid">
+          {PREFAB_CORE_MODULES.map((module) => (
+            <article class="soeteck-prefab-module-card">
+              <span class={`soeteck-prefab-module-card__icon soeteck-prefab-module-card__icon--${module.icon}`} aria-hidden="true"></span>
+              <h3 class="soeteck-card-title">{module.title}</h3>
+              <p>{module.text}</p>
+            </article>
+          ))}
+        </div>
+      </article>
+
+      <!-- Critical Power — Product Gallery Grid -->
+      <section class="soeteck-prefab-product-group" aria-labelledby="prefab-critical-power-title">
+        <div class="soeteck-prefab-rich-text">
+          <h4 id="prefab-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">Critical Power</h4>
+          <p>{PREFAB_CRITICAL_POWER_TEXT}</p>
+        </div>
+        <div class="soeteck-prefab-product-gallery-grid" data-prefab-gallery>
+          {PREFAB_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
+            const panelId = `prefab-critical-power-${pIdx}`;
+            return (
+              <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
+                <div class="soeteck-prefab-product-gallery__stage">
+                  {product.images.slice(0, 4).map((img, iIdx) => (
+                    <a class={`soeteck-prefab-product-gallery__item${iIdx === 0 ? ' is-active' : ''}`}
+                       href={`/${lang}/products/${product.slug}/`}
+                       target="_blank" rel="noopener"
+                       data-product-gallery-item={`${panelId}-${iIdx}`}>
+                      <img src={img} alt={product.title} class="soeteck-prefab-product-gallery__image" loading="lazy" />
+                    </a>
+                  ))}
+                </div>
+                {product.images.slice(0, 4).length > 1 && (
+                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                    {product.images.slice(0, 4).map((img, iIdx) => (
+                      <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
+                              type="button"
+                              data-product-gallery-target={`${panelId}-${iIdx}`}
+                              aria-selected={iIdx === 0 ? 'true' : 'false'}>
+                        <img src={img} alt="" class="soeteck-prefab-product-gallery__thumb-image" loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div class="soeteck-prefab-product-gallery__copy">
+                  <a class="soeteck-card-title soeteck-prefab-product-gallery__title" href={`/${lang}/products/${product.slug}/`} target="_blank" rel="noopener">{product.title}</a>
+                  <p class="soeteck-prefab-product-gallery__excerpt">{product.excerpt}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <!-- Thermal Management — Product Gallery Grid -->
+      <section class="soeteck-prefab-product-group" aria-labelledby="prefab-thermal-title">
+        <div class="soeteck-prefab-rich-text">
+          <h4 id="prefab-thermal-title" class="soeteck-minor-title soeteck-title-bordered">Thermal Management</h4>
+          <p>{PREFAB_THERMAL_MANAGEMENT_TEXT}</p>
+        </div>
+        <div class="soeteck-prefab-product-gallery-grid" data-prefab-gallery>
+          {PREFAB_THERMAL_PRODUCTS.map((product, pIdx) => {
+            const panelId = `prefab-thermal-${pIdx}`;
+            return (
+              <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
+                <div class="soeteck-prefab-product-gallery__stage">
+                  {product.images.slice(0, 4).map((img, iIdx) => (
+                    <a class={`soeteck-prefab-product-gallery__item${iIdx === 0 ? ' is-active' : ''}`}
+                       href={`/${lang}/products/${product.slug}/`}
+                       target="_blank" rel="noopener"
+                       data-product-gallery-item={`${panelId}-${iIdx}`}>
+                      <img src={img} alt={product.title} class="soeteck-prefab-product-gallery__image" loading="lazy" />
+                    </a>
+                  ))}
+                </div>
+                {product.images.slice(0, 4).length > 1 && (
+                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                    {product.images.slice(0, 4).map((img, iIdx) => (
+                      <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
+                              type="button"
+                              data-product-gallery-target={`${panelId}-${iIdx}`}
+                              aria-selected={iIdx === 0 ? 'true' : 'false'}>
+                        <img src={img} alt="" class="soeteck-prefab-product-gallery__thumb-image" loading="lazy" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div class="soeteck-prefab-product-gallery__copy">
+                  <a class="soeteck-card-title soeteck-prefab-product-gallery__title" href={`/${lang}/products/${product.slug}/`} target="_blank" rel="noopener">{product.title}</a>
+                  <p class="soeteck-prefab-product-gallery__excerpt">{product.excerpt}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- Specs Table -->
+  <section class="soeteck-prefab-section soeteck-prefab-specs">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Featured Models and Specifications</h2>
+      <div class="soeteck-prefab-table-wrap">
+        <table class="soeteck-prefab-spec-table">
+          <thead>
+            <tr class="soeteck-prefab-spec-table__images">
+              <th scope="col"></th>
+              {PREFAB_SPEC_COLUMNS.map((col) => (
+                <th scope="col">
+                  <img src={col.image} alt={col.model} width="249" height="282" loading="lazy" />
+                </th>
+              ))}
+            </tr>
+            <tr>
+              <th scope="col">Models</th>
+              {PREFAB_SPEC_COLUMNS.map((col) => (
+                <th scope="col">{col.model}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {PREFAB_SPEC_ROWS.map((row) => (
+              <tr>
+                <th scope="row">{row[0]}</th>
+                {row.slice(1).map((cell) => (
+                  <td>{cell}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>SOETECK Prefabricated Container Data Center.pdf</a></p>
+    </div>
+  </section>
+
+  <!-- Scenarios -->
+  <section class="soeteck-prefab-section soeteck-prefab-scenarios">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Who Might Need Our Prefab DCs?</h2>
+      <p class="soeteck-prefab-section__subtitle">An integration of Power, Cooling &amp; Infrastructure Modules Supporting Reliable IT Operations &ndash; Where Modular DC Delivers Unique Value</p>
+      <div class="soeteck-prefab-scenario-grid">
+        {PREFAB_SCENARIOS.map((scenario) => (
+          <article class="soeteck-prefab-scenario-card" data-scenario-card>
+            <img class="soeteck-prefab-scenario-card__image" src={scenario.image} alt={scenario.title} width="436" height="237" loading="lazy" />
+            <div class="soeteck-prefab-scenario-card__body">
+              <h3 class="soeteck-card-title">{scenario.title}</h3>
+              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={`${scenario.title} details`}>
+                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">Solution Benefits</button>
+                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">Critical Pain Points</button>
+              </div>
+              <div class="soeteck-prefab-scenario-card__panel is-active" data-scenario-panel="benefits">
+                <div class="soeteck-prefab-scenario-card__tags">
+                  {scenario.benefits.map((tag) => (
+                    <span>{tag}</span>
+                  ))}
+                </div>
+                <p>{scenario.solution}</p>
+              </div>
+              <div class="soeteck-prefab-scenario-card__panel" data-scenario-panel="pain" hidden>
+                <div class="soeteck-prefab-scenario-card__tags">
+                  {scenario.pain_points.map((tag) => (
+                    <span>{tag}</span>
+                  ))}
+                </div>
+                <p>{scenario.problem}</p>
+              </div>
+              <p><strong>{scenario.application}</strong></p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Client Cases -->
+  <section class="soeteck-prefab-section soeteck-prefab-cases">
+    <div class="soeteck-container">
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">Check Our Featured Client Cases</h2>
+      <div class="soeteck-prefab-case-grid">
+        {PREFAB_CLIENT_CASES.map((c) => (
+          <article class="soeteck-prefab-case-card">
+            <a class="soeteck-prefab-case-card__media" href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>
+              <img class="soeteck-prefab-case-card__image" src={c.imgSrc} alt={c.title} width="436" height="240" loading="lazy" />
+            </a>
+            <div class="soeteck-prefab-case-card__body">
+              <h3 class="soeteck-card-title"><a href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>{c.title}</a></h3>
+              <p>{c.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="soeteck-cta" id="prefab-inquiry">
+    <div class="soeteck-container soeteck-cta__inner">
+      <div>
+        <p class="soeteck-eyebrow">Talk to an Engineer</p>
+        <h2>Get in Touch with SOETECK</h2>
+        <p>Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.</p>
+        <ul class="soeteck-cta__checks">
+          <li>Project consultation</li>
+          <li>Technical configuration support</li>
+          <li>Regional follow-up</li>
+        </ul>
+      </div>
+      <div class="soeteck-cta__actions">
+        <a class="soeteck-cta__button" href={`/${lang}/contact/`}>Contact Us</a>
+        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">Download Brochure</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+<style is:global>
+  .soeteck-prefab-solution {
+    color: var(--soeteck-text);
+    background: #fff;
+  }
+
+  .soeteck-prefab-section {
+    padding-block: var(--soeteck-section-y);
+  }
+
+  .soeteck-prefab-section__title {
+    max-width: 900px;
+    margin: 0 auto clamp(28px, 3vw, 40px);
+    text-align: center;
+  }
+
+  .soeteck-prefab-section__subtitle {
+    max-width: 880px;
+    margin: 0 auto clamp(28px, 3vw, 40px);
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-lg);
+    line-height: 1.72;
+    text-align: center;
+  }
+
+  /* Banner */
+  .soeteck-prefab-banner {
+    position: relative;
+    display: flex;
+    min-height: 480px;
+    align-items: center;
+    overflow: hidden;
+    background: var(--soeteck-dark, #202020);
+    color: #fff;
+  }
+
+  .soeteck-prefab-banner__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .soeteck-prefab-banner__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(11, 31, 58, 0.82), rgba(11, 31, 58, 0.42), rgba(11, 31, 58, 0.12));
+  }
+
+  /* Breadcrumbs color is handled by .soeteck-breadcrumbs--hero in Breadcrumbs.astro */
+
+  .soeteck-prefab-banner {
+    position: relative;
+  }
+
+  .soeteck-prefab-banner__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 480px;
+    padding-top: 0; /* 取消预留空间，面包屑完全脱离文档流 */
+  }
+
+  /* 面包屑完全脱离文档流，视觉位置保持在顶部20px */
+  .soeteck-prefab-banner__inner .soeteck-breadcrumbs--hero {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    margin: 0; /* 清除默认边距 */
+  }
+
+  .soeteck-prefab-banner__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* 相对于整个Hero高度绝对居中 */
+    min-height: 480px; /* 强制占满整个Hero高度 */
+    padding-block: 0; /* 取消上下padding */
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-prefab-banner__inner,
+    .soeteck-prefab-banner__body {
+      min-height: 420px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-prefab-banner__inner,
+    .soeteck-prefab-banner__body {
+      min-height: 360px;
+    }
+    .soeteck-prefab-banner__inner .soeteck-breadcrumbs--hero {
+      top: 15px; /* 移动端面包屑位置符合设计规范 */
+    }
+  }
+
+  .soeteck-prefab-banner__title {
+    max-width: 900px;
+    margin: 0;
+    color: #fff;
+    font-size: var(--soeteck-heading-lg, clamp(2.5rem, 4vw, 3.5rem));
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0;
+  }
+
+  /* Overview */
+  .soeteck-prefab-overview { padding-bottom: 0; }
+
+  .soeteck-prefab-overview .soeteck-prefab-section__title {
+    width: max-content;
+    max-width: 100%;
+  }
+
+  .soeteck-prefab-overview__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(32px, 4.5vw, 54px);
+    align-items: start;
+  }
+
+  .soeteck-prefab-rich-text {
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-md);
+    line-height: 1.75;
+  }
+
+  .soeteck-prefab-rich-text p { color: inherit; }
+  .soeteck-prefab-rich-text strong { color: var(--soeteck-text); }
+  .soeteck-prefab-rich-text a { color: var(--soeteck-primary); }
+  .soeteck-prefab-rich-text a:hover { color: var(--soeteck-primary-dark); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+  .soeteck-prefab-rich-text ul { padding-left: 1.25rem; }
+  .soeteck-prefab-rich-text > *:last-child { margin-bottom: 0; }
+
+  .soeteck-prefab-video,
+  .soeteck-prefab-video__button,
+  .soeteck-prefab-video__iframe-wrap {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #0f172a;
+    aspect-ratio: 16 / 9;
+  }
+
+  .soeteck-prefab-video__button { color: #fff; text-decoration: none; }
+
+  .soeteck-prefab-video__iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .soeteck-prefab-video__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 360ms ease, opacity 360ms ease;
+  }
+
+  .soeteck-prefab-video__button:hover .soeteck-prefab-video__image {
+    transform: scale(1.035);
+    opacity: 0.88;
+  }
+
+  .soeteck-prefab-video__play {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 76px;
+    height: 76px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+    transform: translate(-50%, -50%);
+  }
+
+  .soeteck-prefab-video__play::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 52%;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 22px solid var(--soeteck-primary);
+    transform: translate(-38%, -50%);
+  }
+
+  .soeteck-prefab-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: clamp(32px, 4.5vw, 44px);
+  }
+
+  /* Detail Block */
+  .soeteck-prefab-detail-block + .soeteck-prefab-detail-block {
+    margin-top: var(--soeteck-section-y);
+  }
+
+  .soeteck-prefab-detail-block__title {
+    margin: 0 0 clamp(22px, 3vw, 34px);
+    color: var(--soeteck-text);
+    font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.18;
+  }
+
+  .soeteck-prefab-detail-block__title span { color: var(--soeteck-primary); }
+
+  .soeteck-prefab-detail-block__copy {
+    max-width: 980px;
+    margin: clamp(28px, 4vw, 44px) auto 0;
+  }
+
+  /* Hotspot */
+  .soeteck-prefab-hotspot { display: flex; justify-content: center; }
+
+  .soeteck-prefab-hotspot__media {
+    position: relative;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .soeteck-prefab-hotspot__image {
+    width: 100%;
+    height: auto;
+  }
+
+  .soeteck-prefab-hotspot__pin {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    z-index: 1;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .soeteck-prefab-hotspot__core {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(75, 211, 170, 0.9);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: 0 0 0 4px rgba(75, 211, 170, 0.2);
+    transition: background-color var(--soeteck-transition-medium), box-shadow var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-hotspot__pulse {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: 2px solid rgba(75, 211, 170, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: soeteck-prefab-hotspot-pulse 2000ms ease infinite;
+  }
+
+  .soeteck-prefab-hotspot__tooltip {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    z-index: 4;
+    width: max-content;
+    max-width: min(320px, calc(100vw - 40px));
+    padding: 5px 9px;
+    border-radius: var(--soeteck-radius-sm);
+    background: var(--soeteck-primary);
+    color: #fff;
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.35;
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+    transform: translate(-50%, 6px);
+    transition: opacity var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-hotspot__tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
+    border-top: 6px solid var(--soeteck-primary);
+    transform: translateX(-50%);
+  }
+
+  .soeteck-prefab-hotspot__pin:hover .soeteck-prefab-hotspot__tooltip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .soeteck-prefab-hotspot__pin.is-active .soeteck-prefab-hotspot__core {
+    background: var(--soeteck-primary-dark);
+    box-shadow: 0 0 0 4px rgba(26, 133, 229, 0.2);
+  }
+
+  @keyframes soeteck-prefab-hotspot-pulse {
+    0% { opacity: 0; transform: scale(0.1); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.5); }
+  }
+
+  /* Models */
+  .soeteck-prefab-models__intro {
+    max-width: none;
+    margin-bottom: clamp(34px, 4.5vw, 54px);
+  }
+
+  .soeteck-prefab-model + .soeteck-prefab-model {
+    margin-top: clamp(58px, 6vw, 84px);
+  }
+
+  .soeteck-prefab-model__title {
+    display: block;
+    width: 100%;
+    margin-bottom: 22px;
+  }
+
+  .soeteck-title-bordered {
+    padding-left: 14px;
+    border-left: 5px solid var(--soeteck-primary);
+  }
+
+  .soeteck-title-bordered,
+  .soeteck-minor-title {
+    margin-bottom: 16px;
+  }
+
+  .soeteck-prefab-model__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(18px, 2.4vw, 28px);
+    align-items: start;
+  }
+
+  .soeteck-prefab-model__full-view,
+  .soeteck-prefab-view { min-width: 0; }
+
+  .soeteck-prefab-model__image,
+  .soeteck-prefab-view__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .soeteck-prefab-model__full-view p {
+    margin: 14px 0 0;
+    color: var(--soeteck-text-soft);
+    font-size: 0.95rem;
+    line-height: 1.66;
+  }
+
+  .soeteck-prefab-view-label {
+    width: 100%;
+    margin-top: 8px;
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-style: italic;
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.4;
+    text-align: right;
+  }
+
+  .soeteck-prefab-view-label span { padding-right: 3px; font-size: var(--soeteck-text-xs); }
+
+  .soeteck-prefab-view__media { position: relative; }
+
+  .soeteck-prefab-view__pin {
+    position: absolute;
+    top: var(--y);
+    left: var(--x);
+    z-index: 2;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    transform: translate(-50%, -50%);
+  }
+
+  .soeteck-prefab-view__core {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 25px;
+    height: 25px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(75, 211, 170, 0.9);
+    color: #fff;
+    font-size: var(--soeteck-text-xs);
+    font-weight: 600;
+    line-height: 1;
+    box-shadow: 0 0 0 4px rgba(75, 211, 170, 0.2);
+    transition: background-color var(--soeteck-transition-medium), box-shadow var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-view__pulse {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border: 2px solid rgba(75, 211, 170, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: soeteck-prefab-view-pulse 2000ms ease infinite;
+  }
+
+  .soeteck-prefab-view__pin.is-active .soeteck-prefab-view__core {
+    background: var(--soeteck-primary);
+    box-shadow: 0 0 0 4px rgba(26, 133, 229, 0.2);
+  }
+
+  .soeteck-prefab-view__pin:hover .soeteck-prefab-view__core {
+    background: rgba(75, 211, 170, 1);
+    box-shadow: 0 0 0 6px rgba(75, 211, 170, 0.35);
+    transform: scale(1.06);
+  }
+
+  .soeteck-prefab-view__pin.is-active .soeteck-prefab-view__pulse {
+    border-color: rgba(26, 133, 229, 0.5);
+  }
+
+  @keyframes soeteck-prefab-view-pulse {
+    0% { opacity: 0; transform: scale(0.1); }
+    50% { opacity: 1; }
+    100% { opacity: 0; transform: scale(1.7); }
+  }
+
+  .soeteck-prefab-view__accordion {
+    display: grid;
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .soeteck-prefab-view__item {
+    width: 350px;
+    margin: 0 auto;
+  }
+
+  .soeteck-prefab-view__item + .soeteck-prefab-view__item { border-top: 1px solid #e5e5e5; }
+
+  .soeteck-prefab-view__title {
+    position: relative;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    padding: 12px 40px 12px 15px;
+    border: 0;
+    border-radius: 0;
+    background: #f5f5f5;
+    color: var(--soeteck-text);
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.94rem;
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.35;
+    text-align: left;
+    transition: background-color var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-view__title:hover { background: #eee; }
+
+  .soeteck-prefab-view__title::after {
+    content: '+';
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    color: var(--soeteck-primary);
+    font-size: 1.1rem;
+    line-height: 1;
+    transform: translateY(-50%);
+  }
+
+  .soeteck-prefab-view__title.is-active { background-color: rgba(0, 123, 255, 0.1); }
+
+  .soeteck-prefab-view__title.is-active::after { content: '\2212'; }
+
+  .soeteck-prefab-view__content {
+    display: grid;
+    grid-template-rows: 0fr;
+    overflow: hidden;
+    color: var(--soeteck-muted);
+    font-size: 0.9rem;
+    line-height: 1.58;
+    transition: grid-template-rows var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-view__content-inner {
+    min-height: 0;
+    padding: 0 15px;
+    opacity: 0;
+    transition: opacity var(--soeteck-transition-fast), padding var(--soeteck-transition-medium);
+  }
+
+  .soeteck-prefab-view__item.is-active .soeteck-prefab-view__content {
+    grid-template-rows: 1fr;
+  }
+
+  .soeteck-prefab-view__item.is-active .soeteck-prefab-view__content-inner {
+    padding: 10px 15px 14px;
+    opacity: 1;
+  }
+
+  /* Module Grid */
+  .soeteck-prefab-module-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--soeteck-card-gap);
+    margin: 0 0 clamp(44px, 5.5vw, 70px);
+  }
+
+  .soeteck-prefab-module-card {
+    padding: clamp(18px, 2vw, 24px);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius);
+    text-align: center;
+    transition: transform var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast);
+  }
+
+  .soeteck-prefab-module-card:hover {
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: var(--soeteck-shadow-card);
+    transform: translateY(-2px);
+  }
+
+  .soeteck-prefab-module-card__icon {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    background-color: var(--soeteck-primary-dark);
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-size: contain;
+  }
+
+  .soeteck-prefab-module-card__icon--snowflake { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 2h2v4.27l3.04-3.04 1.42 1.42L13 9.1v1.17l1.02.59 6.1-3.52 1 1.73-4.1 2.37 4.1 2.37-1 1.73-6.1-3.52-1.02.59v1.18l4.46 4.45-1.42 1.42L13 16.73V22h-2v-5.27l-3.04 3.04-1.42-1.42L11 13.9v-1.18l-1.02-.59-6.1 3.52-1-1.73 4.1-2.37-4.1-2.37 1-1.73 6.1 3.52 1.02-.59V9.1L6.54 4.65l1.42-1.42L11 6.27V2Z'/%3E%3C/svg%3E"); }
+
+  .soeteck-prefab-module-card__icon--bolt { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M13 2 4 14h7l-1 8 10-13h-7l1-7Z'/%3E%3C/svg%3E"); }
+
+  .soeteck-prefab-module-card__icon--shield { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2 4 5v6c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V5l-8-3Zm3.7 7.7-4.3 4.3-2.1-2.1 1.4-1.4.7.7 2.9-2.9 1.4 1.4Z'/%3E%3C/svg%3E"); }
+
+  .soeteck-prefab-module-card__icon--chart { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 19h16v2H2V3h2v16Zm3-2V9h3v8H7Zm5 0V5h3v12h-3Zm5 0v-6h3v6h-3Z'/%3E%3C/svg%3E"); }
+
+  .soeteck-prefab-module-card h3 {
+    margin: 0;
+    color: var(--soeteck-primary-dark);
+    font-size: var(--soeteck-text-md);
+    font-weight: var(--soeteck-weight-semibold);
+  }
+
+  .soeteck-prefab-module-card p {
+    margin: 6px 0 0;
+    color: var(--soeteck-text-soft);
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .soeteck-prefab-modules__lead {
+    max-width: none;
+    margin: 0 0 clamp(30px, 4vw, 46px);
+    color: #363636;
+    font-size: var(--soeteck-text-md);
+    line-height: 1.65;
+  }
+
+  /* Spec Table */
+  .soeteck-prefab-specs { background: #252525; }
+
+  .soeteck-prefab-specs .soeteck-prefab-section__title {
+    margin-bottom: 30px;
+    color: var(--soeteck-primary);
+    font-weight: var(--soeteck-weight-semibold);
+    text-align: left;
+    margin-inline: 0;
+  }
+
+  .soeteck-prefab-table-wrap {
+    overflow-x: auto;
+    background: #252525;
+    color: #c7c7c7;
+    scrollbar-color: #0058a7 #444;
+    scrollbar-width: thin;
+  }
+
+  .soeteck-prefab-table-wrap::-webkit-scrollbar { width: 8px; }
+  .soeteck-prefab-table-wrap::-webkit-scrollbar-thumb { border-radius: var(--soeteck-radius-sm); background: #0058a7; }
+  .soeteck-prefab-table-wrap::-webkit-scrollbar-track { border-radius: var(--soeteck-radius-sm); background: #444; }
+
+  .soeteck-prefab-spec-table {
+    width: 100%;
+    min-width: 600px;
+    border: 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    color: #c7c7c7;
+  }
+
+  .soeteck-prefab-spec-table th,
+  .soeteck-prefab-spec-table td {
+    padding: 16px 12px;
+    border: 0;
+    border-bottom: 1px solid #444;
+    color: #c7c7c7;
+    font-size: var(--soeteck-text-md);
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  .soeteck-prefab-spec-table thead th { color: #fff; }
+
+  .soeteck-prefab-spec-table__images th { min-height: 282px; vertical-align: middle; }
+
+  .soeteck-prefab-spec-table__images img {
+    display: block;
+    width: min(100%, 249px);
+    height: auto;
+    margin-inline: auto;
+  }
+
+  .soeteck-prefab-pdf-link {
+    display: flex;
+    justify-content: flex-end;
+    margin: 28px 0 0;
+  }
+
+  .soeteck-prefab-pdf-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    min-height: 42px;
+    color: #fff;
+    font-size: var(--soeteck-text-lg);
+    font-weight: var(--soeteck-weight-semibold);
+    text-decoration: none;
+  }
+
+  .soeteck-prefab-pdf-link span {
+    position: relative;
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 3px;
+    border-radius: var(--soeteck-radius-sm);
+    background: #ff1313;
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1;
+  }
+
+  .soeteck-prefab-pdf-link span::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 11px;
+    height: 11px;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.34) 50%, #252525 50%);
+  }
+
+  /* Scenario Grid */
+  .soeteck-prefab-scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(20px, 2.4vw, 32px);
+  }
+
+  .soeteck-prefab-scenario-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--soeteck-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card:hover {
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .soeteck-prefab-scenario-card__image {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 19.75vw, 237px);
+    object-fit: cover;
+  }
+
+  .soeteck-prefab-scenario-card__body {
+    flex: 1;
+    padding: clamp(18px, 2vw, 24px);
+  }
+
+  .soeteck-prefab-scenario-card__body p {
+    margin: 14px 0 0;
+    color: var(--soeteck-text-soft);
+    font-size: 0.93rem;
+    line-height: 1.62;
+  }
+
+  .soeteck-prefab-scenario-card__tabs {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 18px;
+    border-bottom: 1px solid #d7dce3;
+  }
+
+  .soeteck-prefab-scenario-card__tab {
+    position: relative;
+    min-height: 30px;
+    padding: 0 0 8px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #697386;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card__tab::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: transparent;
+    transition: background-color 180ms ease;
+  }
+
+  .soeteck-prefab-scenario-card__tab:hover,
+  .soeteck-prefab-scenario-card__tab.is-active { color: var(--soeteck-primary-dark); }
+
+  .soeteck-prefab-scenario-card__tab.is-active::after { background: var(--soeteck-primary); }
+
+  .soeteck-prefab-scenario-card__panel { margin-top: 14px; }
+  .soeteck-prefab-scenario-card__panel[hidden] { display: none; }
+
+  .soeteck-prefab-scenario-card__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .soeteck-prefab-scenario-card__tags span {
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: #e8f3ff;
+    color: var(--soeteck-primary-dark);
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  /* Case Studies */
+  .soeteck-prefab-case-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(20px, 2.4vw, 32px);
+  }
+
+  .soeteck-prefab-case-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--soeteck-border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .soeteck-prefab-case-card:hover {
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    transform: translateY(-2px);
+  }
+
+  .soeteck-prefab-case-card__media {
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 436 / 240;
+    background: var(--soeteck-surface);
+  }
+
+  .soeteck-prefab-case-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 360ms ease;
+  }
+
+  .soeteck-prefab-case-card:hover .soeteck-prefab-case-card__image {
+    transform: scale(1.04);
+  }
+
+  .soeteck-prefab-case-card__body {
+    flex: 1;
+    padding: clamp(18px, 2vw, 24px);
+  }
+
+  .soeteck-prefab-case-card h3 a {
+    color: inherit;
+    text-decoration: none;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .soeteck-prefab-case-card h3 a:hover {
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-prefab-case-card p {
+    margin: 12px 0 0;
+    color: var(--soeteck-text-soft);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* CTA — dark gradient (shared) */
+  .soeteck-cta {
+    position: relative;
+    overflow: hidden;
+    padding: var(--soeteck-section-y) 0;
+    background: radial-gradient(circle at 78% 18%, rgba(0, 102, 204, 0.28), transparent 34%), linear-gradient(135deg, #061529 0%, #0a2749 56%, #061529 100%);
+    color: #fff;
+  }
+
+  .soeteck-cta::before {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+
+  .soeteck-cta__inner {
+    position: relative;
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .soeteck-cta h2 {
+    margin: 0;
+    color: #fff;
+  }
+
+  .soeteck-cta p:not(.soeteck-eyebrow) {
+    max-width: 820px;
+    margin: 22px 0 0;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .soeteck-cta__checks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .soeteck-cta__checks li {
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.86);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+  }
+
+  .soeteck-cta__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 0 0 auto;
+  }
+
+  .soeteck-cta__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 28px;
+    border-radius: 999px;
+    background: var(--soeteck-primary);
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 16px 36px rgba(0, 102, 204, 0.28);
+    transition: background 200ms ease;
+  }
+
+  .soeteck-cta__button:hover {
+    color: #fff;
+    background: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-cta__button--outline {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: none;
+  }
+
+  .soeteck-cta__button--outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-cta__inner {
+      display: grid;
+      justify-items: start;
+    }
+
+    .soeteck-cta__actions {
+      flex-direction: row;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-cta {
+      padding-block: 56px;
+    }
+    .soeteck-cta::before {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-cta__actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .soeteck-cta__button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-prefab-overview__grid,
+    .soeteck-prefab-model__grid,
+    .soeteck-prefab-module-grid,
+    .soeteck-prefab-scenario-grid,
+    .soeteck-prefab-case-grid { grid-template-columns: 1fr; }
+
+    .soeteck-prefab-module-grid,
+    .soeteck-prefab-case-grid { gap: 18px; }
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-prefab-banner { min-height: 380px; }
+    .soeteck-prefab-banner__inner { padding-block: 58px; }
+    .soeteck-prefab-section { padding-block: 58px; }
+    .soeteck-prefab-section__title { margin-bottom: 26px; text-align: left; }
+    .soeteck-prefab-section__subtitle { margin: 16px 0 28px; text-align: left; }
+    .soeteck-prefab-cta-row { flex-direction: column; }
+    .soeteck-prefab-button { width: 100%; }
+    .soeteck-prefab-scenario-card__image { aspect-ratio: 16 / 10; }
+    .soeteck-prefab-spec-table th,
+    .soeteck-prefab-spec-table td { padding: 10px 8px; font-size: 0.875rem; }
+    .soeteck-prefab-hotspot__pin,
+    .soeteck-prefab-hotspot__core,
+    .soeteck-prefab-view__pin,
+    .soeteck-prefab-view__core { width: 20px; height: 20px; font-size: 12px; }
+  }
+
+  @media (max-width: 480px) {
+    .soeteck-prefab-solution .soeteck-container { width: min(100% - 32px, 1200px); }
+    .soeteck-prefab-banner__title { font-size: clamp(2rem, 13vw, 3rem); }
+    .soeteck-prefab-video__play { width: 62px; height: 62px; }
+    .soeteck-prefab-spec-table { min-width: 700px; }
+    .soeteck-prefab-spec-table th,
+    .soeteck-prefab-spec-table td { padding: 12px 6px; font-size: 0.75rem; }
+    .soeteck-prefab-spec-table thead tr:nth-child(2) th { font-size: 0.875rem; }
+  }
+</style>
+
+<script>
+/*
+ * Prefabricated Container Data Center solution page interactions.
+ * @package Soeteck
+ */
+
+(function () {
+    'use strict';
+
+    var roots = document.querySelectorAll('[data-prefab-solution]');
+
+    if (!roots.length) {
+        return;
+    }
+
+    function buildYouTubeEmbed(videoId, title) {
+        var wrapper = document.createElement('div');
+        var iframe = document.createElement('iframe');
+
+        wrapper.className = 'soeteck-prefab-video__iframe-wrap';
+
+        iframe.className = 'soeteck-prefab-video__iframe';
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1&rel=0';
+        iframe.title = title || 'Soeteck solution video';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+        iframe.allowFullscreen = true;
+        iframe.loading = 'eager';
+        iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+        wrapper.appendChild(iframe);
+
+        return wrapper;
+    }
+
+    function enhanceVideos(root) {
+        var triggers = root.querySelectorAll('[data-youtube-id]');
+
+        triggers.forEach(function (trigger) {
+            trigger.addEventListener('click', function (event) {
+                var videoId = trigger.getAttribute('data-youtube-id');
+                var videoShell = trigger.closest('[data-prefab-video]');
+
+                if (!videoId || !videoShell) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                videoShell.replaceChildren(buildYouTubeEmbed(videoId, trigger.getAttribute('aria-label')));
+            });
+        });
+    }
+
+    function clearHotspotGroup(group) {
+        group.querySelectorAll('[data-hotspot-index].is-active').forEach(function (pin) {
+            pin.classList.remove('is-active');
+            pin.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    function enhanceHotspots(root) {
+        var groups = root.querySelectorAll('[data-prefab-hotspots]');
+
+        groups.forEach(function (group) {
+            var pins = group.querySelectorAll('[data-hotspot-index]');
+
+            pins.forEach(function (pin) {
+                pin.addEventListener('click', function (event) {
+                    var isActive = pin.classList.contains('is-active');
+
+                    event.stopPropagation();
+                    clearHotspotGroup(group);
+
+                    if (!isActive) {
+                        pin.classList.add('is-active');
+                        pin.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                pin.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape') {
+                        clearHotspotGroup(group);
+                        pin.blur();
+                    }
+                });
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!group.contains(event.target)) {
+                    clearHotspotGroup(group);
+                }
+            });
+        });
+    }
+
+    function clearViewGroup(group) {
+        group.querySelectorAll('.is-active').forEach(function (node) {
+            node.classList.remove('is-active');
+        });
+
+        group.querySelectorAll('[aria-expanded="true"]').forEach(function (node) {
+            node.setAttribute('aria-expanded', 'false');
+        });
+    }
+
+    function setViewTarget(group, target) {
+        var pin = group.querySelector('[data-view-target="' + target + '"]');
+        var item = group.querySelector('[data-view-item="' + target + '"]');
+        var title = item ? item.querySelector('.soeteck-prefab-view__title') : null;
+
+        if (!pin || !item || !title) {
+            return;
+        }
+
+        clearViewGroup(group);
+        pin.classList.add('is-active');
+        pin.setAttribute('aria-expanded', 'true');
+        item.classList.add('is-active');
+        title.classList.add('is-active');
+        title.setAttribute('aria-expanded', 'true');
+    }
+
+    function enhanceViewAccordions(root) {
+        var groups = root.querySelectorAll('[data-prefab-view]');
+
+        groups.forEach(function (group) {
+            group.querySelectorAll('[data-view-target]').forEach(function (pin) {
+                pin.addEventListener('click', function () {
+                    var target = pin.getAttribute('data-view-target');
+                    var isActive = pin.classList.contains('is-active');
+
+                    clearViewGroup(group);
+
+                    if (!isActive && target) {
+                        setViewTarget(group, target);
+                    }
+                });
+            });
+
+            group.querySelectorAll('[data-view-item]').forEach(function (item) {
+                var title = item.querySelector('.soeteck-prefab-view__title');
+
+                if (!title) {
+                    return;
+                }
+
+                title.addEventListener('click', function () {
+                    var target = item.getAttribute('data-view-item');
+                    var isActive = item.classList.contains('is-active');
+
+                    clearViewGroup(group);
+
+                    if (!isActive && target) {
+                        setViewTarget(group, target);
+                    }
+                });
+            });
+        });
+    }
+
+    function enhanceScenarioCards(root) {
+        root.querySelectorAll('[data-scenario-card]').forEach(function (card) {
+            card.querySelectorAll('[data-scenario-tab]').forEach(function (tab) {
+                tab.addEventListener('click', function () {
+                    var target = tab.getAttribute('data-scenario-tab');
+
+                    if (!target) {
+                        return;
+                    }
+
+                    card.querySelectorAll('[data-scenario-tab]').forEach(function (node) {
+                        var isActive = node === tab;
+                        node.classList.toggle('is-active', isActive);
+                        node.setAttribute('aria-selected', isActive ? 'true' : 'false');
+                    });
+
+                    card.querySelectorAll('[data-scenario-panel]').forEach(function (panel) {
+                        var isActive = panel.getAttribute('data-scenario-panel') === target;
+                        panel.classList.toggle('is-active', isActive);
+                        panel.hidden = !isActive;
+                    });
+                });
+            });
+        });
+    }
+
+    function enhanceProductGallery(root) {
+        var grids = root.querySelectorAll('[data-prefab-gallery]');
+        grids.forEach(function (grid) {
+            grid.querySelectorAll('[data-product-gallery-target]').forEach(function (thumb) {
+                thumb.addEventListener('click', function () {
+                    var target = thumb.getAttribute('data-product-gallery-target');
+                    var panel = thumb.closest('[data-product-panel]');
+                    if (!panel) return;
+                    panel.querySelectorAll('[data-product-gallery-target]').forEach(function (t) {
+                        t.classList.remove('is-active');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    panel.querySelectorAll('[data-product-gallery-item]').forEach(function (item) {
+                        item.classList.remove('is-active');
+                    });
+                    thumb.classList.add('is-active');
+                    thumb.setAttribute('aria-selected', 'true');
+                    var activeItem = panel.querySelector('[data-product-gallery-item="' + target + '"]');
+                    if (activeItem) activeItem.classList.add('is-active');
+                });
+            });
+        });
+    }
+
+    roots.forEach(function (root) {
+        enhanceVideos(root);
+        enhanceHotspots(root);
+        enhanceViewAccordions(root);
+        enhanceScenarioCards(root);
+        enhanceProductGallery(root);
+    });
+}());
+</script>

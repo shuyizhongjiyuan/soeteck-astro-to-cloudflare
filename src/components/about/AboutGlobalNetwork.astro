@@ -41,7 +41,7 @@ const { image, nodes, eyebrow = 'Global Network & Industrial Partners', title = 
 
 <style>
   .about-section {
-    padding: clamp(64px, 7vw, 108px) 0;
+    padding: var(--soeteck-section-y) 0;
   }
 
   .global {
@@ -58,14 +58,11 @@ const { image, nodes, eyebrow = 'Global Network & Industrial Partners', title = 
   .global h2 {
     margin: 0;
     color: var(--soeteck-text);
-    font-size: clamp(1.85rem, 3.1vw, 3rem);
-    line-height: 1.14;
   }
 
   .global p:not(.soeteck-eyebrow) {
     margin: 22px 0 0;
     color: var(--soeteck-text-soft);
-    line-height: 1.72;
   }
 
   .global__map {

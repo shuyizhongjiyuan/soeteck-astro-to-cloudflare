@@ -1,4 +1,144 @@
 ---
-const relatedArticles: never[] = [];
+import type { AdaptedArticleCard } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  articles: AdaptedArticleCard[];
+  lang?: string;
+}
+
+const { articles, lang = 'en' } = Astro.props;
+
+const dateFormatter = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : lang === 'ru' ? 'ru-RU' : lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
-{relatedArticles.length > 0 && <section class="soeteck-single-post__related"></section>}
+{articles.length > 0 && (
+  <section class="soeteck-single-post__related" aria-labelledby="soeteck-related-posts-title">
+    <div class="container">
+      <div class="soeteck-single-post__related-header">
+        <p class="soeteck-eyebrow">{getUITranslation(lang, 'keepReading')}</p>
+        <h2 id="soeteck-related-posts-title" class="soeteck-single-post__related-title">
+          {getUITranslation(lang, 'relatedArticles')}
+        </h2>
+      </div>
+      <div class="soeteck-single-post__related-grid">
+        {articles.map((article) => (
+          <article class="soeteck-single-post__related-card">
+            <a href={article.path} class="soeteck-single-post__related-link">
+              {article.featuredImage ? (
+                <span class="soeteck-single-post__related-media">
+                  <img
+                    src={article.featuredImage.path}
+                    alt={article.featuredImage.alt || article.title}
+                    class="soeteck-single-post__related-image"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
+              ) : (
+                <span class="soeteck-single-post__related-media soeteck-single-post__related-media--empty" aria-hidden="true"></span>
+              )}
+              <span class="soeteck-single-post__related-body">
+                <time class="soeteck-single-post__related-date" datetime={article.date ?? ''}>
+                  {article.date ? dateFormatter.format(new Date(article.date)) : ''}
+                </time>
+                <h3 class="soeteck-single-post__related-card-title">{article.title}</h3>
+              </span>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .soeteck-single-post__related {
+    padding: var(--soeteck-section-y-sm) 0;
+    background: var(--soeteck-surface);
+  }
+
+  .soeteck-single-post__related :global(.container) {
+    width: min(var(--soeteck-container), calc(100% - (var(--soeteck-gutter) * 2)));
+    margin-inline: auto;
+  }
+
+  .soeteck-single-post__related-header {
+    margin-bottom: clamp(24px, 3vw, 34px);
+  }
+
+  .soeteck-single-post__related-title {
+    margin: 0;
+    color: var(--soeteck-text);
+  }
+
+  .soeteck-single-post__related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--soeteck-card-gap);
+  }
+
+  .soeteck-single-post__related-card {
+    overflow: hidden;
+    background: var(--soeteck-white);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    box-shadow: var(--soeteck-shadow);
+    transition: transform var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast);
+  }
+
+  .soeteck-single-post__related-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: var(--soeteck-shadow-card);
+  }
+
+  .soeteck-single-post__related-link {
+    display: block;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .soeteck-single-post__related-media {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--soeteck-media-bg);
+  }
+
+  .soeteck-single-post__related-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .soeteck-single-post__related-body {
+    display: block;
+    padding: 20px;
+  }
+
+  .soeteck-single-post__related-date {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+  }
+
+  .soeteck-single-post__related-card-title {
+    display: block;
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-lg);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.35;
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-single-post__related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -11,7 +11,7 @@ const { title, path, image } = Astro.props;
   <div class="hero-inner">
     <div class="hero-copy">
       <p class="soeteck-eyebrow">Soeteck Power & Cooling</p>
-      <h1>{title}</h1>
+      <h1 class="soeteck-page-title">{title}</h1>
       <p class="hero-lead">Professional digital power, cooling, and data center infrastructure solutions for mission-critical environments.</p>
       <div class="hero-actions">
         <a class="primary-cta" href="/en/products/critical-power/">Explore Products</a>
@@ -62,7 +62,6 @@ const { title, path, image } = Astro.props;
     margin: 26px 0 0;
     color: var(--soeteck-text-soft);
     font-size: clamp(1.05rem, 1.4vw, 1.32rem);
-    line-height: 1.7;
   }
 
   .hero-actions {

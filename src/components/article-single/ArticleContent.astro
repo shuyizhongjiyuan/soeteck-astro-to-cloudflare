@@ -4,8 +4,17 @@ interface Props {
 }
 
 const { contentHtml } = Astro.props;
+
+// CSS 始终导入（体积小，~3KB，仅在 gallery 页面生效）
+import '@/styles/simply-gallery-slider.css';
 ---
-<div class="entry-content soeteck-single-post__content" set:html={contentHtml} />
+
+<div class="entry-content soeteck-single-post__content" set:html={contentHtml}></div>
+
+<script>
+  // 导入 gallery 滑块模块（模块级代码自动初始化）
+  import('@/lib/simply-gallery');
+</script>
 
 <style>
   .soeteck-single-post__content {
@@ -55,17 +64,18 @@ const { contentHtml } = Astro.props;
 
   .soeteck-single-post__content :global(a) {
     color: var(--soeteck-primary);
+  }
+
+  .soeteck-single-post__content :global(a:hover) {
+    color: var(--soeteck-primary-dark);
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
   }
 
-  .soeteck-single-post__content :global(a:hover) {
-    color: var(--soeteck-primary-dark);
-  }
-
-  .soeteck-single-post__content :global(img),
-  .soeteck-single-post__content :global(figure) {
+  /* Default image/figure border-radius — :where() gives zero specificity,
+     so user-set styles (is-style-rounded, inline style) always win. */
+  .soeteck-single-post__content :global(:where(img, figure)) {
     border-radius: var(--soeteck-radius);
   }
 

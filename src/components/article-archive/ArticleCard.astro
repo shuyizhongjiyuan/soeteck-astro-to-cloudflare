@@ -1,0 +1,210 @@
+---
+import type { AdaptedArticleCard } from '@/lib/page-adapter';
+
+interface Props {
+  article: AdaptedArticleCard;
+  /** Show author avatar and source label (Blogs only) */
+  showAuthor?: boolean;
+  /** Label for the source, e.g., "Soeteck Technical Team" */
+  sourceLabel?: string;
+  /** Detail for the source, e.g., author position */
+  sourceDetail?: string;
+  /** Avatar image URL */
+  authorAvatar?: string | null;
+  /** Language code for date formatting */
+  lang?: string;
+}
+
+const { article, showAuthor = false, sourceLabel = '', sourceDetail = '', authorAvatar = null, lang = 'en' } = Astro.props;
+
+const dateLocale = lang === 'zh' ? 'zh-CN' : lang === 'ru' ? 'ru-RU' : lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-US';
+const dateStr = article.date
+  ? new Date(article.date).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' })
+  : '';
+
+const categoryLabel = article.primaryCategory?.name ?? '';
+---
+
+<article class="article-card">
+  <a href={article.path} class="article-card__link">
+    <span class="article-card__media">
+      {article.featuredImage ? (
+        <img
+          src={article.featuredImage.path}
+          alt={article.featuredImage.alt || article.title}
+          class="article-card__image"
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <span class="article-card__media article-card__media--empty" aria-hidden="true"></span>
+      )}
+    </span>
+    <span class="article-card__body">
+      <span class="article-card__meta">
+        {categoryLabel && <span class="article-card__category">{categoryLabel}</span>}
+        {dateStr && <time class="article-card__date" datetime={article.date ?? ''}>{dateStr}</time>}
+      </span>
+      <h3 class="article-card__title">{article.title}</h3>
+      {article.excerpt && <p class="article-card__excerpt">{article.excerpt}</p>}
+      {showAuthor && (
+        <>
+          <span class="article-card__divider" aria-hidden="true"></span>
+          <span class="article-card__source">
+            {authorAvatar && <img src={authorAvatar} alt="" class="article-card__avatar" aria-hidden="true" />}
+            <span class="article-card__source-text">
+              <span class="article-card__source-label">{sourceLabel}</span>
+              {sourceDetail && <span class="article-card__source-detail">{sourceDetail}</span>}
+            </span>
+          </span>
+        </>
+      )}
+    </span>
+  </a>
+</article>
+
+<style>
+  .article-card {
+    overflow: hidden;
+    background: var(--soeteck-white);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+    box-shadow: var(--soeteck-shadow);
+    transition: transform var(--soeteck-transition-fast),
+                box-shadow var(--soeteck-transition-fast),
+                border-color var(--soeteck-transition-fast);
+  }
+
+  .article-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(26, 133, 229, 0.28);
+    box-shadow: var(--soeteck-shadow-card);
+  }
+
+  .article-card__link {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .article-card__media {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--soeteck-media-bg);
+    border-radius: var(--soeteck-radius-lg) var(--soeteck-radius-lg) 0 0;
+  }
+
+  .article-card__media--empty {
+    min-height: 120px;
+  }
+
+  .article-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 220ms ease;
+  }
+
+  .article-card:hover .article-card__image {
+    transform: scale(1.03);
+  }
+
+  .article-card__body {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    gap: 12px;
+  }
+
+  .article-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .article-card__category {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 12px;
+    border: 1px solid var(--soeteck-primary);
+    border-radius: 999px;
+    color: var(--soeteck-primary);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .article-card__date {
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.4;
+  }
+
+  .article-card__title {
+    display: -webkit-box;
+    margin: 0;
+    color: var(--soeteck-text);
+    font-weight: 700;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .article-card__excerpt {
+    display: -webkit-box;
+    margin: 0;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .article-card__divider {
+    display: block;
+    height: 1px;
+    margin-top: auto;
+    background: var(--soeteck-border-soft);
+  }
+
+  .article-card__source {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+  }
+
+  .article-card__avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .article-card__source-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .article-card__source-label {
+    color: var(--soeteck-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .article-card__source-detail {
+    color: var(--soeteck-muted);
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+</style>

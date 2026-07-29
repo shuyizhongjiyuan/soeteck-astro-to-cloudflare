@@ -5,6 +5,8 @@
  *      Inquiry 表单占位提交 + UTM 参数捕获 + Anchor 链接映射到 Tab。
  */
 
+import { submitContactForm } from '@/lib/inquiry-form';
+
 const init = () => {
   // -------- Gallery --------
   const galleries = document.querySelectorAll<HTMLElement>('[data-product-gallery]');
@@ -328,18 +330,67 @@ const init = () => {
     }
   });
 
-  // -------- Inquiry form placeholder submission --------
+  // -------- Inquiry form submission --------
   document.querySelectorAll<HTMLFormElement>('[data-product-inquiry-form]').forEach((form) => {
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const note = form.querySelector<HTMLElement>('.soeteck-product-inquiry-form__note');
       const submitBtn = form.querySelector<HTMLButtonElement>('[data-form-pending-message]');
-      const message = submitBtn?.getAttribute('data-form-pending-message')
-        ?? 'Inquiry submission will be connected in the native contact system phase.';
+      const fileInput = form.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
+
+      submitBtn!.disabled = true;
+      submitBtn!.classList.add('is-loading');
       if (note) {
-        note.textContent = message;
+        note.className = 'soeteck-product-inquiry-form__note';
+        note.textContent = 'Submitting your inquiry...';
+      }
+
+      try {
+        await submitContactForm(form, fileInput);
+        // redirects to /thank-you/ on success
+      } catch (err: any) {
+        if (note) {
+          note.textContent = err.message || 'Submission failed. Please try again.';
+          note.classList.add('soeteck-product-inquiry-form__note--error');
+        }
+        submitBtn!.disabled = false;
+        submitBtn!.classList.remove('is-loading');
       }
     });
+  });
+
+  // File upload toggle for product page
+  document.querySelectorAll<HTMLInputElement>('input[name="needs_upload"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const fileSection = document.querySelector<HTMLElement>('.soeteck-product-inquiry__file');
+      if (!fileSection) return;
+      if (radio.value === 'yes' && radio.checked) {
+        fileSection.classList.add('is-visible');
+        fileSection.setAttribute('aria-hidden', 'false');
+      } else {
+        fileSection.classList.remove('is-visible');
+        fileSection.setAttribute('aria-hidden', 'true');
+      }
+    });
+  });
+
+  // File chip interaction
+  const fileTrigger = document.querySelector<HTMLButtonElement>('[data-product-file-trigger]');
+  const fileInput = document.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
+  const fileList = document.querySelector<HTMLElement>('[data-product-file-list]');
+  fileTrigger?.addEventListener('click', () => fileInput?.click());
+  fileInput?.addEventListener('change', () => {
+    const files = fileInput.files;
+    const fileSection = fileInput?.closest<HTMLElement>('.soeteck-product-inquiry__file');
+    if (!files || files.length === 0) {
+      if (fileList) fileList.textContent = 'No files selected';
+      fileSection?.classList.remove('has-file');
+      return;
+    }
+    const names = Array.from(files).map(f => f.name);
+    const chips = names.map(name => `<span class="soeteck-contact-form__file-chip"><span class="soeteck-contact-form__file-chip-name">${name}</span></span>`).join('');
+    if (fileList) fileList.innerHTML = chips;
+    fileSection?.classList.add('has-file');
   });
 };
 

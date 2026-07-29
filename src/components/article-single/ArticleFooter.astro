@@ -1,21 +1,58 @@
 ---
 import type { AdaptedArticleSingle } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
 
 interface Props {
   article: AdaptedArticleSingle;
+  isBlogs?: boolean;
+  lang?: string;
 }
 
-const { article } = Astro.props;
+const { article, isBlogs = false, lang = 'en' } = Astro.props;
+const showAuthorCard = isBlogs && article.author && article.author.description;
+const hasPrevNext = article.prevPost || article.nextPost;
 ---
-<footer class="soeteck-single-post__footer">
+
+<div class="soeteck-single-post__footer">
   {article.tags.length > 0 && (
     <div class="soeteck-single-post__tags" aria-label="Article tags">
       <span class="soeteck-single-post__tags-label">Tags</span>
       {article.tags.map((tag) => <a class="soeteck-single-post__tag" href={tag.path}>{tag.name}</a>)}
     </div>
   )}
+
+  {showAuthorCard && (
+    <section class="soeteck-single-post__author-card" aria-label="Author information">
+      {article.author!.avatar && (
+        <img class="soeteck-single-post__author-avatar" src={article.author!.avatar} alt={article.author!.name} width="72" height="72" loading="lazy" />
+      )}
+      <div class="soeteck-single-post__author-body">
+        <p class="soeteck-single-post__author-label">Written by</p>
+        <h2 class="soeteck-card-title soeteck-single-post__author-name">{article.author!.name}</h2>
+        {article.author!.description && <p class="soeteck-single-post__author-description">{article.author!.description}</p>}
+      </div>
+    </section>
+  )}
+
+  {hasPrevNext && (
+    <nav class="soeteck-single-post__prev-next" aria-label={`${getUITranslation(lang, 'common.previous')} / ${getUITranslation(lang, 'common.next')}`}>
+      {article.prevPost ? (
+        <a class="soeteck-single-post__prev-next-link soeteck-single-post__prev-next-link--prev" href={article.prevPost.path}>
+          <span class="soeteck-single-post__prev-next-direction">{getUITranslation(lang, 'common.previous')}</span>
+          <span class="soeteck-single-post__prev-next-title">{article.prevPost.title}</span>
+        </a>
+      ) : <div />}
+      {article.nextPost ? (
+        <a class="soeteck-single-post__prev-next-link soeteck-single-post__prev-next-link--next" href={article.nextPost.path}>
+          <span class="soeteck-single-post__prev-next-direction">{getUITranslation(lang, 'common.next')}</span>
+          <span class="soeteck-single-post__prev-next-title">{article.nextPost.title}</span>
+        </a>
+      ) : <div />}
+    </nav>
+  )}
+
   <div class="soeteck-single-post__extension-slot" aria-hidden="true"></div>
-</footer>
+</div>
 
 <style>
   .soeteck-single-post__footer {
@@ -56,13 +93,120 @@ const { article } = Astro.props;
     color: var(--soeteck-white);
   }
 
+  .soeteck-single-post__author-card {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: clamp(20px, 3vw, 28px);
+    background: var(--soeteck-surface);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-lg);
+  }
+
+  .soeteck-single-post__author-avatar {
+    width: 72px;
+    height: 72px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+  }
+
+  .soeteck-single-post__author-label {
+    margin: 0 0 4px;
+    color: var(--soeteck-primary);
+    font-family: var(--soeteck-font-ui);
+    font-size: var(--soeteck-text-xs);
+    font-weight: var(--soeteck-weight-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .soeteck-single-post__author-name {
+    margin: 0 0 8px;
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-xl);
+    line-height: 1.25;
+  }
+
+  .soeteck-single-post__author-description {
+    margin: 0;
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+    line-height: 1.65;
+  }
+
+  .soeteck-single-post__prev-next {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: clamp(40px, 5vw, 64px);
+    padding-top: var(--soeteck-section-y-sm);
+  }
+
+  .soeteck-single-post__prev-next-link {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 64px;
+    padding: clamp(16px, 2vw, 20px);
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius);
+    text-decoration: none;
+    transition: border-color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast);
+  }
+
+  .soeteck-single-post__prev-next-link:hover {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.08);
+  }
+
+  .soeteck-single-post__prev-next-link--next {
+    text-align: right;
+  }
+
+  .soeteck-single-post__prev-next-direction {
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .soeteck-single-post__prev-next-title {
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-md);
+    font-weight: var(--soeteck-weight-semibold);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .soeteck-single-post__prev-next-link:hover .soeteck-single-post__prev-next-title {
+    color: var(--soeteck-primary);
+  }
+
   .soeteck-single-post__extension-slot {
     display: none;
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-single-post__prev-next {
+      grid-template-columns: 1fr;
+    }
+
+    .soeteck-single-post__prev-next-link--next {
+      text-align: left;
+    }
   }
 
   @media (max-width: 768px) {
     .soeteck-single-post__footer {
       padding-top: 56px;
+    }
+
+    .soeteck-single-post__author-card {
+      flex-direction: column;
     }
   }
 </style>

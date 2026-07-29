@@ -49,7 +49,7 @@ const missionText = Astro.props.missionText ?? "Driving digital power innovation
 
 <style>
   .about-section {
-    padding: clamp(64px, 7vw, 108px) 0;
+    padding: var(--soeteck-section-y) 0;
   }
 
   .timeline__grid {
@@ -62,14 +62,11 @@ const missionText = Astro.props.missionText ?? "Driving digital power innovation
   .timeline h2 {
     margin: 0;
     color: var(--soeteck-text);
-    font-size: clamp(1.85rem, 3.1vw, 3rem);
-    line-height: 1.14;
   }
 
   .timeline p:not(.soeteck-eyebrow) {
     margin: 22px 0 0;
     color: var(--soeteck-text-soft);
-    line-height: 1.72;
   }
 
   .belief-grid {

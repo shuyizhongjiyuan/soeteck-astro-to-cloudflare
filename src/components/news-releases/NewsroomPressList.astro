@@ -1,21 +1,37 @@
 ---
 import type { AdaptedArticleCard } from '@/lib/page-adapter';
 import { formatDateParts } from './news-releases-content';
+import { ARCHIVE_EN } from './news-releases-content';
+import { ARCHIVE_ZH } from './news-releases-content-zh';
+import { ARCHIVE_RU } from './news-releases-content-ru';
+import { ARCHIVE_PT } from './news-releases-content-pt';
+import { ARCHIVE_ES } from './news-releases-content-es';
+import type { PressListContent } from './news-releases-content';
 
 interface Props {
   articles: AdaptedArticleCard[];
+  lang?: string;
 }
 
-const { articles } = Astro.props;
+const { articles, lang = 'en' } = Astro.props;
+
+const contentMap: Record<string, PressListContent> = {
+  en: ARCHIVE_EN.pressList,
+  zh: ARCHIVE_ZH.pressList,
+  ru: ARCHIVE_RU.pressList,
+  pt: ARCHIVE_PT.pressList,
+  es: ARCHIVE_ES.pressList,
+};
+const t = contentMap[lang] ?? ARCHIVE_EN.pressList;
 ---
-<section class="newsroom-press-list" aria-label="News release list">
+<section class="newsroom-press-list" aria-label={t.sectionTitle}>
   <div class="newsroom-section-heading">
-    <p>Latest Releases</p>
-    <h2>Press archive</h2>
+    <p>{t.sectionEyebrow}</p>
+    <h2>{t.sectionTitle}</h2>
   </div>
   <div class="newsroom-press-list__rows">
     {articles.map((article) => {
-      const date = formatDateParts(article.date);
+      const date = formatDateParts(article.date, lang === 'zh' ? 'zh-CN' : lang === 'ru' ? 'ru-RU' : lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-US');
       const excerpt = article.compactExcerpt || article.excerpt;
       return (
         <article class="newsroom-press-row soeteck-article-archive__row">
@@ -28,7 +44,7 @@ const { articles } = Astro.props;
             <h2 class="newsroom-press-row__title soeteck-article-archive__row-title"><a href={article.path}>{article.title}</a></h2>
             {excerpt && <p class="newsroom-press-row__excerpt soeteck-article-archive__row-excerpt">{excerpt}</p>}
           </div>
-          <a class="newsroom-press-row__action soeteck-article-archive__row-action" href={article.path}>Read release</a>
+          <a class="newsroom-press-row__action soeteck-article-archive__row-action" href={article.path}>{t.actionLabel}</a>
         </article>
       );
     })}
@@ -41,9 +57,9 @@ const { articles } = Astro.props;
   }
 
   .newsroom-section-heading p {
-    margin: 0 0 8px;
+    margin: 0 0 14px;
     color: var(--soeteck-primary);
-    font-size: var(--soeteck-text-xs);
+    font-size: var(--soeteck-text-sm);
     font-weight: var(--soeteck-weight-bold);
     letter-spacing: 0.08em;
     line-height: 1.2;
@@ -53,8 +69,6 @@ const { articles } = Astro.props;
   .newsroom-section-heading h2 {
     margin: 0;
     color: var(--soeteck-text);
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
-    line-height: 1.18;
   }
 
   .newsroom-press-list__rows {

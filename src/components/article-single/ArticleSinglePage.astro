@@ -13,21 +13,22 @@ interface Props {
 
 const { page, lang = 'en' } = Astro.props;
 const article = page.article;
+const isBlogs = article?.primaryCategory?.slug === 'blogs';
 ---
 {article && (
-  <main class="soeteck-single-post single-post--blogs">
+  <div class={`soeteck-single-post${isBlogs ? ' single-post--blogs' : ''}`}>
     <article class="soeteck-single-post__article">
-      <ArticleHero article={article} breadcrumbs={page.breadcrumbs} lang={lang} />
+      <ArticleHero article={article} breadcrumbs={page.breadcrumbs} lang={lang} showAuthor={isBlogs} />
       <div class="container soeteck-single-post__body-shell">
-        <ArticleToc />
+        {isBlogs && <ArticleToc lang={lang} />}
         <div class="soeteck-single-post__content-wrap">
           <ArticleContent contentHtml={article.contentHtml} />
-          <ArticleFooter article={article} />
+          <ArticleFooter article={article} isBlogs={isBlogs} lang={lang} />
         </div>
       </div>
     </article>
-    <RelatedArticles />
-  </main>
+    <RelatedArticles articles={article.relatedArticles ?? []} lang={lang} />
+  </div>
 )}
 
 <style>
@@ -46,7 +47,7 @@ const article = page.article;
 
   .soeteck-single-post__body-shell {
     position: relative;
-    padding-bottom: clamp(56px, 7vw, 96px);
+    padding-bottom: var(--soeteck-section-y);
   }
 
   @media (max-width: 768px) {

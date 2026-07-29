@@ -21,8 +21,8 @@
 }
 
 .soeteck-product-content-wrap {
-    padding-top: clamp(18px, 3vw, 34px);
-    padding-bottom: clamp(44px, 7vw, 96px);
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .soeteck-product-tabs,
@@ -35,7 +35,7 @@
     grid-template-columns: minmax(0, 1fr) minmax(340px, 1fr);
     gap: clamp(20px, 3vw, 40px);
     align-items: start;
-    padding: 20px 0 clamp(48px, 6vw, 82px);
+    padding: var(--soeteck-section-y-sm) 0 var(--soeteck-section-y);
 }
 
 .soeteck-product-hero__gallery {
@@ -139,16 +139,20 @@
     flex: 0 0 auto;
     border: 2px solid transparent;
     border-radius: 10px;
-    background: #fff;
+    background: #e5e7eb;
     padding: 4px;
     cursor: pointer;
-    transition: border-color 160ms ease, box-shadow 160ms ease;
+    transition: border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
 }
 
 .soeteck-product-gallery__thumb:hover,
 .soeteck-product-gallery__thumb.is-active {
     border-color: #1d4f8f;
     box-shadow: 0 8px 18px rgba(29, 79, 143, .14);
+}
+
+.soeteck-product-gallery__thumb:not(.is-active) {
+    opacity: 0.75;
 }
 
 .soeteck-product-gallery__thumb img {
@@ -173,10 +177,9 @@
     padding-top: 0;
 }
 
-.soeteck-product-hero__eyebrow,
-.soeteck-product-section .soeteck-eyebrow {
+.soeteck-product-section__label {
     margin: 0 0 16px;
-    color: #1d4f8f;
+    color: var(--soeteck-primary);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: .12em;
@@ -184,7 +187,12 @@
 }
 
 .soeteck-product-hero__eyebrow {
-    margin-bottom: 16px;
+    margin: 0 0 28px;
+    color: #1d4f8f;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
     font-size: 17px;
     letter-spacing: 0;
 }
@@ -690,29 +698,40 @@ table.variations-table {
 .soeteck-field {
     width: 100%;
     font-family: var(--soeteck-font-ui);
-    min-height: 42px;
+    min-height: 46px;
     border: 1px solid #d1d5db;
-    border-radius: 0;
+    border-radius: 6px;
     background: #fff;
-    padding: 10px 12px;
+    padding: 11px 14px;
     color: #0f172a;
     font: inherit;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 textarea.soeteck-field {
-    min-height: 132px;
+    min-height: 140px;
     resize: vertical;
 }
 
 .soeteck-field::placeholder {
-    color: #111827;
-    font-style: italic;
+    color: #94a3b8;
+    font-style: normal;
 }
 
 .soeteck-field:focus-visible {
-    outline: 2px solid rgba(29, 110, 200, .25);
-    outline-offset: 1px;
-    border-color: #1d6ec8;
+    border-color: #1d8fe8;
+    box-shadow: 0 0 0 3px rgba(29, 143, 232, 0.12);
+    outline: none;
+}
+
+/* Validation states (via JS-added data attributes) */
+.soeteck-field[data-invalid] {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.soeteck-field[data-valid] {
+    border-color: #16a34a;
 }
 
 .soeteck-inquiry-upload {
@@ -740,28 +759,181 @@ textarea.soeteck-field {
 }
 
 .soeteck-inquiry-submit {
-    min-height: 42px;
+    min-height: 46px;
     font-family: var(--soeteck-font-ui);
     border: 0;
+    border-radius: 6px;
     background: #1d8fe8;
     color: #fff;
     cursor: pointer;
     font: inherit;
-    font-size: 14px;
-    font-style: italic;
-    font-weight: 700;
-    transition: background-color 160ms ease;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: background-color 180ms ease, opacity 180ms ease, transform 180ms ease;
 }
 
 .soeteck-inquiry-submit:hover {
-    background: #1d6ec8;
+    background: #1a7cd1;
+    transform: translateY(-1px);
+}
+
+.soeteck-inquiry-submit:active {
+    transform: translateY(0);
+}
+
+/* Loading spinner */
+.soeteck-inquiry-submit.is-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.soeteck-inquiry-submit.is-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: soeteck-spin 0.6s linear infinite;
+}
+
+/* Disabled state */
+.soeteck-inquiry-submit:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@keyframes soeteck-spin {
+    to { transform: rotate(360deg); }
 }
 
 .soeteck-product-inquiry-form__note {
-    min-height: 20px;
+    min-height: 22px;
     margin: 0;
     color: #64748b;
     font-size: 14px;
+    font-weight: 500;
+}
+
+.soeteck-product-inquiry-form__note--error {
+    color: #dc2626;
+}
+
+/* ── File upload area (product page) ── */
+.soeteck-product-inquiry__file {
+    grid-column: 1 / -1;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-4px);
+    transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 200ms ease;
+}
+
+.soeteck-product-inquiry__file.is-visible {
+    max-height: 220px;
+    margin-top: 6px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.soeteck-product-inquiry__file-label {
+    display: block;
+    margin-bottom: 6px;
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.soeteck-product-inquiry__file-control {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+    min-height: 50px;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.soeteck-product-inquiry__file-control:hover,
+.soeteck-product-inquiry__file:focus-within .soeteck-product-inquiry__file-control {
+    border-color: #1d8fe8;
+    box-shadow: 0 0 0 3px rgba(29, 143, 232, 0.08);
+}
+
+.soeteck-product-inquiry__file-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 34px;
+    padding: 0 10px 0 0;
+    border: 0;
+    background: transparent;
+    color: #111827;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.soeteck-product-inquiry__file-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(29, 143, 232, 0.22);
+    border-radius: 50%;
+    background: rgba(29, 143, 232, 0.06);
+    color: #1d8fe8;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.soeteck-product-inquiry__file-add:hover .soeteck-product-inquiry__file-icon,
+.soeteck-product-inquiry__file-add:focus-visible .soeteck-product-inquiry__file-icon {
+    background: #1d8fe8;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+.soeteck-product-inquiry__file-name {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+    min-height: 34px;
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.soeteck-product-inquiry__file input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.soeteck-product-inquiry__file.has-file .soeteck-product-inquiry__file-control {
+    border-color: rgba(29, 143, 232, 0.4);
+}
+
+.soeteck-product-inquiry__file.has-file .soeteck-product-inquiry__file-icon {
+    background: #1d8fe8;
+    color: #fff;
 }
 
 .soeteck-product-related .related.products {

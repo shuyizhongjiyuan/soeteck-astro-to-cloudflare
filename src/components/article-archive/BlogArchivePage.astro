@@ -1,0 +1,114 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import NewsArchiveHero from '@/components/news-releases/NewsArchiveHero.astro';
+import FeaturedArticleCard from './FeaturedArticleCard.astro';
+import ArticleCard from './ArticleCard.astro';
+import { ARCHIVE_EN } from '@/components/news-releases/news-releases-content';
+import { ARCHIVE_ZH } from '@/components/news-releases/news-releases-content-zh';
+import { ARCHIVE_RU } from '@/components/news-releases/news-releases-content-ru';
+import { ARCHIVE_PT } from '@/components/news-releases/news-releases-content-pt';
+import { ARCHIVE_ES } from '@/components/news-releases/news-releases-content-es';
+import type { ArchiveContent } from '@/components/news-releases/news-releases-content';
+
+interface Props {
+  page: AdaptedPage;
+  lang?: string;
+}
+
+const { page, lang = 'en' } = Astro.props;
+
+const contentMap: Record<string, ArchiveContent> = {
+  en: ARCHIVE_EN,
+  zh: ARCHIVE_ZH,
+  ru: ARCHIVE_RU,
+  pt: ARCHIVE_PT,
+  es: ARCHIVE_ES,
+};
+const archiveContent = contentMap[lang] ?? ARCHIVE_EN;
+const heroConfig = archiveContent.blogs;
+
+const description = page.source.archive?.description || heroConfig.description;
+const allArticles = page.articles;
+
+// Page 1: first article is featured, rest in grid
+const featuredArticle = allArticles.length > 0 ? allArticles[0] : null;
+const gridArticles = featuredArticle ? allArticles.slice(1) : [];
+
+const blogLabels = archiveContent.blogLabels;
+---
+
+<div class="soeteck-blog-archive-page">
+  <NewsArchiveHero
+    breadcrumbs={page.breadcrumbs}
+    title={page.title || heroConfig.title}
+    description={description}
+    lang={lang}
+    heroConfig={heroConfig}
+  />
+  <div class="soeteck-container soeteck-blog-archive-page__container">
+    {featuredArticle && (
+      <div class="soeteck-blog-archive-page__featured">
+        <FeaturedArticleCard
+          article={featuredArticle}
+          label={blogLabels.featuredLabel}
+          readMoreLabel={blogLabels.readMoreLabel}
+          lang={lang}
+        />
+      </div>
+    )}
+    {gridArticles.length > 0 && (
+      <div class="soeteck-blog-archive-page__grid">
+        {gridArticles.map((article) => (
+          <ArticleCard
+            article={article}
+            showAuthor={true}
+            sourceLabel={blogLabels.sourceLabel}
+            lang={lang}
+          />
+        ))}
+      </div>
+    )}
+    {allArticles.length === 0 && (
+      <p class="soeteck-blog-archive-page__empty">{blogLabels.noArticles}</p>
+    )}
+  </div>
+</div>
+
+<style>
+  .soeteck-blog-archive-page {
+    background: var(--soeteck-white);
+  }
+
+  .soeteck-blog-archive-page__container {
+    padding: var(--soeteck-section-y-sm) 0 var(--soeteck-section-y);
+  }
+
+  .soeteck-blog-archive-page__featured {
+    margin-bottom: clamp(34px, 5vw, 72px);
+  }
+
+  .soeteck-blog-archive-page__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .soeteck-blog-archive-page__empty {
+    text-align: center;
+    color: var(--soeteck-muted);
+    padding: 48px 0;
+    font-size: var(--soeteck-text-lg);
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-blog-archive-page__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .soeteck-blog-archive-page__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

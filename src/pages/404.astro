@@ -1,0 +1,194 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { getUITranslation } from '@/lib/translations';
+
+// 尝试从 URL 路径中提取语言前缀，默认英文
+const url = Astro.url;
+const langMatch = url.pathname.match(/^\/([a-z]{2})\//);
+const lang = langMatch?.[1] ?? 'en';
+
+const t = (key: string): string => getUITranslation(lang, key);
+
+const breadcrumbs = [
+  { label: t('breadcrumb.home'), path: `/${lang}/` },
+  { label: '404', path: '' },
+];
+---
+<BaseLayout
+  lang={lang}
+  title={`404 - ${t('common.pageNotFound')}`}
+  canonical={`https://soeteck.com/${lang}/404/`}
+  robots="noindex"
+>
+  <div class="soeteck-404-page">
+    <div class="soeteck-container soeteck-404-content" style="text-align: center;">
+      <div class="error-404">
+        <div class="error-code">404</div>
+
+        <h1 class="soeteck-page-title">{t('common.pageNotFound')}</h1>
+
+        <p class="error-description">
+          {t('common.pageNotFoundDesc')}
+        </p>
+
+        <div class="error-actions">
+          <a class="soeteck-button soeteck-button-primary" href={`/${lang}/`}>
+            {t('common.goToHomepage')}
+          </a>
+          <button class="soeteck-button soeteck-button-outline" onclick="history.back()" type="button">
+            {t('common.goBack')}
+          </button>
+        </div>
+
+        <div class="error-search">
+          <p class="error-search__label">{t('common.orTrySearching')}</p>
+          <form class="soeteck-search-form" action={`/${lang}/`} method="get" role="search">
+            <label class="soeteck-search-form__field">
+              <input type="search" name="s" placeholder={t('common.search')} aria-label={t('common.search')} />
+            </label>
+            <button class="soeteck-button soeteck-button-primary" type="submit">{t('common.search')}</button>
+          </form>
+        </div>
+
+        <div class="error-suggestions">
+          <h3 class="error-suggestions__title">{t('common.popularPages')}</h3>
+          <ul class="error-suggestions__list">
+            <li><a href={`/${lang}/`}>{t('nav.home')}</a></li>
+            <li><a href={`/${lang}/products/`}>{t('nav.products')}</a></li>
+            <li><a href={`/${lang}/about-soeteck/`}>{t('nav.about')}</a></li>
+            <li><a href={`/${lang}/contact/`}>{t('nav.contact')}</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .soeteck-404-content {
+    padding: var(--soeteck-section-y) 0;
+  }
+
+  .error-404 .error-code {
+    font-size: 8rem;
+    font-weight: 700;
+    color: var(--soeteck-primary);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+
+  .error-404 .soeteck-page-title {
+    margin-bottom: 16px;
+  }
+
+  .error-description {
+    color: var(--soeteck-muted);
+    font-size: 1.125rem;
+    margin-bottom: 32px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+  }
+
+  .error-search {
+    max-width: 400px;
+    margin: 0 auto 48px;
+  }
+
+  .error-search__label {
+    margin-bottom: 16px;
+    font-weight: 500;
+    color: var(--soeteck-text);
+  }
+
+  .soeteck-search-form {
+    display: flex;
+    gap: 10px;
+  }
+
+  .soeteck-search-form__field {
+    flex: 1;
+  }
+
+  .soeteck-search-form__field input {
+    width: 100%;
+    min-height: 48px;
+    padding: 8px 14px;
+    border: 1px solid var(--soeteck-border);
+    border-radius: var(--soeteck-radius-sm);
+    font-size: var(--soeteck-text-md);
+  }
+
+  .soeteck-search-form__field input:focus-visible {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.14);
+    outline: none;
+  }
+
+  .soeteck-search-form .soeteck-button {
+    min-width: auto;
+    white-space: nowrap;
+  }
+
+  .error-suggestions {
+    text-align: left;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px;
+    background: var(--soeteck-surface);
+    border-radius: var(--soeteck-radius-lg);
+  }
+
+  .error-suggestions__title {
+    font-size: 1.125rem;
+    margin-bottom: 16px;
+    color: var(--soeteck-text);
+  }
+
+  .error-suggestions__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    columns: 2;
+    gap: 12px;
+  }
+
+  .error-suggestions__list li {
+    margin-bottom: 8px;
+  }
+
+  .error-suggestions__list a {
+    color: var(--soeteck-primary);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .error-suggestions__list a:hover {
+    color: var(--soeteck-primary-dark);
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .error-404 .error-code {
+      font-size: 5rem;
+    }
+
+    .error-suggestions__list {
+      columns: 1;
+    }
+
+    .soeteck-search-form {
+      flex-direction: column;
+    }
+  }
+</style>

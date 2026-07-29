@@ -1,25 +1,45 @@
 ---
-import { NEWSROOM_FACTS, NEWSROOM_TOPICS } from './news-releases-content';
+import { ARCHIVE_EN } from './news-releases-content';
+import { ARCHIVE_ZH } from './news-releases-content-zh';
+import { ARCHIVE_RU } from './news-releases-content-ru';
+import { ARCHIVE_PT } from './news-releases-content-pt';
+import { ARCHIVE_ES } from './news-releases-content-es';
+import type { SidebarContent } from './news-releases-content';
+
+interface Props {
+  lang?: string;
+}
+
+const { lang = 'en' } = Astro.props;
+
+const contentMap: Record<string, SidebarContent> = {
+  en: ARCHIVE_EN.sidebar,
+  zh: ARCHIVE_ZH.sidebar,
+  ru: ARCHIVE_RU.sidebar,
+  pt: ARCHIVE_PT.sidebar,
+  es: ARCHIVE_ES.sidebar,
+};
+const t = contentMap[lang] ?? ARCHIVE_EN.sidebar;
 ---
-<aside class="newsroom-sidebar" aria-label="Newsroom information">
+<aside class="newsroom-sidebar" aria-label={t.inquiriesLabel}>
   <section class="newsroom-sidebar__card">
-    <p class="newsroom-sidebar__label">News Topics</p>
+    <p class="newsroom-sidebar__label">{t.newsTopicsLabel}</p>
     <div class="newsroom-topics">
-      {NEWSROOM_TOPICS.map((topic) => <span>{topic}</span>)}
+      {t.newsTopics.map((topic) => <span>{topic}</span>)}
     </div>
   </section>
 
   <section class="newsroom-sidebar__card newsroom-sidebar__card--contact">
-    <p class="newsroom-sidebar__label">Media & Business Inquiries</p>
-    <h2>Need official information from Soeteck?</h2>
-    <p>Contact our team for media requests, partnership discussions, product information, or project cooperation.</p>
-    <a class="newsroom-sidebar__link" href="/en/contact-us/">Contact Soeteck</a>
+    <p class="newsroom-sidebar__label">{t.inquiriesLabel}</p>
+    <h2>{t.inquiriesTitle}</h2>
+    <p>{t.inquiriesText}</p>
+    <a class="newsroom-sidebar__link" href={`/${lang}/contact-us/`}>{t.inquiriesCta}</a>
   </section>
 
   <section class="newsroom-sidebar__card">
-    <p class="newsroom-sidebar__label">Company Snapshot</p>
+    <p class="newsroom-sidebar__label">{t.companyLabel}</p>
     <ul class="newsroom-facts">
-      {NEWSROOM_FACTS.map((fact) => <li>{fact}</li>)}
+      {t.companyFacts.map((fact) => <li>{fact}</li>)}
     </ul>
   </section>
 </aside>
@@ -45,9 +65,9 @@ import { NEWSROOM_FACTS, NEWSROOM_TOPICS } from './news-releases-content';
   }
 
   .newsroom-sidebar__label {
-    margin: 0 0 8px;
+    margin: 0 0 14px;
     color: var(--soeteck-primary);
-    font-size: var(--soeteck-text-xs);
+    font-size: var(--soeteck-text-sm);
     font-weight: var(--soeteck-weight-bold);
     letter-spacing: 0.08em;
     line-height: 1.2;
@@ -57,8 +77,6 @@ import { NEWSROOM_FACTS, NEWSROOM_TOPICS } from './news-releases-content';
   .newsroom-sidebar__card h2 {
     margin: 0 0 12px;
     color: var(--soeteck-text);
-    font-size: 1.25rem;
-    line-height: 1.25;
   }
 
   .newsroom-sidebar__card p:not(.newsroom-sidebar__label) {

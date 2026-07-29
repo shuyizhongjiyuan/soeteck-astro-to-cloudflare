@@ -32,7 +32,9 @@ const globalConfig = await fetchGlobalConfig(lang);
   </head>
   <body>
     <Header globalConfig={globalConfig} lang={lang} />
-    <slot />
+    <main id="main" class="site-main">
+      <slot />
+    </main>
     <Footer globalConfig={globalConfig} lang={lang} />
     <script>
       import { initLightbox } from '@/lib/lightbox';
@@ -1719,9 +1721,20 @@ const globalConfig = await fetchGlobalConfig(lang);
   }
 
   .footer-social-links a:hover {
-    background: var(--soeteck-primary);
     color: #fff;
     transform: translateY(-1px);
+  }
+
+  .footer-social-links a[aria-label="LinkedIn"]:hover {
+    background: #0a66c2;
+  }
+
+  .footer-social-links a[aria-label="Facebook"]:hover {
+    background: #1877f2;
+  }
+
+  .footer-social-links a[aria-label="YouTube"]:hover {
+    background: #ff0000;
   }
 
   .footer-social-links svg {
@@ -2108,7 +2121,7 @@ const globalConfig = await fetchGlobalConfig(lang);
     background: #fff;
     font-family: var(--soeteck-font-body);
     font-size: var(--soeteck-text-md);
-    line-height: 1.62;
+    line-height: 1.7;
   }
 
   img,
@@ -2131,6 +2144,17 @@ const globalConfig = await fetchGlobalConfig(lang);
     color: var(--soeteck-primary-dark);
   }
 
+  a:focus-visible {
+    outline: 2px solid var(--soeteck-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  a:active {
+    color: var(--soeteck-primary-dark);
+    opacity: 0.8;
+  }
+
   h1,
   h2,
   h3,
@@ -2143,6 +2167,23 @@ const globalConfig = await fetchGlobalConfig(lang);
     line-height: 1.2;
   }
 
+  /* 全站标题字号规范（2026-07-27 ADR-014）—— About 页面设计推广到全站
+     产品单页（ProductSingle）和博客单页（ArticleContent）保持原设计 */
+  h2 {
+    font-size: clamp(1.85rem, 3.1vw, 2.5rem);
+    line-height: 1.14;
+  }
+
+  h3 {
+    font-size: clamp(1.12rem, 1.35vw, 1.36rem);
+    line-height: 1.25;
+  }
+
+  h4 {
+    font-size: clamp(1rem, 1.1vw, 1.125rem);
+    line-height: 1.35;
+  }
+
   p {
     margin-bottom: 1em;
   }
@@ -2153,7 +2194,7 @@ const globalConfig = await fetchGlobalConfig(lang);
   }
 
   .soeteck-eyebrow {
-    margin: 0 0 12px;
+    margin: 0 0 20px;
     color: var(--soeteck-primary);
     font-family: var(--soeteck-font-ui);
     font-size: var(--soeteck-text-sm);
@@ -2163,9 +2204,14 @@ const globalConfig = await fetchGlobalConfig(lang);
     text-transform: uppercase;
   }
 
-  main.poc-page {
+  /* 相邻同背景色 section：消除重复顶部间距 */
+  .soeteck-section--adjacent {
+    padding-top: 0 !important;
+  }
+
+  .soeteck-poc-page {
     background: var(--soeteck-surface);
-    padding: 48px 0 88px;
+    padding: var(--soeteck-section-y) 0;
   }
 
   .poc-panel {

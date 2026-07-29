@@ -1,0 +1,1445 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { CONTACT_EN, type ContactContent, COUNTRIES } from './contact-content';
+import { CONTACT_ZH } from './contact-content-zh';
+import { CONTACT_RU } from './contact-content-ru';
+import { CONTACT_PT } from './contact-content-pt';
+import { CONTACT_ES } from './contact-content-es';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+const t = (key: string): string => getUITranslation(lang, key);
+
+const contentMap: Record<string, ContactContent> = {
+  en: CONTACT_EN,
+  zh: CONTACT_ZH,
+  ru: CONTACT_RU,
+  pt: CONTACT_PT,
+  es: CONTACT_ES,
+};
+const c = contentMap[lang] ?? CONTACT_EN;
+const countries = COUNTRIES;
+
+// Contact data — try ACF option 'company_contact_data' first, then page contentHtml, then fallback defaults
+const contactData = page.sections?.contact ?? {};
+const email = contactData.email || (page.sections?.company_contact_data?.email) || (page.sections?.email) || 'sales@soeteck.com';
+const phoneLabel = contactData.phone_label || (page.sections?.company_contact_data?.phone_label) || 'WhatsApp/Tel';
+const phone = contactData.phone || (page.sections?.company_contact_data?.phone) || '+86 18155158620';
+const phoneUri = String(phone).replace(/[^0-9+]/g, '');
+const wechat = contactData.wechat || (page.sections?.company_contact_data?.wechat) || '18155158620';
+const address = contactData.address || (page.sections?.company_contact_data?.address) || 'Floor 21, Building 8, China Sound Valley, No. 3333, Xiyou Road, Hefei, China';
+const addressUrl = contactData.address_url || (page.sections?.company_contact_data?.address_url) || '';
+const mapEmbed = contactData.map_embed || (page.sections?.company_contact_data?.map_embed) || '';
+const intro = contactData.inquiry_default_intro || (page.sections?.company_contact_data?.inquiry_default_intro) || 'Tell us your industry and interests for tailored solutions and quotes.';
+const submitLabel = contactData.inquiry_submit_label || (page.sections?.company_contact_data?.inquiry_submit_label) || 'Submit';
+const socials = contactData.socials || (page.sections?.company_contact_data?.socials) || {};
+---
+
+<div class="soeteck-contact-page">
+    <!-- Hero Section -->
+    <section class="soeteck-contact-hero" aria-labelledby="soeteck-contact-title">
+      {page.heroImage && (
+        <img
+          class="soeteck-contact-hero__image"
+          src={page.heroImage.path}
+          alt={page.heroImage.alt || ''}
+          fetchpriority="high"
+          loading="eager"
+        />
+      )}
+      <div class="soeteck-contact-hero__overlay" aria-hidden="true"></div>
+      <div class="soeteck-container soeteck-contact-hero__content">
+        <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+        <div class="soeteck-contact-hero__body">
+          <h1 id="soeteck-contact-title" class="soeteck-page-title">{t('product.contactSoeteck')}</h1>
+          <p>{c.heroDesc}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Grid: Form + Contact Info -->
+    <section class="soeteck-contact-main soeteck-section-light" aria-labelledby="soeteck-contact-form-title">
+      <div class="soeteck-container">
+        <div class="soeteck-contact-main__grid">
+          <div class="soeteck-contact-form-card soeteck-card">
+            <h2 id="soeteck-contact-form-title" class="soeteck-section-title">{c.formTitle}</h2>
+            <form class="soeteck-contact-form" data-contact-form aria-describedby="soeteck-contact-form-note">
+              <div class="soeteck-contact-form__grid">
+                <label>
+                  <input type="text" name="name" autocomplete="name" placeholder={t('product.formYourName')} aria-label={t('product.formYourName')} />
+                </label>
+                <label>
+                  <input type="text" name="company" autocomplete="organization" placeholder={t('product.formCompany')} aria-label={t('product.formCompany')} />
+                </label>
+                <div class="soeteck-contact-form__country-wrap">
+                  <div class="soeteck-country-select" data-country-select>
+                    <button type="button" class="soeteck-country-select__trigger" data-country-trigger aria-haspopup="listbox" aria-expanded="false">
+                      <span class="soeteck-country-select__placeholder" data-country-placeholder>{t('product.formCountryPlaceholder')}</span>
+                      <svg class="soeteck-country-select__arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                        <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <div class="soeteck-country-select__dropdown" data-country-dropdown role="listbox" aria-label={t('product.formCountry')}>
+                      <div class="soeteck-country-select__search-wrap">
+                        <svg class="soeteck-country-select__search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                          <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+                          <path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" class="soeteck-country-select__search" data-country-search placeholder="Search countries..." autocomplete="off">
+                      </div>
+                      <div class="soeteck-country-select__list" data-country-list>
+                        {countries.map((c, i) => (
+                          <button type="button" class="soeteck-country-select__option" role="option" data-country-value={c.code} data-country-name={c.name} data-index={i}>
+                            <span class="soeteck-country-select__flag"><img src={c.flagUrl} alt="" width="20" height="15" loading="lazy"></span>
+                            <span class="soeteck-country-select__name">{c.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 隐藏的原生 select，用于表单提交 -->
+                  <select name="country" data-country-native hidden aria-hidden="true">
+                    <option value="">{t('product.formCountryPlaceholder')}</option>
+                    {countries.map(c => (
+                      <option value={c.name} data-country-code={c.code}>{c.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <label>
+                  <input type="tel" name="phone" autocomplete="tel" placeholder={t('product.formPhone')} aria-label={t('product.formPhone')} />
+                </label>
+                <label>
+                  <input type="email" name="email" autocomplete="email" placeholder={t('product.formEmail')} aria-label={t('product.formEmail')} />
+                </label>
+                <label>
+                  <input type="tel" name="whatsapp" placeholder={t('product.formWhatsapp')} aria-label={t('product.formWhatsapp')} />
+                </label>
+                <label class="soeteck-contact-form__wide">
+                  <input type="text" name="subject" placeholder={t('product.formSubject')} aria-label={t('product.formSubject')} />
+                </label>
+                <label class="soeteck-contact-form__wide">
+                  <textarea name="message" rows={6} placeholder={intro} aria-label={t('product.formMessage')}></textarea>
+                </label>
+              </div>
+
+              <div class="soeteck-contact-form__upload-switch">
+                <span class="soeteck-contact-form__upload-switch-inner">
+                  <span class="soeteck-contact-form__upload-switch-label">{t('product.formUploadPrompt')}</span>
+                  <label class="soeteck-contact-form__upload-switch-track" aria-label={t('product.formUploadPrompt')}>
+                    <input type="checkbox" class="soeteck-contact-form__upload-switch-input" data-upload-toggle role="switch" aria-checked="false" />
+                    <span class="soeteck-contact-form__upload-switch-knob"></span>
+                  </label>
+                </span>
+                <!-- Hidden radios for form submission -->
+                <input type="radio" name="needs_file_upload" value="yes" data-upload-yes hidden />
+                <input type="radio" name="needs_file_upload" value="no" data-upload-no checked hidden />
+              </div>
+
+              <div class="soeteck-contact-form__file" aria-hidden="true">
+                <span class="soeteck-contact-form__file-label">{t('product.uploadFiles')}</span>
+                <span class="soeteck-contact-form__file-control">
+                  <span class="soeteck-contact-form__file-actions">
+                    <button class="soeteck-contact-form__file-add" type="button" data-file-trigger tabindex="-1">
+                      <span class="soeteck-contact-form__file-icon" aria-hidden="true">+</span>
+                      <span class="soeteck-contact-form__file-action">{t('product.addFiles')}</span>
+                    </button>
+                    <button type="button" class="soeteck-contact-form__file-clear" data-file-clear hidden>Clear all</button>
+                  </span>
+                  <span class="soeteck-contact-form__file-name" data-file-list>{t('product.noFilesSelected')}</span>
+                </span>
+                <input type="file" name="file_upload[]" multiple tabindex="-1" />
+              </div>
+
+              <button class="soeteck-button soeteck-button-primary" type="submit">{submitLabel}</button>
+
+              <p id="soeteck-contact-form-note" class="soeteck-contact-form__note" hidden>
+                {t('product.formSubmitPending')}
+              </p>
+            </form>
+          </div>
+
+          <aside class="soeteck-contact-info-card" aria-labelledby="soeteck-contact-info-title">
+            <h2 id="soeteck-contact-info-title" class="soeteck-section-title">{t('product.letsTalk')}</h2>
+            <p>{t('product.contactDescription')}</p>
+            <dl class="soeteck-contact-methods">
+              {email && (
+                <div>
+                  <dt>{c.emailLabel}</dt>
+                  <dd><a href={`mailto:${email}`}>{email}</a></dd>
+                </div>
+              )}
+              {phone && (
+                <div>
+                  <dt>{phoneLabel}:</dt>
+                  <dd><a href={`tel:${phoneUri}`}>{phone}</a></dd>
+                </div>
+              )}
+              {wechat && (
+                <div>
+                  <dt>{c.wechatLabel}</dt>
+                  <dd>{wechat}</dd>
+                </div>
+              )}
+              {address && (
+                <div>
+                  <dt>{c.addressLabel}</dt>
+                  <dd>
+                    {addressUrl ? (
+                      <a href={addressUrl} target="_blank" rel="noopener noreferrer">{address}</a>
+                    ) : (
+                      address
+                    )}
+                  </dd>
+                </div>
+              )}
+            </dl>
+
+            <div class="soeteck-contact-socials" aria-label="Social media">
+              <h3 class="soeteck-card-title">{t('product.followUs')}</h3>
+              <ul class="soeteck-contact-socials__list">
+                <li><a href="https://www.linkedin.com/company/soeteck" target="_blank" rel="noopener noreferrer" class="soeteck-contact-socials__link soeteck-contact-socials__link--linkedin">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  <span>LinkedIn</span>
+                </a></li>
+                <li><a href="https://www.facebook.com/soeteck123/" target="_blank" rel="noopener noreferrer" class="soeteck-contact-socials__link soeteck-contact-socials__link--facebook">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                  <span>Facebook</span>
+                </a></li>
+                <li><a href="https://www.youtube.com/@Soeteck" target="_blank" rel="noopener noreferrer" class="soeteck-contact-socials__link soeteck-contact-socials__link--youtube">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                  <span>YouTube</span>
+                </a></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="soeteck-contact-location" aria-labelledby="soeteck-contact-location-title">
+      <div class="soeteck-container">
+        <h2 id="soeteck-contact-location-title" class="soeteck-section-title">{t('product.ourLocation')}</h2>
+        <div class="soeteck-contact-location__frame">
+          {mapEmbed ? (
+            <div set:html={mapEmbed}></div>
+          ) : (
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4021.491121228908!2d117.12300999999998!3d31.818560000000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35cc9f74f8fbc68b%3A0x63b8196145222c2f!2sChina%20Speech%20Vly.%20Ev%20Charging%20Stn.!5e1!3m2!1sen!2sus!4v1784801348119!5m2!1sen!2sus"
+              width="100%"
+              height="420"
+              style="border:0;display:block;"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              title="Soeteck location on Google Maps"
+            ></iframe>
+          )}
+        </div>
+      </div>
+    </section>
+</div>
+
+<script>
+  import { submitContactForm } from '@/lib/inquiry-form';
+
+  document.querySelector<HTMLFormElement>('[data-contact-form]')
+    ?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget as HTMLFormElement;
+      const note = document.getElementById('soeteck-contact-form-note');
+      const submitBtn = form.querySelector<HTMLButtonElement>('[type="submit"]');
+      const fileInput = form.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
+
+      // Loading state
+      submitBtn!.disabled = true;
+      submitBtn!.classList.add('is-loading');
+      note!.hidden = false;
+      note!.textContent = 'Submitting your inquiry...';
+
+      try {
+        await submitContactForm(form, fileInput);
+        // submitContactForm handles redirect on success
+      } catch (err: any) {
+        note!.textContent = err.message || 'Submission failed. Please try again or contact us directly.';
+        note!.classList.add('soeteck-contact-form__note--error');
+        submitBtn!.disabled = false;
+        submitBtn!.classList.remove('is-loading');
+      }
+    });
+
+  // 文件上传开关切换逻辑
+  document.querySelector<HTMLInputElement>('[data-upload-toggle]')
+    ?.addEventListener('change', function () {
+      const fileSection = document.querySelector<HTMLElement>('.soeteck-contact-form__file');
+      const inputYes = document.querySelector<HTMLInputElement>('[data-upload-yes]');
+      const inputNo = document.querySelector<HTMLInputElement>('[data-upload-no]');
+      const isChecked = this.checked;
+      if (fileSection) {
+        fileSection.classList.toggle('is-visible', isChecked);
+      }
+      if (inputYes) inputYes.checked = isChecked;
+      if (inputNo) inputNo.checked = !isChecked;
+    });
+
+  // 文件芯片交互
+  const fileInput = document.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
+  const fileTrigger = document.querySelector<HTMLButtonElement>('[data-file-trigger]');
+  const fileList = document.querySelector<HTMLElement>('[data-file-list]');
+  const fileClear = document.querySelector<HTMLButtonElement>('[data-file-clear]');
+  const fileSection = document.querySelector<HTMLElement>('.soeteck-contact-form__file');
+  let pendingFiles: File[] = [];
+
+  fileTrigger?.addEventListener('click', () => {
+    // Save current files before opening file dialog
+    pendingFiles = Array.from(fileInput?.files || []);
+    fileInput!.value = ''; // Clear so same file can be re-selected
+    fileInput?.click();
+  });
+
+  function mergeFiles(existing: File[], incoming: FileList | null): File[] {
+    const incomingArr = Array.from(incoming || []);
+    // Avoid duplicates by name + size
+    const existingNames = new Set(existing.map(f => `${f.name}-${f.size}`));
+    const newFiles = incomingArr.filter(f => !existingNames.has(`${f.name}-${f.size}`));
+    return [...existing, ...newFiles];
+  }
+
+  function updateFileInput(allFiles: File[]): void {
+    const dt = new DataTransfer();
+    allFiles.forEach(f => dt.items.add(f));
+    fileInput!.files = dt.files;
+  }
+
+  function refreshFileChips(): void {
+    const allFiles = Array.from(fileInput?.files || []);
+    if (allFiles.length === 0) {
+      if (fileList) fileList.textContent = 'No files selected';
+      if (fileClear) fileClear.hidden = true;
+      fileSection?.classList.remove('has-file');
+      return;
+    }
+    const chips = allFiles.map((f, i) => {
+      return `<span class="soeteck-contact-form__file-chip" data-chip-index="${i}">
+        <span class="soeteck-contact-form__file-chip-name">${f.name}</span>
+        <button type="button" class="soeteck-contact-form__file-remove" data-chip-remove="${i}" aria-label="Remove ${f.name}">×</button>
+      </span>`;
+    }).join('');
+    if (fileList) fileList.innerHTML = chips;
+    if (fileClear) fileClear.hidden = false;
+    fileSection?.classList.add('has-file');
+
+    // Bind individual remove buttons
+    document.querySelectorAll<HTMLButtonElement>('[data-chip-remove]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const index = parseInt(btn.getAttribute('data-chip-remove') || '0');
+        const remaining = Array.from(fileInput!.files || []).filter((_, i) => i !== index);
+        updateFileInput(remaining);
+        refreshFileChips();
+      });
+    });
+  }
+
+  fileInput?.addEventListener('change', () => {
+    const merged = mergeFiles(pendingFiles, fileInput?.files || null);
+    updateFileInput(merged);
+    pendingFiles = [];
+    refreshFileChips();
+  });
+
+  // Clear all button
+  fileClear?.addEventListener('click', () => {
+    updateFileInput([]);
+    refreshFileChips();
+  });
+
+  // -------- 自定义国家选择器 --------
+  class CountrySelect {
+    private root: HTMLElement;
+    private trigger: HTMLButtonElement;
+    private dropdown: HTMLElement;
+    private placeholder: HTMLElement;
+    private nativeSelect: HTMLSelectElement;
+    private searchInput: HTMLInputElement;
+    private list: HTMLElement;
+    private options: HTMLElement[];
+    private visibleOptions: HTMLElement[];
+    private selectedCode: string = '';
+    private isOpen: boolean = false;
+    private activeIndex: number = -1;
+
+    constructor(root: HTMLElement) {
+      this.root = root;
+      this.trigger = root.querySelector<HTMLButtonElement>('[data-country-trigger]')!;
+      this.dropdown = root.querySelector<HTMLElement>('[data-country-dropdown]')!;
+      this.placeholder = root.querySelector<HTMLElement>('[data-country-placeholder]')!;
+      this.nativeSelect = root.querySelector<HTMLSelectElement>('[data-country-native]')!;
+      this.searchInput = root.querySelector<HTMLInputElement>('[data-country-search]')!;
+      this.list = root.querySelector<HTMLElement>('[data-country-list]')!;
+      this.options = Array.from(root.querySelectorAll<HTMLElement>('[data-country-value]'));
+      this.visibleOptions = [...this.options];
+
+      this.bindEvents();
+      this.close();
+    }
+
+    private bindEvents(): void {
+      this.trigger.addEventListener('click', () => this.toggle());
+
+      document.addEventListener('click', (e) => {
+        if (!this.root.contains(e.target as Node)) this.close();
+      });
+
+      this.trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); this.open(); this.focusOption(0); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); this.open(); this.focusOption(this.visibleOptions.length - 1); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.toggle(); }
+        if (e.key === 'Escape') this.close();
+      });
+
+      this.options.forEach((opt) => {
+        opt.addEventListener('click', () => this.select(opt));
+        opt.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.select(opt); }
+          if (e.key === 'ArrowDown') { e.preventDefault(); this.focusNext(1); }
+          if (e.key === 'ArrowUp') { e.preventDefault(); this.focusNext(-1); }
+          if (e.key === 'Escape') { e.preventDefault(); this.close(); this.trigger.focus(); }
+          if (e.key === 'Tab') this.close();
+        });
+      });
+
+      // 搜索过滤
+      let searchTimer: number;
+      this.searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimer);
+        searchTimer = window.setTimeout(() => this.filter(), 80);
+      });
+      this.searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); this.focusOption(0); }
+        if (e.key === 'Escape') { e.preventDefault(); this.close(); this.trigger.focus(); }
+      });
+    }
+
+    private toggle(): void {
+      this.isOpen ? this.close() : this.open();
+    }
+
+    private open(): void {
+      this.isOpen = true;
+      this.dropdown.classList.add('is-open');
+      this.trigger.setAttribute('aria-expanded', 'true');
+      requestAnimationFrame(() => this.searchInput.focus());
+    }
+
+    private close(): void {
+      this.isOpen = false;
+      this.dropdown.classList.remove('is-open');
+      this.trigger.setAttribute('aria-expanded', 'false');
+      this.searchInput.value = '';
+      this.filter();
+    }
+
+    private select(opt: HTMLElement): void {
+      const code = opt.getAttribute('data-country-value') || '';
+      const name = opt.getAttribute('data-country-name') || '';
+      const flagImg = opt.querySelector('.soeteck-country-select__flag img');
+      const flagHtml = flagImg ? flagImg.outerHTML : '';
+      this.selectedCode = code;
+      this.placeholder.innerHTML = `${flagHtml} ${name}`;
+      this.placeholder.classList.add('soeteck-country-select__placeholder--selected');
+      this.nativeSelect.value = name;
+
+      this.options.forEach(o => o.classList.remove('is-selected'));
+      opt.classList.add('is-selected');
+
+      this.close();
+      this.trigger.focus();
+    }
+
+    private filter(): void {
+      const q = this.searchInput.value.toLowerCase().trim();
+      this.options.forEach(opt => {
+        const name = (opt.getAttribute('data-country-name') || '').toLowerCase();
+        const code = (opt.getAttribute('data-country-value') || '').toLowerCase();
+        const matches = !q || name.includes(q) || code.includes(q);
+        opt.classList.toggle('is-hidden', !matches);
+      });
+      this.visibleOptions = this.options.filter(o => !o.classList.contains('is-hidden'));
+      this.activeIndex = -1;
+    }
+
+    private focusOption(index: number): void {
+      if (this.visibleOptions.length === 0) return;
+      const idx = Math.max(0, Math.min(index, this.visibleOptions.length - 1));
+      this.visibleOptions.forEach(o => o.classList.remove('is-focused'));
+      this.visibleOptions[idx].classList.add('is-focused');
+      this.visibleOptions[idx].scrollIntoView({ block: 'nearest' });
+      this.activeIndex = idx;
+    }
+
+    private focusNext(dir: number): void {
+      if (this.activeIndex < 0) this.focusOption(0);
+      else this.focusOption(this.activeIndex + dir);
+    }
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-country-select]').forEach(el => new CountrySelect(el));
+</script>
+
+<style is:global>
+  .soeteck-contact-page {
+    --soeteck-contact-content-width: 1200px;
+    --soeteck-contact-content-gutter: 20px;
+    background: var(--soeteck-white);
+  }
+
+  .soeteck-contact-page .soeteck-container {
+    width: min(var(--soeteck-contact-content-width), calc(100% - (var(--soeteck-contact-content-gutter) * 2)));
+    max-width: none;
+    padding-inline: 0;
+  }
+
+  .soeteck-contact-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--soeteck-dark);
+    color: var(--soeteck-white);
+  }
+
+  .soeteck-contact-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .soeteck-contact-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(11, 31, 58, 0.82), rgba(11, 31, 58, 0.4), rgba(11, 31, 58, 0.1));
+  }
+
+  .soeteck-contact-hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 480px;
+  }
+  /* Marketing-focused Hero layout: breadcrumbs absolute positioned */
+  .soeteck-contact-hero__content .soeteck-breadcrumbs--hero {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    margin: 0;
+  }
+  /* Breadcrumbs color is handled by .soeteck-breadcrumbs--hero in Breadcrumbs.astro */
+  .soeteck-contact-hero__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 0;
+    min-height: 480px;
+  }
+
+  .soeteck-contact-hero h1 {
+    font-family: var(--soeteck-font-heading);
+    margin: 0;
+    color: var(--soeteck-white);
+    font-size: var(--soeteck-heading-lg);
+    font-weight: var(--soeteck-weight-bold);
+    line-height: 1.08;
+  }
+
+  .soeteck-contact-hero p {
+    max-width: 720px;
+    margin: 22px 0 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+    line-height: 1.6;
+  }
+
+  .soeteck-contact-main.soeteck-section-light {
+    padding: var(--soeteck-section-y) 0;
+    background: var(--soeteck-white);
+  }
+
+  .soeteck-contact-main__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+    gap: clamp(56px, 7vw, 120px);
+    align-items: start;
+  }
+
+  .soeteck-contact-form-card {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .soeteck-contact-form-card:hover {
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .soeteck-contact-form-card h2,
+  .soeteck-contact-info-card h2,
+  .soeteck-contact-location h2 {
+    margin: 0 0 28px;
+    color: var(--soeteck-text);
+  }
+
+  .soeteck-contact-form-card #soeteck-contact-form-title {
+    margin-bottom: 24px;
+  }
+
+  .soeteck-contact-info-card h2 {
+    margin-bottom: 20px;
+  }
+
+  .soeteck-contact-form__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .soeteck-contact-form label {
+    display: grid;
+    gap: 6px;
+    color: var(--soeteck-text);
+    font-size: 0.8125rem;
+    font-weight: var(--soeteck-weight-semibold);
+    letter-spacing: 0.02em;
+  }
+
+  .soeteck-contact-form__country-wrap {
+    display: grid;
+    gap: 0;
+  }
+
+  .soeteck-contact-form input,
+  .soeteck-contact-form textarea {
+    width: 100%;
+    min-height: 50px;
+    border: 1.5px solid #dce0e6;
+    border-radius: 8px;
+    background: var(--soeteck-white);
+    color: #1e293b;
+    padding: 0 16px;
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.5;
+    transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .soeteck-contact-form textarea {
+    padding: 14px 16px;
+    min-height: 150px;
+    resize: vertical;
+  }
+
+  .soeteck-contact-form input::placeholder,
+  .soeteck-contact-form textarea::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    opacity: 1;
+  }
+
+  .soeteck-contact-form input:hover,
+  .soeteck-contact-form textarea:hover {
+    border-color: #b0b8c4;
+  }
+
+  .soeteck-contact-form input:focus-visible,
+  .soeteck-contact-form textarea:focus-visible {
+    outline: none;
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3.5px rgba(26, 133, 229, 0.12);
+    background: #fafcff;
+  }
+
+
+  .soeteck-contact-form__wide {
+    grid-column: 1 / -1;
+  }
+
+  .soeteck-country-select {
+    position: relative;
+    width: 100%;
+  }
+
+  .soeteck-country-select__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 50px;
+    padding: 0 16px;
+    border: 1.5px solid #dce0e6;
+    border-radius: 8px;
+    background: var(--soeteck-white);
+    cursor: pointer;
+    font-family: 'Sora', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #1e293b;
+    text-align: left;
+    transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .soeteck-country-select__trigger:hover {
+    border-color: #b0b8c4;
+  }
+
+  .soeteck-country-select__trigger:focus-visible {
+    outline: none;
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3.5px rgba(26, 133, 229, 0.12);
+    background: #fafcff;
+  }
+
+  .soeteck-country-select__placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+  }
+
+  .soeteck-country-select__placeholder--selected {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #1e293b;
+    font-weight: 500;
+    font-size: 0.9375rem;
+  }
+
+  .soeteck-country-select__placeholder--selected .soeteck-country-select__flag img {
+    display: block;
+    width: 20px;
+    height: 15px;
+    border-radius: 2px;
+  }
+
+  .soeteck-country-select__arrow {
+    flex-shrink: 0;
+    width: 10px;
+    height: 6px;
+    color: #94a3b8;
+    transition: transform 220ms ease;
+  }
+
+  .soeteck-country-select__trigger[aria-expanded="true"] .soeteck-country-select__arrow {
+    transform: rotate(180deg);
+  }
+
+  /* —— 下拉菜单 —— */
+  .soeteck-country-select__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+  }
+
+  .soeteck-country-select__dropdown.is-open {
+    display: block;
+  }
+
+  .soeteck-country-select__search-wrap {
+    position: relative;
+    padding: 10px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .soeteck-country-select__search-icon {
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: #94a3b8;
+    pointer-events: none;
+  }
+
+  input.soeteck-country-select__search {
+    all: unset;
+    display: block;
+    width: 100%;
+    min-height: 36px;
+    padding: 0 16px 0 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background: #f8fafc;
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #1e293b;
+    line-height: 1.4;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 200ms ease, background 200ms ease;
+  }
+
+  input.soeteck-country-select__search:focus {
+    border-color: var(--soeteck-primary);
+    background: #fff;
+  }
+
+  input.soeteck-country-select__search::placeholder {
+    color: #94a3b8;
+  }
+
+  .soeteck-country-select__search:focus {
+    border-color: var(--soeteck-primary);
+    background: #fff;
+  }
+
+  .soeteck-country-select__search::placeholder {
+    color: #94a3b8;
+  }
+
+  .soeteck-country-select__list {
+    max-height: 280px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px;
+  }
+
+  .soeteck-country-select__list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .soeteck-country-select__list::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .soeteck-country-select__list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+  }
+
+  .soeteck-country-select__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    cursor: pointer;
+    font-family: 'Sora', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
+    transition: background 120ms ease;
+  }
+
+  .soeteck-country-select__option:hover,
+  .soeteck-country-select__option.is-focused {
+    background: #f1f5f9;
+  }
+
+  .soeteck-country-select__option.is-selected {
+    background: #eff6ff;
+    color: var(--soeteck-primary);
+    font-weight: 600;
+  }
+
+  .soeteck-country-select__option.is-hidden {
+    display: none;
+  }
+
+  .soeteck-country-select__flag {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    width: 24px;
+    height: 18px;
+  }
+
+  .soeteck-country-select__flag img {
+    display: block;
+    width: 20px;
+    height: 15px;
+    border-radius: 2px;
+    object-fit: cover;
+  }
+
+  .soeteck-country-select__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* ── Upload switch toggle ── */
+  .soeteck-contact-form__upload-switch {
+    display: block;
+    margin: 24px 0 24px;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  .soeteck-contact-form__upload-switch-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .soeteck-contact-form__upload-switch-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.4;
+  }
+
+  .soeteck-contact-form__upload-switch-track {
+    position: relative;
+    width: 46px;
+    height: 24px;
+    border-radius: 12px;
+    background: #d1d5db;
+    cursor: pointer;
+    transition: background 200ms ease;
+    flex-shrink: 0;
+  }
+
+  .soeteck-contact-form__upload-switch-track:has(input:checked) {
+    background: var(--soeteck-primary);
+  }
+
+  .soeteck-contact-form__upload-switch-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 2;
+  }
+
+  .soeteck-contact-form__upload-switch-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+  }
+
+  .soeteck-contact-form__upload-switch-track:has(input:checked) .soeteck-contact-form__upload-switch-knob {
+    transform: translateX(22px);
+  }
+
+  /* ── File upload area ── */
+  .soeteck-contact-form__file {
+    max-height: 0;
+    margin-top: 0;
+    overflow: hidden;
+    transition: max-height 300ms ease, margin-top 300ms ease;
+  }
+
+  .soeteck-contact-form__file.is-visible {
+    max-height: 320px;
+    margin-top: 24px;
+  }
+
+  .soeteck-contact-form__file-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1e293b;
+  }
+
+  .soeteck-contact-form__file-control {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    min-height: 54px;
+    padding: 8px 12px;
+    border: 1.5px solid #dce0e6;
+    border-radius: 8px;
+    background: #fff;
+    transition: border-color 200ms ease, box-shadow 200ms ease;
+  }
+
+  .soeteck-contact-form__file-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .soeteck-contact-form__file:hover .soeteck-contact-form__file-control,
+  .soeteck-contact-form__file:focus-within .soeteck-contact-form__file-control {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.08);
+  }
+
+  .soeteck-contact-form__file-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 10px 0 0;
+    border: 0;
+    background: transparent;
+    color: #1e293b;
+    cursor: pointer;
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .soeteck-contact-form__file-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(26, 133, 229, 0.2);
+    border-radius: 50%;
+    background: rgba(26, 133, 229, 0.06);
+    color: var(--soeteck-primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1;
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+  }
+
+  .soeteck-contact-form__file-add:hover .soeteck-contact-form__file-icon,
+  .soeteck-contact-form__file-add:focus-visible .soeteck-contact-form__file-icon {
+    background: var(--soeteck-primary);
+    color: #fff;
+    transform: scale(1.05);
+  }
+
+  .soeteck-contact-form__file-action {
+    color: #1e293b;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .soeteck-contact-form__file-name {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    min-height: 36px;
+    color: #94a3b8;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .soeteck-contact-form__file-chip {
+    display: inline-flex;
+    align-items: center;
+    max-width: 240px;
+    min-height: 26px;
+    overflow: hidden;
+    border: 1px solid rgba(26, 133, 229, 0.15);
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .soeteck-contact-form__file-chip-name {
+    overflow: hidden;
+    padding: 3px 6px 3px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .soeteck-contact-form__file-remove {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 26px;
+    align-self: stretch;
+    width: 26px;
+    min-width: 26px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 1px solid rgba(26, 133, 229, 0.12);
+    border-radius: 0;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    line-height: 1;
+    transition: background 120ms ease, color 120ms ease;
+  }
+
+  .soeteck-contact-form__file-remove:hover,
+  .soeteck-contact-form__file-remove:focus-visible {
+    background: rgba(220, 38, 38, 0.08);
+    color: #dc2626;
+  }
+
+  .soeteck-contact-form__file.has-file .soeteck-contact-form__file-control {
+    border-color: rgba(26, 133, 229, 0.35);
+  }
+
+  .soeteck-contact-form__file.has-file .soeteck-contact-form__file-icon {
+    background: var(--soeteck-primary);
+    color: #fff;
+  }
+
+  .soeteck-contact-form__file.has-file .soeteck-contact-form__file-name {
+    color: #475569;
+  }
+
+  .soeteck-contact-form__file-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 4px;
+    background: #fee2e2;
+    color: #dc2626;
+    font-family: 'Sora', system-ui, sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 120ms ease;
+    white-space: nowrap;
+  }
+
+  .soeteck-contact-form__file-clear:hover {
+    background: #fecaca;
+  }
+
+  .soeteck-contact-form__file-clear[hidden] {
+    display: none;
+  }
+
+  .soeteck-contact-form__file input[type="file"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+
+  /* ── Submit button ── */
+  .soeteck-contact-form__note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0 0;
+    color: var(--soeteck-primary-dark);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+    min-height: 20px;
+  }
+
+  .soeteck-contact-form__note[hidden] {
+    display: none;
+  }
+
+  .soeteck-contact-form__note--error {
+    color: #dc2626;
+  }
+
+  .soeteck-contact-form .soeteck-button.soeteck-button-primary {
+    margin-top: 25px;
+    width: 100%;
+  }
+
+  /* ── Form validation states (via JS-added data attributes) ── */
+  .soeteck-contact-form input[data-invalid],
+  .soeteck-contact-form select[data-invalid],
+  .soeteck-contact-form textarea[data-invalid] {
+    border-color: #dc2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+  }
+
+  .soeteck-contact-form input[data-valid],
+  .soeteck-contact-form select[data-valid],
+  .soeteck-contact-form textarea[data-valid] {
+    border-color: #16a34a;
+  }
+
+  .soeteck-contact-form .soeteck-field-error {
+    grid-column: 1 / -1;
+    margin-top: -10px;
+    color: #dc2626;
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+  }
+
+  /* ── Submit button loading spinner ── */
+  .soeteck-button.is-loading,
+  .soeteck-button-primary.is-loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+  }
+
+  .soeteck-button.is-loading::after,
+  .soeteck-button-primary.is-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: soeteck-spin 0.6s linear infinite;
+  }
+
+  @keyframes soeteck-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ── Submit button error state ── */
+  .soeteck-button-primary.is-error {
+    background: #dc2626;
+    border-color: #dc2626;
+  }
+
+  /* ── Submit button disabled state ── */
+  .soeteck-button:disabled,
+  .soeteck-button-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .soeteck-contact-form__note--error {
+    color: #dc2626;
+  }
+
+  .soeteck-contact-form__note--success {
+    color: #16a34a;
+  }
+
+  .soeteck-contact-info-card {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .soeteck-contact-info-card > p {
+    margin: 0 0 26px;
+    color: var(--soeteck-muted);
+    font-size: var(--soeteck-text-md);
+  }
+
+  .soeteck-contact-methods {
+    display: grid;
+    gap: 20px;
+    margin: 0;
+  }
+
+  .soeteck-contact-methods div {
+    display: grid;
+    gap: 6px;
+  }
+
+  .soeteck-contact-methods dt {
+    color: var(--soeteck-text);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-bold);
+  }
+
+  .soeteck-contact-methods dd {
+    margin: 0;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-md);
+    line-height: 1.55;
+  }
+
+  .soeteck-contact-methods a {
+    color: var(--soeteck-primary);
+    font-weight: var(--soeteck-weight-semibold);
+  }
+
+  .soeteck-contact-socials {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--soeteck-border-soft);
+  }
+
+  .soeteck-contact-socials h3 {
+    margin: 0 0 14px;
+    color: var(--soeteck-text);
+  }
+
+
+  .soeteck-contact-socials__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .soeteck-contact-socials__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 36px;
+    padding: 0 14px;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: 999px;
+    background: var(--soeteck-surface);
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-semibold);
+    text-decoration: none;
+    transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+  }
+
+  .soeteck-contact-socials__link:hover {
+    border-color: var(--soeteck-primary);
+    color: var(--soeteck-primary);
+  }
+
+  .soeteck-contact-socials__link svg {
+    flex-shrink: 0;
+  }
+
+  .soeteck-contact-socials__link--linkedin:hover { color: #0a66c2; border-color: #0a66c2; }
+  .soeteck-contact-socials__link--facebook:hover { color: #1877f2; border-color: #1877f2; }
+  .soeteck-contact-socials__link--youtube:hover { color: #ff0000; border-color: #ff0000; }
+
+  .soeteck-contact-location {
+    padding: var(--soeteck-section-y) 0;
+    background: var(--soeteck-surface);
+  }
+
+  .soeteck-contact-location h2 {
+    text-align: center;
+  }
+
+  .soeteck-contact-location__frame {
+    min-height: 420px;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    border-radius: var(--soeteck-radius-lg);
+    background: var(--soeteck-white);
+    box-shadow: 0 18px 46px rgba(15, 23, 42, 0.07);
+  }
+
+  .soeteck-contact-location__frame iframe {
+    display: block;
+    width: 100%;
+    min-height: 420px;
+    border: 0;
+  }
+
+  .soeteck-contact-location__fallback {
+    display: grid;
+    min-height: 420px;
+    place-items: center;
+    padding: 32px;
+    text-align: center;
+  }
+
+  .soeteck-contact-location__fallback p {
+    max-width: 680px;
+    margin: 0;
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-lg);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 991px) {
+    .soeteck-contact-hero__content {
+      min-height: 420px;
+    }
+
+    .soeteck-contact-main__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .soeteck-contact-info-card {
+      order: 2;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-contact-hero__content {
+      min-height: 360px;
+    }
+    .soeteck-contact-hero__content .soeteck-breadcrumbs--hero {
+      top: 15px;
+    }
+    .soeteck-contact-hero__body {
+      min-height: 360px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .soeteck-contact-hero__content {
+      min-height: 360px;
+    }
+    .soeteck-contact-hero__body {
+      padding-block: 56px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .soeteck-contact-form-card,
+    .soeteck-contact-info-card {
+      padding: 22px 18px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .soeteck-country-select__dropdown {
+      transition: none;
+    }
+  }
+</style>
