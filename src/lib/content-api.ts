@@ -323,13 +323,29 @@ export interface ContentApiResponse {
   featuredArticles?: ContentApiArticleCard[];
 }
 
+/**
+ * 统一媒体 URL：将 CMS 域名替换为相对路径，
+ * 确保所有图片/资源走 Worker 代理（保护主域 SEO 权重）。
+ * 例如：https://cms.soeteck.com/resources/xxx → /resources/xxx
+ */
+function normalizeMediaUrls<T>(data: T): T {
+  const CMS_ORIGIN = 'https://cms.soeteck.com';
+  const raw = JSON.stringify(data);
+  // Replace absolute CMS URLs in /resources/ with relative paths
+  const normalized = raw.replace(
+    new RegExp(`${CMS_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/resources/`, 'g'),
+    '/resources/'
+  );
+  return JSON.parse(normalized);
+}
+
 export async function fetchPocRoutes(): Promise<PocRoute[]> {
   const response = await fetch(`${API_BASE_URL}/wp-json/soeteck/v1/routes?dynamic=1`);
   if (!response.ok) {
     throw new Error(`Failed to fetch PoC routes: ${response.status}`);
   }
 
-  const data = (await response.json()) as RouteListResponse;
+  const data = normalizeMediaUrls(await response.json()) as RouteListResponse;
   return data.routes;
 }
 
@@ -340,7 +356,7 @@ export async function fetchRouteContent(route: PocRoute, lang: string = 'en'): P
     throw new Error(`Failed to fetch ${route.path}: ${response.status}`);
   }
 
-  return (await response.json()) as ContentApiResponse;
+  return normalizeMediaUrls(await response.json()) as ContentApiResponse;
 }
 
 /**
@@ -358,7 +374,7 @@ export async function fetchGlobalConfig(lang?: string): Promise<GlobalConfigResp
     throw new Error(`Failed to fetch global config: ${response.status}`);
   }
 
-  return (await response.json()) as GlobalConfigResponse;
+  return normalizeMediaUrls(await response.json()) as GlobalConfigResponse;
 }
 
 /**
@@ -376,7 +392,7 @@ export async function fetchPreviewContent(
   if (!response.ok) {
     throw new Error(`Preview fetch failed for post ${postId}: ${response.status}`);
   }
-  return (await response.json()) as ContentApiResponse;
+  return normalizeMediaUrls(await response.json()) as ContentApiResponse;
 }
 
 function endpointForRouteType(routeType: RouteType): string {

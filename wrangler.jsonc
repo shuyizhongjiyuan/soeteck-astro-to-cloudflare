@@ -3,10 +3,12 @@
   // Last rebuild: 2026-07-29T07:20:00Z — fix Astro 7 output path (dist/client/)
   // 用途：跳过 wrangler 对 Astro SSR adapter 的自动安装，
   //       把 `output: 'static'` 生成的 dist/client/ 作为静态资源发布。
+  //       worker.js 处理 /resources/* 代理到 CMS，保护主域图片 SEO。
   // 参考：https://developers.cloudflare.com/workers/static-assets/
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "soeteck-astro-to-cloudflare",
   "compatibility_date": "2026-07-02",
+  "main": "./src/worker.js",
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "404-page"
