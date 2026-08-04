@@ -1,0 +1,107 @@
+---
+/**
+ * ProductsSectionC — Non-card flat 4×2 product grid (Variant C).
+ * White band below the fullscreen hero. No cards, no group labels,
+ * no background behind images. Hover swaps primary ↔ hover image.
+ *
+ * @package Soeteck\Astro
+ */
+import type { HomeContent } from '../home-content';
+
+interface Props {
+  intro: NonNullable<HomeContent['productsIntro']>;
+  productCategories: HomeContent['productCategories'];
+}
+
+const { intro, productCategories } = Astro.props;
+const allItems = productCategories.groups.flatMap((g) => g.items);
+---
+
+<section class="home-products-c" id="home-products-c" aria-labelledby="products-c-title">
+  <div class="soeteck-container">
+    <div class="home-section__head home-section__head">
+      <p class="home-section__eyebrow">{intro.eyebrow}</p>
+      <h2 id="products-c-title" class="home-section__title">{intro.title}</h2>
+      <p class="home-section__lead">{intro.text}</p>
+    </div>
+
+    <div class="home-products-c__grid">
+      {allItems.map((item) => (
+        <a href={item.ctaLink} class="home-product-c">
+          <span class="home-product-c__media">
+            <img class="home-product-c__img home-product-c__img--primary" src={item.image.path} alt={item.image.alt} width="400" height="400" loading="lazy" decoding="async" />
+            <img class="home-product-c__img home-product-c__img--hover" src={item.hoverImage.path} alt={item.hoverImage.alt} width="400" height="400" loading="lazy" decoding="async" />
+          </span>
+          <span class="home-product-c__title">{item.title}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ PRODUCTS C — non-card flat 4×2 ════════════════════════ */
+.home-products-c {
+  padding: var(--soeteck-section-y) 0;
+  background: var(--soeteck-white);
+}
+.home-products-c :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ─────────────────────────────────────────── */
+.home-section__head { max-width: 760px; margin: 0 auto 48px; text-align: center; }
+.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-section__title { margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1.12; color: var(--soeteck-text); }
+.home-section__lead { margin: 16px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: var(--soeteck-text-soft); }
+
+/* ── Flat 4×2 grid — no card, no image bg ─────────────────── */
+.home-products-c__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px 20px;
+}
+.home-product-c {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+}
+.home-product-c__media {
+  position: relative;
+  aspect-ratio: 1;
+  display: block;
+}
+.home-product-c__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease, opacity 0.35s ease;
+}
+.home-product-c__img--hover { opacity: 0; }
+.home-product-c:hover .home-product-c__img--primary {
+  opacity: 0;
+  transform: scale(1.04);
+}
+.home-product-c:hover .home-product-c__img--hover {
+  opacity: 1;
+  transform: scale(1.04);
+}
+.home-product-c__title {
+  margin-top: 12px;
+  text-align: center;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  color: var(--soeteck-text);
+  line-height: 1.35;
+  transition: color 0.25s ease;
+}
+.home-product-c:hover .home-product-c__title { color: var(--soeteck-primary); }
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .home-products-c__grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>

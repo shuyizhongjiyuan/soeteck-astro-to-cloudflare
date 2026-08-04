@@ -126,6 +126,36 @@ const globalConfig = await fetchGlobalConfig(lang);
     transition: transform 0.5s ease;
   }
 
+  /* ── Homepage overlay header ────────────────────────────────
+     初始态透明、悬浮在 hero 背景图之上；滚动后恢复实色。
+     Hero 上拉 70px 使其顶到页面顶部，被透明 header 覆盖的区域
+     透出 hero 背景图。 */
+  body .site-header--overlay {
+    background: transparent;
+    border-top: none;
+    box-shadow: none;
+  }
+  body .site-header--overlay.site-header--scrolled {
+    background: #f3f3f3;
+    border-top: 7px solid #0058a7;
+    box-shadow: 0 1px 5px rgba(33, 33, 33, 0.46);
+  }
+  /* Hero 上拉至页面顶部，透明 header 悬浮其上 */
+  body .site-header--overlay ~ main .home-hero {
+    margin-top: -70px;
+  }
+  /* 未滚动（悬浮在深色 hero 上）时导航文字转白 */
+  body .site-header--overlay:not(.site-header--scrolled) .primary-menu-link,
+  body .site-header--overlay:not(.site-header--scrolled) .submenu-toggle,
+  body .site-header--overlay:not(.site-header--scrolled) .dropdown-chevron,
+  body .site-header--overlay:not(.site-header--scrolled) .header-icon-button,
+  body .site-header--overlay:not(.site-header--scrolled) .language-toggle {
+    color: #fff;
+  }
+  body .site-header--overlay:not(.site-header--scrolled) .menu-toggle-line {
+    background: #fff;
+  }
+
   .header-inner {
     display: flex;
     align-items: center;

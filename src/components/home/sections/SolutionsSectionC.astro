@@ -1,0 +1,196 @@
+---
+/**
+ * SolutionsSectionC — Light editorial full-width bands (Variant C, Option S1).
+ * Roadmap lead-in (01/02/03) + alternating image/text bands with hairline
+ * separators. Non-card, non-immersive.
+ *
+ * @package Soeteck\Astro
+ */
+import type { HomeContent } from '../home-content';
+
+interface Props {
+  solutions: HomeContent['solutions'];
+  transition?: HomeContent['transition'];
+}
+
+const { solutions, transition } = Astro.props;
+const cards = solutions.cards;
+// 合并后的板块头：eyebrow/title 用 solutions（原 home-section__head），text 优先用 transition 引言
+const headTitle = solutions.title;
+const headText = transition?.text ?? solutions.text;
+---
+
+<section class="home-solutions-c" id="home-solutions-c" aria-labelledby="solutions-c-title">
+  <div class="soeteck-container">
+    <div class="home-section__head home-section__head">
+      <p class="home-section__eyebrow">{solutions.eyebrow}</p>
+      <h2 id="solutions-c-title" class="home-section__title">{headTitle}</h2>
+      <p class="home-section__lead">{headText}</p>
+    </div>
+
+    {/* Roadmap — 方案 → 三个架构的过渡引言 */}
+    <div class="home-solutions-c__roadmap" aria-label="Three turnkey architectures">
+      {cards.map((card, i) => (
+        <span class="home-solutions-c__roadmap-item">0{i + 1} · {card.short ?? card.title}</span>
+      ))}
+    </div>
+
+    <div class="home-solutions-c__bands">
+      {cards.map((card, i) => (
+        <a href={card.ctaLink} class={`home-solution-c${i % 2 === 1 ? ' home-solution-c--reverse' : ''}`}>
+          <div class="home-solution-c__media">
+            <img src={card.image.path} alt={card.image.alt} width="640" height="400" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+          </div>
+          <div class="home-solution-c__info">
+            <span class="home-solution-c__index">0{i + 1}</span>
+            <span class="home-solution-c__title">{card.title}</span>
+            <p class="home-solution-c__text">{card.text}</p>
+            <ul class="home-solution-c__features">
+              {card.features.map((f) => <li>{f}</li>)}
+            </ul>
+            <span class="home-solution-c__cta">{card.cta} →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ SOLUTIONS C — light editorial bands (S1) ═══════════════ */
+.home-solutions-c {
+  padding: var(--soeteck-section-y) 0;
+  background: var(--soeteck-white);
+}
+.home-solutions-c :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ─────────────────────────────────────────── */
+.home-section__head { max-width: 760px; margin: 0 auto 48px; text-align: center; }
+.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-section__title { margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1.12; color: var(--soeteck-text); }
+.home-section__lead { margin: 16px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: var(--soeteck-text-soft); }
+
+/* ── Roadmap lead-in ──────────────────────────────────────── */
+.home-solutions-c__roadmap {
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 44px;
+}
+.home-solutions-c__roadmap-item {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--soeteck-white);
+  border: 1px solid var(--soeteck-border);
+  color: var(--soeteck-text-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ── Bands ────────────────────────────────────────────────── */
+.home-solutions-c__bands { display: flex; flex-direction: column; }
+.home-solutions-c__bands .home-solution-c:last-child {
+  border-bottom: none;
+}
+.home-solution-c {
+  display: flex;
+  align-items: center;
+  gap: clamp(32px, 5vw, 64px);
+  padding: 36px 0;
+  border-bottom: 1px solid var(--soeteck-border-soft);
+  text-decoration: none;
+}
+.home-solution-c--reverse { flex-direction: row-reverse; }
+
+.home-solution-c__media {
+  flex: 0 0 50%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: linear-gradient(160deg, #f2f7fd 0%, #e9f2fb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.home-solution-c__media img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+.home-solution-c:hover .home-solution-c__media img { transform: scale(1.04); }
+
+.home-solution-c__info { flex: 1; }
+.home-solution-c__index {
+  display: block;
+  color: var(--soeteck-primary);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+.home-solution-c__title {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(20px, 2.4vw, 27px);
+  font-weight: 800;
+  color: var(--soeteck-text);
+  line-height: 1.2;
+}
+.home-solution-c__text {
+  margin: 10px 0 0;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--soeteck-text-soft);
+}
+.home-solution-c__features {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.home-solution-c__features li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--soeteck-text-soft);
+}
+.home-solution-c__features li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--soeteck-primary);
+}
+.home-solution-c__cta {
+  display: inline-flex;
+  margin-top: 18px;
+  padding: 11px 26px;
+  border-radius: 999px;
+  background: var(--soeteck-primary);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.home-solution-c:hover .home-solution-c__cta {
+  background: var(--soeteck-primary-dark);
+  transform: translateY(-1px);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .home-solution-c { flex-direction: column !important; align-items: flex-start; }
+  .home-solution-c__media { width: 100%; flex: none; }
+}
+</style>

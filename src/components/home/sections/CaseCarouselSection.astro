@@ -1,0 +1,318 @@
+---
+/**
+ * CaseCarouselSection — Framed full-screen case carousel (Variant C).
+ * Section head on navy first, then the immersive carousel stage.
+ *
+ * @package Soeteck\Astro
+ */
+import type { HomeContent } from '../home-content';
+
+interface Props {
+  data: HomeContent['projects'];
+}
+
+const { data } = Astro.props;
+const cards = data.cards;
+---
+
+<section class="home-case-carousel" aria-roledescription="carousel" aria-label={data.title}>
+  <div class="soeteck-container">
+    <div class="home-section__head">
+      <p class="home-section__eyebrow">{data.eyebrow}</p>
+      <h2 class="home-section__title">{data.title}</h2>
+      <p class="home-section__lead">{data.text}</p>
+    </div>
+  </div>
+
+  <div class="home-case-carousel__stage">
+    {cards.map((card, i) => (
+      <article class={`home-case-slide${i === 0 ? ' home-case-slide--active' : ''}`} data-index={String(i)} aria-hidden={i === 0 ? 'false' : 'true'}>
+        <img class="home-case-slide__bg" src={card.image.path} alt="" width="1920" height="1080" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
+        <div class="home-case-slide__overlay"></div>
+        <div class="soeteck-container home-case-slide__content">
+          <div class="home-case-slide__metric">
+            <span class="home-case-slide__metric-value">{card.metric}</span>
+            <span class="home-case-slide__metric-label">{card.metricLabel}</span>
+          </div>
+          <p class="home-case-slide__location">{card.location}</p>
+          <h3 class="home-case-slide__title">{card.title}</h3>
+          <p class="home-case-slide__text">{card.text}</p>
+          <a href={card.ctaLink} class="home-case-slide__cta">{card.cta} →</a>
+        </div>
+      </article>
+    ))}
+
+    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--prev" aria-label="Previous case">‹</button>
+    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--next" aria-label="Next case">›</button>
+    <div class="home-case-carousel__controls">
+      <div class="home-case-carousel__thumbs">
+        {cards.map((card, i) => (
+          <button type="button" class={`home-case-carousel__thumb${i === 0 ? ' home-case-carousel__thumb--active' : ''}`} data-index={String(i)} aria-label={`Case ${i + 1}`} aria-selected={i === 0 ? 'true' : 'false'}>
+            <img src={card.image.path} alt={card.title} width="120" height="72" loading="lazy" decoding="async" />
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ CASE CAROUSEL — framed ════════════════════════════════ */
+.home-case-carousel {
+  background: var(--soeteck-navy);
+  color: #fff;
+}
+.home-case-carousel :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ─────────────────────────────────────────── */
+.home-section__head { max-width: 760px; margin: 0 auto 0; padding: clamp(48px, 6vw, 80px) 0 40px; text-align: center; }
+.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-section__title { margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1.12; color: #fff; }
+.home-section__lead { margin: 14px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: rgba(255, 255, 255, 0.78); }
+
+/* ── Carousel stage ───────────────────────────────────────── */
+.home-case-carousel__stage {
+  position: relative;
+  min-height: 690px;
+  overflow: hidden;
+}
+
+/* ── Slides ───────────────────────────────────────────────── */
+.home-case-slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.9s ease, visibility 0s linear 0.9s;
+}
+.home-case-slide--active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.9s ease, visibility 0s linear 0s;
+}
+.home-case-slide__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-case-slide__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(8, 22, 43, 0.9) 0%, rgba(8, 22, 43, 0.55) 55%, rgba(8, 22, 43, 0.2) 100%),
+    linear-gradient(180deg, rgba(8, 22, 43, 0.15) 0%, rgba(8, 22, 43, 0.5) 100%);
+}
+.home-case-slide__content {
+  position: relative;
+  z-index: 1;
+  padding: 40px 0;
+  color: #fff;
+  max-width: 640px;
+  margin-left: 0;
+}
+
+.home-case-slide__metric {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 14px 22px;
+  margin-bottom: 24px;
+  border-radius: var(--soeteck-radius);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  text-align: center;
+}
+.home-case-slide__metric-value {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.home-case-slide__metric-label {
+  margin-top: 4px;
+  font-size: var(--soeteck-text-xs);
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.home-case-slide__location {
+  margin: 0 0 10px;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soeteck-primary);
+}
+.home-case-slide__title {
+  margin: 0 0 14px;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #fff;
+}
+.home-case-slide__text {
+  margin: 0 0 26px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+}
+.home-case-slide__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: var(--soeteck-primary);
+  color: #fff;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+.home-case-slide__cta:hover {
+  background: var(--soeteck-primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ── Controls ─────────────────────────────────────────────── */
+.home-case-carousel__controls {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(8, 22, 43, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+}
+.home-case-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(8, 22, 43, 0.45);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.home-case-carousel__arrow--prev { left: 24px; }
+.home-case-carousel__arrow--next { right: 24px; }
+.home-case-carousel__arrow:hover {
+  background: var(--soeteck-primary);
+  border-color: var(--soeteck-primary);
+}
+.home-case-carousel__thumbs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.home-case-carousel__thumb {
+  width: 120px;
+  height: 72px;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: border-color 0.3s ease, opacity 0.3s ease, transform 0.2s ease;
+}
+.home-case-carousel__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-case-carousel__thumb:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+.home-case-carousel__thumb--active {
+  border-color: var(--soeteck-primary);
+  opacity: 1;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .home-case-carousel__stage { min-height: 480px; }
+  .home-case-carousel__controls { bottom: 18px; padding: 6px 10px; }
+  .home-case-carousel__thumbs { max-width: 200px; overflow-x: auto; }
+  .home-case-carousel__thumb { width: 76px; height: 46px; flex-shrink: 0; }
+  .home-case-carousel__arrow--prev { left: 12px; }
+  .home-case-carousel__arrow--next { right: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-case-slide { transition: opacity 0.2s ease; }
+}
+</style>
+
+<script is:inline>
+(function () {
+  var section = document.querySelector('.home-case-carousel');
+  if (!section) return;
+
+  var slides = section.querySelectorAll('.home-case-slide');
+  var thumbs = section.querySelectorAll('.home-case-carousel__thumb');
+  if (slides.length === 0) return;
+
+  var current = 0;
+  var total   = slides.length;
+  var reduce  = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function goTo(index) {
+    if (index === current) return;
+    slides[current].classList.remove('home-case-slide--active');
+    slides[current].setAttribute('aria-hidden', 'true');
+    thumbs[current].classList.remove('home-case-carousel__thumb--active');
+    thumbs[current].setAttribute('aria-selected', 'false');
+    current = index;
+    slides[current].classList.add('home-case-slide--active');
+    slides[current].setAttribute('aria-hidden', 'false');
+    thumbs[current].classList.add('home-case-carousel__thumb--active');
+    thumbs[current].setAttribute('aria-selected', 'true');
+  }
+
+  section.querySelector('.home-case-carousel__arrow--prev').addEventListener('click', function () {
+    goTo((current - 1 + total) % total);
+  });
+  section.querySelector('.home-case-carousel__arrow--next').addEventListener('click', function () {
+    goTo((current + 1) % total);
+  });
+  thumbs.forEach(function (thumb) {
+    thumb.addEventListener('click', function () {
+      goTo(parseInt(thumb.getAttribute('data-index'), 10));
+    });
+  });
+
+  if (reduce) return;
+  var timer = setInterval(function () {
+    goTo((current + 1) % total);
+  }, 6000);
+  section.addEventListener('mouseenter', function () { clearInterval(timer); });
+  section.addEventListener('mouseleave', function () {
+    timer = setInterval(function () { goTo((current + 1) % total); }, 6000);
+  });
+})();
+</script>

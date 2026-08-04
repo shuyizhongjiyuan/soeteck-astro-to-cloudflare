@@ -1,0 +1,164 @@
+---
+import type { HomeContent } from '../home-content';
+interface Props { data: HomeContent['cta']; }
+const { data } = Astro.props;
+---
+
+<section class="home-cta" aria-labelledby="home-cta-title">
+  <div class="soeteck-container">
+    <div class="home-cta__head">
+      <p class="home-cta__eyebrow">{data.eyebrow}</p>
+      <h2 id="home-cta-title" class="home-cta__title">{data.title}</h2>
+      <p class="home-cta__lead">{data.text}</p>
+    </div>
+    <div class="home-cta__grid">
+      {data.cards.map((card) => (
+        <div class="home-cta-card">
+          <div class="home-cta-card__icon">
+            {card.icon === 'products' && <svg viewBox="0 0 32 32" fill="none"><rect x="5" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="18" y="5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="5" y="18" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="18" y="18" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>}
+            {card.icon === 'solutions' && <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M16 8v16M8 16h16" stroke="currentColor" stroke-width="2"/></svg>}
+            {card.icon === 'engineering' && <svg viewBox="0 0 32 32" fill="none"><path d="M11 22l-5-6 5-6M21 10l5 6-5 6M14 7l4 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+          </div>
+          <h3 class="home-cta-card__title">{card.title}</h3>
+          <p class="home-cta-card__text">{card.text}</p>
+          <a href={card.ctaLink} class="home-cta-card__btn">{card.cta}</a>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ CTA SECTION ═════════════════════════════════════════════════ */
+.home-cta {
+  position: relative;
+  overflow: hidden;
+  padding: var(--soeteck-section-y) 0;
+  background:
+    radial-gradient(circle at 78% 18%, rgba(0, 102, 204, 0.28), transparent 34%),
+    linear-gradient(135deg, #061529 0%, #0a2749 56%, #061529 100%);
+  color: #fff;
+}
+.home-cta :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.home-cta::before {
+  content: '';
+  position: absolute;
+  inset: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+/* ── Section head ──────────────────────────────────────────────── */
+.home-cta__head {
+  position: relative;
+  max-width: 720px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+.home-cta__eyebrow {
+  margin: 0 0 20px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: var(--soeteck-text-sm);
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.home-cta__title {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.1vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.14;
+  color: #fff;
+}
+.home-cta__lead {
+  margin: 18px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Card grid ─────────────────────────────────────────────────── */
+.home-cta__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+/* ── CTA card ──────────────────────────────────────────────────── */
+.home-cta-card {
+  padding: 34px 28px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--soeteck-radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.home-cta-card__icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--soeteck-radius-md);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  margin-bottom: 20px;
+}
+.home-cta-card__icon :global(svg) {
+  width: 26px;
+  height: 26px;
+}
+.home-cta-card__title {
+  margin: 0 0 10px;
+  font-size: clamp(1.12rem, 1.35vw, 1.36rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+}
+.home-cta-card__text {
+  margin: 0 0 20px;
+  font-size: var(--soeteck-text-sm);
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+  flex: 1;
+}
+.home-cta-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 24px;
+  border-radius: 999px;
+  background: #fff;
+  color: #061529;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease;
+}
+.home-cta-card__btn:hover {
+  background: var(--soeteck-primary);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .home-cta__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .home-cta__grid {
+    grid-template-columns: 1fr;
+  }
+  .home-cta::before {
+    display: none;
+  }
+}
+</style>

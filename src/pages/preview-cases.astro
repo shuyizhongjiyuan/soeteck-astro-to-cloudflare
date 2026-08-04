@@ -1,0 +1,159 @@
+---
+/**
+ * Preview page — Case section optimization options for Variant C.
+ * Access: http://localhost:4321/preview-cases/
+ *
+ * Option C1 — Framed full-screen carousel (head + top fade)
+ * Option C2 — Editorial case banners (light, continues S1 language)
+ * Option C3 — Framed half-screen carousel (lighter)
+ */
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HOME_EN } from '@/components/home/home-content';
+
+const c = HOME_EN;
+const projects = c.projects;
+const cases = projects.cards;
+const firstThree = cases.slice(0, 3);
+---
+
+<BaseLayout title="Preview: Case Section — Variant C" lang="en" canonical="https://soeteck.com/preview-cases/" robots="noindex">
+  <!-- ═══ Compare header ═══ -->
+  <div style="padding:40px 24px; background:var(--soeteck-navy); color:#fff;">
+    <div style="max-width:1200px; margin:0 auto;">
+      <p style="color:var(--soeteck-primary); font-size:12px; letter-spacing:.16em; text-transform:uppercase; margin:0 0 8px;">Variant C · Case Section</p>
+      <h1 style="font-size:26px; margin:0 0 8px;">案例板块优化方案对比</h1>
+      <p style="color:rgba(255,255,255,.8); margin:0;">向下滚动查看 <strong>Option C1 / C2 / C3</strong> —— 解决"方案后突然出现深色全屏轮播"的突兀感。</p>
+    </div>
+  </div>
+
+  <!-- ═══ Option C1 — Framed full-screen carousel ═══ -->
+  <section style="background:var(--soeteck-navy); padding:clamp(48px,6vw,80px) 0 0; color:#fff;">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px 40px;">
+      <p class="opt-label" style="color:var(--soeteck-primary);">Option C1 · 带头全屏轮播</p>
+      <p class="opt-why" style="color:rgba(255,255,255,.7);">保留沉浸式全屏轮播，先给深色区一个引言头，顶部渐淡过渡</p>
+      <h2 style="font-size:26px; font-weight:800; margin:14px 0 6px; color:#fff;">{projects.title}</h2>
+      <p style="color:rgba(255,255,255,.78); margin:0 0 32px; max-width:640px;">{projects.text}</p>
+    </div>
+    <div style="position:relative; height:520px; background:#0a1d38;">
+      <img src={cases[0].image.path} alt="" width="1920" height="1080" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,22,43,.92) 0%, rgba(8,22,43,.4) 60%, rgba(8,22,43,.15) 100%);"></div>
+      <div style="position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:48px 24px;">
+        <div style="display:inline-flex; flex-direction:column; align-items:center; padding:12px 20px; border-radius:10px; background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); margin-bottom:18px;">
+          <span style="font-size:26px; font-weight:800; line-height:1;">{cases[0].metric}</span>
+          <span style="font-size:11px; color:rgba(255,255,255,.85); text-transform:uppercase; letter-spacing:.06em;">{cases[0].metricLabel}</span>
+        </div>
+        <p style="margin:0 0 8px; color:var(--soeteck-primary); font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;">{cases[0].location}</p>
+        <h3 style="margin:0 0 10px; font-size:26px; font-weight:800; color:#fff;">{cases[0].title}</h3>
+        <p style="margin:0 0 20px; max-width:520px; font-size:15px; line-height:1.7; color:rgba(255,255,255,.85);">{cases[0].text}</p>
+        <span style="display:inline-flex; padding:12px 28px; border-radius:999px; background:var(--soeteck-primary); color:#fff; font-size:14px; font-weight:600;">{cases[0].cta} →</span>
+      </div>
+      <div style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:2;">
+        <span style="width:10px; height:10px; border-radius:50%; background:var(--soeteck-primary);"></span>
+        <span style="width:10px; height:10px; border-radius:50%; border:1.5px solid rgba(255,255,255,.5);"></span>
+        <span style="width:10px; height:10px; border-radius:50%; border:1.5px solid rgba(255,255,255,.5);"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Option C2 — Editorial case banners (light, S1 language) ═══ -->
+  <section style="background:var(--soeteck-surface); padding:clamp(56px,7vw,88px) 0; color:var(--soeteck-text);">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
+      <p class="opt-label">Option C2 · 编辑式案例横幅（延续 S1 语言）</p>
+      <p class="opt-why">浅色横幅 + 发丝线 + 数据徽标，与方案区视觉连贯，无深色突变</p>
+      <h2 style="font-size:26px; font-weight:800; margin:14px 0 6px; color:var(--soeteck-text);">{projects.title}</h2>
+      <p style="color:var(--soeteck-text-soft); margin:0 0 32px; max-width:640px;">{projects.text}</p>
+    </div>
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px;">
+      {firstThree.map((cs, i) => (
+        <a href={cs.ctaLink} class="c2-band" style={i % 2 === 1 ? 'flex-direction:row-reverse;' : ''}>
+          <div class="c2-media">
+            <img src={cs.image.path} alt={cs.image.alt} width="640" height="400" loading="lazy" />
+            <span class="c2-metric"><strong>{cs.metric}</strong><small>{cs.metricLabel}</small></span>
+          </div>
+          <div class="c2-info">
+            <span class="c2-location">{cs.location}</span>
+            <span class="c2-title">{cs.title}</span>
+            <p class="c2-text">{cs.text}</p>
+            <span class="c2-cta">{cs.cta} →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══ Option C3 — Framed half-screen carousel ═══ -->
+  <section style="background:var(--soeteck-navy); padding:clamp(48px,6vw,80px) 0 0; color:#fff;">
+    <div style="max-width:1200px; margin:0 auto; padding:0 24px 40px;">
+      <p class="opt-label" style="color:var(--soeteck-primary);">Option C3 · 带头半屏轮播</p>
+      <p class="opt-why" style="color:rgba(255,255,255,.7);">保留轮播但高度减半（约 55vh），弱化全屏压迫感</p>
+      <h2 style="font-size:26px; font-weight:800; margin:14px 0 6px; color:#fff;">{projects.title}</h2>
+      <p style="color:rgba(255,255,255,.78); margin:0 0 32px; max-width:640px;">{projects.text}</p>
+    </div>
+    <div style="position:relative; height:340px; background:#0a1d38;">
+      <img src={cases[1].image.path} alt="" width="1920" height="1080" loading="lazy" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.55;" />
+      <div style="position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,22,43,.9) 0%, rgba(8,22,43,.4) 60%, rgba(8,22,43,.15) 100%);"></div>
+      <div style="position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:36px 24px;">
+        <p style="margin:0 0 6px; color:var(--soeteck-primary); font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;">{cases[1].location}</p>
+        <h3 style="margin:0 0 8px; font-size:24px; font-weight:800; color:#fff;">{cases[1].title}</h3>
+        <p style="margin:0; max-width:480px; font-size:14px; line-height:1.7; color:rgba(255,255,255,.85);">{cases[1].text}</p>
+      </div>
+      <div style="position:absolute; bottom:16px; left:50%; transform:translateX(-50%); display:flex; gap:10px; z-index:2;">
+        <span style="width:10px; height:10px; border-radius:50%; border:1.5px solid rgba(255,255,255,.5);"></span>
+        <span style="width:10px; height:10px; border-radius:50%; background:var(--soeteck-primary);"></span>
+        <span style="width:10px; height:10px; border-radius:50%; border:1.5px solid rgba(255,255,255,.5);"></span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .opt-label { margin: 0; color: var(--soeteck-primary); font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+  .opt-why { margin: 4px 0 0; font-size: 14px; color: var(--soeteck-muted); }
+
+  /* ══ Option C2 — editorial case banners ══ */
+  .c2-band {
+    display: flex;
+    align-items: center;
+    gap: clamp(32px, 5vw, 64px);
+    padding: 36px 0;
+    border-bottom: 1px solid var(--soeteck-border-soft);
+    text-decoration: none;
+  }
+  .c2-band:first-child { border-top: 1px solid var(--soeteck-border-soft); }
+  .c2-media {
+    position: relative;
+    flex: 0 0 50%;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--soeteck-white);
+  }
+  .c2-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+  .c2-band:hover .c2-media img { transform: scale(1.04); }
+  .c2-metric {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, .14);
+    border: 1px solid rgba(255, 255, 255, .24);
+    backdrop-filter: blur(6px);
+    color: #fff;
+  }
+  .c2-metric strong { font-size: 20px; line-height: 1; }
+  .c2-metric small { margin-top: 4px; font-size: 10px; color: rgba(255,255,255,.85); text-transform: uppercase; letter-spacing: .06em; }
+  .c2-info { flex: 1; }
+  .c2-location { display: block; color: var(--soeteck-primary); font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+  .c2-title { display: block; margin-top: 8px; font-size: clamp(20px, 2.4vw, 27px); font-weight: 800; color: var(--soeteck-text); }
+  .c2-text { margin: 10px 0 0; font-size: 15px; line-height: 1.7; color: var(--soeteck-text-soft); }
+  .c2-cta { display: inline-flex; margin-top: 18px; padding: 11px 26px; border-radius: 999px; background: var(--soeteck-primary); color: #fff; font-size: 14px; font-weight: 600; }
+
+  @media (max-width: 991px) {
+    .c2-band { flex-direction: column !important; align-items: flex-start; }
+    .c2-media { width: 100%; flex: none; }
+  }
+</style>

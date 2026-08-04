@@ -134,6 +134,11 @@ const dateFormatter = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : lang ===
     font-size: var(--soeteck-text-lg);
     font-weight: var(--soeteck-weight-bold);
     line-height: 1.35;
+    transition: color var(--soeteck-transition-fast);
+  }
+
+  .soeteck-single-post__related-card:hover .soeteck-single-post__related-card-title {
+    color: var(--soeteck-primary);
   }
 
   @media (max-width: 991px) {

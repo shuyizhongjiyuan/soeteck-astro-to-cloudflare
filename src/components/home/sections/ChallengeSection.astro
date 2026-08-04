@@ -1,0 +1,192 @@
+---
+/**
+ * ChallengeSection — AI Infrastructure Challenge (Variant B only).
+ * Problem statement that leads into solutions.
+ * High-impact: navy gradient bg, glassy data cards, gradient answer band.
+ *
+ * @package Soeteck\Astro
+ */
+import type { ChallengeContent } from '../home-content';
+
+interface Props {
+  data: ChallengeContent;
+}
+
+const { data } = Astro.props;
+---
+
+<section class="home-challenge" aria-labelledby="challenge-title">
+  <div class="soeteck-container">
+    <div class="home-section__head">
+      <p class="home-section__eyebrow">{data.eyebrow}</p>
+      <h2 id="challenge-title" class="home-section__title">{data.title}</h2>
+      <p class="home-section__lead">{data.subtitle}</p>
+    </div>
+    <div class="home-challenge__grid">
+      {data.points.map((point) => (
+        <div class="home-challenge-card">
+          <span class="home-challenge-card__value">{point.value}</span>
+          <span class="home-challenge-card__label">{point.label}</span>
+          <p class="home-challenge-card__text">{point.text}</p>
+        </div>
+      ))}
+    </div>
+    <div class="home-challenge__answer">
+      <h3 class="home-challenge__answer-title">{data.soeteckAnswer.title}</h3>
+      <ul class="home-challenge__answer-list">
+        {data.soeteckAnswer.items.map((item) => (
+          <li class="home-challenge__answer-item">{item}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ CHALLENGE — high impact ════════════════════════════════ */
+.home-challenge {
+  position: relative;
+  padding: var(--soeteck-section-y) 0;
+  background:
+    radial-gradient(1200px 500px at 85% -10%, rgba(0, 102, 204, 0.35), transparent 60%),
+    radial-gradient(900px 420px at -10% 110%, rgba(0, 102, 204, 0.25), transparent 55%),
+    linear-gradient(180deg, #0a1d38 0%, #0b1f3a 100%);
+  color: #fff;
+}
+.home-challenge :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ─────────────────────────────────────────── */
+.home-section__head { max-width: 760px; margin: 0 auto 56px; text-align: center; }
+.home-section__eyebrow {
+  margin: 0 0 10px;
+  color: var(--soeteck-primary);
+  font-size: var(--soeteck-text-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.home-section__title {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.1vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.14;
+  color: #fff;
+}
+.home-section__lead {
+  margin: 18px 0 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ── Data cards ───────────────────────────────────────────── */
+.home-challenge__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.home-challenge-card {
+  position: relative;
+  padding: 36px 24px 32px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--soeteck-radius-lg);
+  text-align: center;
+  backdrop-filter: blur(6px);
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+}
+.home-challenge-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--soeteck-primary), #00b4ff);
+  opacity: 0.85;
+}
+.home-challenge-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 102, 204, 0.55);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.home-challenge-card__value {
+  display: block;
+  font-size: clamp(2.6rem, 4.5vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  background: linear-gradient(120deg, #fff 0%, var(--soeteck-primary) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.home-challenge-card__label {
+  display: block;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+.home-challenge-card__text {
+  margin: 0;
+  font-size: var(--soeteck-text-sm);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── SOETECK answer — full-width gradient band ────────────── */
+.home-challenge__answer {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 40px 44px;
+  background: linear-gradient(120deg, var(--soeteck-primary) 0%, #005cae 100%);
+  border-radius: var(--soeteck-radius-lg);
+  box-shadow: 0 20px 48px rgba(0, 82, 168, 0.35);
+}
+.home-challenge__answer-title {
+  margin: 0 0 24px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+}
+.home-challenge__answer-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 24px;
+}
+.home-challenge__answer-item {
+  position: relative;
+  padding-left: 26px;
+  font-size: var(--soeteck-text-sm);
+  line-height: 1.6;
+  color: #fff;
+}
+.home-challenge__answer-item::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #fff;
+  font-weight: 800;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .home-challenge__grid { grid-template-columns: 1fr; }
+  .home-challenge__answer-list { grid-template-columns: 1fr; }
+}
+</style>

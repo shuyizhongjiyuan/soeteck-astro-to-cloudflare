@@ -32,6 +32,10 @@ const init = () => {
       thumbs.forEach((button) => {
         button.classList.toggle('is-active', Number(button.getAttribute('data-gallery-thumb')) === activeIndex);
       });
+
+      // 将 active thumb 滚入可视区域，避免被容器边缘遮挡
+      const activeThumb = gallery.querySelector<HTMLElement>('[data-gallery-thumb].is-active');
+      activeThumb?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
     };
 
     thumbs.forEach((thumb) => {

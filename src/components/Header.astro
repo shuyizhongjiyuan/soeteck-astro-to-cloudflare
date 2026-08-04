@@ -118,9 +118,17 @@ const currentLanguage = globalConfig.currentLanguage || languages[0];
 const logoUrl = globalConfig.site.logo?.path || '/resources/soeteck-logo-2.webp';
 const contactUrl = localizePath(globalConfig.urls.contact || '/en/contact-us/');
 const searchUrl = localizePath('/en/search/');
+
+// 首页（语言根路径 / 预览页）启用透明悬浮 header
+const pathname = Astro.url.pathname;
+const isHomepage =
+  pathname === '/' ||
+  /^\/(en|zh|ru|pt|es)\/?$/.test(pathname) ||
+  pathname.startsWith('/preview-home-b') ||
+  pathname.startsWith('/preview-home-c');
 ---
 
-<header id="masthead" class="site-header">
+<header id="masthead" class={`site-header${isHomepage ? ' site-header--overlay' : ''}`}>
   <div class="header-inner">
     <a class="site-logo-link" href={localizePath("/en/")} rel="home" aria-label="Soeteck">
       <img class="site-logo-image" src={logoUrl} alt="Soeteck" width="240" height="59">
@@ -484,6 +492,15 @@ const searchUrl = localizePath('/en/search/');
 document.addEventListener('DOMContentLoaded', function() {
   const header = document.querySelector('.site-header')
   if (!header) return
+
+  // Transparent overlay header → solid on scroll (homepage)
+  if (header.classList.contains('site-header--overlay')) {
+    const updateOverlay = function() {
+      header.classList.toggle('site-header--scrolled', window.scrollY > 60)
+    }
+    window.addEventListener('scroll', updateOverlay, { passive: true })
+    updateOverlay()
+  }
 
   // Mobile menu toggle
   const menuToggle = header.querySelector('.menu-toggle')

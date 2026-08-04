@@ -1,0 +1,392 @@
+---
+import type { HomeContent } from '../home-content';
+
+interface Props {
+  slides: HomeContent['hero']['slides'];
+  fullscreen?: boolean;
+}
+
+const { slides, fullscreen = false } = Astro.props;
+---
+
+<section class={`home-hero${fullscreen ? ' home-hero--fullscreen' : ''}`} aria-labelledby="home-hero-title" data-slides={String(slides.length)}>
+  {/* Slideshow backgrounds */}
+  <div class="home-hero__slideshow" aria-hidden="true">
+    {slides.map((slide, i) => (
+      <img
+        class={`home-hero__slide${i === 0 ? ' home-hero__slide--active' : ''}`}
+        src={slide.image}
+        alt=""
+        width="1920"
+        height="1080"
+      />
+    ))}
+  </div>
+  <div class="home-hero__overlay" aria-hidden="true"></div>
+  {/* Slideshow text — one set per slide, toggled by JS */}
+  <div class="soeteck-container home-hero__content">
+    {slides.map((slide, i) => (
+      <div class={`home-hero__text${i === 0 ? ' home-hero__text--active' : ''}`} data-index={String(i)}>
+        <p class="home-hero__eyebrow">{slide.eyebrow}</p>
+        <h1 class="home-hero__title">
+          {slide.title}<br /><span class="home-hero__title-accent">{slide.titleAccent}</span>
+        </h1>
+        <p class="home-hero__lead">{slide.subtitle}</p>
+        <div class="home-hero__actions">
+          <a href={slide.ctaPrimaryLink} class="home-hero__btn home-hero__btn--primary">{slide.ctaPrimary}</a>
+          <a href={slide.ctaSecondaryLink} class="home-hero__btn home-hero__btn--ghost">{slide.ctaSecondary}</a>
+        </div>
+      </div>
+    ))}
+  </div>
+  {/* Slide indicators */}
+  <div class="home-hero__dots" role="tablist" aria-label="Hero slides">
+    {slides.map((_, i) => (
+      <button
+        class={`home-hero__dot${i === 0 ? ' home-hero__dot--active' : ''}`}
+        role="tab"
+        aria-selected={i === 0 ? 'true' : 'false'}
+        aria-label={`Slide ${i + 1}`}
+        data-index={String(i)}
+      />
+    ))}
+  </div>
+  {/* Scroll-down hint — fullscreen variant only */}
+  {fullscreen && (
+    <a href="#home-products-c" class="home-hero__scroll-hint" aria-label="Scroll to explore">
+      <span></span>
+    </a>
+  )}
+</section>
+
+<style>
+/* ── HERO ─────────────────────────────────────────────────── */
+.home-hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--soeteck-navy);
+  color: #fff;
+  height: 90vh;
+}
+.home-hero--fullscreen {
+  height: 100vh;
+}
+/* ── Slideshow ────────────────────────────────────────────── */
+.home-hero__slideshow {
+  position: absolute;
+  inset: 0;
+}
+.home-hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 35%;
+  opacity: 0;
+  transform: scale(1.03);
+  transition: opacity 1.6s ease-in-out, transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+  will-change: opacity, transform;
+}
+.home-hero__slide--active {
+  opacity: 1;
+  transform: scale(1);
+}
+@keyframes hero-zoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+.home-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(100deg, rgba(11, 31, 58, 0.92) 0%, rgba(11, 31, 58, 0.72) 42%, rgba(11, 31, 58, 0.28) 100%),
+    linear-gradient(180deg, rgba(11, 31, 58, 0.2) 0%, rgba(11, 31, 58, 0.55) 100%);
+}
+.home-hero__content {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  padding-inline: clamp(24px, 5vw, 48px);
+  text-align: left;
+}
+/* ── Hero text groups — glow emerge (Set E) ──────────────── */
+.home-hero__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  pointer-events: none;
+}
+/* Non-active: hidden, blur + fade + drop */
+.home-hero__text:not(.home-hero__text--active) .home-hero__eyebrow,
+.home-hero__text:not(.home-hero__text--active) .home-hero__title,
+.home-hero__text:not(.home-hero__text--active) .home-hero__lead,
+.home-hero__text:not(.home-hero__text--active) .home-hero__actions {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(16px);
+  transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+/* Active: emerge from blur with stagger */
+.home-hero__text--active {
+  pointer-events: auto;
+}
+.home-hero__text--active .home-hero__eyebrow {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 0.5s ease 50ms, filter 0.6s ease 50ms, transform 0.5s ease 50ms;
+}
+.home-hero__text--active .home-hero__title {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 0.6s ease 150ms, filter 0.7s ease 150ms, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) 150ms;
+}
+.home-hero__text--active .home-hero__lead {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 0.5s ease 300ms, filter 0.6s ease 300ms, transform 0.5s ease 300ms;
+}
+.home-hero__text--active .home-hero__actions {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 0.4s ease 450ms, filter 0.5s ease 450ms, transform 0.4s ease 450ms;
+}
+/* ── Individual element styles ──────────────────────────── */
+.home-hero__eyebrow {
+  max-width: 680px;
+  margin: 0 0 24px;
+  color: var(--soeteck-primary);
+  font-size: 17px;
+  font-weight: var(--soeteck-weight-bold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.home-hero__title {
+  max-width: 680px;
+  margin: 0;
+  color: #fff;
+  font-size: clamp(2.4rem, 5.4vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1.04;
+  letter-spacing: -0.025em;
+}
+.home-hero__title-accent {
+  color: var(--soeteck-primary);
+}
+.home-hero__lead {
+  max-width: 580px;
+  margin: 26px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.65;
+}
+.home-hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 36px;
+  flex-wrap: wrap;
+}
+.home-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 30px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: var(--soeteck-weight-semibold);
+  transition: background var(--soeteck-transition-medium), color var(--soeteck-transition-medium), border-color var(--soeteck-transition-medium), transform 0.2s ease, box-shadow 0.2s ease;
+}
+.home-hero__btn--primary { background: var(--soeteck-primary); color: #fff; }
+.home-hero__btn--primary:hover { background: var(--soeteck-primary-dark); color: #fff; transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0, 102, 204, 0.35); }
+.home-hero__btn--ghost { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.4); }
+.home-hero__btn--ghost:hover { border-color: #fff; background: rgba(255, 255, 255, 0.08); color: #fff; transform: translateY(-2px); }
+
+/* ── HERO SLIDE DOTS ────────────────────────────────────── */
+.home-hero__dots {
+  position: absolute;
+  bottom: 32px;
+  right: 48px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+.home-hero__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.2s ease;
+}
+.home-hero__dot:hover {
+  border-color: #fff;
+  transform: scale(1.15);
+}
+.home-hero__dot--active {
+  background: var(--soeteck-primary);
+  border-color: var(--soeteck-primary);
+}
+
+/* ── Scroll-down hint (fullscreen variant) ────────────────── */
+.home-hero__scroll-hint {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 26px;
+  height: 42px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-radius: 999px;
+  display: flex;
+  justify-content: center;
+  padding-top: 8px;
+  transition: border-color 0.3s ease;
+}
+.home-hero__scroll-hint:hover { border-color: var(--soeteck-primary); }
+.home-hero__scroll-hint span {
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--soeteck-primary);
+  animation: hero-scroll-dot 1.8s ease-in-out infinite;
+}
+@keyframes hero-scroll-dot {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ── HERO RESPONSIVE ──────────────────────────────────────── */
+@media (max-width: 640px) {
+  .home-hero { height: 380px; }
+  .home-hero--fullscreen { height: 92vh; }
+  .home-hero__actions { flex-direction: column; align-items: stretch; }
+  .home-hero__btn { width: 100%; }
+  .home-hero__dots { right: auto; left: 50%; transform: translateX(-50%); bottom: auto; top: 16px; }
+  .home-hero__dot { width: 8px; height: 8px; }
+  .home-hero__scroll-hint { display: none; }
+}
+
+/* ── REDUCED MOTION ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .home-hero__slide { transition: none; transform: none; }
+  .home-hero__scroll-hint span { animation: none; }
+  .home-hero__text .home-hero__eyebrow,
+  .home-hero__text .home-hero__title,
+  .home-hero__text .home-hero__lead,
+  .home-hero__text .home-hero__actions { transition: none; transform: none; filter: none; }
+  .home-hero__text:not(.home-hero__text--active) .home-hero__eyebrow,
+  .home-hero__text:not(.home-hero__text--active) .home-hero__title,
+  .home-hero__text:not(.home-hero__text--active) .home-hero__lead,
+  .home-hero__text:not(.home-hero__text--active) .home-hero__actions { opacity: 0; }
+  .home-hero__text--active .home-hero__eyebrow,
+  .home-hero__text--active .home-hero__title,
+  .home-hero__text--active .home-hero__lead,
+  .home-hero__text--active .home-hero__actions { opacity: 1; }
+}
+</style>
+
+<script is:inline>
+/**
+ * Hero — 精密机械式动画系统
+ * 1. 背景 + 文案同步切换（crossfade + 文案 fade-up）
+ * 2. 滚动视差（object-position + content translateY）
+ * 3. 圆点导航点击切换
+ */
+(function() {
+  var hero = document.querySelector('.home-hero');
+  if (!hero) return;
+
+  var slides = hero.querySelectorAll('.home-hero__slide');
+  var texts  = hero.querySelectorAll('.home-hero__text');
+  var dots   = hero.querySelectorAll('.home-hero__dot');
+  var content = hero.querySelector('.home-hero__content');
+  if (slides.length === 0 || !content) return;
+
+  var current = 0;
+  var total   = slides.length;
+  var INTERVAL = 4000;
+  var timer   = null;
+
+  /* ── Slide + text switching ──────────────────────────────── */
+  function goToSlide(index) {
+    if (index === current) return;
+
+    // 移除当前
+    slides[current].classList.remove('home-hero__slide--active');
+    texts[current]  && texts[current].classList.remove('home-hero__text--active');
+    dots[current]   && dots[current].classList.remove('home-hero__dot--active');
+    dots[current]   && dots[current].setAttribute('aria-selected', 'false');
+
+    current = index;
+
+    // 激活新的
+    slides[current].classList.add('home-hero__slide--active');
+    texts[current]  && texts[current].classList.add('home-hero__text--active');
+    dots[current]   && dots[current].classList.add('home-hero__dot--active');
+    dots[current]   && dots[current].setAttribute('aria-selected', 'true');
+  }
+
+  function nextSlide() {
+    goToSlide((current + 1) % total);
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    timer = setInterval(nextSlide, INTERVAL);
+  }
+
+  function stopAutoplay() {
+    if (timer) { clearInterval(timer); timer = null; }
+  }
+
+  /* ── Dot click ───────────────────────────────────────────── */
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var idx = parseInt(dot.getAttribute('data-index'), 10);
+      goToSlide(idx);
+      startAutoplay();
+    });
+  });
+
+  /* ── Parallax on scroll ──────────────────────────────────── */
+  var BASE_OBJECT_POS = 35;
+  var MAX_SHIFT = 12;
+  var ticking = false;
+
+  function updateParallax() {
+    var rect = hero.getBoundingClientRect();
+    var viewportH = window.innerHeight;
+    var progress = Math.max(0, Math.min(1, -rect.top / (rect.height + viewportH)));
+
+    var activeSlide = hero.querySelector('.home-hero__slide--active');
+    if (activeSlide) {
+      activeSlide.style.objectPosition = 'center ' + (BASE_OBJECT_POS + progress * MAX_SHIFT) + '%';
+    }
+    content.style.transform = 'translateY(' + (progress * 35) + 'px)';
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) {
+      window.requestAnimationFrame(updateParallax);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ── Init ────────────────────────────────────────────────── */
+  updateParallax();
+  startAutoplay();
+})();
+</script>

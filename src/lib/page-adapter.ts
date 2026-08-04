@@ -309,7 +309,7 @@ function adaptArticleSingle(content: ContentApiResponse): AdaptedArticleSingle |
   };
 }
 
-function adaptArticleCard(article: ContentApiArticleCard): AdaptedArticleCard {
+export function adaptArticleCard(article: ContentApiArticleCard): AdaptedArticleCard {
   return {
     id: article.id,
     title: article.title,

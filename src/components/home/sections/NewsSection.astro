@@ -1,0 +1,152 @@
+---
+/**
+ * NewsSection — News + Blogs entry points with latest articles.
+ */
+import type { HomeContent } from '../home-content';
+import type { AdaptedArticleCard } from '@/lib/page-adapter';
+import ArticleCard from '@/components/article-archive/ArticleCard.astro';
+
+interface Props {
+  data: HomeContent['news'];
+  articles: AdaptedArticleCard[];
+  lang: string;
+}
+
+const { data, articles, lang } = Astro.props;
+---
+
+<section class="home-news" aria-labelledby="news-title">
+  <div class="soeteck-container">
+
+    {/* ── Section head ── */}
+    <div class="home-section__head home-section__head--split">
+      <div>
+        <p class="home-section__eyebrow">{data.eyebrow}</p>
+        <h2 id="news-title" class="home-section__title">{data.title}</h2>
+      </div>
+      <a href={data.viewAllLink} class="home-section__view-all">{data.viewAllLabel} →</a>
+    </div>
+
+    {/* ── Category entry cards ── */}
+    <div class="home-news__entries">
+      <a href="/en/news-and-insights/news-releases/" class="home-news-entry">
+        <span class="home-news-entry__icon">📰</span>
+        <h3 class="home-news-entry__title">News Releases</h3>
+        <p class="home-news-entry__text">Latest company announcements and industry news</p>
+        <span class="home-news-entry__link">View News →</span>
+      </a>
+      <a href="/en/news-and-insights/blogs/" class="home-news-entry">
+        <span class="home-news-entry__icon">✍️</span>
+        <h3 class="home-news-entry__title">Blogs</h3>
+        <p class="home-news-entry__text">Technical insights and thought leadership from SOETECK</p>
+        <span class="home-news-entry__link">Read Blogs →</span>
+      </a>
+      <a href="/en/news-and-insights/case-studies/" class="home-news-entry">
+        <span class="home-news-entry__icon">📋</span>
+        <h3 class="home-news-entry__title">Case Studies</h3>
+        <p class="home-news-entry__text">Real-world project stories and deployment results</p>
+        <span class="home-news-entry__link">Explore Cases →</span>
+      </a>
+    </div>
+
+    {/* ── Latest articles ── */}
+    {articles.length > 0 && (
+      <div class="home-news__latest">
+        <h3 class="home-news__latest-title">Latest Updates</h3>
+        <div class="home-news__grid">
+          {articles.map((article) => <ArticleCard article={article} lang={lang} />)}
+        </div>
+      </div>
+    )}
+
+  </div>
+</section>
+
+<style>
+.home-news {
+  padding: var(--soeteck-section-y) 0;
+  background: var(--soeteck-white);
+}
+.home-news :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ──────────────────────────────────────────────── */
+.home-section__head { max-width: 760px; margin: 0 auto 48px; text-align: center; }
+.home-section__head--split { max-width: none; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; text-align: left; }
+.home-section__eyebrow { margin: 0 0 10px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-section__title { margin: 0; font-size: clamp(1.85rem, 3.1vw, 2.5rem); font-weight: 700; line-height: 1.14; color: var(--soeteck-text); }
+.home-section__view-all { white-space: nowrap; font-weight: 600; color: var(--soeteck-primary); font-size: var(--soeteck-text-sm); }
+.home-section__view-all:hover { color: var(--soeteck-primary-dark); }
+
+/* ── Category entry cards ──────────────────────────────────────── */
+.home-news__entries {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 56px;
+}
+.home-news-entry {
+  padding: 32px 28px;
+  background: var(--soeteck-surface);
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: var(--soeteck-radius-lg);
+  text-decoration: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+.home-news-entry:hover {
+  border-color: var(--soeteck-primary);
+  box-shadow: 0 8px 28px rgba(0, 102, 204, 0.08);
+  transform: translateY(-2px);
+}
+.home-news-entry__icon {
+  display: block;
+  font-size: 2rem;
+  margin-bottom: 16px;
+}
+.home-news-entry__title {
+  margin: 0 0 8px;
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+  font-weight: 700;
+  color: var(--soeteck-text);
+}
+.home-news-entry__text {
+  margin: 0 0 16px;
+  font-size: var(--soeteck-text-sm);
+  line-height: 1.6;
+  color: var(--soeteck-text-soft);
+}
+.home-news-entry__link {
+  font-weight: 600;
+  font-size: var(--soeteck-text-sm);
+  color: var(--soeteck-primary);
+}
+
+/* ── Latest articles ───────────────────────────────────────────── */
+.home-news__latest {
+  padding-top: 48px;
+  border-top: 1px solid var(--soeteck-border-soft);
+}
+.home-news__latest-title {
+  margin: 0 0 28px;
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+  font-weight: 700;
+  color: var(--soeteck-text);
+}
+.home-news__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .home-news__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .home-section__head--split { flex-direction: column; align-items: flex-start; }
+  .home-news__entries { grid-template-columns: 1fr; }
+  .home-news__grid { grid-template-columns: 1fr; }
+}
+</style>
