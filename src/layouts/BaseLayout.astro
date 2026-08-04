@@ -134,15 +134,17 @@ const globalConfig = await fetchGlobalConfig(lang);
     background: transparent;
     border-top: none;
     box-shadow: none;
+    padding-top: 7px;
   }
   body .site-header--overlay.site-header--scrolled {
     background: #f3f3f3;
     border-top: 7px solid #0058a7;
     box-shadow: 0 1px 5px rgba(33, 33, 33, 0.46);
+    padding-top: 0;
   }
   /* Hero 上拉至页面顶部，透明 header 悬浮其上 */
   body .site-header--overlay ~ main .home-hero {
-    margin-top: -70px;
+    margin-top: -77px;
   }
   /* 未滚动（悬浮在深色 hero 上）时导航文字转白 */
   body .site-header--overlay:not(.site-header--scrolled) .primary-menu-link,
@@ -1007,6 +1009,9 @@ const globalConfig = await fetchGlobalConfig(lang);
 
   body .site-header {
     padding: 0;
+  }
+  body .site-header--overlay {
+    padding-top: 7px;
   }
 
   body .site-header .header-inner {
