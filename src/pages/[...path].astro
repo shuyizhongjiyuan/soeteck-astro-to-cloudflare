@@ -3,6 +3,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro';
 import PageDispatcher from '@/components/PageDispatcher.astro';
 import { fetchPocRoutes, fetchRouteContent } from '@/lib/content-api';
 import { adaptPage } from '@/lib/page-adapter';
+import { buildBreadcrumbSchema } from '@/lib/schema';
 
 const languages = ['en', 'zh', 'ru', 'pt', 'es'];
 
@@ -59,13 +60,21 @@ try {
 const localizedPaths: Record<string, { path: string | null; status: string }> | undefined = page.source?.route?.localizedPaths;
 // 去掉语言前缀的路径，用于 canonical URL
 const pathWithoutLang = route.path.replace(/^\/[a-z]{2}\//, '/');
+
+// Schema JSON-LD：优先用 Rank Math 在 Content API 交付的 schema；
+// 无则用 Astro 生成 BreadcrumbList 兜底，保证全站基础结构化数据覆盖
+const schemas = (page.seo.schema && page.seo.schema.length > 0)
+  ? page.seo.schema
+  : [buildBreadcrumbSchema(page.breadcrumbs, lang)];
 ---
 <BaseLayout
   lang={lang}
   title={page.seo.title}
   canonical={`https://soeteck.com/${lang}${pathWithoutLang}`}
   robots={page.seo.robots}
+  description={page.seo.description}
   localizedPaths={localizedPaths}
+  schemas={schemas}
 >
   <PageDispatcher page={page} lang={lang} />
 </BaseLayout>

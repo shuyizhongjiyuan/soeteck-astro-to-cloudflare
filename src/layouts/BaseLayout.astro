@@ -5,13 +5,15 @@ import { fetchGlobalConfig } from '@/lib/content-api';
 
 interface Props {
   title: string;
+  description?: string;
   canonical: string;
   robots?: string;
   lang?: string;
   localizedPaths?: Record<string, { path: string | null; status: string }>;
+  schemas?: Array<Record<string, unknown>>;
 }
 
-const { title, canonical, robots = 'index,follow', lang = 'en', localizedPaths } = Astro.props;
+const { title, description, canonical, robots = 'index,follow', lang = 'en', localizedPaths, schemas } = Astro.props;
 const globalConfig = await fetchGlobalConfig(lang);
 ---
 <!doctype html>
@@ -22,6 +24,7 @@ const globalConfig = await fetchGlobalConfig(lang);
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
+    {description && <meta name="description" content={description} />}
     {/* hreflang 标签 */}
     {localizedPaths && Object.entries(localizedPaths).map(([l, data]) => (
       data.path && (
@@ -29,6 +32,10 @@ const globalConfig = await fetchGlobalConfig(lang);
       )
     ))}
     <link rel="alternate" hreflang="x-default" href={`https://soeteck.com/en${localizedPaths?.en?.path || '/'}`} />
+    {/* Schema.org JSON-LD（Rank Math 生成，Content API 交付） */}
+    {schemas?.map((s) => (
+      <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...s })} />
+    ))}
   </head>
   <body>
     <Header globalConfig={globalConfig} lang={lang} />

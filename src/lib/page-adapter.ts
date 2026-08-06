@@ -4,8 +4,10 @@ export type PageKind = 'home' | 'about' | 'contact' | 'thankYou' | 'search' | 'n
 
 export interface PageSeo {
   title: string;
+  description: string;
   canonical: string;
   robots: string;
+  schema?: Array<Record<string, unknown>>;
 }
 
 export interface PageBreadcrumb {
@@ -121,8 +123,10 @@ export function adaptPage(content: ContentApiResponse): AdaptedPage {
     title,
     seo: {
       title: content.seo.title,
+      description: content.seo.description ?? '',
       canonical: content.seo.productionCanonical ?? content.seo.canonical,
       robots: content.seo.robots,
+      schema: content.seo.schema,
     },
     breadcrumbs: adaptBreadcrumbs(content),
     heroImage,

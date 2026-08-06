@@ -207,9 +207,11 @@ export interface ContentApiResponse {
   };
   seo: {
     title: string;
+    description: string;
     canonical: string;
     productionCanonical?: string;
     robots: string;
+    schema?: Array<Record<string, unknown>>;
   };
   breadcrumbs: Array<{ label: string; path: string }>;
   media: ContentApiImage[];
