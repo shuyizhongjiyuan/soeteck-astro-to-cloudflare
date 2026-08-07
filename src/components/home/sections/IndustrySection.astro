@@ -1,0 +1,197 @@
+---
+/**
+ * IndustrySection — Auto-scrolling marquee with JS animation.
+ * Infinite horizontal scroll, gradient fade on edges. Sub-level section.
+ *
+ * @package Soeteck\Astro
+ */
+import type { HomeContent } from '../home-content';
+
+interface Props {
+  data: HomeContent['industries'];
+}
+
+const { data } = Astro.props;
+
+const shortNames: Record<string, string> = {
+  telecom: 'Telecom', finance: 'Finance', government: 'Government',
+  cloud: 'Cloud', ai: 'AI & GPU', manufacturing: 'Manufacturing', submarine: 'Submarine',
+};
+---
+
+<section class="home-industry" aria-label="Industries served">
+  <div class="soeteck-container">
+    <div class="home-industry__head">
+      <p class="home-industry__eyebrow">{data.eyebrow}</p>
+      <h2 class="home-industry__title">{data.title}</h2>
+    </div>
+
+    <div class="home-industry__marquee">
+      <div class="home-industry__track" id="industry-track">
+        {data.items.map((item) => (
+          <a href={item.ctaLink ?? '/en/solutions/'} class="home-industry__card">
+            <div class="home-industry__card-bg" style={`background-image: url(/industry/industry-${item.icon}.png);`}></div>
+            <div class="home-industry__card-overlay"></div>
+            <div class="home-industry__card-body">
+              <span class="home-industry__card-icon">
+                {item.icon === 'telecom' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 22h20M10 22v-6a6 6 0 0112 0v6M16 10v2M8 22l-2 4h20l-2-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+                {item.icon === 'finance' && <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M12 12h8M12 12v4M12 16h6M12 20h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'government' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 12l12-8 12 8v2H4v-2zM6 14v10M26 14v10M10 14v6M16 14v6M22 14v6M4 24h24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+                {item.icon === 'cloud' && <svg viewBox="0 0 32 32" fill="none"><path d="M9 22a7 7 0 111.5-13.8A9 9 0 1123 22H9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'ai' && <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l3 6 6.5 1-4.5 5 1 6.5L16 19l-6 3.5 1-6.5-4.5-5L13 10l3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'manufacturing' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 28V16l7 4v-5l7 4V9h7v19H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 28v-6M16 28v-8M22 28v-6M28 28H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'submarine' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 14h20v8H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 14l4-8h12l4 8M8 22l-2 4M24 22l2 4M14 14v8M18 14v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+              </span>
+              <span class="home-industry__card-title">{shortNames[item.icon] ?? item.title}</span>
+            </div>
+          </a>
+        ))}
+        {data.items.map((item) => (
+          <a href={item.ctaLink ?? '/en/solutions/'} class="home-industry__card" aria-hidden="true">
+            <div class="home-industry__card-bg" style={`background-image: url(/industry/industry-${item.icon}.png);`}></div>
+            <div class="home-industry__card-overlay"></div>
+            <div class="home-industry__card-body">
+              <span class="home-industry__card-icon">
+                {item.icon === 'telecom' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 22h20M10 22v-6a6 6 0 0112 0v6M16 10v2M8 22l-2 4h20l-2-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+                {item.icon === 'finance' && <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="currentColor" stroke-width="2"/><path d="M12 12h8M12 12v4M12 16h6M12 20h7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'government' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 12l12-8 12 8v2H4v-2zM6 14v10M26 14v10M10 14v6M16 14v6M22 14v6M4 24h24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>}
+                {item.icon === 'cloud' && <svg viewBox="0 0 32 32" fill="none"><path d="M9 22a7 7 0 111.5-13.8A9 9 0 1123 22H9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'ai' && <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l3 6 6.5 1-4.5 5 1 6.5L16 19l-6 3.5 1-6.5-4.5-5L13 10l3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'manufacturing' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 28V16l7 4v-5l7 4V9h7v19H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 28v-6M16 28v-8M22 28v-6M28 28H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'submarine' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 14h20v8H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 14l4-8h12l4 8M8 22l-2 4M24 22l2 4M14 14v8M18 14v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+              </span>
+              <span class="home-industry__card-title">{shortNames[item.icon] ?? item.title}</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+/* ═══ INDUSTRY — marquee sub-level ══════════════════════════════ */
+.home-industry {
+  padding: 24px 0 36px;
+  background: var(--soeteck-white);
+  position: relative;
+}
+.home-industry :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+/* ── Section head ──────────────────────────────────────────────── */
+.home-industry__head { margin-bottom: 20px; }
+.home-industry__eyebrow { margin: 0 0 8px; color: var(--soeteck-primary); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.home-industry__title { margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.25; color: var(--soeteck-text); }
+
+/* ── Marquee ───────────────────────────────────────────────────── */
+.home-industry__marquee {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  padding: 6px 0 8px;
+}
+
+/* ── Track ─────────────────────────────────────────────────────── */
+.home-industry__track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+}
+
+/* ── Card ──────────────────────────────────────────────────────── */
+.home-industry__card {
+  flex: 0 0 220px;
+  height: 150px;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  align-items: flex-end;
+  position: relative;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  will-change: transform;
+}
+.home-industry__card:hover {
+  transform: translateY(-4px);
+}
+
+.home-industry__card-bg {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  transition: transform 0.6s ease;
+}
+.home-industry__card:hover .home-industry__card-bg { transform: scale(1.08); }
+
+.home-industry__card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.55) 100%);
+  transition: opacity 0.35s ease;
+}
+.home-industry__card:hover .home-industry__card-overlay { opacity: 0.8; }
+
+.home-industry__card-body {
+  position: relative; z-index: 2; padding: 18px; color: #fff; width: 100%;
+}
+
+.home-industry__card-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+.home-industry__card-icon :global(svg) {
+  width: 20px;
+  height: 20px;
+  stroke: rgba(255, 255, 255, 0.9);
+}
+
+.home-industry__card-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #fff;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.home-industry__card:hover .home-industry__card-title { transform: translateY(-1px); }
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .home-industry__card { flex-basis: 170px; height: 120px; }
+}
+</style>
+
+<script is:inline>
+(function() {
+  var track = document.getElementById('industry-track');
+  if (!track) return;
+
+  var speed = 0.5;
+  var pos = 0;
+  var running = true;
+
+  function step() {
+    if (!running) { requestAnimationFrame(step); return; }
+    pos -= speed;
+    var halfW = track.scrollWidth / 2;
+    if (Math.abs(pos) >= halfW) { pos = 0; }
+    track.style.transform = 'translateX(' + pos + 'px)';
+    requestAnimationFrame(step);
+  }
+
+  var marquee = track.closest('.home-industry__marquee');
+  if (marquee) {
+    marquee.addEventListener('mouseenter', function() { running = false; });
+    marquee.addEventListener('mouseleave', function() { running = true; });
+  }
+
+  step();
+})();
+</script>

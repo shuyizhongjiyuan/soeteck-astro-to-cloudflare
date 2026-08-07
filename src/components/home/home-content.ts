@@ -96,6 +96,7 @@ export interface ProductCategory {
 
 export interface ServiceStep {
   num: string;
+  icon: string;
   title: string;
   text: string;
 }
@@ -392,17 +393,17 @@ export const HOME_EN: HomeContent = {
   },
 
   services: {
-    eyebrow: 'End-to-End Delivery',
-    title: 'From Blueprint to Commissioning',
-    text: 'One partner, one contract, one team. SOETECK owns the entire delivery — from collaborative design through factory testing to on-site commissioning.',
+    eyebrow: 'Our Services',
+    title: 'What We Deliver for You',
+    text: 'From the first conversation to years of operation — SOETECK owns the full lifecycle. Here is what that means for your project.',
     image: { path: '/resources/soeteck-factory-1.jpg', alt: 'SOETECK manufacturing facility' },
     steps: [
-      { num: '01', title: 'Design', text: 'Collaborative engineering with 3D modeling and CFD thermal simulation.' },
-      { num: '02', title: 'Manufacture', text: 'In-house production of UPS, cooling, PDUs, and enclosures.' },
-      { num: '03', title: 'Integrate', text: 'System-level assembly and configuration in our factory.' },
-      { num: '04', title: 'Test', text: 'Full-load testing, thermal validation, and failover verification.' },
-      { num: '05', title: 'Ship', text: 'Secure global logistics with door-to-door oversight.' },
-      { num: '06', title: 'Commission', text: 'On-site installation, commissioning, and operator training.' },
+      { num: '01', icon: 'design', title: 'Free Solution Design', text: 'Tell us your power, cooling, and site requirements. We deliver a tailored data center solution with 3D layout and thermal simulation — at no cost.' },
+      { num: '02', icon: 'manufacture', title: 'In-House Manufacturing', text: 'UPS, precision cooling, PDUs, enclosures — all designed and built in our own factory. No middlemen, no markups, full quality control.' },
+      { num: '03', icon: 'test', title: 'Factory Acceptance Test', text: 'Every unit undergoes full-load testing before shipment. You are invited to witness — onsite or via live video — before a single crate leaves the factory.' },
+      { num: '04', icon: 'ship', title: 'Global Logistics & Customs', text: 'FOB, CIF, or DDP — we handle shipping, documentation, and customs clearance. 50+ countries delivered, every grid standard covered.' },
+      { num: '05', icon: 'install', title: 'On-Site Installation & Training', text: 'Our engineers commission the system on your site and train your local team. No third-party contractors, no handoff gaps.' },
+      { num: '06', icon: 'support', title: 'After-Sales & Spare Parts', text: '2-year warranty, 7×24 technical support, remote monitoring, and emergency spare parts dispatch. One contract, one team, one throat to choke.' },
     ],
   },
 

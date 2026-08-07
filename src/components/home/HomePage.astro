@@ -1,117 +1,58 @@
 ---
 /**
- * HomePage — Main homepage component with variant support.
- *
- * Variants:
- * - A (default): Compact efficient — Solutions-first hierarchy
- * - B: Narrative driven — challenge → solutions → evidence → action
- * - C: Visual impact — full-bleed imagery, stats bar, case carousel
+ * HomePage — Variant C: visual impact homepage.
  *
  * @package Soeteck\Astro
  */
 import { adaptArticleCard, type AdaptedPage, type AdaptedArticleCard } from '@/lib/page-adapter';
 import { HOME_EN, type HomeContent } from './home-content';
 import HeroSection from './sections/HeroSection.astro';
-import SolutionsSection from './sections/SolutionsSection.astro';
-import ProductsSection from './sections/ProductsSection.astro';
-import DeliverySection from './sections/DeliverySection.astro';
-import CasesSection from './sections/CasesSection.astro';
-import WhySoeteckSection from './sections/WhySoeteckSection.astro';
-import NewsSection from './sections/NewsSection.astro';
 import CtaSection from './sections/CtaSection.astro';
-
-// Variant B only
-import ChallengeSection from './sections/ChallengeSection.astro';
-import SolutionsSectionB from './sections/SolutionsSectionB.astro';
-import AiInsightsSection from './sections/AiInsightsSection.astro';
-import GlobalPresenceSection from './sections/GlobalPresenceSection.astro';
-
-// Variant C only
 import ProductsSectionC from './sections/ProductsSectionC.astro';
 import SolutionsSectionC from './sections/SolutionsSectionC.astro';
+import IndustrySection from './sections/IndustrySection.astro';
+import ServiceSectionHome from './sections/ServiceSectionHome.astro';
 import CaseCarouselSection from './sections/CaseCarouselSection.astro';
-import DeliveryLightSection from './sections/DeliveryLightSection.astro';
 import NewsBlogsSectionC from './sections/NewsBlogsSectionC.astro';
-import WhySectionC from './sections/WhySectionC.astro';
 
 interface Props {
   page: AdaptedPage;
   lang: string;
-  variant?: 'A' | 'B' | 'C';
 }
 
-const { page, lang, variant = 'C' } = Astro.props;
+const { page, lang } = Astro.props;
 void page;
 
 const c: HomeContent = HOME_EN;
 
-// Fetch latest 3 articles for the news section
-let articles: AdaptedArticleCard[] = [];
+// Fetch latest news and blog articles
 let newsArticles: AdaptedArticleCard[] = [];
 let blogArticles: AdaptedArticleCard[] = [];
 try {
   const { fetchRouteContent } = await import('@/lib/content-api');
-  if (variant === 'C') {
-    const newsRoute = { path: `/en/news-and-insights/news-releases/`, routeType: 'article_category_archive' as const, expectedTitle: '' };
-    const newsData = await fetchRouteContent(newsRoute, lang);
-    newsArticles = (newsData.articles ?? []).slice(0, 3).map(adaptArticleCard);
-    const blogRoute = { path: `/en/news-and-insights/blogs/`, routeType: 'article_category_archive' as const, expectedTitle: '' };
-    const blogData = await fetchRouteContent(blogRoute, lang);
-    blogArticles = (blogData.articles ?? []).slice(0, 3).map(adaptArticleCard);
-  } else {
-    const archiveRoute = { path: `/en/news-and-insights/`, routeType: 'article_category_archive' as const, expectedTitle: '' };
-    const archiveData = await fetchRouteContent(archiveRoute, lang);
-    articles = (archiveData.articles ?? []).slice(0, 3).map(adaptArticleCard);
-  }
+  const newsRoute = { path: `/en/news-and-insights/news-releases/`, routeType: 'article_category_archive' as const, expectedTitle: '' };
+  const newsData = await fetchRouteContent(newsRoute, lang);
+  newsArticles = (newsData.articles ?? []).slice(0, 3).map(adaptArticleCard);
+  const blogRoute = { path: `/en/news-and-insights/blogs/`, routeType: 'article_category_archive' as const, expectedTitle: '' };
+  const blogData = await fetchRouteContent(blogRoute, lang);
+  blogArticles = (blogData.articles ?? []).slice(0, 3).map(adaptArticleCard);
 } catch {
   // News section hidden if API unavailable
 }
 ---
 
-<div class={`soeteck-home-page soeteck-home-page--${variant}`}>
-  {/* ═══ Variant A — compact & efficient, solutions-first ═══ */}
-  {variant === 'A' && (
-    <>
-      <HeroSection slides={c.hero.slides} />
-      <SolutionsSection solutions={c.solutions} />
-      <ProductsSection productCategories={c.productCategories} industries={c.industries} />
-      <DeliverySection data={c.services} />
-      <CasesSection data={c.projects} />
-      <WhySoeteckSection data={c.whySoeteck} />
-      <NewsSection data={c.news} articles={articles} lang={lang} />
-      <CtaSection data={c.cta} />
-    </>
-  )}
+<div class="soeteck-home-page soeteck-home-page--C">
+  <HeroSection slides={c.hero.slides} fullscreen />
+  {c.productsIntro && <ProductsSectionC intro={c.productsIntro} productCategories={c.productCategories} />}
+  <SolutionsSectionC solutions={c.solutions} transition={c.transition} />
 
-  {/* ═══ Variant B — narrative driven ═══ */}
-  {variant === 'B' && (
-    <>
-      <HeroSection slides={c.hero.slides} />
-      {c.challenge && <ChallengeSection data={c.challenge} />}
-      <SolutionsSectionB solutions={c.solutions} />
-      <DeliverySection data={c.services} />
-      <CasesSection data={c.projects} />
-      <AiInsightsSection data={c.aiInsights} />
-      <ProductsSection productCategories={c.productCategories} industries={c.industries} />
-      {c.globalPresence && <GlobalPresenceSection data={c.globalPresence} />}
-      <WhySoeteckSection data={c.whySoeteck} />
-      <NewsSection data={c.news} articles={articles} lang={lang} />
-      <CtaSection data={c.cta} />
-    </>
-  )}
+  <IndustrySection data={c.industries} />
 
-  {/* ═══ Variant C — visual impact ═══ */}
-  {variant === 'C' && (
-    <>
-      <HeroSection slides={c.hero.slides} fullscreen />
-      {c.productsIntro && <ProductsSectionC intro={c.productsIntro} productCategories={c.productCategories} />}
-      <SolutionsSectionC solutions={c.solutions} transition={c.transition} />
-      <CaseCarouselSection data={c.projects} />
-      <WhySectionC data={c.whySoeteck} timeline={c.timeline} />
-      {c.newsC && <NewsBlogsSectionC newsC={c.newsC} news={c.news} newsArticles={newsArticles} blogArticles={blogArticles} lang={lang} />}
-      <CtaSection data={c.cta} />
-    </>
-  )}
+  <ServiceSectionHome data={c.services} />
+
+  <CaseCarouselSection data={c.projects} />
+  {c.newsC && <NewsBlogsSectionC newsC={c.newsC} news={c.news} newsArticles={newsArticles} blogArticles={blogArticles} lang={lang} />}
+  <CtaSection data={c.cta} />
 </div>
 
 <style>

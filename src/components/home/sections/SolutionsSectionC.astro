@@ -123,7 +123,8 @@ const headText = transition?.text ?? solutions.text;
   object-fit: contain;
   transition: transform 0.5s ease;
 }
-.home-solution-c:hover .home-solution-c__media img { transform: scale(1.04); }
+/* Zone-based hover: image zooms only when hovering the image */
+.home-solution-c__media:hover img { transform: scale(1.04); }
 
 .home-solution-c__info { flex: 1; }
 .home-solution-c__index {
@@ -140,7 +141,10 @@ const headText = transition?.text ?? solutions.text;
   font-weight: 800;
   color: var(--soeteck-text);
   line-height: 1.2;
+  transition: color 0.25s ease;
 }
+/* Zone-based hover: title hints the link when hovering the text area */
+.home-solution-c__info:hover .home-solution-c__title { color: var(--soeteck-primary); }
 .home-solution-c__text {
   margin: 10px 0 0;
   font-size: 15px;
@@ -183,7 +187,8 @@ const headText = transition?.text ?? solutions.text;
   font-weight: 600;
   transition: background 0.3s ease, transform 0.2s ease;
 }
-.home-solution-c:hover .home-solution-c__cta {
+/* Zone-based hover: button reacts only on direct hover */
+.home-solution-c__cta:hover {
   background: var(--soeteck-primary-dark);
   transform: translateY(-1px);
 }
