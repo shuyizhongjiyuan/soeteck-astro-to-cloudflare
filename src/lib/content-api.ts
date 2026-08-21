@@ -118,6 +118,46 @@ export interface GlobalConfigResponse {
   currentLanguage: LanguageItem;
   // 页脚配置
   footer: FooterConfig;
+  // 追踪与分析配置（Consent Mode v2 + GTM/GA4，ADR-023）
+  tracking?: {
+    gtmId: string;
+    ga4Id: string;
+  };
+  // Cookie 同意配置（ADR-023）
+  consent?: ConsentConfig;
+}
+
+/** 同意文案（每语言一套，缺语言/缺 key 时前端回退 EN 再退硬编码默认） */
+export interface ConsentCopy {
+  banner_title: string;
+  banner_body: string;
+  accept: string;
+  decline: string;
+  settings_open: string;
+  drawer_title: string;
+  drawer_save: string;
+  drawer_accept: string;
+  chip: string;
+  us_out: string;
+  cat_necessary_label: string;
+  cat_necessary_desc: string;
+  cat_analytics_label: string;
+  cat_analytics_desc: string;
+  cat_marketing_label: string;
+  cat_marketing_desc: string;
+}
+
+/** Cookie 同意全局配置（对照 Content API getGlobalConfig() 返回的 consent 块） */
+export interface ConsentConfig {
+  enabled: boolean;
+  preview?: boolean;
+  geoTiers: {
+    eea: string[];
+    us: string | 'opt-out';
+    rest: string | 'allow';
+  };
+  categories: ('necessary' | 'analytics' | 'marketing')[];
+  copy: Record<string, Partial<ConsentCopy>>;
 }
 
 export interface PocRoute {
@@ -270,6 +310,8 @@ export interface ContentApiResponse {
       productTitle: string;
       path: string | null;
     };
+    // 相关产品（同最深层 product_cat，排除自身与翻译副本，前 4）—— 由 Content API product() 交付
+    relatedProducts?: ContentApiProductCard[];
   };
   article?: {
     id: string | null;
@@ -377,6 +419,29 @@ export async function fetchGlobalConfig(lang?: string): Promise<GlobalConfigResp
   }
 
   return normalizeMediaUrls(await response.json()) as GlobalConfigResponse;
+}
+
+/**
+ * Fetch the hero banner image uploaded on a `category` term via the
+ * `category_banner_image` ACF field. Used by the code-embedded Solutions /
+ * News & Insights hub pages so editors can set the hero from WP. Returns
+ * `{ bannerImage }` where bannerImage is null when the field is empty.
+ */
+export interface CategoryBannerResponse {
+  bannerImage: { path: string; alt?: string } | null;
+}
+
+export async function fetchCategoryBanner(slug: string, lang = 'en'): Promise<CategoryBannerResponse> {
+  const url = new URL(`${API_BASE_URL}/wp-json/soeteck/v1/category-banner`);
+  url.searchParams.set('slug', slug);
+  url.searchParams.set('lang', lang);
+
+  const response = await fetch(url.toString());
+  if (!response.ok) {
+    throw new Error(`Failed to fetch category banner for "${slug}": ${response.status}`);
+  }
+
+  return normalizeMediaUrls(await response.json()) as CategoryBannerResponse;
 }
 
 /**

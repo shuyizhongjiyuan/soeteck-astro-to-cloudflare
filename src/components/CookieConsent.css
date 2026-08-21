@@ -1,0 +1,305 @@
+/* ═══════════════════════════════════════════════════════════════
+ * CookieConsent 组件样式 — v4 "Precision Light"（ADR-023）
+ * 设计：浅色精密控制条（banner）+ 干净中置抽屉。贴合页面、克制、技术感。
+ * 视觉 §3.1 + 抽屉动画 §3.4 + 可访问性 §3.2，遵循 Soeteck token。
+ * 仅改样式（类名与 .astro 标记保持一致，避免动未构建验证的标记）。
+ * ═══════════════════════════════════════════════════════════════ */
+
+.soeteck-consent {
+  font-family: var(--soeteck-font-ui);
+  color: var(--soeteck-text);
+}
+
+/* ═══════════════ Banner — 纤细控制条 ═══════════════ */
+.soeteck-consent-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  z-index: 9990;
+  width: min(960px, calc(100vw - 28px));
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 13px 18px;
+  background: rgba(245, 248, 253, 0.95);
+  backdrop-filter: blur(12px) saturate(1.2);
+  -webkit-backdrop-filter: blur(12px) saturate(1.2);
+  border: 1px solid var(--soeteck-border);
+  border-radius: 14px;
+  /* 悬空层次：接触阴影 + 中距 + 柔和落地 + 顶边高光（飘浮于页面上层） */
+  box-shadow:
+    0 1px 2px rgba(11, 31, 58, 0.06),
+    0 14px 30px rgba(11, 31, 58, 0.12),
+    0 40px 90px rgba(11, 31, 58, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  /* 隐藏态：整体沉到视口下方（屏幕外），不透明度恒 1 → 进入是纯位移滑入，无渐变/淡入 */
+  transform: translateX(-50%) translateY(calc(100% + 40px));
+  opacity: 1;
+  visibility: hidden;
+  transition: transform 320ms ease-out, box-shadow var(--soeteck-transition-medium), visibility 320ms ease-out;
+  will-change: transform;
+}
+.soeteck-consent-banner:hover {
+  /* 悬停时投影稍加深，强化「悬空」拾起感（不动 transform，避免与进入动画冲突） */
+  box-shadow:
+    0 2px 4px rgba(11, 31, 58, 0.08),
+    0 20px 42px rgba(11, 31, 58, 0.16),
+    0 52px 110px rgba(11, 31, 58, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+.soeteck-consent-banner.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0); /* reduced-motion 时直接落位；进场上由 animation 接管 */
+  animation: soeteck-banner-enter 800ms cubic-bezier(0.22, 1, 0.36, 1) 400ms both;
+}
+@keyframes soeteck-banner-enter {
+  from { transform: translateX(-50%) translateY(calc(100% + 42px)); }
+  to   { transform: translateX(-50%) translateY(0); }
+}
+
+/* eyebrow（原为 "Cookies" label）在控制条里省略，避免噪音 */
+.soeteck-consent-banner__eyebrow { display: none; }
+
+.soeteck-consent-banner__copy { min-width: 0; flex: 1 1 auto; display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 8px; row-gap: 2px; }
+.soeteck-consent-banner__title { margin: 0; font-size: 0.9375rem; font-weight: var(--soeteck-weight-bold); line-height: 1.3; white-space: nowrap; }
+.soeteck-consent-banner__body { margin: 0; color: var(--soeteck-text-soft); font-size: 0.8125rem; line-height: 1.5; }
+.soeteck-consent-banner__body a { color: var(--soeteck-primary); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
+.soeteck-consent-banner__body a:hover { color: var(--soeteck-primary-dark); }
+
+.soeteck-consent-banner__actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+
+/* 按钮 — 一个实心主按钮 + 一个描边 + 一个文字链 */
+.soeteck-consent__btn {
+  display: inline-flex;
+  font-family: var(--soeteck-font-ui);
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: var(--soeteck-weight-semibold);
+  line-height: 1;
+  text-align: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast), border-color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast);
+}
+/* hover 反馈改用 background/border，不用 transform 位移——避免在毛玻璃 banner 合成层上重影 */
+.soeteck-consent__btn--primary { background: var(--soeteck-primary); color: #fff; box-shadow: 0 6px 16px rgba(26, 133, 229, 0.28); }
+.soeteck-consent__btn--primary:hover { background: var(--soeteck-primary-dark); color: #fff; }
+.soeteck-consent__btn--outline { background: transparent; color: var(--soeteck-primary); border-color: var(--soeteck-primary); }
+.soeteck-consent__btn--outline:hover { background: var(--soeteck-primary); color: #fff; }
+.soeteck-consent__btn--ghost { background: none; color: var(--soeteck-muted); border-color: transparent; font-weight: var(--soeteck-weight-medium); padding: 0 8px; }
+.soeteck-consent__btn--ghost:hover { color: var(--soeteck-text); background: none; transform: none; }
+
+/* ═══════════════ 悬浮 chip — 小品牌药丸 ═══════════════ */
+.soeteck-consent-chip {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 9980;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 15px;
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(11, 31, 58, 0.12);
+  color: var(--soeteck-text-soft);
+  font-size: 0.8125rem;
+  font-weight: var(--soeteck-weight-semibold);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity var(--soeteck-transition-medium), visibility var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+}
+.soeteck-consent-chip.is-visible { opacity: 1; visibility: visible; transform: translateY(0); }
+.soeteck-consent-chip:hover { border-color: var(--soeteck-primary); color: var(--soeteck-primary); }
+.soeteck-consent-chip__icon { display: inline-flex; width: 16px; height: 16px; color: var(--soeteck-primary); }
+.soeteck-consent-chip__icon svg { display: block; width: 16px; height: 16px; fill: currentColor; }
+
+/* ═══════════════ Drawer — 干净中置面板 ═══════════════ */
+.soeteck-consent-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  display: grid;
+  place-items: center;
+  padding: clamp(20px, 4vw, 40px);
+  background: rgba(11, 31, 58, 0.42);
+  backdrop-filter: blur(2px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 240ms ease-out, visibility 240ms ease-out;
+}
+.soeteck-consent-overlay.is-open { opacity: 1; visibility: visible; }
+
+.soeteck-consent-drawer {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: min(86vh, 720px);
+  display: flex;
+  flex-direction: column;
+  background: var(--soeteck-white);
+  border-radius: 16px;
+  box-shadow: 0 40px 90px rgba(11, 31, 58, 0.26);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 240ms cubic-bezier(0.4, 0, 0.2, 1), transform 240ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.soeteck-consent-overlay.is-open .soeteck-consent-drawer { opacity: 1; transform: scale(1); }
+
+.soeteck-consent-drawer__header {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 26px 16px;
+  border-bottom: 1px solid var(--soeteck-border-soft);
+  background:
+    linear-gradient(180deg, rgba(232, 243, 255, 0.65), transparent 70%);
+}
+.soeteck-consent-drawer__title { margin: 0; font-size: 19px; font-weight: var(--soeteck-weight-bold); line-height: 1.25; }
+.soeteck-consent-drawer__close {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: 10px;
+  background: transparent;
+  color: var(--soeteck-muted);
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  transition: background var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+}
+.soeteck-consent-drawer__close:hover { background: var(--soeteck-surface); color: var(--soeteck-text); }
+
+.soeteck-consent-drawer__body { padding: 2px 26px 6px; overflow-y: auto; overscroll-behavior: contain; }
+
+.soeteck-consent-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--soeteck-border-soft);
+}
+.soeteck-consent-row:last-child { border-bottom: 0; }
+.soeteck-consent-row__label-wrap { min-width: 0; flex: 1; }
+.soeteck-consent-row__label { margin: 0; font-size: 0.9375rem; font-weight: var(--soeteck-weight-semibold); line-height: 1.35; }
+.soeteck-consent-row__desc { margin: 3px 0 0; color: var(--soeteck-muted); font-size: 0.8125rem; line-height: 1.55; }
+.soeteck-consent-row__note { margin: 4px 0 0; color: var(--soeteck-muted); font-size: 0.75rem; font-weight: var(--soeteck-weight-medium); font-style: italic; }
+
+/* 开关 — 46×24 品牌蓝 switch */
+.soeteck-consent-switch {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  border-radius: 12px;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background 200ms ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.soeteck-consent-switch:has(input:checked) { background: var(--soeteck-primary); }
+.soeteck-consent-switch__input { position: absolute; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; z-index: 2; }
+.soeteck-consent-switch__knob { position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+.soeteck-consent-switch:has(input:checked) .soeteck-consent-switch__knob { transform: translateX(22px); }
+.soeteck-consent-switch--disabled { cursor: not-allowed; opacity: 0.85; }
+.soeteck-consent-switch--disabled .soeteck-consent-switch__input { cursor: not-allowed; }
+
+.soeteck-consent-drawer__us-note { display: flex; align-items: flex-start; gap: 10px; margin: 14px 0 8px; padding: 12px 14px; border: 1px solid var(--soeteck-border); border-radius: 10px; background: var(--soeteck-surface); color: var(--soeteck-text-soft); font-size: 0.8125rem; line-height: 1.5; }
+
+.soeteck-consent-drawer__footer { display: flex; flex-direction: column; gap: 12px; padding: 14px 26px 22px; border-top: 1px solid var(--soeteck-border-soft); }
+.soeteck-consent-drawer__footer .row { display: flex; gap: 10px; }
+.soeteck-consent-drawer__footer .row > * { flex: 1; }
+.soeteck-consent-drawer__footer .cb { display: flex; justify-content: space-between; align-items: center; }
+.soeteck-consent-drawer__footer .cb .reject { background: none; border: 0; color: var(--soeteck-muted); font-family: var(--soeteck-font-ui); font-size: 0.8125rem; text-decoration: underline; cursor: pointer; padding: 6px; }
+.soeteck-consent-drawer__footer .cb .reject:hover { color: var(--soeteck-text); }
+
+/* Toast */
+.soeteck-consent-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 9999;
+  min-height: 42px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  background: var(--soeteck-navy);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: var(--soeteck-weight-medium);
+  box-shadow: 0 14px 34px rgba(11, 31, 58, 0.3);
+  transform: translateX(-50%) translateY(16px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--soeteck-transition-medium), visibility var(--soeteck-transition-medium), transform var(--soeteck-transition-medium);
+}
+.soeteck-consent-toast.is-visible { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+/* ═══════════════ 响应式 ═══════════════ */
+@media (max-width: 760px) {
+  .soeteck-consent-banner {
+    width: calc(100vw - 16px);
+    bottom: max(8px, env(safe-area-inset-bottom, 0px));
+    border-radius: 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px 18px 18px;
+    max-height: 84vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .soeteck-consent-banner__copy { display: block; }
+  .soeteck-consent-banner__title { white-space: normal; margin-bottom: 2px; }
+  .soeteck-consent-banner__actions { flex-wrap: wrap; }
+  .soeteck-consent-banner__actions > * { flex: 1 1 auto; min-width: 0; min-height: 44px; }
+  .soeteck-consent-banner__actions .soeteck-consent__btn--ghost { order: -1; color: var(--soeteck-primary); min-height: 40px; }
+
+  .soeteck-consent-chip {
+    left: max(16px, env(safe-area-inset-left, 0px));
+    bottom: max(16px, env(safe-area-inset-bottom, 0px));
+    min-height: 44px;
+  }
+
+  .soeteck-consent-overlay { padding: 0; align-items: flex-end; }
+  .soeteck-consent-drawer {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: 16px 16px 0 0;
+    padding-bottom: max(20px, env(safe-area-inset-bottom, 0px));
+    transform: translateY(12px) scale(1);
+    transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1), transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .soeteck-consent-overlay.is-open .soeteck-consent-drawer { transform: translateY(0) scale(1); }
+  .soeteck-consent-drawer__header, .soeteck-consent-drawer__body { padding-left: 20px; padding-right: 20px; }
+  .soeteck-consent-drawer__footer { padding-left: 20px; padding-right: 20px; padding-bottom: 0; }
+}
+
+/* ═══════════════ 减少动效 ═══════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .soeteck-consent-banner,
+  .soeteck-consent-chip,
+  .soeteck-consent-overlay,
+  .soeteck-consent-drawer,
+  .soeteck-consent-row,
+  .soeteck-consent-toast,
+  .soeteck-consent-switch,
+  .soeteck-consent-switch__knob,
+  .soeteck-consent__btn { transition: none !important; animation: none !important; }
+}

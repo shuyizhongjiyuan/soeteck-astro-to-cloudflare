@@ -1,6 +1,7 @@
 ---
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import CookieConsent from '@/components/CookieConsent.astro';
 import { fetchGlobalConfig } from '@/lib/content-api';
 
 interface Props {
@@ -15,12 +16,51 @@ interface Props {
 
 const { title, description, canonical, robots = 'index,follow', lang = 'en', localizedPaths, schemas } = Astro.props;
 const globalConfig = await fetchGlobalConfig(lang);
+
+// ── 追踪与同意配置（ADR-023 / spec 2026-08-20-consent-tracking-design） ──
+const tracking = globalConfig.tracking;
+const consent = globalConfig.consent;
+const gtmId = tracking?.gtmId ?? '';
+const isProd = import.meta.env.PROD;
 ---
 <!doctype html>
 <html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* ═══ Consent Mode v2 初始化（必须在 GTM 之前）ADR-023 ═══ */}
+    {/* 4 信号先保守 deny；security/functionality（必要类）恒 granted。
+        geo+偏好解析后由 consent 模块触发 consent:update。 */}
+    {isProd ? (
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('consent','default',{
+          'ad_storage':'denied',
+          'ad_user_data':'denied',
+          'ad_personalization':'denied',
+          'analytics_storage':'denied',
+          'functionality_storage':'granted',
+          'security_storage':'granted',
+          'wait_for_update':500
+        });
+      </script>
+    ) : (
+      <script is:inline>window.dataLayer = window.dataLayer || [];</script>
+    )}
+    {/* ═══ Google Tag Manager（生产 + gtmId 才注入） === */}
+    {isProd && gtmId && (
+      <script is:inline>
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','{gtmId}');
+      </script>
+    )}
+    {/* ═══ End Google Tag Manager === */}
+
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
@@ -38,11 +78,18 @@ const globalConfig = await fetchGlobalConfig(lang);
     ))}
   </head>
   <body>
+    {/* GTM noscript fallback（生产 + gtmId） */}
+    {isProd && gtmId && (
+      <noscript>
+        <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
+      </noscript>
+    )}
     <Header globalConfig={globalConfig} lang={lang} />
     <main id="main" class="site-main">
       <slot />
     </main>
     <Footer globalConfig={globalConfig} lang={lang} />
+    <CookieConsent consent={consent} lang={lang} />
     <script>
       import { initLightbox } from '@/lib/lightbox';
       initLightbox();
@@ -133,36 +180,13 @@ const globalConfig = await fetchGlobalConfig(lang);
     transition: transform 0.5s ease;
   }
 
-  /* ── Homepage overlay header ────────────────────────────────
-     初始态透明、悬浮在 hero 背景图之上；滚动后恢复实色。
-     Hero 上拉 70px 使其顶到页面顶部，被透明 header 覆盖的区域
-     透出 hero 背景图。 */
+  /* ── Homepage header（2026-08-17：恒为浅色实底 + 深色字）──
+     用户要求首页 header 背景 #f3f3f3、文字深色；不再透明悬浮。 */
   body .site-header--overlay {
-    background: transparent;
-    border-top: none;
-    box-shadow: none;
-    padding-top: 7px;
+    background: #f3f3f3;
   }
   body .site-header--overlay.site-header--scrolled {
     background: #f3f3f3;
-    border-top: 7px solid #0058a7;
-    box-shadow: 0 1px 5px rgba(33, 33, 33, 0.46);
-    padding-top: 0;
-  }
-  /* Hero 上拉至页面顶部，透明 header 悬浮其上 */
-  body .site-header--overlay ~ main .home-hero {
-    margin-top: -77px;
-  }
-  /* 未滚动（悬浮在深色 hero 上）时导航文字转白 */
-  body .site-header--overlay:not(.site-header--scrolled) .primary-menu-link,
-  body .site-header--overlay:not(.site-header--scrolled) .submenu-toggle,
-  body .site-header--overlay:not(.site-header--scrolled) .dropdown-chevron,
-  body .site-header--overlay:not(.site-header--scrolled) .header-icon-button,
-  body .site-header--overlay:not(.site-header--scrolled) .language-toggle {
-    color: #fff;
-  }
-  body .site-header--overlay:not(.site-header--scrolled) .menu-toggle-line {
-    background: #fff;
   }
 
   .header-inner {
@@ -1018,7 +1042,8 @@ const globalConfig = await fetchGlobalConfig(lang);
     padding: 0;
   }
   body .site-header--overlay {
-    padding-top: 7px;
+    padding-top: 3px;
+    padding-bottom: 3px;
   }
 
   body .site-header .header-inner {

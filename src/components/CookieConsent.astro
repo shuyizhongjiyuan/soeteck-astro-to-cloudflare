@@ -1,0 +1,450 @@
+---
+/// <reference types="astro/client" />
+import './CookieConsent.css';
+import type { ConsentConfig, ConsentCopy } from '@/lib/content-api';
+
+interface Props {
+  consent?: ConsentConfig;
+  lang?: string;
+}
+
+/**
+ * Cookie 同意组件（ADR-023 / spec 2026-08-20-consent-tracking-design）
+ *
+ * 三形态：底部 banner（EEA 首访）/ 居中抽屉（设置）/ 悬浮 chip（随时重开）。
+ * 仅在 consent.enabled 时服务端渲染；显示与否由客户端 geo 检测决定：
+ *   - eea —— 未选则弹 banner，已选则提供 chip
+ *   - us  —— 不主动弹 banner，提供 chip + opt-out（GPC 识别）
+ *   - rest —— 全不显示（默认全量追踪）
+ *
+ * 全局重开：暴露 window.__soeteckOpenConsent()，政策页可用；
+ * 亦可带 ?cookie-settings=1 查询参数进入设置。
+ */
+
+const { consent, lang = 'en' } = Astro.props;
+const enabled = consent?.enabled === true;
+// 预览模式：WP 开关 + dev 环境 → dev 服务器每页强制显示 cookie UI（生产不受影响）
+const preview = consent?.preview === true && import.meta.env.DEV;
+const renderConsent = enabled || preview;
+
+// 硬编码 EN 兜底（文案最终读 copy[lang]，EN 为回退，最坏情况不空白）
+const EN_DEFAULTS: ConsentCopy = {
+  banner_title: 'We value your privacy',
+  banner_body: 'We use cookies to enhance your experience and analyse our traffic. See our Cookie Policy and Privacy Policy.',
+  accept: 'Accept all',
+  decline: 'Decline all',
+  settings_open: 'Cookie settings',
+  drawer_title: 'Cookie settings',
+  drawer_save: 'Confirm choices',
+  drawer_accept: 'Accept all',
+  chip: 'Cookies',
+  us_out: 'Do not sell or share my personal information',
+  cat_necessary_label: 'Necessary',
+  cat_necessary_desc: 'Required for the website to function and securely deliver pages.',
+  cat_analytics_label: 'Analytics',
+  cat_analytics_desc: 'Helps us understand how visitors use the site and improve it.',
+  cat_marketing_label: 'Marketing',
+  cat_marketing_desc: 'Used to show you relevant advertising across the web.',
+};
+
+// Content API 的 globalConfig.consent.copy 是按请求语言解析后的【扁平】结构
+// （WP getConsentCopy() 返回「EN 默认 + 本语言已存值覆盖」后的当前语言文案）。
+// 组件按扁平读取；EN_DEFAULTS 作最末兜底。无需再按语言嵌套。
+const copy: ConsentCopy = { ...EN_DEFAULTS, ...(consent?.copy ?? {}) };
+
+const categories = consent?.categories ?? ['necessary', 'analytics', 'marketing'];
+const eeaCodes = consent?.geoTiers?.eea ?? [];
+
+const enabledAny = ['necessary', 'analytics', 'marketing'].filter((c) => categories.includes(c as ConsentConfig['categories'][number]));
+const hasAnalytics = enabledAny.includes('analytics');
+const hasMarketing = enabledAny.includes('marketing');
+
+// 序列化给客户端逻辑用的最小配置
+const runtimeConfig = {
+  lang,
+  eeaCodes,
+  categories: enabledAny,
+  copy,
+  preview,
+};
+
+const chipIcon = /* svg */ `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M13.53 2.552l2.667 1.104a1 1 0 0 1 .414 1.53a3 3 0 0 0 3.492 4.604a1 1 0 0 1 1.296 .557l.049 .122a4 4 0 0 1 0 3.062l-.079 .151c-.467 .74 -.785 1.314 -.945 1.7c-.166 .4 -.373 1.097 -.613 2.073l-.047 .144a4 4 0 0 1 -2.166 2.164l-.139 .046c-1.006 .253 -1.705 .461 -2.076 .615c-.412 .17 -.982 .486 -1.696 .942l-.156 .082a4 4 0 0 1 -3.062 0l-.148 -.077c-.759 -.475 -1.333 -.793 -1.704 -.947c-.413 -.171 -1.109 -.378 -2.07 -.612l-.146 -.048a4 4 0 0 1 -2.164 -2.166l-.046 -.138c-.254 -1.009 -.463 -1.709 -.615 -2.078q -.256 -.621 -.942 -1.695l-.082 -.156a4 4 0 0 1 0 -3.062l.084 -.16c.447 -.692 .761 -1.262 .94 -1.692c.147 -.355 .356 -1.057 .615 -2.078l.045 -.138a4 4 0 0 1 2.166 -2.164l.141 -.047c.988 -.245 1.686 -.453 2.074 -.614c.395 -.164 .967 -.48 1.7 -.944l.152 -.08a4 4 0 0 1 3.062 0m-1.531 13.448a1 1 0 0 0 -1 1v.01a1 1 0 0 0 2 0v-.01a1 1 0 0 0 -1 -1m4 -3a1 1 0 0 0 -1 1v.01a1 1 0 0 0 2 0v-.01a1 1 0 0 0 -1 -1m-8 -1a1 1 0 0 0 -1 1v.01a1 1 0 0 0 2 0v-.01a1 1 0 0 0 -1 -1m4 -1a1 1 0 0 0 -1 1v.01a1 1 0 0 0 2 0v-.01a1 1 0 0 0 -1 -1m-1 -4c-.552 0 -1 .448 -1 1.01a1 1 0 1 0 2 -.01a1 1 0 0 0 -1 -1" /></svg>`;
+---
+{renderConsent && (
+  <>
+    <div class="soeteck-consent" id="soeteck-consent" data-consent-root>
+      <script type="application/json" id="soeteck-consent-config" set:html={JSON.stringify(runtimeConfig)}></script>
+
+      {/* ── 悬浮 chip：可随时重开抽屉（EEA 已选 / US） ── */}
+      <button
+        type="button"
+        class="soeteck-consent-chip"
+        id="soeteck-consent-chip"
+        aria-haspopup="dialog"
+        data-consent-open
+      >
+        <span class="soeteck-consent-chip__icon" set:html={chipIcon}></span>
+        <span data-consent-chip-label>{copy.chip}</span>
+      </button>
+
+      {/* ── Banner：底部通栏（EEA 首访） §3.1 ── */}
+      <div
+        class="soeteck-consent-banner soeteck-consent-banner--enter"
+        id="soeteck-consent-banner"
+        role="region"
+        aria-label={copy.banner_title}
+      >
+        <div class="soeteck-consent-banner__copy">
+          <p class="soeteck-consent-banner__eyebrow">{copy.chip}</p>
+          <h2 class="soeteck-consent-banner__title">{copy.banner_title}</h2>
+          <p class="soeteck-consent-banner__body" set:html={copy.banner_body}></p>
+        </div>
+        <div class="soeteck-consent-banner__actions">
+          <button type="button" class="soeteck-consent__btn soeteck-consent__btn--primary" data-banner-accept>
+            {copy.accept}
+          </button>
+          <button type="button" class="soeteck-consent__btn soeteck-consent__btn--outline" data-banner-decline>
+            {copy.decline}
+          </button>
+          <button type="button" class="soeteck-consent__btn soeteck-consent__btn--ghost" data-banner-settings>
+            {copy.settings_open}
+          </button>
+        </div>
+      </div>
+
+      {/* ── Drawer：居中模态 / 移动端底部 sheet §3.4 ── */}
+      <div class="soeteck-consent-overlay" id="soeteck-consent-overlay" data-consent-overlay>
+        <div
+          class="soeteck-consent-drawer"
+          id="soeteck-consent-dialog"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="soeteck-consent-drawer-title"
+          tabindex="-1"
+          data-consent-dialog
+        >
+          <div class="soeteck-consent-drawer__header">
+            <h2 class="soeteck-consent-drawer__title" id="soeteck-consent-drawer-title">{copy.drawer_title}</h2>
+            <button type="button" class="soeteck-consent-drawer__close" data-consent-close aria-label="Close">
+              &times;
+            </button>
+          </div>
+
+          <div class="soeteck-consent-drawer__body">
+            {categories.includes('analytics') && (
+                  <div class="soeteck-consent-row" data-consent-row>
+                    <div class="soeteck-consent-row__label-wrap">
+                      <p class="soeteck-consent-row__label">{copy.cat_analytics_label}</p>
+                      <p class="soeteck-consent-row__desc">{copy.cat_analytics_desc}</p>
+                    </div>
+                    <label class="soeteck-consent-switch">
+                      <input
+                        class="soeteck-consent-switch__input"
+                        type="checkbox"
+                        data-consent-switch="analytics"
+                        aria-label={copy.cat_analytics_label}
+                      />
+                      <span class="soeteck-consent-switch__knob"></span>
+                    </label>
+                  </div>
+                )}
+                {categories.includes('marketing') && (
+                  <div class="soeteck-consent-row" data-consent-row>
+                    <div class="soeteck-consent-row__label-wrap">
+                      <p class="soeteck-consent-row__label">{copy.cat_marketing_label}</p>
+                      <p class="soeteck-consent-row__desc">{copy.cat_marketing_desc}</p>
+                    </div>
+                    <label class="soeteck-consent-switch">
+                      <input
+                        class="soeteck-consent-switch__input"
+                        type="checkbox"
+                        data-consent-switch="marketing"
+                        aria-label={copy.cat_marketing_label}
+                      />
+                      <span class="soeteck-consent-switch__knob"></span>
+                    </label>
+                  </div>
+                )}
+                {categories.includes('necessary') && (
+                  <div class="soeteck-consent-row" data-consent-row>
+                    <div class="soeteck-consent-row__label-wrap">
+                      <p class="soeteck-consent-row__label">{copy.cat_necessary_label}</p>
+                      <p class="soeteck-consent-row__desc">{copy.cat_necessary_desc}</p>
+                      <p class="soeteck-consent-row__note">Always on</p>
+                    </div>
+                    <label class="soeteck-consent-switch soeteck-consent-switch--disabled">
+                      <input
+                        class="soeteck-consent-switch__input"
+                        type="checkbox"
+                        data-consent-switch="necessary"
+                        aria-label={copy.cat_necessary_label}
+                        checked
+                        disabled
+                      />
+                      <span class="soeteck-consent-switch__knob"></span>
+                    </label>
+                  </div>
+                )}
+
+            <div class="soeteck-consent-drawer__us-note" id="soeteck-consent-us-note" hidden>
+              {copy.us_out}
+            </div>
+          </div>
+
+          <div class="soeteck-consent-drawer__footer">
+            <button type="button" class="soeteck-consent__btn soeteck-consent__btn--primary" data-drawer-save>
+              {copy.drawer_save}
+            </button>
+            {hasMarketing || hasAnalytics ? (
+              <button type="button" class="soeteck-consent__btn soeteck-consent__btn--outline" data-drawer-accept>
+                {copy.drawer_accept}
+              </button>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      {/* Toast 反馈 */}
+      <div class="soeteck-consent-toast" id="soeteck-consent-toast" role="status" aria-live="polite"></div>
+    </div>
+  </>
+)}
+
+<script>
+  import {
+    CATEGORY_SIGNALS,
+    categoryModesToSignals,
+    consentUpdate,
+    readStoredConsent,
+    resolveCategoryModes,
+    saveConsent,
+  } from '@/lib/consent';
+  import { detectGeoRegion, hasGPC } from '@/lib/geo';
+  import type { GeoRegion } from '@/lib/geo';
+  import type { ConsentCopy } from '@/lib/content-api';
+
+  type RuntimeCfg = {
+    lang: string;
+    eeaCodes: string[];
+    categories: string[];
+    copy: ConsentCopy;
+    preview: boolean;
+  };
+
+  const root = document.getElementById('soeteck-consent');
+  if (!root) throw new Error('CookieConsent root missing');
+
+  const cfgEl = document.getElementById('soeteck-consent-config');
+  const cfg: RuntimeCfg = cfgEl ? JSON.parse(cfgEl.textContent || '{}') : { lang: 'en', eeaCodes: [], categories: [], copy: {} as ConsentCopy, preview: false };
+
+  // DOM refs
+  const banner = document.getElementById('soeteck-consent-banner') as HTMLElement | null;
+  const chip = document.getElementById('soeteck-consent-chip') as HTMLElement | null;
+  const overlay = document.getElementById('soeteck-consent-overlay') as HTMLElement | null;
+  const dialog = document.getElementById('soeteck-consent-dialog') as HTMLElement | null;
+  const toast = document.getElementById('soeteck-consent-toast') as HTMLElement | null;
+  const usNote = document.getElementById('soeteck-consent-us-note') as HTMLElement | null;
+  const switches = Array.from(root.querySelectorAll<HTMLInputElement>('[data-consent-switch]'));
+
+  let region: GeoRegion = 'eea';
+  let gpc = false;
+  let lastFocus: HTMLElement | null = null;
+  let scrollY = 0;
+  let scrollLocked = false; // 仅当真正 lockScroll 过才在 unlock 时还原滚动，避免误 scrollTo(0,0)
+  let bannerPending = false; // banner 首访未决（EAE）→ 抽屉取消时需恢复 banner
+
+  function showBanner(): void {
+    if (!banner) return;
+    banner.classList.remove('soeteck-consent-banner--enter');
+    banner.classList.add('is-visible');
+    hideChip(); // banner 与 chip 互斥，不同时显示
+  }
+  function hideBanner(): void {
+    banner?.classList.remove('is-visible');
+    banner?.classList.add('soeteck-consent-banner--enter');
+  }
+  function showChip(): void {
+    chip?.classList.add('is-visible');
+    hideBanner(); // banner 与 chip 互斥
+  }
+  function hideChip(): void {
+    chip?.classList.remove('is-visible');
+  }
+
+  function showToast(text: string): void {
+    if (!toast) return;
+    toast.textContent = text;
+    toast.classList.add('is-visible');
+    window.setTimeout(() => toast.classList.remove('is-visible'), 2600);
+  }
+
+  // ── 抽屉开关 ──
+  function lockScroll(): void {
+    if (scrollLocked) return; // 幂等：避免重复锁定覆盖已捕获的 scrollY
+    scrollLocked = true;
+    scrollY = window.scrollY;
+    const html = document.documentElement;
+    html.style.setProperty('--soeteck-consent-scroll-y', `-${scrollY}px`);
+    html.classList.add('soeteck-consent-scroll-lock');
+  }
+  function unlockScroll(): void {
+    if (!scrollLocked) return; // 未锁定则不触碰滚动（避免误 scrollTo(0,0) 跳顶）
+    scrollLocked = false;
+    const html = document.documentElement;
+    html.classList.remove('soeteck-consent-scroll-lock');
+    html.style.removeProperty('--soeteck-consent-scroll-y');
+    window.scrollTo(0, scrollY);
+  }
+
+  function syncSwitchesFromState(): void {
+    const stored = readStoredConsent();
+    const modes = resolveCategoryModes(region, stored, gpc);
+    switches.forEach((sw) => {
+      const cat = sw.dataset.consentSwitch as keyof typeof CATEGORY_SIGNALS;
+      if (cat === 'necessary') return;
+      sw.checked = modes[cat as 'analytics' | 'marketing'] === 'granted';
+    });
+  }
+  function readSwitchState(): { analytics: boolean; marketing: boolean } {
+    const get = (cat: 'analytics' | 'marketing') => {
+      if (!cfg.categories.includes(cat)) return true; // 类别未启用视为全开
+      const el = root.querySelector<HTMLInputElement>(`[data-consent-switch="${cat}"]`);
+      return el ? el.checked : false;
+    };
+    return { analytics: get('analytics'), marketing: get('marketing') };
+  }
+
+  function openDrawer(source: 'banner' | 'chip' = 'chip'): void {
+    if (!overlay || !dialog) return;
+    bannerPending = source === 'banner';
+    if (source === 'banner') hideBanner();
+    hideChip(); // 面板打开时不显示 chip（免得多余）
+    syncSwitchesFromState();
+    lastFocus = document.activeElement as HTMLElement | null;
+    overlay.classList.add('is-open');
+    lockScroll();
+    window.setTimeout(() => {
+      const focusable = getFocusable(dialog!);
+      (focusable[0] as HTMLElement | undefined)?.focus();
+    }, 60);
+  }
+  function closeDrawer(): void {
+    if (!overlay || !dialog) return;
+    overlay.classList.remove('is-open');
+    unlockScroll();
+    // chip = banner 与面板都关闭后的「重新设置」入口 → 面板关闭即显示 chip（与 banner 互斥）
+    window.setTimeout(showChip, 150);
+    window.setTimeout(() => lastFocus?.focus({ preventScroll: true }), 60);
+  }
+
+  // ── actions ──
+  function acceptAll(): void {
+    saveConsent({ analytics: true, marketing: true });
+    hideBanner();
+    showChip();
+    closeDrawer();
+    showToast(cfg.copy.accept);
+  }
+  function declineAll(): void {
+    saveConsent({ analytics: false, marketing: false });
+    hideBanner();
+    showChip();
+    showToast(cfg.copy.decline);
+  }
+  function confirmChoices(): void {
+    const state = readSwitchState();
+    saveConsent(state);
+    hideBanner();
+    showChip();
+    closeDrawer();
+    showToast(cfg.copy.drawer_save);
+  }
+
+  // ── focus trap ──
+  function getFocusable(container: HTMLElement): HTMLElement[] {
+    return Array.from(
+      container.querySelectorAll<HTMLElement>(
+        'button, [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      ),
+    ).filter((el) => el.offsetParent !== null || el === document.activeElement);
+  }
+  dialog?.addEventListener('keydown', (event) => {
+    if (event.key !== 'Tab') return;
+    const focusable = getFocusable(dialog!);
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey) {
+      if (document.activeElement === first || !dialog!.contains(document.activeElement)) {
+        event.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+
+  // ── wire events ──
+  root.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement;
+    if (target.closest('[data-consent-open]')) { openDrawer('chip'); return; }
+    if (target.closest('[data-banner-accept]')) { event.preventDefault(); acceptAll(); return; }
+    if (target.closest('[data-banner-decline]')) { event.preventDefault(); declineAll(); return; }
+    if (target.closest('[data-banner-settings]')) { event.preventDefault(); openDrawer('banner'); return; }
+    if (target.closest('[data-drawer-save]')) { event.preventDefault(); confirmChoices(); return; }
+    if (target.closest('[data-drawer-accept]')) { event.preventDefault(); acceptAll(); return; }
+    if (target.closest('[data-consent-close]')) { event.preventDefault(); closeDrawer(); return; }
+    // 仅点击遮罩（抽屉外）才关闭；抽屉内部点击不关（closest 会误命中子元素，故用 === overlay）
+    if (target === overlay) { closeDrawer(); return; }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && overlay?.classList.contains('is-open')) closeDrawer();
+  });
+
+  // ── 全局重开（政策页） + query 参数 ──
+  (window as any).__soeteckOpenConsent = function (): void {
+    if (overlay?.classList.contains('is-open')) return;
+    bannerPending = false;
+    if (banner) { hideBanner(); if (region === 'eea' && !readStoredConsent()) bannerPending = true; }
+    openDrawer('chip');
+  };
+  document.addEventListener('soeteck:open-consent', () => (window as any).__soeteckOpenConsent?.());
+
+  // ── 初始化：geo → update 信号 → 决定显示 ──
+  async function init(): Promise<void> {
+    // 预览模式：忽略地区与已选状态，直接强制展示 banner + chip（供 dev 检查设计与交互）
+    if (cfg.preview) {
+      showBanner(); // 预览默认显示 banner（设计+交互）；接受/拒绝后 chip 出现（二者互斥）
+      bannerPending = true;
+      return;
+    }
+
+    const geo = await detectGeoRegion(cfg.eeaCodes);
+    region = geo.region;
+    gpc = hasGPC();
+
+    // EEA 首访：geo 已知即 push consent:update（保守 deny 由 head 的 consent:default 承载）
+    const stored = readStoredConsent();
+    consentUpdate(categoryModesToSignals(resolveCategoryModes(region, stored, gpc)));
+
+    const wantsSettings = new URLSearchParams(window.location.search).get('cookie-settings') === '1';
+    if (wantsSettings) { (window as any).__soeteckOpenConsent?.(); return; }
+
+    if (region === 'eea') {
+      if (!stored) {
+        bannerPending = true;
+        window.setTimeout(showBanner, 600); // 页面进入后再弹，避免和首屏渲染抢
+      } else {
+        showChip();
+      }
+    } else if (region === 'us') {
+      showChip();
+      if (usNote) usNote.hidden = false; // US 提供 opt-out 入口说明
+    }
+    // rest：全不显示（默认全量）
+  }
+
+  void init();
+</script>
