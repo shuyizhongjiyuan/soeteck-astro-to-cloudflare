@@ -14,3 +14,5 @@
     "not_found_handling": "404-page"
   }
 }
+
+  // build-trigger 2026-08-21: force CF re-build (previous git push build failed, no code change)
