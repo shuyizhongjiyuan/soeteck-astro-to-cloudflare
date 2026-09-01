@@ -8,8 +8,11 @@
   },
   "scripts": {
     "dev": "astro dev --host 0.0.0.0",
-    "build": "astro build",
-    "preview": "astro preview --host 127.0.0.1"
+    "build": "node scripts/build-search-index.mjs && astro build",
+    "preview": "astro preview --host 127.0.0.1",
+    "search:index": "node scripts/build-search-index.mjs",
+    "perf:local": "node scripts/perf-lighthouse.mjs",
+    "perf:gate": "node scripts/perf-lighthouse.mjs --paths=/en/ && echo GATE-BASELINE-RUN"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -17,5 +20,8 @@
     "@astrojs/sitemap": "^3.7.3",
     "astro": "^7.1.5",
     "typescript": "^6.0.3"
+  },
+  "devDependencies": {
+    "lighthouse": "^13.4.1"
   }
 }
