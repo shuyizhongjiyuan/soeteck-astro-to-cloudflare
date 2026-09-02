@@ -1,0 +1,43 @@
+# Cloudflare Workers Static Assets 重定向规则
+# 每行格式：source destination [status]
+#   默认 status=302；301 需显式。支持通配符 *（destination 用 :splat 引用）和占位符 :name。
+# 上限：2000 静态重定向 + 100 动态。本文件随 git 部署（push 触发 Workers 构建即生效）。
+#
+# 来源：docs/collaboration/tasks/2026-08-13-sunwei-astro-launch/checklist-60-url-gaps.md
+# 维护：由 checklist 已确认 301 项转写；G2(earthfirst) 跳过、G7/G8/G9 待查生产、G1 待确认后补。
+# G4（2026-08-14）：/news-and-insights/ 现在是真实 hub 页（NewsInsightsHubPage），移除 5 条 301。
+
+# ─────────────────────────────────────────────────────────────
+# G1 — faq 单复数（20 条，checklist 推荐 301 → /X/faqs/；处理方式「faq 保留待开发 + 子分类删除」）
+# ⚠️ 待确认后补：faq 主页面保留（待开发）与 301 到 faqs 的关系未定，暂不写入。
+
+# ─────────────────────────────────────────────────────────────
+# G4 — news-and-insights hub：2026-08-14 已开发 NewsInsightsHubPage 为真实汇总页，
+# 移除 5 条 301 规则。# G5 — data-center-solutions hub → ai-data-center（5 条，目标已验证存在）
+/en/solutions/data-center-solutions /en/solutions/data-center-solutions/ai-data-center/ 301
+/es/solutions/data-center-solutions /es/solutions/data-center-solutions/ai-data-center/ 301
+/pt/solutions/data-center-solutions /pt/solutions/data-center-solutions/ai-data-center/ 301
+/ru/solutions/data-center-solutions /ru/solutions/data-center-solutions/ai-data-center/ 301
+/zh/solutions/data-center-solutions /zh/solutions/data-center-solutions/ai-data-center/ 301
+
+# ─────────────────────────────────────────────────────────────
+# G6 — liquid-cooling-solutions hub → aicoolit（5 条，目标已验证存在）
+/en/solutions/liquid-cooling-solutions /en/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
+/es/solutions/liquid-cooling-solutions /es/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
+/pt/solutions/liquid-cooling-solutions /pt/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
+/ru/solutions/liquid-cooling-solutions /ru/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
+/zh/solutions/liquid-cooling-solutions /zh/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
+
+# ─────────────────────────────────────────────────────────────
+# G8 — container-ai 博客（5 条，生产站有原文 35414 → 待复刻到 CMS，非 301；复刻前暂不写规则）
+
+# G9 — do-i-need 博客（5 条，生产站有原文 35424 → 待复刻到 CMS，非 301；复刻前暂不写规则）
+
+# ─────────────────────────────────────────────────────────────
+# G7 — ai-server-liquid-cooling（5 条，待查生产确认后定 301/404）
+# ⚠️ 待确认（ai-server-liquid-cooling 生产是否有此页）
+
+# ─────────────────────────────────────────────────────────────
+# 通用前缀规则（generic_prefix，1 条覆盖 228 个旧 URL）
+# ⚠️ 风险：/* → /en/* 优先级高，会批量误伤 specific 规则。落地时须保证 specific 优先于 generic。
+# 待确认优先级策略后启用，暂不写入。

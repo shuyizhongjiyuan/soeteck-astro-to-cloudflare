@@ -1,6 +1,7 @@
 ---
 import type { GlobalConfigResponse } from '@/lib/content-api'
 import { getUITranslation } from '@/lib/translations'
+import shared from '../translations/shared.json'
 
 interface Props {
   globalConfig: GlobalConfigResponse
@@ -29,7 +30,18 @@ const footerTitleMap: Record<string, string> = {
   'News & Insights': 'nav.news',
   'News Releases': 'category.newsReleases',
   'Blog': 'category.blogs',
+  'Blogs': 'category.blogs',
   'Case Studies': 'category.caseStudies',
+  'Client Case Studies': 'category.caseStudies',
+  // 方案列（修复A 后来自 main-menu 子树；按菜单真实 title 精确匹配，避免非英语言显示英文）
+  'AI Data Center': 'solutions.aiDataCenter',
+  'AI Data Center Infrastructure': 'solutions.aiDataCenter',
+  'Liquid Cooling Data Center': 'solutions.liquidCoolingDC',
+  'Prefabricated Container Data Center': 'solutions.prefabContainerDC',
+  'Cabinet Modular Data Center': 'solutions.cabinetModularDC',
+  'Row Modular Data Center': 'solutions.rowModularDC',
+  'Aisle Modular Data Center': 'solutions.aisleModularDC',
+  'Data Center Cooling Solutions': 'solutions.dataCenterCooling',
   'Site Map': 'footer.siteMap',
   'Terms of Use': 'footer.termsOfUse',
   'Privacy Policy': 'footer.privacyPolicy',
@@ -38,24 +50,37 @@ const footerTitleMap: Record<string, string> = {
 function translateFooterTitle(title: string): string {
   if (lang === 'en') return title;
   const key = footerTitleMap[title];
-  if (!key) return title;
-  return getUITranslation(lang, key);
+  if (key) return getUITranslation(lang, key);
+  // 兜底：按英文原文在 ui.products / ui.solutions 反查（覆盖 CMS 菜单全部/新增条目）
+  for (const scope of ['products', 'solutions'] as const) {
+    for (const v of Object.values((shared.ui as Record<string, any>)[scope] ?? {})) {
+      if (v && typeof v === 'object' && (v as any).en === title) {
+        return (v as Record<string, string>)[lang] ?? title;
+      }
+    }
+  }
+  return title;
 }
 
-// Footer 内精简标题：仅在此处简写长标题，避免换行
-function shortenFooterTitle(title: string): string {
-  return title
-    .replace(/^Prefabricated /i, 'Prefab ')
-    .replace(/Data Center$/i, 'DC');
+// Footer 分类链接（与 Header 同源）：列头指向该分类的归档/入口页
+// API 组标题随语言变化（zh 为「产品中心」等），先按英文 key 匹配，未命中按固定组序兜底
+const footerGroupPath: Record<string, string> = {
+  'Products': `/${lang}/products/`,
+  'Solutions': `/${lang}/solutions/`,
+  'News & Insights': `/${lang}/news-and-insights/`,
+}
+const FOOTER_GROUP_PATHS = [`/${lang}/products/`, `/${lang}/solutions/`, `/${lang}/news-and-insights/`]
+function groupPath(title: string, index: number): string {
+  return footerGroupPath[title] || FOOTER_GROUP_PATHS[index] || '/'
 }
 
 // Use data from API, fall back to defaults if not available
 const logoUrl = globalConfig.site.logoWhite?.path || '/resources/soeteck-logo-2-1.webp'
-const footerSections = (globalConfig.footer.navigation || []).map(section => ({
+const footerSections = (globalConfig.footer.navigation || []).map((section, index) => ({
   title: translateFooterTitle(section.title),
-  path: section.items?.[0]?.path || '#',
+  path: groupPath(section.title, index),
   children: (section.items || []).map(item => ({
-    title: shortenFooterTitle(translateFooterTitle(item.title)),
+    title: translateFooterTitle(item.title),
     path: item.path,
   })),
 }))
@@ -86,8 +111,9 @@ const socialLinks = rawSocialLinks
         <a class="footer-logo" href={localizePath("/en/")} rel="home" aria-label="Soeteck">
           <img src={logoUrl} alt="Soeteck" width="240" height="59">
         </a>
+        <p class="footer-tagline">{getUITranslation(lang, 'footer.tagline')}</p>
         <div class="footer-social-block footer-social-block-desktop">
-          <h2 class="footer-social-title">{getUITranslation(lang, 'footer.connectWithUs')}</h2>
+          <div class="footer-social-title">{getUITranslation(lang, 'footer.connectWithUs')}</div>
           <div class="footer-social-links">
             {socialLinks.map(social => (
               <a href={social.url} aria-label={social.name} target="_blank" rel="noopener noreferrer">
@@ -115,7 +141,9 @@ const socialLinks = rawSocialLinks
       <nav class="footer-desktop-nav" aria-label="Footer navigation">
         {footerSections.map(section => (
           <div class="footer-column">
-            <h2 class="footer-column-title">{section.title}</h2>
+            <div class="footer-column-title">
+              <a href={localizePath(section.path)}>{section.title}</a>
+            </div>
             {section.children && (
               <ul>
                 {section.children.map(link => (
@@ -204,15 +232,30 @@ document.addEventListener('DOMContentLoaded', function() {
   const footer = document.querySelector('.site-footer')
   if (!footer) return
 
-  // Footer accordion toggles for mobile
+  // Footer accordion toggles for mobile（同级互斥：Products/Solutions/News 最多展开一个，
+  // 与 Header 移动端 accordion 行为一致；面板 max-height 用 scrollHeight 精确值，
+  // 避免 0→1200px 大行程导致展开瞬开、收起柔和的不对称）
   footer.querySelectorAll('.footer-accordion-toggle').forEach(button => {
     button.addEventListener('click', function() {
-      const isExpanded = this.getAttribute('aria-expanded') === 'true'
-      this.setAttribute('aria-expanded', isExpanded ? 'false' : 'true')
-
+      const willOpen = this.getAttribute('aria-expanded') !== 'true'
       const section = this.closest('.footer-accordion-section')
+      const panel = section ? section.querySelector(':scope > .footer-accordion-panel') : null
+
+      if (willOpen && section && section.parentElement) {
+        section.parentElement.querySelectorAll(':scope > .footer-accordion-section').forEach(sib => {
+          if (sib === section) return
+          sib.classList.remove('is-open')
+          const t = sib.querySelector(':scope > .footer-accordion-header .footer-accordion-toggle')
+          if (t) t.setAttribute('aria-expanded', 'false')
+          const sp = sib.querySelector(':scope > .footer-accordion-panel')
+          if (sp) sp.style.maxHeight = '0px'
+        })
+      }
+
       if (section) {
-        section.classList.toggle('is-open', !isExpanded)
+        this.setAttribute('aria-expanded', willOpen ? 'true' : 'false')
+        section.classList.toggle('is-open', willOpen)
+        if (panel) panel.style.maxHeight = willOpen ? (panel.scrollHeight + 'px') : '0px'
       }
     })
   })

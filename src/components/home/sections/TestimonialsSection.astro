@@ -1,0 +1,179 @@
+---
+/**
+ * TestimonialsSection — Standalone customer testimonial grid (Variant C).
+ * Light editorial section after the dark case carousel; independent from
+ * the carousel — no sync, no carousel. Renders one card per project card
+ * that carries a `testimonial` entry.
+ *
+ * @package Soeteck\Astro
+ */
+import type { HomeContent } from '../home-content';
+import { getUITranslation } from '@/lib/translations';
+
+interface Props {
+  projects: HomeContent['projects'];
+  lang?: string;
+}
+
+const { projects, lang = 'en' } = Astro.props;
+const testimonials = projects.cards
+  .map((card) => card.testimonial)
+  .filter((t): t is NonNullable<typeof t> => Boolean(t));
+const placeholders = testimonials.length % 3 === 0 ? 0 : 3 - (testimonials.length % 3);
+---
+
+{testimonials.length > 0 && (
+  <section class="home-testimonials" aria-label="Customer testimonials">
+    <div class="soeteck-container">
+      <div class="home-testimonials__head">
+        <p class="soeteck-eyebrow">{getUITranslation(lang, 'testimonials.eyebrow')}</p>
+        <h2 class="home-testimonials__title">{getUITranslation(lang, 'testimonials.title')}</h2>
+        <p class="home-section__lead">{getUITranslation(lang, 'testimonials.lead')}</p>
+      </div>
+
+      <div class="home-testimonials__grid">
+        {testimonials.map((t) => (
+          <blockquote class="home-testimonials__card">
+            <p class="home-testimonials__quote">{t.quote}</p>
+            <footer class="home-testimonials__footer">
+              <span class="home-testimonials__author">{t.author}</span>
+              <span class="home-testimonials__role">{t.role}</span>
+            </footer>
+          </blockquote>
+        ))}
+        {Array.from({ length: placeholders }, () => (
+          <blockquote class="home-testimonials__card home-testimonials__card--placeholder">
+            <p class="home-testimonials__quote home-testimonials__quote--placeholder">{getUITranslation(lang, 'common.testimonialPlaceholder')}</p>
+            <footer class="home-testimonials__footer">
+              <a class="home-testimonials__cta" href={`/${lang}/contact-us/`}>{getUITranslation(lang, 'common.testimonialCta')}</a>
+            </footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+/* ═══ TESTIMONIALS — standalone light grid ═══════════════════ */
+.home-testimonials {
+  background: var(--soeteck-white);
+  padding: var(--soeteck-section-y) 0;
+}
+.home-testimonials :global(.soeteck-container) {
+  width: min(var(--soeteck-container), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.home-testimonials__head { max-width: 760px; margin: 0 auto 44px; text-align: center; }
+/* 6.1 标准 Eyebrow — 元素只挂规范基类 .soeteck-eyebrow，此处仅覆盖间距（全局基类 20px → 规范 25px） */
+.home-testimonials__head .soeteck-eyebrow {
+  margin: 0 0 25px;
+  padding: 0;
+}
+.home-testimonials__title {
+  margin: 0;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.12;
+  color: var(--soeteck-text);
+}
+.home-testimonials__head .home-section__lead {
+  margin: 16px auto 0;
+  max-width: 620px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--soeteck-text-soft);
+}
+
+.home-testimonials__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 24px;
+}
+.home-testimonials__card {
+  display: flex;
+  flex-direction: column;
+  min-height: 240px;
+  margin: 0;
+  padding: 28px 26px 24px;
+  border-radius: var(--soeteck-radius);
+  background: #f4f8fd;
+  border: 1px solid var(--soeteck-border-soft);
+}
+.home-testimonials__quote {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--soeteck-text);
+}
+.home-testimonials__quote::before { content: '“'; color: var(--soeteck-primary); font-weight: 800; }
+.home-testimonials__quote::after { content: '”'; color: var(--soeteck-primary); font-weight: 800; }
+.home-testimonials__footer {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 18px;
+}
+.home-testimonials__author {
+  font-size: var(--soeteck-text-sm);
+  font-weight: 700;
+  color: var(--soeteck-primary);
+}
+.home-testimonials__role {
+  font-size: var(--soeteck-text-xs);
+  color: var(--soeteck-text-soft);
+}
+
+/* ── Placeholder card ─────────────────────────────────────── */
+.home-testimonials__card--placeholder {
+  background: transparent;
+  border: 1.5px dashed var(--soeteck-border);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: border-color 0.3s ease, border-style 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+.home-testimonials__card--placeholder:hover {
+  border-color: var(--soeteck-primary);
+  border-style: solid;
+  background: #f4f8fd;
+  transform: translateY(-3px);
+}
+.home-testimonials__card--placeholder:hover .home-testimonials__quote--placeholder {
+  color: var(--soeteck-text);
+}
+.home-testimonials__card--placeholder:hover .home-testimonials__cta {
+  color: var(--soeteck-primary-dark);
+}
+.home-testimonials__quote--placeholder {
+  color: var(--soeteck-text-soft);
+}
+.home-testimonials__quote--placeholder::before,
+.home-testimonials__quote--placeholder::after {
+  content: none;
+}
+.home-testimonials__card--placeholder .home-testimonials__footer {
+  justify-content: center;
+}
+.home-testimonials__cta {
+  font-size: var(--soeteck-text-sm);
+  font-weight: 700;
+  color: var(--soeteck-primary);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+.home-testimonials__cta:hover {
+  color: var(--soeteck-primary-dark);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .home-testimonials__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .home-testimonials__grid { grid-template-columns: 1fr; }
+}
+</style>

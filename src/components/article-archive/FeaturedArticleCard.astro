@@ -37,7 +37,7 @@ const dateStr = article.date
     <span class="featured-card__body">
       <span class="featured-card__label">{label}</span>
       {dateStr && <time class="featured-card__date" datetime={article.date ?? ''}>{dateStr}</time>}
-      <h2 class="featured-card__title">{article.title}</h2>
+      <h3 class="featured-card__title">{article.title}</h3>
       {article.excerpt && <p class="featured-card__excerpt">{article.excerpt}</p>}
       <span class="featured-card__cta">{readMoreLabel}</span>
     </span>

@@ -1,6 +1,7 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import type { AdaptedPage } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
 
 interface Props {
   page: AdaptedPage;
@@ -25,8 +26,8 @@ const content = page.source;
 
       {content.product && (
         <section class="content-html">
-          <p><strong>Type:</strong> {content.product.type}</p>
-          {content.product.sku && <p><strong>SKU:</strong> {content.product.sku}</p>}
+          <p><strong>{getUITranslation(lang, 'common.pocType')}</strong> {content.product.type}</p>
+          {content.product.sku && <p><strong>{getUITranslation(lang, 'common.pocSku')}</strong> {content.product.sku}</p>}
           <div set:html={content.product.summary}></div>
           <div set:html={content.product.descriptionHtml}></div>
         </section>
@@ -35,7 +36,7 @@ const content = page.source;
       {content.category && (
         <section>
           <div class="content-html" set:html={content.category.description}></div>
-          <p>{content.category.count} products in current WordPress category.</p>
+          <p>{getUITranslation(lang, 'common.pocProductsInCategory').replace('{count}', String(content.category.count))}</p>
           <div class="cards">
             {content.products?.map((product) => (
               <article>
@@ -58,7 +59,7 @@ const content = page.source;
       {content.archive && (
         <section>
           <div class="content-html" set:html={content.archive.description}></div>
-          <p>{content.archive.count} articles in current WordPress category.</p>
+          <p>{getUITranslation(lang, 'common.pocArticlesInCategory').replace('{count}', String(content.archive.count))}</p>
           <div class="cards">
             {content.articles?.map((article) => (
               <article>

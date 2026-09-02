@@ -10,7 +10,7 @@ const RU_NEWS_RELEASES_HERO: HeroConfig = {
   description: 'Официальные объявления SOETECK, обновления продуктов, новости мероприятий и вехи компании для партнёров, клиентов и СМИ.',
   panelLabel: 'Официальные новости',
   panelItems: ['Анонсы продуктов', 'Мероприятия и выставки', 'Вехи компании'],
-  eyebrow: 'Новостной центр',
+  eyebrow: 'Медиацентр Soeteck',
 };
 
 const RU_BLOGS_HERO: HeroConfig = {
@@ -18,7 +18,7 @@ const RU_BLOGS_HERO: HeroConfig = {
   description: 'Технические статьи, отраслевые тренды и экспертные мнения о решениях для электропитания, охлаждения и инфраструктуры ЦОД.',
   panelLabel: 'Технические статьи',
   panelItems: ['Отраслевые тренды', 'Технические руководства', 'Лучшие практики'],
-  eyebrow: 'Блог',
+  eyebrow: 'Инсайты Soeteck',
 };
 
 const RU_CASE_STUDIES_HERO: HeroConfig = {
@@ -26,7 +26,7 @@ const RU_CASE_STUDIES_HERO: HeroConfig = {
   description: 'Реальные проекты и истории успеха, демонстрирующие, как решения SOETECK решают сложные задачи электропитания и охлаждения.',
   panelLabel: 'Истории успеха',
   panelItems: ['Глобальные проекты', 'Индивидуальные решения', 'Ключевые результаты'],
-  eyebrow: 'Кейсы клиентов',
+  eyebrow: 'Истории успеха Soeteck',
 };
 
 const RU_SIDEBAR: SidebarContent = {
@@ -69,12 +69,20 @@ export const ARCHIVE_RU: ArchiveContent = {
     featuredLabel: 'Избранная статья',
     readMoreLabel: 'Начать чтение',
     sourceLabel: 'Техническая команда SOETECK',
+    featuredEyebrow: 'Выбор редакции',
+    featuredTitle: 'В центре внимания',
+    listEyebrow: 'Ещё статьи',
+    listTitle: 'Изучите архив',
     noArticles: 'Статьи в этой категории не найдены.',
   },
   caseStudyLabels: {
     featuredLabel: 'Избранный кейс',
     readMoreLabel: 'Посмотреть кейс',
     sourceLabel: 'Проектная команда SOETECK',
+    featuredEyebrow: 'Избранное',
+    featuredTitle: 'Избранный кейс клиента',
+    listEyebrow: 'Все кейсы',
+    listTitle: 'Больше реальных проектов',
     noArticles: 'Кейсы в этой категории не найдены.',
   },
   cta: {

@@ -9,9 +9,16 @@ import type { HomeContent } from '../home-content';
 
 interface Props {
   data: HomeContent['industries'];
+  /** 当前语言（父级可传；未传时从渲染 URL 推导，兜底 en） */
+  lang?: string;
 }
 
-const { data } = Astro.props;
+const { data, lang: langProp } = Astro.props;
+
+// lang 优先取父级传入；未传时从当前渲染 URL 首段推导（/zh/ → zh），未知上下文兜底 en。
+const URL_LANGS = ['en', 'zh', 'ru', 'pt', 'es'];
+const urlLang = Astro.url.pathname.split('/')[1] ?? '';
+const lang = langProp ?? (URL_LANGS.includes(urlLang) ? urlLang : 'en');
 
 const shortNames: Record<string, string> = {
   telecom: 'Telecom', finance: 'Finance', government: 'Government',
@@ -22,7 +29,7 @@ const shortNames: Record<string, string> = {
 <section class="home-industry" aria-label="Industries served">
   <div class="soeteck-container">
     <div class="home-industry__head">
-      <p class="home-industry__eyebrow">{data.eyebrow}</p>
+      <p class="soeteck-eyebrow home-industry__eyebrow">{data.eyebrow}</p>
       <h2 class="home-industry__title">{data.title}</h2>
     </div>
 
@@ -30,7 +37,7 @@ const shortNames: Record<string, string> = {
       <div class="home-industry__track" id="industry-track">
         {data.items.map((item) => (
           <a href={item.ctaLink ?? '/en/solutions/'} class="home-industry__card">
-            <div class="home-industry__card-bg" style={`background-image: url(/industry/industry-${item.icon}.png);`}></div>
+            <img class="home-industry__card-bg" src={`/industry/industry-${item.icon}-960.webp`} alt="" width="720" height="405" loading="lazy" decoding="async" />
             <div class="home-industry__card-overlay"></div>
             <div class="home-industry__card-body">
               <span class="home-industry__card-icon">
@@ -40,15 +47,18 @@ const shortNames: Record<string, string> = {
                 {item.icon === 'cloud' && <svg viewBox="0 0 32 32" fill="none"><path d="M9 22a7 7 0 111.5-13.8A9 9 0 1123 22H9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
                 {item.icon === 'ai' && <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l3 6 6.5 1-4.5 5 1 6.5L16 19l-6 3.5 1-6.5-4.5-5L13 10l3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
                 {item.icon === 'manufacturing' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 28V16l7 4v-5l7 4V9h7v19H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 28v-6M16 28v-8M22 28v-6M28 28H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'colocation' && <svg viewBox="0 0 32 32" fill="none"><rect x="7" y="4" width="18" height="24" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 10h18M12 10v-2M12 18v-2M20 10v-2M20 18v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'internet' && <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2"/><path d="M6 16h20M16 6c3.5 3 5.5 6 5.5 10S19.5 23 16 26c-3.5-3-5.5-6-5.5-10S12.5 9 16 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'healthcare' && <svg viewBox="0 0 32 32" fill="none"><rect x="6" y="6" width="20" height="20" rx="4" stroke="currentColor" stroke-width="2"/><path d="M16 11v10M11 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
                 {item.icon === 'submarine' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 14h20v8H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 14l4-8h12l4 8M8 22l-2 4M24 22l2 4M14 14v8M18 14v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
               </span>
-              <span class="home-industry__card-title">{shortNames[item.icon] ?? item.title}</span>
+              <span class="home-industry__card-title">{lang === 'en' ? (shortNames[item.icon] ?? item.title) : (item.title || shortNames[item.icon])}</span>
             </div>
           </a>
         ))}
         {data.items.map((item) => (
           <a href={item.ctaLink ?? '/en/solutions/'} class="home-industry__card" aria-hidden="true">
-            <div class="home-industry__card-bg" style={`background-image: url(/industry/industry-${item.icon}.png);`}></div>
+            <img class="home-industry__card-bg" src={`/industry/industry-${item.icon}-960.webp`} alt="" width="720" height="405" loading="lazy" decoding="async" />
             <div class="home-industry__card-overlay"></div>
             <div class="home-industry__card-body">
               <span class="home-industry__card-icon">
@@ -58,9 +68,12 @@ const shortNames: Record<string, string> = {
                 {item.icon === 'cloud' && <svg viewBox="0 0 32 32" fill="none"><path d="M9 22a7 7 0 111.5-13.8A9 9 0 1123 22H9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
                 {item.icon === 'ai' && <svg viewBox="0 0 32 32" fill="none"><path d="M16 4l3 6 6.5 1-4.5 5 1 6.5L16 19l-6 3.5 1-6.5-4.5-5L13 10l3-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
                 {item.icon === 'manufacturing' && <svg viewBox="0 0 32 32" fill="none"><path d="M4 28V16l7 4v-5l7 4V9h7v19H4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M10 28v-6M16 28v-8M22 28v-6M28 28H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'colocation' && <svg viewBox="0 0 32 32" fill="none"><rect x="7" y="4" width="18" height="24" rx="2" stroke="currentColor" stroke-width="2"/><path d="M7 10h18M12 10v-2M12 18v-2M20 10v-2M20 18v-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
+                {item.icon === 'internet' && <svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="currentColor" stroke-width="2"/><path d="M6 16h20M16 6c3.5 3 5.5 6 5.5 10S19.5 23 16 26c-3.5-3-5.5-6-5.5-10S12.5 9 16 6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>}
+                {item.icon === 'healthcare' && <svg viewBox="0 0 32 32" fill="none"><rect x="6" y="6" width="20" height="20" rx="4" stroke="currentColor" stroke-width="2"/><path d="M16 11v10M11 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
                 {item.icon === 'submarine' && <svg viewBox="0 0 32 32" fill="none"><path d="M6 14h20v8H6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M6 14l4-8h12l4 8M8 22l-2 4M24 22l2 4M14 14v8M18 14v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>}
               </span>
-              <span class="home-industry__card-title">{shortNames[item.icon] ?? item.title}</span>
+              <span class="home-industry__card-title">{lang === 'en' ? (shortNames[item.icon] ?? item.title) : (item.title || shortNames[item.icon])}</span>
             </div>
           </a>
         ))}
@@ -83,7 +96,8 @@ const shortNames: Record<string, string> = {
 
 /* ── Section head ──────────────────────────────────────────────── */
 .home-industry__head { margin-bottom: 20px; }
-.home-industry__eyebrow { margin: 0 0 8px; color: var(--soeteck-primary); font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+/* 6.3 卡片/小场景 Eyebrow（紧凑 section head）— 样式由全局 .soeteck-eyebrow 基类提供 */
+.home-industry__eyebrow { margin: 0 0 14px; padding: 0; }
 .home-industry__title { margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.25; color: var(--soeteck-text); }
 
 /* ── Marquee ───────────────────────────────────────────────────── */
@@ -120,7 +134,8 @@ const shortNames: Record<string, string> = {
 
 .home-industry__card-bg {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
   transition: transform 0.6s ease;
 }
 .home-industry__card:hover .home-industry__card-bg { transform: scale(1.08); }
@@ -163,7 +178,7 @@ const shortNames: Record<string, string> = {
 .home-industry__card:hover .home-industry__card-title { transform: translateY(-1px); }
 
 /* ── Responsive ────────────────────────────────────────────────── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .home-industry__card { flex-basis: 170px; height: 120px; }
 }
 </style>

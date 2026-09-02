@@ -73,13 +73,14 @@ const isProd = import.meta.env.PROD;
     <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
     {description && <meta name="description" content={description} />}
-    {/* hreflang 标签 */}
+    {/* hreflang 标签。localizedPaths 值来自 Content API route，已含语言前缀（如 /zh/about-soeteck/），
+        直接拼到域名即可，不要重复加 /{l}（2026-08-31 修：曾拼成 /zh/zh/… 双前缀）。 */}
     {localizedPaths && Object.entries(localizedPaths).map(([l, data]) => (
       data.path && (
-        <link rel="alternate" hreflang={l} href={`https://soeteck.com/${l}${data.path}`} />
+        <link rel="alternate" hreflang={l} href={`https://soeteck.com${data.path}`} />
       )
     ))}
-    <link rel="alternate" hreflang="x-default" href={`https://soeteck.com/en${localizedPaths?.en?.path || '/'}`} />
+    <link rel="alternate" hreflang="x-default" href={`https://soeteck.com${localizedPaths?.en?.path || '/en/'}`} />
     {/* Schema.org JSON-LD（Rank Math 生成，Content API 交付） */}
     {schemas?.map((s) => (
       <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', ...s })} />
@@ -271,7 +272,7 @@ const isProd = import.meta.env.PROD;
     line-height: 1;
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: 1200px) {
     .primary-menu {
       align-items: flex-end;
       min-height: var(--soeteck-header-h);
@@ -495,48 +496,24 @@ const isProd = import.meta.env.PROD;
       padding: 0;
     }
 
-    .solutions-industry-list li {
+    /* 行业列表为链接（指向行业顶层页），链接样式 */
+    .solutions-industry-list li a {
+      display: block;
       color: var(--soeteck-text);
       font-size: 16px;
+      font-weight: 500;
       line-height: 1.35;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .solutions-industry-list li a:hover {
+      color: var(--soeteck-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
     .solutions-industry-list li + li {
       margin-top: 14px;
-    }
-
-    .solutions-custom-cta {
-      margin-top: auto;
-      padding: 21px 20px 23px;
-      border-radius: 6px;
-      background: #d7e9ff;
-    }
-
-    .solutions-custom-cta span {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--soeteck-text);
-      font-size: 16px;
-      line-height: 1.3;
-    }
-
-    .solutions-custom-cta a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 39px;
-      border-radius: 4px;
-      background: var(--soeteck-primary);
-      color: var(--soeteck-white);
-      font-size: 15px;
-      font-weight: 500;
-      line-height: 1;
-      text-decoration: none;
-      transition: background 180ms ease;
-    }
-
-    .solutions-custom-cta a:hover {
-      background: var(--soeteck-primary-dark);
     }
 
     .news-megamenu-inner {
@@ -554,30 +531,51 @@ const isProd = import.meta.env.PROD;
       min-width: 0;
     }
 
-    .news-megamenu-heading {
+    .megamenu-heading {
       display: flex;
-      font-family: var(--soeteck-font-heading);
       align-items: center;
       gap: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
+      font-family: var(--soeteck-font-heading);
       color: var(--soeteck-text);
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 700;
       line-height: 1.2;
       text-decoration: none;
-      transition: color 180ms ease;
     }
 
-    .news-megamenu-marker {
+    .megamenu-heading__marker {
       display: inline-block;
+      flex: 0 0 auto;
       width: 14px;
       height: 14px;
       border-radius: 3px;
       background: var(--soeteck-primary);
     }
 
-    .news-megamenu-heading:hover {
+    .megamenu-heading-text {
+      position: relative;
+      display: inline-block;
+      transition: color 0.2s ease;
+    }
+
+    .megamenu-heading-text::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0;
+      height: 2px;
+      background-color: var(--soeteck-primary);
+      transition: width 0.2s ease;
+    }
+
+    .megamenu-heading:hover .megamenu-heading-text {
       color: var(--soeteck-primary);
+    }
+
+    .megamenu-heading:hover .megamenu-heading-text::after {
+      width: 100%;
     }
 
     .news-megamenu-subtitle {
@@ -718,56 +716,6 @@ const isProd = import.meta.env.PROD;
       color: var(--soeteck-primary);
     }
 
-    .megamenu-heading {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 10px;
-      color: var(--soeteck-text);
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.2;
-      text-decoration: none;
-    }
-
-    .megamenu-heading-icon {
-      display: inline-flex;
-      flex: 0 0 16px;
-      width: 16px;
-      height: 16px;
-    }
-
-    .megamenu-heading-icon svg {
-      display: block;
-      width: 16px;
-      height: 16px;
-    }
-
-    .megamenu-heading-text {
-      position: relative;
-      display: inline-block;
-      transition: color 0.2s ease;
-    }
-
-    .megamenu-heading-text::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -2px;
-      width: 0;
-      height: 2px;
-      background-color: var(--soeteck-primary);
-      transition: width 0.2s ease;
-    }
-
-    .megamenu-heading:hover .megamenu-heading-text {
-      color: var(--soeteck-primary);
-    }
-
-    .megamenu-heading:hover .megamenu-heading-text::after {
-      width: 100%;
-    }
-
     .megamenu-list,
     .megamenu-sublist {
       list-style: none;
@@ -845,7 +793,7 @@ const isProd = import.meta.env.PROD;
     position: relative;
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: 1200px) {
     .header-dropdown {
       display: flex;
       align-items: center;
@@ -970,14 +918,14 @@ const isProd = import.meta.env.PROD;
     box-shadow: var(--soeteck-shadow-panel);
   }
 
-  @media (min-width: 992px) {
+  @media (min-width: 1200px) {
     .header-dropdown:focus-within > .header-dropdown-panel,
     .header-dropdown.dropdown-open > .header-dropdown-panel {
       display: flex;
     }
   }
 
-  @media (max-width: 991px) {
+  @media (max-width: 1199px) {
     .header-search > .header-dropdown-panel {
       display: none !important;
     }
@@ -1149,7 +1097,7 @@ const isProd = import.meta.env.PROD;
     }
   }
 
-  @media (max-width: 991px) {
+  @media (max-width: 1199px) {
     body.mobile-menu-open {
       overflow: hidden;
     }
@@ -1941,11 +1889,26 @@ const isProd = import.meta.env.PROD;
   }
 
   .footer-column-title {
-    margin-bottom: 22px;
+    margin-bottom: 18px; /* 横线到 ul 距离 = li 间空隙（.footer-column li + li margin-top 18px），节奏统一 */
     text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
   }
 
-  .footer-column-title a {
+  /* 标题与下方 ul 之间的左对齐短横线（与品牌列分割线同风格） */
+  .footer-column-title::after {
+    content: '';
+    width: 28px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .footer-column .footer-column-title a {
+    /* 覆盖 .footer-column a 的 16px/500（同特异度下后者更晚生效）：
+       列标题链接必须跟随 .footer-column-title 的 20px/700 标题排版 */
+    font: inherit;
     color: inherit;
     text-decoration: none;
   }
@@ -2041,7 +2004,7 @@ const isProd = import.meta.env.PROD;
     }
   }
 
-  @media (max-width: 991px) {
+  @media (max-width: 1199px) {
     .footer-main {
       padding: 82px 0 44px;
     }

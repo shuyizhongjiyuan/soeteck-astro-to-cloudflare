@@ -1,0 +1,159 @@
+---
+interface Props {
+  totalItems: number;
+  perPage: number;
+  /** CSS selector for the grid container whose `[data-page]` children get paginated */
+  gridSelector: string;
+  label?: string;
+}
+
+const { totalItems, perPage, gridSelector, label = 'Article pagination' } = Astro.props;
+const totalPages = Math.max(1, Math.ceil(totalItems / perPage));
+---
+
+{totalPages > 1 && (
+  <nav
+    class="soeteck-archive-pagination"
+    aria-label={label}
+    data-grid-selector={gridSelector}
+  >
+    <ul class="page-numbers">
+      <li>
+        <a class="page-numbers prev" href="#" aria-label="Previous page">&laquo;</a>
+      </li>
+      {Array.from({ length: totalPages }, (_, i) => (
+        <li>
+          <a class="page-numbers" href="#" data-page={i + 1}>{i + 1}</a>
+        </li>
+      ))}
+      <li>
+        <a class="page-numbers next" href="#" aria-label="Next page">&raquo;</a>
+      </li>
+    </ul>
+  </nav>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>('.soeteck-archive-pagination').forEach((pagination) => {
+    const grid = document.querySelector<HTMLElement>(pagination.dataset.gridSelector ?? '');
+    if (!grid) return;
+
+    const items = Array.from(grid.querySelectorAll<HTMLElement>('[data-page]'));
+    const numButtons = Array.from(pagination.querySelectorAll<HTMLAnchorElement>('.page-numbers[data-page]'));
+    const prevBtn = pagination.querySelector<HTMLAnchorElement>('.page-numbers.prev');
+    const nextBtn = pagination.querySelector<HTMLAnchorElement>('.page-numbers.next');
+    const totalPages = numButtons.length > 0 ? Math.max(...numButtons.map((b) => Number.parseInt(b.dataset.page ?? '1', 10))) : 1;
+    let current = 1;
+
+    const render = (): void => {
+      items.forEach((item) => {
+        const page = Number.parseInt(item.dataset.page ?? '1', 10);
+        item.style.display = page === current ? '' : 'none';
+      });
+      numButtons.forEach((btn) => {
+        const page = Number.parseInt(btn.dataset.page ?? '1', 10);
+        btn.classList.toggle('current', page === current);
+        if (page === current) {
+          btn.setAttribute('aria-current', 'page');
+        } else {
+          btn.removeAttribute('aria-current');
+        }
+      });
+      if (prevBtn) prevBtn.style.display = current <= 1 ? 'none' : '';
+      if (nextBtn) nextBtn.style.display = current >= totalPages ? 'none' : '';
+    };
+
+    const goTo = (page: number): void => {
+      current = Math.min(totalPages, Math.max(1, page));
+      render();
+      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+
+    numButtons.forEach((btn) => {
+      btn.addEventListener('click', (event) => {
+        event.preventDefault();
+        goTo(Number.parseInt(btn.dataset.page ?? '1', 10));
+      });
+    });
+    prevBtn?.addEventListener('click', (event) => {
+      event.preventDefault();
+      goTo(current - 1);
+    });
+    nextBtn?.addEventListener('click', (event) => {
+      event.preventDefault();
+      goTo(current + 1);
+    });
+
+    render();
+  });
+</script>
+
+<style>
+  .soeteck-archive-pagination {
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .soeteck-archive-pagination ul.page-numbers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    list-style: none;
+  }
+
+  .soeteck-archive-pagination ul.page-numbers li {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .soeteck-archive-pagination ul.page-numbers li::before,
+  .soeteck-archive-pagination ul.page-numbers li::after,
+  .soeteck-archive-pagination ul.page-numbers li + li::before {
+    display: none;
+    content: none;
+  }
+
+  .soeteck-archive-pagination ul.page-numbers > li > .page-numbers {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-sm);
+    background: transparent;
+    box-shadow: none;
+    color: var(--soeteck-text);
+    font-family: var(--soeteck-font-ui);
+    font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    transition: border-color var(--soeteck-transition-fast), background-color var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+  }
+
+  .soeteck-archive-pagination ul.page-numbers > li > .prev,
+  .soeteck-archive-pagination ul.page-numbers > li > .next {
+    font-size: 16px;
+  }
+
+  .soeteck-archive-pagination ul.page-numbers > li > .page-numbers.current,
+  .soeteck-archive-pagination ul.page-numbers > li > .page-numbers:hover {
+    border-color: var(--soeteck-primary);
+    background: var(--soeteck-primary);
+    box-shadow: none;
+    color: var(--soeteck-white);
+  }
+</style>

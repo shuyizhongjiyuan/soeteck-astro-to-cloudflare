@@ -7,7 +7,7 @@ const { data } = Astro.props;
 <section class="home-cta" aria-labelledby="home-cta-title">
   <div class="soeteck-container">
     <div class="home-cta__head">
-      <p class="home-cta__eyebrow">{data.eyebrow}</p>
+      <p class="soeteck-eyebrow home-cta__eyebrow">{data.eyebrow}</p>
       <h2 id="home-cta-title" class="home-cta__title">{data.title}</h2>
       <p class="home-cta__lead">{data.text}</p>
     </div>
@@ -59,13 +59,12 @@ const { data } = Astro.props;
   margin: 0 auto 48px;
   text-align: center;
 }
+/* 6.2 Hero Eyebrow（深色 CTA 区 per §6.4）— weight/transform 由全局 .soeteck-eyebrow 基类提供；颜色随规范修订（2026-09-01）统一品牌蓝 */
 .home-cta__eyebrow {
-  margin: 0 0 20px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: var(--soeteck-text-sm);
-  font-weight: bold;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  margin: 0 0 28px;
+  color: var(--soeteck-primary);
+  font-size: 17px;
+  letter-spacing: 0.1em;
 }
 .home-cta__title {
   margin: 0;
@@ -153,7 +152,7 @@ const { data } = Astro.props;
     grid-template-columns: repeat(2, 1fr);
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .home-cta__grid {
     grid-template-columns: 1fr;
   }

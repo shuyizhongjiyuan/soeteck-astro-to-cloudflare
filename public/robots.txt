@@ -1,0 +1,8 @@
+# Soeteck robots.txt
+# 全站允许爬取；Sitemap 指向 Astro 生成的 sitemap-index.xml
+# 生成：2026-08-13（P1-8 robots.txt 缺口修复）
+
+User-agent: *
+Allow: /
+
+Sitemap: https://soeteck.com/sitemap-index.xml

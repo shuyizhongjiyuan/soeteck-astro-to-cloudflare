@@ -1,0 +1,28 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<header class="soeteck-section-heading">
+  <p class="soeteck-eyebrow">{eyebrow}</p>
+  <h2>{title}</h2>
+</header>
+
+<style>
+  .soeteck-section-heading {
+    margin-bottom: clamp(24px, 3vw, 34px);
+  }
+
+  .soeteck-section-heading :global(.soeteck-eyebrow) {
+    margin-bottom: 12px;
+  }
+
+  .soeteck-section-heading h2 {
+    margin: 0;
+    color: var(--soeteck-text);
+  }
+</style>

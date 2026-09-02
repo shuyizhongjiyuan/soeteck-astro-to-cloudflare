@@ -1,6 +1,6 @@
 import type { ContentApiArticleCard, ContentApiResponse, RouteType } from '@/lib/content-api';
 
-export type PageKind = 'home' | 'about' | 'contact' | 'thankYou' | 'search' | 'newsReleases' | 'blogsArchive' | 'caseStudiesArchive' | 'articleCategoryArchive' | 'articleSingle' | 'products' | 'productCategory' | 'productCategoryLanding' | 'productSingle' | 'solutionAicoolit' | 'solutionPrefab' | 'solutionCabinetModular' | 'solutionRowModular' | 'simple' | 'generic';
+export type PageKind = 'home' | 'about' | 'contact' | 'thankYou' | 'search' | 'newsReleases' | 'blogsArchive' | 'caseStudiesArchive' | 'articleCategoryArchive' | 'articleSingle' | 'products' | 'productCategory' | 'productCategoryLanding' | 'productSingle' | 'solutionAicoolit' | 'solutionPrefab' | 'solutionCabinetModular' | 'solutionRowModular' | 'solutionAisleModular' | 'solutionDataCenterCooling' | 'solutionAiDataCenter' | 'solutionsHub' | 'newsInsightsHub' | 'industryTelecom' | 'industryColocation' | 'industryCloudHyperscale' | 'industryInternet' | 'industryFinance' | 'industryGovernment' | 'industryManufacturing' | 'industryHealthcare' | 'simple' | 'generic';
 
 export interface PageSeo {
   title: string;
@@ -155,6 +155,21 @@ function pageKindFor(content: ContentApiResponse): PageKind {
     '/solutions/data-center-solutions/prefabricated-container-data-center/': 'solutionPrefab',
     '/solutions/data-center-solutions/cabinet-modular-data-center/': 'solutionCabinetModular',
     '/solutions/data-center-solutions/row-modular-data-center/': 'solutionRowModular',
+    '/solutions/data-center-solutions/aisle-modular-data-center/': 'solutionAisleModular',
+    '/solutions/data-center-solutions/ai-data-center/': 'solutionAiDataCenter',
+    '/solutions/data-center-cooling-solutions/': 'solutionDataCenterCooling',
+    // 行业顶层页（code-embedded，CMS post + Solutions 分类，2026-08-31 固化 8 个）
+    '/solutions/telecom/': 'industryTelecom',
+    '/solutions/colocation/': 'industryColocation',
+    '/solutions/cloud-hyperscale/': 'industryCloudHyperscale',
+    '/solutions/internet/': 'industryInternet',
+    '/solutions/finance/': 'industryFinance',
+    '/solutions/government/': 'industryGovernment',
+    '/solutions/manufacturing/': 'industryManufacturing',
+    '/solutions/healthcare/': 'industryHealthcare',
+    // 栏目 hub 页（fixture 路由，code-owned in Astro）
+    '/solutions/': 'solutionsHub',
+    '/news-and-insights/': 'newsInsightsHub',
   };
 
   // 【最高优先级】WordPress 手动标记为"自定义开发"的页面

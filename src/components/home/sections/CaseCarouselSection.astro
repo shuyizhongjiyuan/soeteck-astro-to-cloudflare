@@ -14,13 +14,15 @@ interface Props {
 const { data } = Astro.props;
 const cards = data.cards;
 ---
-
 <section class="home-case-carousel" aria-roledescription="carousel" aria-label={data.title}>
   <div class="soeteck-container">
     <div class="home-section__head">
-      <p class="home-section__eyebrow">{data.eyebrow}</p>
+      <p class="soeteck-eyebrow">{data.eyebrow}</p>
       <h2 class="home-section__title">{data.title}</h2>
       <p class="home-section__lead">{data.text}</p>
+      {data.ctaAll && data.projectsAllLink && (
+        <a href={data.projectsAllLink} class="home-case-carousel__all">{data.ctaAll} →</a>
+      )}
     </div>
   </div>
 
@@ -30,11 +32,7 @@ const cards = data.cards;
         <img class="home-case-slide__bg" src={card.image.path} alt="" width="1920" height="1080" loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
         <div class="home-case-slide__overlay"></div>
         <div class="soeteck-container home-case-slide__content">
-          <div class="home-case-slide__metric">
-            <span class="home-case-slide__metric-value">{card.metric}</span>
-            <span class="home-case-slide__metric-label">{card.metricLabel}</span>
-          </div>
-          <p class="home-case-slide__location">{card.location}</p>
+          <p class="home-case-slide__location"><svg class="home-case-slide__pin" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 22s-7.5-5.6-7.5-11.5a7.5 7.5 0 1 1 15 0C19.5 16.4 12 22 12 22zM12 13.4a2.9 2.9 0 1 0 0-5.8 2.9 2.9 0 0 0 0 5.8z" fill="currentColor"/></svg>{card.location}</p>
           <h3 class="home-case-slide__title">{card.title}</h3>
           <p class="home-case-slide__text">{card.text}</p>
           <a href={card.ctaLink} class="home-case-slide__cta">{card.cta} →</a>
@@ -42,8 +40,8 @@ const cards = data.cards;
       </article>
     ))}
 
-    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--prev" aria-label="Previous case">‹</button>
-    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--next" aria-label="Next case">›</button>
+    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--prev" aria-label="Previous case"></button>
+    <button type="button" class="home-case-carousel__arrow home-case-carousel__arrow--next" aria-label="Next case"></button>
     <div class="home-case-carousel__controls">
       <div class="home-case-carousel__thumbs">
         {cards.map((card, i) => (
@@ -69,9 +67,30 @@ const cards = data.cards;
 
 /* ── Section head ─────────────────────────────────────────── */
 .home-section__head { max-width: 760px; margin: 0 auto 0; padding: clamp(48px, 6vw, 80px) 0 40px; text-align: center; }
-.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+/* 6.1 标准 Eyebrow — 元素只挂规范基类 .soeteck-eyebrow，此处仅覆盖间距（深色 section 沿用基类 primary 色） */
+.home-section__head .soeteck-eyebrow { margin: 0 0 25px; padding: 0; }
 .home-section__title { margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1.12; color: #fff; }
 .home-section__lead { margin: 14px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: rgba(255, 255, 255, 0.78); }
+
+/* ── View-all button ──────────────────────────────────────── */
+.home-case-carousel__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 22px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  color: #fff;
+  font-size: var(--soeteck-text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.home-case-carousel__all:hover {
+  background: var(--soeteck-primary);
+  border-color: var(--soeteck-primary);
+}
 
 /* ── Carousel stage ───────────────────────────────────────── */
 .home-case-carousel__stage {
@@ -118,36 +137,22 @@ const cards = data.cards;
   margin-left: 0;
 }
 
-.home-case-slide__metric {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 14px 22px;
-  margin-bottom: 24px;
-  border-radius: var(--soeteck-radius);
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(8px);
-  text-align: center;
-}
-.home-case-slide__metric-value {
-  font-size: 2rem;
-  font-weight: 800;
-  line-height: 1;
-}
-.home-case-slide__metric-label {
-  margin-top: 4px;
-  font-size: var(--soeteck-text-xs);
-  color: rgba(255, 255, 255, 0.85);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
 .home-case-slide__location {
-  margin: 0 0 10px;
+  margin: 0 0 20px;
   font-size: var(--soeteck-text-sm);
   font-weight: 600;
+  line-height: 1; /* 单行标签：消除行距半 leading 导致的文字偏上，使与 pin 几何居中一致 */
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--soeteck-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.home-case-slide__pin {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
   color: var(--soeteck-primary);
 }
 .home-case-slide__title {
@@ -206,21 +211,35 @@ const cards = data.cards;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: rgba(8, 22, 43, 0.45);
-  backdrop-filter: blur(4px);
-  color: #fff;
-  font-size: 1.5rem;
-  line-height: 1;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.84);
+  opacity: 0.5;
   cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: background 160ms ease, opacity 160ms ease;
+}
+/* Chevron — same treatment as the product detail gallery arrows */
+.home-case-carousel__arrow::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 11px;
+  height: 11px;
+  border-top: 2px solid #1d4f8f;
+  border-right: 2px solid #1d4f8f;
+}
+.home-case-carousel__arrow:hover {
+  background: #fff;
+  opacity: 1;
 }
 .home-case-carousel__arrow--prev { left: 24px; }
+.home-case-carousel__arrow--prev::before {
+  transform: translate(-35%, -50%) rotate(-135deg);
+}
 .home-case-carousel__arrow--next { right: 24px; }
-.home-case-carousel__arrow:hover {
-  background: var(--soeteck-primary);
-  border-color: var(--soeteck-primary);
+.home-case-carousel__arrow--next::before {
+  transform: translate(-65%, -50%) rotate(45deg);
 }
 .home-case-carousel__thumbs {
   display: flex;

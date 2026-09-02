@@ -190,7 +190,15 @@ export interface HomeContent {
     eyebrow: string;
     title: string;
     text: string;
-    cards: ProjectCard[];
+    ctaAll?: string;
+    projectsAllLink?: string;
+    cards: (ProjectCard & {
+      testimonial?: {
+        quote: string;
+        author: string;
+        role: string;
+      };
+    })[];
   };
   whySoeteck: {
     eyebrow: string;
@@ -256,35 +264,50 @@ export const HOME_EN: HomeContent = {
   hero: {
     slides: [
       {
-        image: '/hero/hero-slide-1.png',
-        eyebrow: 'Turnkey Solutions',
-        title: 'Factory-Built.',
-        titleAccent: 'Site-Ready.',
-        subtitle: 'Complete prefabricated container data centers — power, cooling, fire suppression, and monitoring — all integrated, all factory-tested, delivered as a single turnkey unit in weeks, not months.',
+        // ① 身份 —— 品牌+身份进 eyebrow；lead 按"四类预制类型→集成→到站即上线→应用场景"排布
+        image: '/hero/hero-slide-1.webp',
+        eyebrow: 'SOETECK · Prefab Data Center Provider',
+        title: 'Delivered in weeks,',
+        titleAccent: 'not years.',
+        subtitle: 'Prefabricated Container, aisle-containment, row and single-cabinet data centers from SOETECK, with power, cooling and fire suppression factory-integrated and every unit ready to go live the day it arrives, for AI training clusters, edge sites and disaster recovery worldwide.',
         ctaPrimary: 'Explore Solutions',
         ctaPrimaryLink: '/en/solutions/',
         ctaSecondary: 'Talk to an Expert',
         ctaSecondaryLink: '/en/contact-us/',
       },
       {
-        image: '/hero/hero-slide-2.png',
-        eyebrow: 'AI-Ready Cooling',
-        title: 'Liquid Cooling for',
-        titleAccent: 'AI Workloads',
-        subtitle: 'Direct-to-chip liquid cooling eliminates thermal throttling at 100kW+ rack density. Purpose-built for GPU training clusters.',
-        ctaPrimary: 'View AICoolit',
-        ctaPrimaryLink: '/en/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/',
+        // ② AI Data Center —— eyebrow 显性 Prefab；title 密度热词；lead=热点+全栈集成+隐性 prefab/turnkey
+        image: '/hero/hero-slide-2.webp',
+        eyebrow: 'Full-Stack Prefab AI Infrastructure',
+        title: 'AI data centers,',
+        titleAccent: 'engineered as one.',
+        subtitle: 'GPU cabinets now push past 100kW, so air cooling cannot keep up. We design power, liquid cooling, racks and monitoring as one integrated AI stack, then ship it prefabricated and turnkey, live the day it arrives.',
+        ctaPrimary: "See How It's Built",
+        ctaPrimaryLink: '/en/solutions/data-center-solutions/ai-data-center/',
         ctaSecondary: 'Request a Quote',
         ctaSecondaryLink: '/en/contact-us/',
       },
       {
-        image: '/hero/hero-slide-3.png',
-        eyebrow: 'Global Delivery',
-        title: 'Factory-Tested.',
-        titleAccent: 'Plug-and-Play.',
-        subtitle: 'From our factory floor to your site in weeks — not months. Deployed across 50+ countries, every climate, every grid standard.',
-        ctaPrimary: 'View Products',
-        ctaPrimaryLink: '/en/products/',
+        // ③ 服务优势 —— 单一交钥匙责任人（图片为占位）
+        image: '/hero/hero-slide-1.webp',
+        eyebrow: 'Turnkey Partner',
+        title: 'End-to-end delivery,',
+        titleAccent: 'single responsibility.',
+        subtitle: 'One team owns everything, engineering, factory production, global shipping, commissioning and after-sales, so you hand over the keys with a single accountable partner.',
+        ctaPrimary: 'Talk to an Expert',
+        ctaPrimaryLink: '/en/contact-us/',
+        ctaSecondary: 'Contact Sales',
+        ctaSecondaryLink: '/en/contact-us/',
+      },
+      {
+        // ④ 全球证据（图片为占位）
+        image: '/hero/hero-slide-3.webp',
+        eyebrow: 'Global Proof',
+        title: 'Deployed across',
+        titleAccent: '50+ countries.',
+        subtitle: 'From desert heat to arctic cold, on every common grid standard, our units keep AI training platforms, edge nodes and critical sites running around the clock.',
+        ctaPrimary: 'Read Case Studies',
+        ctaPrimaryLink: '/en/news-and-insights/client-case-studies/',
         ctaSecondary: 'Contact Sales',
         ctaSecondaryLink: '/en/contact-us/',
       },
@@ -309,21 +332,31 @@ export const HOME_EN: HomeContent = {
     title: 'Trusted Across Critical Industries',
     text: 'From telecom operators to AI hyperscalers, the world\'s most demanding organizations rely on SOETECK for mission-critical power and cooling infrastructure.',
     items: [
-      { icon: 'telecom', title: 'Telecom & Operators', image: { path: '/home/industry-telecom.png', alt: 'Telecom data center infrastructure' }, ctaLink: '/en/solutions/' },
-      { icon: 'finance', title: 'Finance & Banking', image: { path: '/home/industry-finance.png', alt: 'Financial data center reliability' }, ctaLink: '/en/solutions/' },
-      { icon: 'government', title: 'Government & Public Sector', image: { path: '/home/industry-government.png', alt: 'Government secure infrastructure' }, ctaLink: '/en/solutions/' },
-      { icon: 'cloud', title: 'Cloud & Internet', image: { path: '/home/industry-cloud.png', alt: 'Cloud service provider infrastructure' }, ctaLink: '/en/solutions/' },
-      { icon: 'ai', title: 'AI & Large Models', image: { path: '/home/industry-gpu.png', alt: 'AI computing infrastructure' }, ctaLink: '/en/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/' },
-      { icon: 'manufacturing', title: 'Manufacturing', image: { path: '/home/industry-manufacturing.png', alt: 'Industrial manufacturing data center' }, ctaLink: '/en/solutions/' },
-      { icon: 'submarine', title: 'Submarine Cable Landing Stations', image: { path: '/home/industry-submarine.png', alt: 'Submarine cable landing station infrastructure' }, ctaLink: '/en/solutions/' },
+      { icon: 'telecom', title: 'Telecom & Operators', image: { path: '/home/industry-telecom.png', alt: 'Telecom data center infrastructure' }, ctaLink: '/en/solutions/telecom/' },
+      { icon: 'colocation', title: 'Colocation', image: { path: '/home/industry-colocation.png', alt: 'Colocation data center infrastructure' }, ctaLink: '/en/solutions/colocation/' },
+      { icon: 'cloud', title: 'Cloud & Internet', image: { path: '/home/industry-cloud.png', alt: 'Cloud service provider infrastructure' }, ctaLink: '/en/solutions/cloud-hyperscale/' },
+      { icon: 'internet', title: 'Internet', image: { path: '/home/industry-internet.png', alt: 'Internet platform data center infrastructure' }, ctaLink: '/en/solutions/internet/' },
+      { icon: 'finance', title: 'Finance & Banking', image: { path: '/home/industry-finance.png', alt: 'Financial data center reliability' }, ctaLink: '/en/solutions/finance/' },
+      { icon: 'government', title: 'Government & Public Sector', image: { path: '/home/industry-government.png', alt: 'Government secure infrastructure' }, ctaLink: '/en/solutions/government/' },
+      { icon: 'manufacturing', title: 'Manufacturing', image: { path: '/home/industry-manufacturing.png', alt: 'Industrial manufacturing data center' }, ctaLink: '/en/solutions/manufacturing/' },
+      { icon: 'healthcare', title: 'Healthcare', image: { path: '/home/industry-healthcare.png', alt: 'Healthcare data center infrastructure' }, ctaLink: '/en/solutions/healthcare/' },
     ],
   },
 
   solutions: {
-    eyebrow: 'Turnkey Solutions',
+    eyebrow: 'Prefab & Turnkey Solutions',
     title: 'Complete Data Center Solutions',
     text: 'From single cabinets to multi-megawatt campuses — pre-engineered, factory-tested, and delivered as complete integrated units.',
     cards: [
+      {
+        title: 'AI Data Center',
+        short: 'AI Data Center',
+        text: 'Prefabricated AI infrastructure for GPU workloads. Container modules ship with integrated liquid cooling and high-density power — factory-tested and ready for compute on arrival.',
+        image: { path: '/resources/ai-data-center/ai-data-center-hero.webp', alt: 'AI data center' },
+        features: ['Live in 90–120 days', 'Up to 120 kW/rack', 'PUE as low as 1.08'],
+        cta: 'View Details',
+        ctaLink: '/en/solutions/data-center-solutions/ai-data-center/',
+      },
       {
         title: 'Containerized Data Center',
         short: 'Containerized',
@@ -377,7 +410,7 @@ export const HOME_EN: HomeContent = {
           { title: 'Room Precision AC', image: { path: '/resources/room-chilled-water-cooling-home-11-768x768.webp', alt: 'Room mounted precision air conditioner' }, hoverImage: { path: '/resources/room-chilled-water-cooling-home-3-768x768.webp', alt: 'Room chilled water cooling' }, ctaLink: '/en/products/thermal-management/precision-air-conditioning/room-cooling/' },
           { title: 'Row Precision AC', image: { path: '/resources/Inrow-cooling-split-DX-home-2-768x768.webp', alt: 'In-row precision air conditioner' }, hoverImage: { path: '/resources/Inrow-cooling-split-DX-home-1-768x768.webp', alt: 'In-row cooling' }, ctaLink: '/en/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
           { title: 'Rack Precision AC', image: { path: '/resources/rack-cooling-1.webp', alt: 'Rack precision air conditioner' }, hoverImage: { path: '/resources/rack-cooling-4-768x768.webp', alt: 'Rack cooling' }, ctaLink: '/en/products/thermal-management/precision-air-conditioning/rack-cooling/' },
-          { title: 'Enclosure Precision AC', image: { path: '/resources/outdoor-enclosure-cooling-home-2-768x768.webp', alt: 'Outdoor enclosure precision air conditioner' }, hoverImage: { path: '/resources/outdoor-enclosure-cooling-home-1-768x768.webp', alt: 'Enclosure cooling' }, ctaLink: '/en/products/thermal-management/precision-air-conditioning/telecom-enclosure-air-conditioner/' },
+          { title: 'Enclosure Precision AC', image: { path: '/resources/outdoor-enclosure-cooling-home-2-768x768.webp', alt: 'Outdoor enclosure precision air conditioner' }, hoverImage: { path: '/resources/outdoor-enclosure-cooling-home-1-768x768.webp', alt: 'Enclosure cooling' }, ctaLink: '/en/products/thermal-management/telecom-enclosure-air-conditioner/' },
         ],
       },
       {
@@ -439,56 +472,98 @@ export const HOME_EN: HomeContent = {
     eyebrow: 'Global Track Record',
     title: 'Trusted Where Uptime Is Non-Negotiable',
     text: 'From the deserts of the Middle East to the tropics of Southeast Asia, SOETECK data centers keep critical infrastructure running around the clock.',
+    ctaAll: 'View All Case Studies',
+    projectsAllLink: '/en/news-and-insights/client-case-studies/',
     cards: [
       {
-        title: 'Saudi Telecom Disaster Recovery',
+        title: 'Saudi Telecom',
         location: 'Riyadh, Saudi Arabia',
-        metric: '10',
-        metricLabel: 'Weeks to Deploy',
-        text: 'A fully containerized disaster-recovery data center for Saudi Telecom\'s critical operations. 400kW IT load with N+1 redundancy.',
-        image: { path: '/resources/prefab-modular-data-center-of-Saudi-Telecom-0.webp', alt: 'Saudi Telecom disaster recovery data center' },
-        cta: 'View Case Study',
-        ctaLink: '/en/case-studies/',
+        metric: '2',
+        metricLabel: '40ft Container DCs',
+        text: 'Two 40-foot mobile OLT container data centers for Saudi Telecom, built to carrier grade — with dual DC power, battery backup, and seven OLTs per unit for uninterrupted operation.',
+        image: { path: '/resources/prefab-modular-data-center-of-Saudi-Telecom-0.webp', alt: 'Saudi Telecom container data center' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/driving-innovation-soeteck-provides-saudi-telecom-with-advanced-mobile-olt-container-data-center-solutions/',
+        testimonial: {
+          quote: 'Our client expressed satisfaction with the results, believing that the container data center project laid a solid foundation for their long-term development.',
+          author: 'Saudi Telecom',
+          role: 'DR Project, Middle East',
+        },
       },
       {
-        title: 'Regional Edge Network',
-        location: 'Southeast Asia',
-        metric: '12',
-        metricLabel: 'Sites Deployed',
-        text: 'Distributed micro-module data centers across 12 sites for a regional telecommunications carrier.',
-        image: { path: '/resources/soeteck-racks-and-cabinets.webp', alt: 'Southeast Asia edge computing deployment' },
-        cta: 'View Case Study',
-        ctaLink: '/en/case-studies/',
+        title: 'GRD Qatar',
+        location: 'Qatar',
+        metric: '24/7',
+        metricLabel: 'Stable Operation',
+        text: 'A custom containerized data center for GRD, keeping mission-critical data stable around the clock as part of the company\'s full digital transformation.',
+        image: { path: '/resources/soeteck-racks-and-cabinets.webp', alt: 'GRD Qatar containerized data center' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/grd-qatar-gets-24-7-stable-data-via-soetecks-custom-containerized-data-center/',
+        testimonial: {
+          quote: 'The containerized data center was deployed quickly and runs our operations around the clock, even under extreme heat and dust.',
+          author: 'GRD',
+          role: 'Qatar Branch Operations',
+        },
       },
       {
-        title: 'Submarine Cable Landing Station',
+        title: 'Telecom Fiji',
+        location: 'Fiji',
+        metric: '45',
+        metricLabel: 'kW Anti-Corrosion ACs',
+        text: 'Coastal telecom stations upgraded with 20kW and 45kW anti-corrosion precision air conditioners, replacing underpowered household units in Fiji\'s salty, humid environment.',
+        image: { path: '/home/industry-submarine.png', alt: 'Telecom Fiji coastal site precision cooling' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/telecom-fiji-enhances-network-stability-with-soetecks-precision-cooling-solutions-featuring-anti-corrosion-design/',
+        testimonial: {
+          quote: 'The anti-corrosion precision air conditioners restored stable, efficient cooling at our coastal stations — equipment that used to fail in the salt air.',
+          author: 'Telecom Fiji',
+          role: 'Network Operations',
+        },
+      },
+      {
+        title: 'Open DC Malaysia',
+        location: 'Malaysia',
+        metric: '100',
+        metricLabel: 'kW Modular Cooling',
+        text: 'Two sets of 100kW modular air-cooled precision units retrofit Open DC Malaysia\'s cramped server rooms — a space-efficient upgrade where conventional units could not fit.',
+        image: { path: '/home/industry-gpu.png', alt: 'Open DC Malaysia data center retrofit' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/open-dc-malaysia-deploys-modular-100kw-air-cooled-precision-cooling-for-data-center-retrofit/',
+        testimonial: {
+          quote: 'SOETECK\'s modular units fit where conventional systems could not, giving our retrofitted server rooms reliable 100kW-class cooling.',
+          author: 'Open DC Malaysia',
+          role: 'Facility Engineering',
+        },
+      },
+      {
+        title: 'WebSat Media',
         location: 'Singapore',
-        metric: '99.99%',
-        metricLabel: 'Uptime SLA',
-        text: 'Corrosion-resistant containerized infrastructure for a critical undersea cable junction, deployed in a humid coastal environment with zero tolerance for downtime.',
-        image: { path: '/home/industry-submarine.png', alt: 'Submarine cable landing station infrastructure' },
-        cta: 'View Case Study',
-        ctaLink: '/en/case-studies/',
+        metric: 'N+1',
+        metricLabel: 'Cooling Redundancy',
+        text: 'Five 70kW precision air conditioners in N+1 redundancy keep WebSat Media\'s satellite and broadcast infrastructure online for a global client base.',
+        image: { path: '/home/scenario-remote.png', alt: 'WebSat Media data center cooling' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/websat-media-optimizes-data-center-infrastructure-with-soetecks-cooling-solutions/',
+        testimonial: {
+          quote: 'With N+1 redundancy across five precision units, our satellite and broadcast platforms stay online for clients on every continent.',
+          author: 'WebSat Media',
+          role: 'Data Center Infrastructure',
+        },
       },
       {
-        title: 'AI Training Facility',
-        location: 'Northern Europe',
-        metric: '100kW+',
-        metricLabel: 'Per Rack Density',
-        text: 'Direct-to-chip liquid cooling deployment supporting 100kW+ GPU rack density for an AI research cluster — delivered turnkey in one factory-tested unit.',
-        image: { path: '/home/industry-gpu.png', alt: 'AI training facility with liquid cooling' },
-        cta: 'View Case Study',
-        ctaLink: '/en/case-studies/',
-      },
-      {
-        title: 'Remote Off-Grid Site',
-        location: 'Central Australia',
-        metric: '28',
-        metricLabel: 'Days to Deploy',
-        text: 'Self-contained off-grid container data center with integrated power and cooling for a remote mining operation, shipped and commissioned in under a month.',
-        image: { path: '/home/scenario-remote.png', alt: 'Remote off-grid container data center' },
-        cta: 'View Case Study',
-        ctaLink: '/en/case-studies/',
+        title: 'Sinus-Dochi LLC',
+        location: 'Mongolia',
+        metric: 'In-Row',
+        metricLabel: 'Precision Cooling',
+        text: 'A row-mounted In-Row precision cooling system for a Mongolian HVAC engineering leader — DC inverter compressors, EC fans and N+1 redundancy cut data center PUE, with smart controls bringing cooling right to the heat source.',
+        image: { path: '/resources/a-project-of-Sinus-Dochi-LLC-2.webp', alt: 'Sinus-Dochi LLC in-row precision cooling' },
+        cta: 'Read Full Story',
+        ctaLink: '/en/news-and-insights/client-case-studies/sinus-dochi-llc-reduces-pue-and-enhances-cooling-efficiency-with-soetecks-smart-precision-cooling-system/',
+        testimonial: {
+          quote: 'The smart In-Row precision cooling system lowered our data center PUE and kept temperatures precise — efficiency and reliability in one solution.',
+          author: 'Sinus-Dochi LLC',
+          role: 'HVAC Engineering, Mongolia',
+        },
       },
     ],
   },
@@ -526,7 +601,7 @@ export const HOME_EN: HomeContent = {
     text: 'Tell us your requirements — power, cooling, footprint, timeline. We will engineer the optimal solution and deliver it turnkey.',
     cards: [
       { icon: 'products', title: 'Browse Our Catalog', text: 'Explore the full range of power, cooling, and enclosure products we manufacture in-house.', cta: 'View Products', ctaLink: '/en/products/' },
-      { icon: 'solutions', title: 'Get a Custom Solution', text: 'Receive a tailored recommendation for your specific workload, site, and capacity requirements.', cta: 'Consult an Expert', ctaLink: '/en/contact-us/' },
+      { icon: 'solutions', title: 'Get a Custom Solution', text: 'Receive a tailored recommendation for your specific workload, site, and capacity requirements.', cta: 'Explore Solutions', ctaLink: '/en/solutions/' },
       { icon: 'engineering', title: 'Talk to Engineering', text: 'Engage our engineering team directly for complex custom integration and design-build projects.', cta: 'Submit Inquiry', ctaLink: '/en/contact-us/' },
     ],
   },
@@ -578,8 +653,8 @@ export const HOME_EN: HomeContent = {
   // Variant C: Solutions head intro (merged from the old transition band)
   transition: {
     eyebrow: 'The Solution',
-    title: 'Three Turnkey Architectures',
-    text: 'Every SOETECK data center ships factory-built and site-ready. Pick the deployment model that fits your site, density, and timeline — containerized, micro-module, or row modular.',
+    title: 'Four Turnkey Architectures',
+    text: 'Every SOETECK data center ships factory-built and site-ready. From turnkey AI infrastructure to containerized, micro-module, and row modular deployments — pick the model that fits your site, density, and timeline.',
   },
 
   // Variant C: Products showcase intro

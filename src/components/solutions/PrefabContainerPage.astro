@@ -1,13 +1,11 @@
 ---
 import type { AdaptedPage } from '@/lib/page-adapter';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import {
-  PREFAB_OVERVIEW_PARAGRAPHS, PREFAB_HOTSPOTS, PREFAB_HOTSPOT_IMAGE,
-  PREFAB_CORE_MODULES, PREFAB_MODEL_VIEWS_20FT, PREFAB_MODEL_VIEWS_40FT,
-  PREFAB_SPEC_COLUMNS, PREFAB_SPEC_ROWS, PREFAB_SCENARIOS, PREFAB_CLIENT_CASES,
-  PREFAB_CRITICAL_POWER_TEXT, PREFAB_CRITICAL_POWER_PRODUCTS,
-  PREFAB_THERMAL_MANAGEMENT_TEXT, PREFAB_THERMAL_PRODUCTS,
-} from './prefab-content';
+import * as C_EN from './prefab-content';
+import * as C_ZH from './prefab-content-zh';
+import * as C_RU from './prefab-content-ru';
+import * as C_PT from './prefab-content-pt';
+import * as C_ES from './prefab-content-es';
 import '@/styles/product-gallery.css';
 import './PrefabContainerPage.css';
 
@@ -18,7 +16,17 @@ export interface Props {
 
 const { page, lang } = Astro.props;
 const brochureUrl = '/resources/Soeteck-Data-Center-Solution-Prefabricated-Container-Data-Center.pdf';
-const bannerImage = '/resources/soeteck-prefab-container-data-center-qatar-project-3.webp';
+
+// 正文内容按语言选择（translate-code-embedded 模式，Batch 3）
+const C_LANG_MAP: Record<string, typeof C_EN> = { en: C_EN, zh: C_ZH, ru: C_RU, pt: C_PT, es: C_ES };
+const C = C_LANG_MAP[lang] ?? C_EN;
+// 内容串中的 {lang} 占位符 → 当前语言前缀（内链 slug 不译，仅前缀动态化）
+const overviewParagraphs = C.PREFAB_OVERVIEW_PARAGRAPHS.map((p) => p.replace(/\{lang\}/g, lang));
+
+// hero 背景图：优先 ACF sections.heroImage（WP 后台可传），兜底原硬编码图
+// replace 剥掉可能的 cms.soeteck.com 域名，统一成 /resources/ 相对路径
+const heroOverride = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const bannerImage = heroOverride || '/resources/soeteck-prefab-container-data-center-qatar-project-3.webp';
 const videoThumb = '/resources/prefab-modular-data-center-of-Saudi-Telecom-01.webp';
 const videoId = 'lKo6rY0jVm4';
 ---
@@ -26,12 +34,12 @@ const videoId = 'lKo6rY0jVm4';
 <div class="soeteck-prefab-solution" data-prefab-solution>
   <!-- Banner Hero -->
   <section class="soeteck-prefab-banner" aria-labelledby="prefab-hero-title">
-    <img class="soeteck-prefab-banner__image" src={bannerImage} alt="Prefabricated container data center project" width="1920" height="600" loading="eager" fetchpriority="high" />
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt={C.PREFAB_PAGE_HERO.bannerAlt} width="1920" height="600" loading="eager" fetchpriority="high" />
     <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
     <div class="soeteck-container soeteck-prefab-banner__inner">
       <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
       <div class="soeteck-prefab-banner__body">
-        <h1 id="prefab-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">Prefabricated Container Data Center</h1>
+        <h1 id="prefab-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">{C.PREFAB_PAGE_HERO.title}</h1>
       </div>
     </div>
   </section>
@@ -39,23 +47,23 @@ const videoId = 'lKo6rY0jVm4';
   <!-- Overview -->
   <section class="soeteck-prefab-section soeteck-prefab-overview">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Dynamic Solutions for Evolving Needs</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.PREFAB_OVERVIEW_HEADING}</h2>
       <div class="soeteck-prefab-overview__grid">
         <div class="soeteck-prefab-rich-text">
-          {PREFAB_OVERVIEW_PARAGRAPHS.map((p) => (
+          {overviewParagraphs.map((p) => (
             <p set:html={p}></p>
           ))}
         </div>
-        <div class="soeteck-prefab-video" data-prefab-video>
-          <a class="soeteck-prefab-video__button" data-youtube-id={videoId} href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener" aria-label="Play Prefabricated Container Data Center video">
-            <img class="soeteck-prefab-video__image" src={videoThumb} alt="Prefab modular data center project video preview" width="640" height="360" loading="lazy" />
+        <div class="soeteck-prefab-video" data-prefab-video data-video-fallback-title={C.PREFAB_VIDEO_FALLBACK_TITLE}>
+          <a class="soeteck-prefab-video__button" data-youtube-id={videoId} href={`https://www.youtube.com/watch?v=${videoId}`} target="_blank" rel="noopener" aria-label={C.PREFAB_PAGE_HERO.videoAriaLabel}>
+            <img class="soeteck-prefab-video__image" src={videoThumb} alt={C.PREFAB_PAGE_HERO.videoThumbAlt} width="640" height="360" loading="lazy" />
             <span class="soeteck-prefab-video__play" aria-hidden="true"></span>
           </a>
         </div>
       </div>
       <div class="soeteck-prefab-cta-row">
-        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">GET BROCHURE</a>
-        <a class="soeteck-button-outline" href={`/${lang}/contact/`}>CONTACT US</a>
+        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">{C.PREFAB_CTA_ROW.getBrochure}</a>
+        <a class="soeteck-button-outline" href={`/${lang}/contact-us/`}>{C.PREFAB_CTA_ROW.contactUs}</a>
       </div>
     </div>
   </section>
@@ -63,15 +71,15 @@ const videoId = 'lKo6rY0jVm4';
   <!-- Closer Look -->
   <section class="soeteck-prefab-section soeteck-prefab-closer">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Take a Closer Look at Our Container Data Center</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.PREFAB_CLOSER_HEADING}</h2>
 
       <!-- 1 - Typical Design -->
       <article class="soeteck-prefab-detail-block">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>1 - </span>A typical design of PCDCs</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>{C.PREFAB_DETAIL_BLOCKS.typical.num}</span>{C.PREFAB_DETAIL_BLOCKS.typical.title}</h3>
         <div class="soeteck-prefab-hotspot" data-prefab-hotspots>
           <div class="soeteck-prefab-hotspot__media">
-            <img class="soeteck-prefab-hotspot__image" src={PREFAB_HOTSPOT_IMAGE} alt="Typical design of a prefabricated container data center" width="800" height="500" loading="lazy" />
-            {PREFAB_HOTSPOTS.map((hotspot, index) => (
+            <img class="soeteck-prefab-hotspot__image" src={C.PREFAB_HOTSPOT_IMAGE} alt={C.PREFAB_DETAIL_BLOCKS.typical.imageAlt} width="800" height="500" loading="lazy" />
+            {C.PREFAB_HOTSPOTS.map((hotspot, index) => (
               <button class="soeteck-prefab-hotspot__pin" type="button" data-hotspot-index={index} style={{ '--x': hotspot.x, '--y': hotspot.y } as any} aria-expanded="false" aria-label={hotspot.label}>
                 <span class="soeteck-prefab-hotspot__pulse" aria-hidden="true"></span>
                 <span class="soeteck-prefab-hotspot__core" aria-hidden="true">+</span>
@@ -81,35 +89,33 @@ const videoId = 'lKo6rY0jVm4';
           </div>
         </div>
         <div class="soeteck-prefab-rich-text soeteck-prefab-detail-block__copy">
-          <p>The containerized data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.</p>
-          <p><strong>Key Features:</strong></p>
+          <p>{C.PREFAB_DETAIL_BLOCKS.typical.lead}</p>
+          <p><strong>{C.PREFAB_DETAIL_BLOCKS.typical.featuresLabel}</strong></p>
           <ul>
-            <li>Safety and Reliability: Built to high safety standards with multiple protective measures, including fire resistance, water resistance, and enhanced security features.</li>
-            <li>Rapid Deployment: The design enables quick setup and installation, allowing for operational readiness in a short timeframe.</li>
-            <li>Flexible Scalability: Modular architecture supports easy expansion to accommodate changing requirements.</li>
-            <li>High Density and Efficiency: Efficient use of space allows for high computing power while minimizing resource consumption.</li>
-            <li>Intelligent Management: Equipped with monitoring and management systems for effective oversight and maintenance.</li>
+            {C.PREFAB_DETAIL_BLOCKS.typical.features.map((feature) => (
+              <li>{feature}</li>
+            ))}
           </ul>
         </div>
       </article>
 
       <!-- 2 - Models -->
       <article class="soeteck-prefab-detail-block soeteck-prefab-models">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>2 - </span>Meet with two typical models</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>{C.PREFAB_DETAIL_BLOCKS.models.num}</span>{C.PREFAB_DETAIL_BLOCKS.models.title}</h3>
         <div class="soeteck-prefab-rich-text soeteck-prefab-models__intro">
-          <p>SOETECK prefabricated container data centers come in various sizes to accommodate differing business needs. Here, we introduce two typical dimensions: the 20-foot and the 40-foot containers, each designed to deliver efficient and flexible computing solutions.</p>
+          <p>{C.PREFAB_DETAIL_BLOCKS.models.intro}</p>
         </div>
 
         <!-- 20ft Model -->
         <section class="soeteck-prefab-model">
-          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">20ft container data center</h4>
+          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">{C.PREFAB_DETAIL_BLOCKS.models.ft20Title}</h4>
           <div class="soeteck-prefab-model__grid">
             <div class="soeteck-prefab-model__full-view">
-              <img class="soeteck-prefab-model__image" src="/resources/20ft-container-data-center-3-1024x683.webp" alt="20ft container data center" width="400" height="300" loading="lazy" />
-              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>Full View</div>
-              <p>The 20-foot container data center is a compact solution ideal for businesses with moderate computing requirements. Its small footprint allows for easy deployment in both urban and remote locations.</p>
+              <img class="soeteck-prefab-model__image" src="/resources/20ft-container-data-center-3-1024x683.webp" alt={C.PREFAB_DETAIL_BLOCKS.models.ft20Title} width="400" height="300" loading="lazy" />
+              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>{C.PREFAB_DETAIL_BLOCKS.models.fullViewLabel}</div>
+              <p>{C.PREFAB_DETAIL_BLOCKS.models.ft20Desc}</p>
             </div>
-            {PREFAB_MODEL_VIEWS_20FT.map((view) => (
+            {C.PREFAB_MODEL_VIEWS_20FT.map((view) => (
               <div class="soeteck-prefab-view" data-prefab-view>
                 <div class="soeteck-prefab-view__media">
                   <img class="soeteck-prefab-view__image" src={view.image} alt={view.title} width="400" height="300" loading="lazy" />
@@ -136,14 +142,14 @@ const videoId = 'lKo6rY0jVm4';
 
         <!-- 40ft Model -->
         <section class="soeteck-prefab-model">
-          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">40ft container data center</h4>
+          <h4 class="soeteck-minor-title soeteck-title-bordered soeteck-prefab-model__title">{C.PREFAB_DETAIL_BLOCKS.models.ft40Title}</h4>
           <div class="soeteck-prefab-model__grid">
             <div class="soeteck-prefab-model__full-view">
-              <img class="soeteck-prefab-model__image" src="/resources/40ft-container-data-center-3-1024x683.webp" alt="40ft container data center" width="400" height="300" loading="lazy" />
-              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>Full View</div>
-              <p>The 40-foot container data center is designed for larger-scale deployments, offering expanded capacity for high-density computing while maintaining the same rapid deployment benefits.</p>
+              <img class="soeteck-prefab-model__image" src="/resources/40ft-container-data-center-3-1024x683.webp" alt={C.PREFAB_DETAIL_BLOCKS.models.ft40Title} width="400" height="300" loading="lazy" />
+              <div class="soeteck-prefab-view-label"><span aria-hidden="true">&#9650;</span>{C.PREFAB_DETAIL_BLOCKS.models.fullViewLabel}</div>
+              <p>{C.PREFAB_DETAIL_BLOCKS.models.ft40Desc}</p>
             </div>
-            {PREFAB_MODEL_VIEWS_40FT.map((view) => (
+            {C.PREFAB_MODEL_VIEWS_40FT.map((view) => (
               <div class="soeteck-prefab-view" data-prefab-view>
                 <div class="soeteck-prefab-view__media">
                   <img class="soeteck-prefab-view__image" src={view.image} alt={view.title} width="400" height="300" loading="lazy" />
@@ -171,12 +177,12 @@ const videoId = 'lKo6rY0jVm4';
 
       <!-- 3 - Core Modules -->
       <article class="soeteck-prefab-detail-block soeteck-prefab-modules">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>3 - </span>Core Infrastructure Modules</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>{C.PREFAB_DETAIL_BLOCKS.modules.num}</span>{C.PREFAB_DETAIL_BLOCKS.modules.title}</h3>
         <div class="soeteck-prefab-rich-text soeteck-prefab-modules__lead">
-          <p>The SOETECK containerized data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.</p>
+          <p>{C.PREFAB_DETAIL_BLOCKS.modules.lead}</p>
         </div>
         <div class="soeteck-prefab-module-grid">
-          {PREFAB_CORE_MODULES.map((module) => (
+          {C.PREFAB_CORE_MODULES.map((module) => (
             <article class="soeteck-prefab-module-card">
               <span class={`soeteck-prefab-module-card__icon soeteck-prefab-module-card__icon--${module.icon}`} aria-hidden="true"></span>
               <h3 class="soeteck-card-title">{module.title}</h3>
@@ -189,11 +195,11 @@ const videoId = 'lKo6rY0jVm4';
       <!-- Critical Power — Product Gallery Grid -->
       <section class="soeteck-prefab-product-group" aria-labelledby="prefab-critical-power-title">
         <div class="soeteck-prefab-rich-text">
-          <h4 id="prefab-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">Critical Power</h4>
-          <p>{PREFAB_CRITICAL_POWER_TEXT}</p>
+          <h4 id="prefab-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">{C.PREFAB_PRODUCT_GROUPS.criticalPower}</h4>
+          <p>{C.PREFAB_CRITICAL_POWER_TEXT}</p>
         </div>
         <div class="soeteck-prefab-product-gallery-grid" data-prefab-gallery>
-          {PREFAB_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
+          {C.PREFAB_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
             const panelId = `prefab-critical-power-${pIdx}`;
             return (
               <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
@@ -208,7 +214,7 @@ const videoId = 'lKo6rY0jVm4';
                   ))}
                 </div>
                 {product.images.slice(0, 4).length > 1 && (
-                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={C.PREFAB_PRODUCT_GROUPS.galleryAria.replace('{title}', product.title)}>
                     {product.images.slice(0, 4).map((img, iIdx) => (
                       <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
                               type="button"
@@ -232,11 +238,11 @@ const videoId = 'lKo6rY0jVm4';
       <!-- Thermal Management — Product Gallery Grid -->
       <section class="soeteck-prefab-product-group" aria-labelledby="prefab-thermal-title">
         <div class="soeteck-prefab-rich-text">
-          <h4 id="prefab-thermal-title" class="soeteck-minor-title soeteck-title-bordered">Thermal Management</h4>
-          <p>{PREFAB_THERMAL_MANAGEMENT_TEXT}</p>
+          <h4 id="prefab-thermal-title" class="soeteck-minor-title soeteck-title-bordered">{C.PREFAB_PRODUCT_GROUPS.thermal}</h4>
+          <p>{C.PREFAB_THERMAL_MANAGEMENT_TEXT}</p>
         </div>
         <div class="soeteck-prefab-product-gallery-grid" data-prefab-gallery>
-          {PREFAB_THERMAL_PRODUCTS.map((product, pIdx) => {
+          {C.PREFAB_THERMAL_PRODUCTS.map((product, pIdx) => {
             const panelId = `prefab-thermal-${pIdx}`;
             return (
               <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
@@ -251,7 +257,7 @@ const videoId = 'lKo6rY0jVm4';
                   ))}
                 </div>
                 {product.images.slice(0, 4).length > 1 && (
-                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                  <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={C.PREFAB_PRODUCT_GROUPS.galleryAria.replace('{title}', product.title)}>
                     {product.images.slice(0, 4).map((img, iIdx) => (
                       <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
                               type="button"
@@ -277,27 +283,27 @@ const videoId = 'lKo6rY0jVm4';
   <!-- Specs Table -->
   <section class="soeteck-prefab-section soeteck-prefab-specs">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Featured Models and Specifications</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.PREFAB_SPECS.heading}</h2>
       <div class="soeteck-prefab-table-wrap">
         <table class="soeteck-prefab-spec-table">
           <thead>
             <tr class="soeteck-prefab-spec-table__images">
               <th scope="col"></th>
-              {PREFAB_SPEC_COLUMNS.map((col) => (
+              {C.PREFAB_SPEC_COLUMNS.map((col) => (
                 <th scope="col">
                   <img src={col.image} alt={col.model} width="249" height="282" loading="lazy" />
                 </th>
               ))}
             </tr>
             <tr>
-              <th scope="col">Models</th>
-              {PREFAB_SPEC_COLUMNS.map((col) => (
+              <th scope="col">{C.PREFAB_SPECS.modelsLabel}</th>
+              {C.PREFAB_SPEC_COLUMNS.map((col) => (
                 <th scope="col">{col.model}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {PREFAB_SPEC_ROWS.map((row) => (
+            {C.PREFAB_SPEC_ROWS.map((row) => (
               <tr>
                 <th scope="row">{row[0]}</th>
                 {row.slice(1).map((cell) => (
@@ -308,24 +314,24 @@ const videoId = 'lKo6rY0jVm4';
           </tbody>
         </table>
       </div>
-      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>SOETECK Prefabricated Container Data Center.pdf</a></p>
+      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>{C.PREFAB_SPECS.pdfLinkText}</a></p>
     </div>
   </section>
 
   <!-- Scenarios -->
   <section class="soeteck-prefab-section soeteck-prefab-scenarios">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Who Might Need Our Prefab DCs?</h2>
-      <p class="soeteck-prefab-section__subtitle">An integration of Power, Cooling &amp; Infrastructure Modules Supporting Reliable IT Operations &ndash; Where Modular DC Delivers Unique Value</p>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.PREFAB_SCENARIOS_HEADING}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.PREFAB_SCENARIOS_SUBTITLE}</p>
       <div class="soeteck-prefab-scenario-grid">
-        {PREFAB_SCENARIOS.map((scenario) => (
+        {C.PREFAB_SCENARIOS.map((scenario) => (
           <article class="soeteck-prefab-scenario-card" data-scenario-card>
             <img class="soeteck-prefab-scenario-card__image" src={scenario.image} alt={scenario.title} width="436" height="237" loading="lazy" />
             <div class="soeteck-prefab-scenario-card__body">
               <h3 class="soeteck-card-title">{scenario.title}</h3>
-              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={`${scenario.title} details`}>
-                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">Solution Benefits</button>
-                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">Critical Pain Points</button>
+              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={C.PREFAB_SCENARIO_UI.detailsAria.replace('{title}', scenario.title)}>
+                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">{C.PREFAB_SCENARIO_UI.benefitsTab}</button>
+                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">{C.PREFAB_SCENARIO_UI.painTab}</button>
               </div>
               <div class="soeteck-prefab-scenario-card__panel is-active" data-scenario-panel="benefits">
                 <div class="soeteck-prefab-scenario-card__tags">
@@ -354,9 +360,9 @@ const videoId = 'lKo6rY0jVm4';
   <!-- Featured Client Cases -->
   <section class="soeteck-prefab-section soeteck-prefab-cases">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Check Our Featured Client Cases</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.PREFAB_CASES_HEADING}</h2>
       <div class="soeteck-prefab-case-grid">
-        {PREFAB_CLIENT_CASES.map((c) => (
+        {C.PREFAB_CLIENT_CASES.map((c) => (
           <article class="soeteck-prefab-case-card">
             <a class="soeteck-prefab-case-card__media" href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>
               <img class="soeteck-prefab-case-card__image" src={c.imgSrc} alt={c.title} width="436" height="240" loading="lazy" />
@@ -375,18 +381,18 @@ const videoId = 'lKo6rY0jVm4';
   <section class="soeteck-cta" id="prefab-inquiry">
     <div class="soeteck-container soeteck-cta__inner">
       <div>
-        <p class="soeteck-eyebrow">Talk to an Engineer</p>
-        <h2>Get in Touch with SOETECK</h2>
-        <p>Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.</p>
+        <p class="soeteck-eyebrow">{C.PREFAB_CTA_SECTION.eyebrow}</p>
+        <h2>{C.PREFAB_CTA_SECTION.title}</h2>
+        <p>{C.PREFAB_CTA_SECTION.text}</p>
         <ul class="soeteck-cta__checks">
-          <li>Project consultation</li>
-          <li>Technical configuration support</li>
-          <li>Regional follow-up</li>
+          {C.PREFAB_CTA_SECTION.checks.map((check) => (
+            <li>{check}</li>
+          ))}
         </ul>
       </div>
       <div class="soeteck-cta__actions">
-        <a class="soeteck-cta__button" href={`/${lang}/contact/`}>Contact Us</a>
-        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">Download Brochure</a>
+        <a class="soeteck-cta__button" href={`/${lang}/contact-us/`}>{C.PREFAB_CTA_SECTION.contactButton}</a>
+        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">{C.PREFAB_CTA_SECTION.brochureButton}</a>
       </div>
     </div>
   </section>
@@ -408,7 +414,7 @@ const videoId = 'lKo6rY0jVm4';
         return;
     }
 
-    function buildYouTubeEmbed(videoId, title) {
+    function buildYouTubeEmbed(videoId: string, title: string, fallbackTitle: string) {
         var wrapper = document.createElement('div');
         var iframe = document.createElement('iframe');
 
@@ -416,7 +422,7 @@ const videoId = 'lKo6rY0jVm4';
 
         iframe.className = 'soeteck-prefab-video__iframe';
         iframe.src = 'https://www.youtube-nocookie.com/embed/' + encodeURIComponent(videoId) + '?autoplay=1&rel=0';
-        iframe.title = title || 'Soeteck solution video';
+        iframe.title = title || fallbackTitle || '';
         iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
         iframe.allowFullscreen = true;
         iframe.loading = 'eager';
@@ -441,7 +447,7 @@ const videoId = 'lKo6rY0jVm4';
 
                 event.preventDefault();
 
-                videoShell.replaceChildren(buildYouTubeEmbed(videoId, trigger.getAttribute('aria-label')));
+                videoShell.replaceChildren(buildYouTubeEmbed(videoId, trigger.getAttribute('aria-label'), videoShell.getAttribute('data-video-fallback-title')));
             });
         });
     }

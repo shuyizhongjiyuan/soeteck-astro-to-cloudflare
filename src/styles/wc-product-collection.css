@@ -1,0 +1,118 @@
+/* ==========================================================================
+   WooCommerce Product Collection — 文章内嵌产品网格 (Astro port)
+   ==========================================================================
+   文章 contentHtml 中 woocommerce/product-collection 块由 CMS 渲染为产品卡片
+   （ul.wp-block-woocommerce-product-template > li.wc-block-product）。本样式把
+   其排版为响应式产品网格，视觉对齐项目 product-gallery 卡片语言：
+   白卡 + 4:3 图区(contain 整图) + 居中标题(hover 浮起)。链接由 content-api.ts
+   rewriteProductLinks() 改写为前端 /{lang}/products/... 路径。
+   仅在包含该块的文章页（ArticleContent import）加载。
+   ========================================================================== */
+
+.wp-block-woocommerce-product-template {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(16px, 2vw, 24px);
+  list-style: none;
+  margin: 1.5em 0;
+  padding: 0;
+}
+.wp-block-woocommerce-product-template.columns-3 { grid-template-columns: repeat(3, 1fr); }
+.wp-block-woocommerce-product-template.columns-2 { grid-template-columns: repeat(2, 1fr); }
+.wp-block-woocommerce-product-template.columns-1 { grid-template-columns: 1fr; }
+
+/* ── 卡片本体：白卡 + 细边框 + 圆角 + 轻阴影 ─────────────────────────── */
+.wp-block-woocommerce-product-template > .wc-block-product {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background: var(--soeteck-white);
+  border: 1px solid var(--soeteck-border-soft);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+  transition: box-shadow 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+}
+.wp-block-woocommerce-product-template > .wc-block-product:hover {
+  border-color: rgba(26, 133, 229, 0.35);
+  box-shadow: 0 12px 32px rgba(16, 24, 40, 0.1);
+  transform: translateY(-4px);
+}
+
+/* ── 产品图：4:3 舞台，contain 整图居中，浅灰底 ─────────────────────── */
+.wp-block-woocommerce-product-template .wc-block-components-product-image {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #f6f8fa;
+}
+.wp-block-woocommerce-product-template .wc-block-components-product-image a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+/* inline style(width:100%/object-fit:cover) 来自 CMS 块渲染，覆盖为 contain 显示整图 */
+.wp-block-woocommerce-product-template .wc-block-components-product-image img {
+  display: block;
+  width: auto !important;
+  height: auto !important;
+  max-width: 86%;
+  max-height: 88%;
+  object-fit: contain;
+  transition: transform 0.45s ease;
+}
+.wp-block-woocommerce-product-template > .wc-block-product:hover .wc-block-components-product-image img {
+  transform: scale(1.06);
+}
+
+/* ── 产品标题：xs 字号、居中、最长两行省略 ────────────────────────────── */
+/* 标题元素在两篇含该块的文章中不同（h2 无 soeteck-product-title / h4 有）,
+   但都带 .wp-block-post-title。选择器用 .wp-block-post-title 覆盖两种变体；
+   specificity (0,3,0) 压过 ArticleContent 的 :global(h2)（否则 h2 标题会拿到 2.5rem）；
+   !important 双保险 + 覆盖 CMS 内联 margin/line-height、scoped h2 字号。 */
+.wp-block-woocommerce-product-template .wc-block-product .wp-block-post-title {
+  min-height: 0;
+  margin: 0 !important;
+  padding: 12px 14px;
+  text-align: center;
+  font-size: var(--soeteck-text-xs) !important;
+  font-weight: 600;
+  line-height: 1.35 !important;
+  color: var(--soeteck-text) !important;
+  border-top: 1px solid var(--soeteck-border-soft);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* 兼容旧自定义类（row-vs-rack 篇的 h4 带 soeteck-product-title） */
+.wp-block-woocommerce-product-template .wc-block-product .soeteck-product-title {
+  border-top: 1px solid var(--soeteck-border-soft);
+}
+.wp-block-woocommerce-product-template .wp-block-post-title a {
+  color: inherit;
+  text-decoration: none;
+  background: none;
+}
+.wp-block-woocommerce-product-template .wp-block-post-title a:hover {
+  color: var(--soeteck-primary);
+}
+
+/* ── 响应式：4 → 3 → 2 → 1 ──────────────────────────────────────────── */
+@media (max-width: 991px) {
+  .wp-block-woocommerce-product-template,
+  .wp-block-woocommerce-product-template.columns-4 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .wp-block-woocommerce-product-template,
+  .wp-block-woocommerce-product-template.columns-4,
+  .wp-block-woocommerce-product-template.columns-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .wp-block-woocommerce-product-template,
+  .wp-block-woocommerce-product-template.columns-4,
+  .wp-block-woocommerce-product-template.columns-3,
+  .wp-block-woocommerce-product-template.columns-2 { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,494 @@
+/**
+ * Inquiry 共享控件样式（contact 页与产品询盘表单共用）
+ *
+ * 从 contact/ContactPage.astro 内联样式抽取，供两处询盘表单复用。
+ * 组件：
+ *   - 国家选择器  .soeteck-country-select-*
+ *   - 上传开关    .soeteck-contact-form__upload-switch*
+ *   - 文件 chips  .soeteck-contact-form__file-*
+ *
+ * 容器可用 .soeteck-contact-form__file（含 is-visible 展开 / has-file 高亮）。
+ */
+
+/* ═══════════ 国家选择器 ═══════════ */
+.soeteck-country-select {
+  position: relative;
+  width: 100%;
+}
+
+.soeteck-country-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1.5px solid #dce0e6;
+  border-radius: 8px;
+  background: var(--soeteck-white);
+  cursor: pointer;
+  font-family: 'Sora', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #1e293b;
+  text-align: left;
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.soeteck-country-select__trigger:hover {
+  border-color: #b0b8c4;
+}
+
+.soeteck-country-select__trigger:focus-visible {
+  outline: none;
+  border-color: var(--soeteck-primary);
+  box-shadow: 0 0 0 3.5px rgba(26, 133, 229, 0.12);
+  background: #fafcff;
+}
+
+.soeteck-country-select__placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 0.875rem;
+  letter-spacing: 0.01em;
+}
+
+.soeteck-country-select__placeholder--selected {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.soeteck-country-select__placeholder--selected .soeteck-country-select__flag img {
+  display: block;
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+}
+
+.soeteck-country-select__arrow {
+  flex-shrink: 0;
+  width: 10px;
+  height: 6px;
+  color: #94a3b8;
+  transition: transform 220ms ease;
+}
+
+.soeteck-country-select__trigger[aria-expanded="true"] .soeteck-country-select__arrow {
+  transform: rotate(180deg);
+}
+
+/* —— 下拉菜单 —— */
+.soeteck-country-select__dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12), 0 2px 8px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.soeteck-country-select__dropdown.is-open {
+  display: block;
+}
+
+.soeteck-country-select__search-wrap {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.soeteck-country-select__search-icon {
+  position: absolute;
+  top: 50%;
+  left: 24px;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+input.soeteck-country-select__search {
+  all: unset;
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 16px 0 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #1e293b;
+  line-height: 1.4;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+
+input.soeteck-country-select__search:focus {
+  border-color: var(--soeteck-primary);
+  background: #fff;
+}
+
+input.soeteck-country-select__search::placeholder {
+  color: #94a3b8;
+}
+
+.soeteck-country-select__list {
+  max-height: 280px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 4px;
+}
+
+.soeteck-country-select__list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.soeteck-country-select__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.soeteck-country-select__list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.soeteck-country-select__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  font-family: 'Sora', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+  text-align: left;
+  transition: background 120ms ease;
+}
+
+.soeteck-country-select__option:hover,
+.soeteck-country-select__option.is-focused {
+  background: #f1f5f9;
+}
+
+.soeteck-country-select__option.is-selected {
+  background: #eff6ff;
+  color: var(--soeteck-primary);
+  font-weight: 600;
+}
+
+.soeteck-country-select__option.is-hidden {
+  display: none;
+}
+
+.soeteck-country-select__flag {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  width: 24px;
+  height: 18px;
+}
+
+.soeteck-country-select__flag img {
+  display: block;
+  width: 20px;
+  height: 15px;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.soeteck-country-select__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ═══════════ 上传开关 ═══════════ */
+.soeteck-contact-form__upload-switch {
+  display: block;
+  margin: 24px 0 0;   /* 上传开关 ↔ 文件区距离统一约 10px（下方交给文件区自身 margin） */
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.soeteck-contact-form__upload-switch-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.soeteck-contact-form__upload-switch-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.soeteck-contact-form__upload-switch-track {
+  position: relative;
+  width: 46px;
+  height: 24px;
+  border-radius: 12px;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background 200ms ease;
+  flex-shrink: 0;
+}
+
+.soeteck-contact-form__upload-switch-track:has(input:checked) {
+  background: var(--soeteck-primary);
+}
+
+.soeteck-contact-form__upload-switch-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.soeteck-contact-form__upload-switch-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.soeteck-contact-form__upload-switch-track:has(input:checked) .soeteck-contact-form__upload-switch-knob {
+  transform: translateX(22px);
+}
+
+/* ═══════════ 文件上传区 ═══════════ */
+.soeteck-contact-form__file {
+  max-height: 0;
+  margin-top: 0;
+  overflow: hidden;
+  transition: max-height 300ms ease, margin-top 300ms ease;
+}
+
+.soeteck-contact-form__file.is-visible {
+  max-height: 320px;
+  margin-top: 10px;   /* 与上传开关间距统一约 10px */
+}
+
+.soeteck-contact-form__file-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.soeteck-contact-form__file-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 54px;
+  padding: 8px 12px;
+  border: 1.5px solid #dce0e6;
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.soeteck-contact-form__file-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+}
+
+.soeteck-contact-form__file:hover .soeteck-contact-form__file-control,
+.soeteck-contact-form__file:focus-within .soeteck-contact-form__file-control {
+  border-color: var(--soeteck-primary);
+  box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.08);
+}
+
+.soeteck-contact-form__file-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 10px 0 0;
+  border: 0;
+  background: transparent;
+  color: #1e293b;
+  cursor: pointer;
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.soeteck-contact-form__file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid rgba(26, 133, 229, 0.2);
+  border-radius: 50%;
+  background: rgba(26, 133, 229, 0.06);
+  color: var(--soeteck-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.soeteck-contact-form__file-add:hover .soeteck-contact-form__file-icon,
+.soeteck-contact-form__file-add:focus-visible .soeteck-contact-form__file-icon {
+  background: var(--soeteck-primary);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.soeteck-contact-form__file-action {
+  color: #1e293b;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.soeteck-contact-form__file-name {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  min-height: 36px;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.soeteck-contact-form__file-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 240px;
+  min-height: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(26, 133, 229, 0.15);
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.soeteck-contact-form__file-chip-name {
+  overflow: hidden;
+  padding: 3px 6px 3px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.soeteck-contact-form__file-remove {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 26px;
+  align-self: stretch;
+  width: 26px;
+  min-width: 26px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-left: 1px solid rgba(26, 133, 229, 0.12);
+  border-radius: 0;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1;
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.soeteck-contact-form__file-remove:hover,
+.soeteck-contact-form__file-remove:focus-visible {
+  background: rgba(220, 38, 38, 0.08);
+  color: #dc2626;
+}
+
+.soeteck-contact-form__file.has-file .soeteck-contact-form__file-control {
+  border-color: rgba(26, 133, 229, 0.35);
+}
+
+.soeteck-contact-form__file.has-file .soeteck-contact-form__file-icon {
+  background: var(--soeteck-primary);
+  color: #fff;
+}
+
+.soeteck-contact-form__file.has-file .soeteck-contact-form__file-name {
+  color: #475569;
+}
+
+.soeteck-contact-form__file-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 4px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-family: 'Sora', system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 120ms ease;
+  white-space: nowrap;
+}
+
+.soeteck-contact-form__file-clear:hover {
+  background: #fecaca;
+}
+
+.soeteck-contact-form__file-clear[hidden] {
+  display: none;
+}
+
+.soeteck-contact-form__file input[type="file"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .soeteck-country-select__dropdown {
+    transition: none;
+  }
+}

@@ -20,7 +20,7 @@
 }
 
 .soeteck-aicoolit-section { padding-block: var(--soeteck-section-y); }
-.soeteck-aicoolit-section .soeteck-eyebrow { display: block; padding-bottom: 20px; color: var(--aicoolit-blue); }
+.soeteck-aicoolit-section .soeteck-eyebrow { display: block; margin: 0 0 25px; padding: 0; color: var(--aicoolit-blue); }
 .soeteck-aicoolit-section .soeteck-section-lead { max-width: 680px; color: var(--soeteck-text-soft); margin-bottom: 40px; }
 .soeteck-aicoolit-section .soeteck-section-title {
   font-size: clamp(1.85rem, 3.1vw, 3rem);
@@ -56,17 +56,12 @@
   display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; position: relative; z-index: 2;
 }
 .soeteck-aicoolit-hero__content { text-align: left; }
-.soeteck-aicoolit-hero__eyebrow {
-  display: inline-block; padding: 6px 16px; border-radius: 4px;
-  background: rgba(26,133,229,0.08); border: 1px solid rgba(26,133,229,0.15);
-  color: var(--aicoolit-blue); font-size: 17px; font-weight: 600;
-  letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 20px;
-}
 .soeteck-aicoolit-hero__title {
   font-size: var(--soeteck-heading-lg);
   line-height: 1.08;
   color: #363636;
   margin-bottom: 8px;
+  white-space: normal; /* 有意两行："Liquid Cooling" / "Data Center"（<br> 强制断行） */
 }
 .soeteck-aicoolit-hero__subtitle {
   font-size: clamp(24px, 4vw, 40px); font-weight: 300; color: #363636;
@@ -490,6 +485,12 @@ details[open] .soeteck-aicoolit-faq__chevron { transform: rotate(180deg); }
   cursor: pointer; transition: background 180ms ease;
 }
 .soeteck-aicoolit-cta__form-submit:hover { background: var(--aicoolit-blue-dark); }
+.soeteck-aicoolit-cta__form-submit[disabled] { opacity: 0.6; cursor: default; }
+.soeteck-aicoolit-cta__form-note {
+  margin: 12px 0 0; padding: 10px 12px; border-radius: 6px;
+  font-size: 13px; line-height: 1.5; color: var(--aicoolit-blue-dark, #0067c5);
+  background: rgba(26, 133, 229, 0.08);
+}
 
 /* ── Responsive ── */
 @media (max-width: 991px) {

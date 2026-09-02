@@ -1,0 +1,194 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { SOLUTIONS_HUB_EN } from './solutions-hub-content';
+import { SOLUTIONS_HUB_ZH } from './solutions-hub-content-zh';
+import { SOLUTIONS_HUB_RU } from './solutions-hub-content-ru';
+import { SOLUTIONS_HUB_PT } from './solutions-hub-content-pt';
+import { SOLUTIONS_HUB_ES } from './solutions-hub-content-es';
+import type { SolutionsHubContent } from './solutions-hub-content';
+import { fetchCategoryBanner } from '@/lib/content-api';
+import AboutCta from '@/components/about/AboutCta.astro';
+import './SolutionsHubPage.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+
+const contentMap: Record<string, SolutionsHubContent> = {
+  en: SOLUTIONS_HUB_EN,
+  zh: SOLUTIONS_HUB_ZH,
+  ru: SOLUTIONS_HUB_RU,
+  pt: SOLUTIONS_HUB_PT,
+  es: SOLUTIONS_HUB_ES,
+};
+const content = contentMap[lang] ?? SOLUTIONS_HUB_EN;
+const hero = content.hero;
+// hero 完全由后台「分类」的 Category Banner Image 字段驱动：未上传则不显示背景图，
+// 不做代码兜底（用户指示 2026-08-20）。
+const heroBannerImage = (await fetchCategoryBanner('solutions', lang).catch(() => null))?.bannerImage?.path ?? null;
+
+// 参考设计的 2×3 网格放 6 个解决方案；AI Data Center 作旗舰宽卡单独突出
+const gridSolutions = content.solutions.slice(0, 6);
+const featured = content.solutions[6];
+// 行业入口图标（SVG path，复用首页 Industry 图标集）
+const industryIcons: Record<string, string> = {
+  telecom: 'M6 22h20M10 22v-6a6 6 0 0112 0v6M16 10v2M8 22l-2 4h20l-2-4',
+  colocation: 'M8 4h16a2 2 0 012 2v20a2 2 0 01-2 2H8a2 2 0 01-2-2V6a2 2 0 012-2zM7 10h18M12 10v-2M12 18v-2M20 10v-2M20 18v-2',
+  cloud: 'M9 22a7 7 0 111.5-13.8A9 9 0 1123 22H9z',
+  internet: 'M16 26a10 10 0 100-20 10 10 0 000 20zM6 16h20M16 6c3.5 3 5.5 6 5.5 10S19.5 23 16 26c-3.5-3-5.5-6-5.5-10S12.5 9 16 6z',
+  finance: 'M16 16a9 9 0 100-18a9 9 0 000 18zM12 13h8M12 13v4M12 17h5',
+  government: 'M4 12l12-8 12 8v2H4v-2zM6 14v10M26 14v10M10 14v6M16 14v6M22 14v6M4 24h24',
+  manufacturing: 'M4 28V16l7 4v-5l7 4V9h7v19H4zM10 28v-6M16 28v-8M22 28v-6M28 28H4',
+  healthcare: 'M10 6h12a4 4 0 014 4v12a4 4 0 01-4 4H10a4 4 0 01-4-4V10a4 4 0 014-4zM16 11v10M11 16h10',
+};
+const industryExplore =
+  ({ en: 'Explore', zh: '探索', ru: 'Узнать больше', pt: 'Explorar', es: 'Explorar' } as Record<string, string>)[lang] ?? 'Explore';
+---
+
+<div class="soeteck-solutions-hub">
+  <!-- Hero Banner -->
+  <section class="soeteck-solutions-hub__banner" aria-labelledby="solutions-hub-title">
+      {heroBannerImage && (
+        <img class="soeteck-solutions-hub__banner-image" src={heroBannerImage} alt={hero.title} loading="eager" fetchpriority="high" />
+      )}
+      <div class="soeteck-solutions-hub__banner-overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-solutions-hub__banner-content">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-solutions-hub__banner-body">
+        <h1 id="solutions-hub-title" class="soeteck-page-title">{hero.title}</h1>
+        <p>{hero.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Data-trust stats strip -->
+  {content.stats && content.stats.length > 0 && (
+    <section class="soeteck-solutions-hub__stats" aria-label="Soeteck at a glance">
+      <div class="soeteck-container soeteck-solutions-hub__stats-inner">
+        {content.stats.map((stat) => (
+          <div class="soeteck-solutions-hub__stat">
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Solutions grid — 参考设计：2×3 分隔线网格，大圆角图 + 粗体标题 + 蓝链接 -->
+  <section class="soeteck-solutions-hub__band" aria-labelledby="solutions-hub-band-title">
+    <div class="soeteck-container">
+      <div class="soeteck-solutions-hub__band-info">
+        <p class="soeteck-eyebrow soeteck-solutions-hub__band-eyebrow">{content.sectionIntro.eyebrow}</p>
+        <h2 id="solutions-hub-band-title" class="soeteck-section-title soeteck-solutions-hub__band-title">{content.sectionIntro.title}</h2>
+        <p class="soeteck-solutions-hub__band-subtitle">{content.sectionIntro.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="soeteck-solutions-hub__cards" aria-label="Solutions">
+    <div class="soeteck-container">
+      <div class="soeteck-solutions-hub__grid">
+        {gridSolutions.map((solution) => (
+          <a class="soeteck-solutions-hub__card" href={`/${lang}${solution.path}`}>
+            <div class="soeteck-solutions-hub__card-media">
+              <img class="soeteck-solutions-hub__card-image" src={solution.image} alt={solution.alt} loading="lazy" />
+            </div>
+            <div class="soeteck-solutions-hub__card-body">
+              <h3 class="soeteck-solutions-hub__card-title">{solution.title}</h3>
+              <p class="soeteck-solutions-hub__card-desc">{solution.description}</p>
+              <span class="soeteck-solutions-hub__card-link">
+                {industryExplore}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M4 8h8M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- AI Data Center — 旗舰宽卡 -->
+      {featured && (
+        <a class="soeteck-solutions-hub__featured" href={`/${lang}${featured.path}`}>
+          <div class="soeteck-solutions-hub__featured-media">
+            <img class="soeteck-solutions-hub__featured-image" src={featured.image} alt={featured.alt} loading="lazy" />
+          </div>
+          <div class="soeteck-solutions-hub__featured-body">
+            <p class="soeteck-eyebrow soeteck-solutions-hub__featured-eyebrow">AI-ready</p>
+            <h3 class="soeteck-solutions-hub__featured-title">{featured.title}</h3>
+            <p class="soeteck-solutions-hub__featured-desc">{featured.description}</p>
+            <span class="soeteck-solutions-hub__card-link">
+              {industryExplore}
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M4 8h8M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      )}
+    </div>
+  </section>
+
+  <!-- Section B — Industry solutions entry -->
+  {content.industries && content.industries.items.length > 0 && (
+    <section class="soeteck-solutions-hub__industries" aria-labelledby="solutions-hub-industries-title">
+      <div class="soeteck-container">
+        <div class="soeteck-solutions-hub__industry-head">
+          <p class="soeteck-eyebrow soeteck-solutions-hub__band-eyebrow">{content.industries.eyebrow}</p>
+          <h2 id="solutions-hub-industries-title" class="soeteck-solutions-hub__band-title">{content.industries.title}</h2>
+          <p class="soeteck-solutions-hub__band-subtitle">{content.industries.subtitle}</p>
+        </div>
+
+        <div class="soeteck-solutions-hub__industry-grid">
+          {content.industries.items.map((item) => (
+            <a class="soeteck-solutions-hub__industry-card" href={`/${lang}${item.path}`}>
+              <div class="soeteck-solutions-hub__industry-body">
+                <span class="soeteck-solutions-hub__industry-icon" aria-hidden="true">
+                  <svg viewBox="0 0 32 32" fill="none">
+                    <path d={industryIcons[item.icon] ?? industryIcons.telecom} stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <h3 class="soeteck-solutions-hub__industry-name">{item.name}</h3>
+                <p class="soeteck-solutions-hub__industry-desc">{item.description}</p>
+                <span class="soeteck-solutions-hub__card-link" aria-hidden="true">
+                  {industryExplore}
+                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M4 8h8M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          ))}
+            {/* 第 9 格占位卡：邀请未覆盖行业访客 → 联系定制（补满 3×3 网格） */}
+            {content.industries.exploreMore && (
+              <a class="soeteck-solutions-hub__industry-card soeteck-solutions-hub__industry-card--placeholder" href={`/${lang}${content.industries.exploreMore.path}`}>
+                <div class="soeteck-solutions-hub__industry-body">
+                  <span class="soeteck-solutions-hub__industry-icon" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none">
+                      <path d="M14 21a7 7 0 100-14 7 7 0 000 14zM19.5 19.5 25 25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                  <h3 class="soeteck-solutions-hub__industry-name">{content.industries.exploreMore.title}</h3>
+                  <p class="soeteck-solutions-hub__industry-desc">{content.industries.exploreMore.description}</p>
+                  <span class="soeteck-solutions-hub__card-link" aria-hidden="true">
+                    {content.industries.exploreMore.cta}
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M4 8h8M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </span>
+                </div>
+              </a>
+            )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- CTA（统一模板 ADR-033） -->
+  <AboutCta lang={lang} id="solutions-hub-inquiry" />
+</div>

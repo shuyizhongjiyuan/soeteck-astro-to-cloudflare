@@ -1,0 +1,695 @@
+/* AiDataCenterPage styles — code-embedded solution page.
+   Reuses shared `soeteck-prefab-*` classes (banner/section/title/spec-table/case-card/cta)
+   defined in PrefabContainerPage.css (bundled via PageDispatcher).
+   This file adds the page-specific AI Data Center sections. */
+
+.soeteck-aidc {
+  color: var(--soeteck-text);
+  background: #fff;
+}
+
+/* Alternate band background for rhythm */
+.soeteck-aidc__section--alt {
+  background: var(--soeteck-surface, #f5f7fa);
+}
+
+/* Section eyebrow */
+.soeteck-aidc__section-eyebrow {
+  text-align: center;
+  margin-bottom: clamp(10px, 1.2vw, 18px);
+}
+
+/* Hero — eyebrow 样式走共享 .soeteck-prefab-banner .soeteck-eyebrow（6.2 hero 档）+ 基类 primary 色 */
+
+.soeteck-aidc__hero-subtitle {
+  max-width: 820px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--soeteck-text-lg, clamp(1rem, 1.6vw, 1.22rem));
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.soeteck-aidc__hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: clamp(24px, 3vw, 34px);
+}
+
+.soeteck-aidc__hero-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  border-radius: var(--soeteck-radius-md, 8px);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color var(--soeteck-transition-fast, 0.2s), color var(--soeteck-transition-fast, 0.2s);
+}
+
+.soeteck-aidc__hero-btn--primary {
+  background: var(--soeteck-primary);
+  color: #fff;
+}
+
+.soeteck-aidc__hero-btn--primary:hover {
+  background: var(--soeteck-primary-dark);
+}
+
+.soeteck-aidc__hero-btn--outline {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #fff;
+}
+
+.soeteck-aidc__hero-btn--outline:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Pain Points */
+.soeteck-aidc__pain-intro {
+  text-align: center;
+}
+
+.soeteck-aidc__pain-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__pain-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  box-shadow: var(--soeteck-shadow-card);
+  padding: clamp(22px, 2.4vw, 30px);
+}
+
+.soeteck-aidc__pain-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: rgba(0, 122, 230, 0.12);
+  color: var(--soeteck-primary);
+  margin-bottom: 18px;
+}
+
+.soeteck-aidc__pain-icon--temp svg { color: #e06c4f; }
+.soeteck-aidc__pain-icon--cost svg { color: #c0392b; }
+
+.soeteck-aidc__pain-stat {
+  margin: 0 0 10px;
+  color: var(--soeteck-primary);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+}
+
+.soeteck-aidc__pain-stat strong {
+  display: block;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--soeteck-primary-dark);
+}
+
+.soeteck-aidc__pain-text {
+  margin: 0;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+/* Platform pillars */
+.soeteck-aidc__pillar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.2vw, 28px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__pillar-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  box-shadow: var(--soeteck-shadow-card);
+  padding: clamp(20px, 2.2vw, 28px);
+}
+
+.soeteck-aidc__pillar-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: rgba(0, 122, 230, 0.12);
+  color: var(--soeteck-primary);
+  margin-bottom: 16px;
+}
+
+.soeteck-aidc__pillar-card p {
+  margin: 0;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+/* Configurations */
+.soeteck-aidc__table-wrap {
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__config-table {
+  background: #fff;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  overflow: hidden;
+}
+
+.soeteck-aidc__config-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__config-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-top: 4px solid var(--soeteck-primary);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  box-shadow: var(--soeteck-shadow-card);
+  padding: clamp(22px, 2.4vw, 30px);
+}
+
+.soeteck-aidc__config-name {
+  margin: 0;
+  color: var(--soeteck-primary-dark);
+  font-size: clamp(1.4rem, 2vw, 1.7rem);
+}
+
+.soeteck-aidc__config-tagline {
+  margin: 6px 0 18px;
+  color: var(--soeteck-muted);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+}
+
+.soeteck-aidc__config-specs {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  border-top: 1px solid var(--soeteck-border-soft, #eceef2);
+}
+
+.soeteck-aidc__config-specs li {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--soeteck-border-soft, #eceef2);
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  line-height: 1.55;
+}
+
+.soeteck-aidc__config-specs li span {
+  color: var(--soeteck-text);
+  font-weight: var(--soeteck-weight-semibold, 600);
+}
+
+.soeteck-aidc__config-bestfor {
+  margin: 0 0 18px;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  line-height: 1.55;
+}
+
+.soeteck-aidc__config-cta {
+  margin-top: auto;
+  color: var(--soeteck-primary);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  text-decoration: none;
+}
+
+.soeteck-aidc__config-cta:hover {
+  color: var(--soeteck-primary-dark);
+}
+
+/* Cooling tabs */
+.soeteck-aidc__cooling-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__cooling-tab {
+  padding: 12px 22px;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: #fff;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-family: inherit;
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  cursor: pointer;
+  transition: border-color var(--soeteck-transition-fast, 0.2s), color var(--soeteck-transition-fast, 0.2s), background-color var(--soeteck-transition-fast, 0.2s);
+}
+
+.soeteck-aidc__cooling-tab.is-active {
+  border-color: var(--soeteck-primary);
+  background: var(--soeteck-primary);
+  color: #fff;
+}
+
+.soeteck-aidc__cooling-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__cooling-image {
+  width: 100%;
+  border-radius: var(--soeteck-radius, 10px);
+}
+
+.soeteck-aidc__cooling-copy h3 {
+  margin: 0 0 14px;
+}
+
+.soeteck-aidc__cooling-text {
+  color: var(--soeteck-text-soft, #5a6270);
+  line-height: 1.7;
+}
+
+.soeteck-aidc__cooling-bullets {
+  margin: 16px 0 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.soeteck-aidc__cooling-bullets li {
+  position: relative;
+  padding-left: 22px;
+  margin-bottom: 10px;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.6;
+}
+
+.soeteck-aidc__cooling-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--soeteck-primary);
+}
+
+/* Power */
+.soeteck-aidc__power-layout {
+  display: grid;
+  grid-template-columns: 1fr 0.9fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: start;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__power-modules {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.soeteck-aidc__power-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  padding: 20px;
+}
+
+.soeteck-aidc__power-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: rgba(0, 122, 230, 0.12);
+  color: var(--soeteck-primary);
+}
+
+.soeteck-aidc__power-card h3 {
+  margin: 0 0 8px;
+}
+
+.soeteck-aidc__power-card p {
+  margin: 0;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+.soeteck-aidc__power-image {
+  width: 100%;
+  border-radius: var(--soeteck-radius, 10px);
+}
+
+/* Timeline */
+.soeteck-aidc__timeline-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.2vw, 28px));
+  margin: clamp(28px, 3vw, 40px) 0 0;
+  padding: 0;
+}
+
+.soeteck-aidc__timeline-step {
+  position: relative;
+  border-top: 3px solid var(--soeteck-primary);
+  padding: 18px 4px 0;
+}
+
+.soeteck-aidc__timeline-step::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 4px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--soeteck-primary);
+  border: 3px solid var(--soeteck-surface, #f5f7fa);
+}
+
+.soeteck-aidc__timeline-month {
+  display: inline-block;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: rgba(0, 122, 230, 0.12);
+  color: var(--soeteck-primary-dark);
+  font-size: var(--soeteck-text-xs, 0.85rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+}
+
+.soeteck-aidc__timeline-title {
+  margin: 0 0 8px;
+  font-size: var(--soeteck-text-md, 1.05rem);
+}
+
+.soeteck-aidc__timeline-step p {
+  margin: 0;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  line-height: 1.6;
+}
+
+.soeteck-aidc__timeline-compare {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  margin-top: clamp(32px, 4vw, 48px);
+}
+
+.soeteck-aidc__compare-block {
+  flex: 1 1 260px;
+  max-width: 360px;
+  text-align: center;
+  border: 1px dashed var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  padding: 22px;
+}
+
+.soeteck-aidc__compare-block--highlight {
+  border: 2px solid var(--soeteck-primary);
+  background: #fff;
+}
+
+.soeteck-aidc__compare-label {
+  display: block;
+  color: var(--soeteck-muted);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  margin-bottom: 8px;
+}
+
+.soeteck-aidc__compare-value {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: var(--soeteck-weight-bold, 700);
+  color: var(--soeteck-primary-dark);
+}
+
+/* Global */
+.soeteck-aidc__global-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: clamp(24px, 3vw, 40px);
+  align-items: center;
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__global-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.soeteck-aidc__global-fact {
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  padding: 18px;
+}
+
+.soeteck-aidc__global-fact-value {
+  display: block;
+  font-size: clamp(1.5rem, 2.4vw, 2rem);
+  font-weight: var(--soeteck-weight-bold, 700);
+  color: var(--soeteck-primary-dark);
+  letter-spacing: -0.02em;
+}
+
+.soeteck-aidc__global-fact-label {
+  display: block;
+  margin-top: 6px;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  line-height: 1.5;
+}
+
+.soeteck-aidc__global-flags {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.soeteck-aidc__global-flag {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(0, 122, 230, 0.1);
+  color: var(--soeteck-primary-dark);
+  font-size: var(--soeteck-text-xs, 0.85rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+}
+
+.soeteck-aidc__global-image {
+  width: 100%;
+  border-radius: var(--soeteck-radius, 10px);
+}
+
+/* Trusted by */
+.soeteck-aidc__client-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  box-shadow: var(--soeteck-shadow-card);
+  padding: 24px;
+}
+
+.soeteck-aidc__client-name {
+  margin: 0 0 10px;
+  color: var(--soeteck-primary-dark);
+}
+
+.soeteck-aidc__client-desc {
+  margin: 0 0 18px;
+  color: var(--soeteck-text-soft, #5a6270);
+  line-height: 1.7;
+}
+
+.soeteck-aidc__client-link {
+  margin-top: auto;
+  color: var(--soeteck-primary);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  text-decoration: none;
+}
+
+/* Related ecosystem */
+.soeteck-aidc__related-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.2vw, 28px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-aidc__related-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 10px);
+  background: #fff;
+  box-shadow: var(--soeteck-shadow-card);
+  padding: clamp(20px, 2.2vw, 26px);
+  text-decoration: none;
+  transition: transform var(--soeteck-transition-fast, 0.2s), border-color var(--soeteck-transition-fast, 0.2s);
+}
+
+.soeteck-aidc__related-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--soeteck-primary);
+}
+
+.soeteck-aidc__related-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: rgba(0, 122, 230, 0.12);
+  color: var(--soeteck-primary);
+  margin-bottom: 16px;
+}
+
+/* Inline SVG sizing inside icon tiles */
+.soeteck-aidc__pain-icon svg,
+.soeteck-aidc__pillar-icon svg,
+.soeteck-aidc__power-icon svg,
+.soeteck-aidc__related-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.soeteck-aidc__related-card h3 {
+  margin: 0 0 10px;
+  color: var(--soeteck-primary-dark);
+}
+
+.soeteck-aidc__related-card p {
+  margin: 0 0 16px;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.6;
+}
+
+.soeteck-aidc__related-link {
+  margin-top: auto;
+  color: var(--soeteck-primary);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  font-size: var(--soeteck-text-sm, 0.95rem);
+}
+
+/* FAQ */
+.soeteck-aidc__faq-container {
+  max-width: 860px;
+}
+
+.soeteck-aidc__faq-list {
+  margin-top: clamp(28px, 3vw, 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.soeteck-aidc__faq-item {
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius-sm, 8px);
+  background: #fff;
+}
+
+.soeteck-aidc__faq-question {
+  cursor: pointer;
+  padding: 18px 22px;
+  font-weight: var(--soeteck-weight-semibold, 600);
+  font-size: var(--soeteck-text-md, 1.05rem);
+  color: var(--soeteck-text);
+  list-style: none;
+}
+
+.soeteck-aidc__faq-question::marker {
+  content: '';
+}
+
+.soeteck-aidc__faq-question::after {
+  content: '+';
+  float: right;
+  font-size: 1.3rem;
+  color: var(--soeteck-primary);
+  transition: transform var(--soeteck-transition-fast, 0.2s);
+}
+
+.soeteck-aidc__faq-item[open] .soeteck-aidc__faq-question::after {
+  transform: rotate(45deg);
+}
+
+.soeteck-aidc__faq-answer {
+  padding: 0 22px 18px;
+  color: var(--soeteck-text-soft, #5a6270);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+.soeteck-aidc__faq-answer p {
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .soeteck-aidc__pillar-grid,
+  .soeteck-aidc__related-grid,
+  .soeteck-aidc__timeline-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .soeteck-aidc__cooling-panel,
+  .soeteck-aidc__power-layout,
+  .soeteck-aidc__global-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .soeteck-aidc__pain-grid,
+  .soeteck-aidc__config-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .soeteck-aidc__cooling-tabs {
+    justify-content: flex-start;
+  }
+}

@@ -1,18 +1,19 @@
 ﻿---
 import type { AdaptedPage } from '@/lib/page-adapter';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
-import {
-  CABINET_HERO_SUBTITLE, CABINET_OVERVIEW_PARAGRAPHS, CABINET_OVERVIEW_IMAGE,
-  CABINET_HOTSPOTS, CABINET_HOTSPOT_IMAGE, CABINET_KEY_FEATURES,
-  CABINET_FEATURED_MODELS, CABINET_MODELS_INTRO, CABINET_MODELS_OUTRO,
-  CABINET_CORE_MODULES,
-  CABINET_CRITICAL_POWER_TEXT, CABINET_CRITICAL_POWER_PRODUCTS,
-  CABINET_THERMAL_MANAGEMENT_TEXT, CABINET_THERMAL_PRODUCTS,
-  CABINET_SPEC_COLUMNS, CABINET_SPEC_ROWS,
-  CABINET_SCENARIOS,
-} from './cabinet-modular-content';
+// 5-language content wiring (translate-code-embedded namespace pattern)
+import * as C_EN from './cabinet-modular-content';
+import * as C_ZH from './cabinet-modular-content-zh';
+import * as C_RU from './cabinet-modular-content-ru';
+import * as C_PT from './cabinet-modular-content-pt';
+import * as C_ES from './cabinet-modular-content-es';
 import './CabinetModularPage.css';
-import { PREFAB_CLIENT_CASES } from './prefab-content';
+// Shared client cases (Prefab/Cabinet/Row) — translations live in prefab-content-<lang>.ts
+import { PREFAB_CLIENT_CASES as CASES_EN } from './prefab-content';
+import { PREFAB_CLIENT_CASES as CASES_ZH } from './prefab-content-zh';
+import { PREFAB_CLIENT_CASES as CASES_RU } from './prefab-content-ru';
+import { PREFAB_CLIENT_CASES as CASES_PT } from './prefab-content-pt';
+import { PREFAB_CLIENT_CASES as CASES_ES } from './prefab-content-es';
 import '@/styles/product-gallery.css';
 
 export interface Props {
@@ -21,20 +22,28 @@ export interface Props {
 }
 
 const { page, lang } = Astro.props;
+
+const C_LANG_MAP: Record<string, typeof C_EN> = { en: C_EN, zh: C_ZH, ru: C_RU, pt: C_PT, es: C_ES };
+const C = C_LANG_MAP[lang] ?? C_EN;
+const CASES = ({ en: CASES_EN, zh: CASES_ZH, ru: CASES_RU, pt: CASES_PT, es: CASES_ES })[lang] ?? CASES_EN;
+
 const brochureUrl = '/resources/Soeteck-Data-Center-Solution-Micro-Data-Center.pdf';
-const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
+// hero 背景图：优先 ACF sections.heroImage（WP 后台可传），兜底原硬编码图
+// replace 剥掉可能的 cms.soeteck.com 域名，统一成 /resources/ 相对路径
+const heroOverride = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const bannerImage = heroOverride || '/resources/cabinet-modular-data-center-header.webp';
 ---
 
 <div class="soeteck-cabinet-modular-page" data-cabinet-solution>
   <!-- Banner Hero -->
   <section class="soeteck-prefab-banner" aria-labelledby="cabinet-hero-title">
-    <img class="soeteck-prefab-banner__image" src={bannerImage} alt="Cabinet modular data center" width="1920" height="600" loading="eager" fetchpriority="high" />
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt={C.CABINET_HERO_IMAGE_ALT} width="1920" height="600" loading="eager" fetchpriority="high" />
     <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
     <div class="soeteck-container soeteck-prefab-banner__inner">
       <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
       <div class="soeteck-prefab-banner__body">
-        <h1 id="cabinet-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">Cabinet Modular Data Center</h1>
-        <p class="soeteck-cabinet-banner__subtitle">{CABINET_HERO_SUBTITLE}</p>
+        <h1 id="cabinet-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">{C.CABINET_HERO_TITLE}</h1>
+        <p class="soeteck-cabinet-banner__subtitle">{C.CABINET_HERO_SUBTITLE}</p>
       </div>
     </div>
   </section>
@@ -42,20 +51,20 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <!-- Overview: 2-column (text left, image right) -->
   <section class="soeteck-prefab-section soeteck-prefab-overview">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Smart, Efficient, and Scalable Cabinet Data Center</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.CABINET_OVERVIEW_TITLE}</h2>
       <div class="soeteck-cabinet-overview__grid">
         <div class="soeteck-cabinet-overview__text">
-          {CABINET_OVERVIEW_PARAGRAPHS.map((p) => (
+          {C.CABINET_OVERVIEW_PARAGRAPHS.map((p) => (
             <div set:html={p}></div>
           ))}
         </div>
         <div class="soeteck-cabinet-overview__media">
-          <img src={CABINET_OVERVIEW_IMAGE} alt="Cabinet modular data center overview" width="1024" height="798" loading="lazy" />
+          <img src={C.CABINET_OVERVIEW_IMAGE} alt={C.CABINET_OVERVIEW_IMAGE_ALT} width="1024" height="798" loading="lazy" />
         </div>
       </div>
       <div class="soeteck-prefab-cta-row">
-        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">GET BROCHURE</a>
-        <a class="soeteck-button-outline" href={`/${lang}/contact/`}>CONTACT US</a>
+        <a class="soeteck-button-primary" href={brochureUrl} target="_blank" rel="noopener">{C.CABINET_CTA_BROCHURE}</a>
+        <a class="soeteck-button-outline" href={`/${lang}/contact-us/`}>{C.CABINET_CTA_CONTACT}</a>
       </div>
     </div>
   </section>
@@ -63,15 +72,15 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <!-- Closer Look -->
   <section class="soeteck-prefab-section soeteck-prefab-closer">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Take a Closer Look at Our CMDCs</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.CABINET_CLOSER_TITLE}</h2>
 
       <!-- 1 - Typical Design -->
       <article class="soeteck-prefab-detail-block">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>1 - </span>Typical Designs of CMDCs</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>1 - </span>{C.CABINET_DETAIL_TITLES[0]}</h3>
         <div class="soeteck-prefab-hotspot" data-prefab-hotspots>
           <div class="soeteck-prefab-hotspot__media">
-            <img class="soeteck-prefab-hotspot__image" src={CABINET_HOTSPOT_IMAGE} alt="Typical design of a cabinet modular data center" width="800" height="500" loading="lazy" />
-            {CABINET_HOTSPOTS.map((hotspot, index) => (
+            <img class="soeteck-prefab-hotspot__image" src={C.CABINET_HOTSPOT_IMAGE} alt={C.CABINET_HOTSPOT_IMAGE_ALT} width="800" height="500" loading="lazy" />
+            {C.CABINET_HOTSPOTS.map((hotspot, index) => (
               <button class="soeteck-prefab-hotspot__pin" type="button" data-hotspot-index={index} style={{ '--x': hotspot.x, '--y': hotspot.y } as any} aria-expanded="false" aria-label={hotspot.label}>
                 <span class="soeteck-prefab-hotspot__pulse" aria-hidden="true"></span>
                 <span class="soeteck-prefab-hotspot__core" aria-hidden="true">+</span>
@@ -81,10 +90,10 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
           </div>
         </div>
         <div class="soeteck-prefab-rich-text soeteck-prefab-detail-block__copy">
-          <p>The cabinet modular data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.</p>
-          <p><strong>Key Features:</strong></p>
+          <p>{C.CABINET_DESIGN_TEXT}</p>
+          <p><strong>{C.CABINET_KEY_FEATURES_LABEL}</strong></p>
           <ul>
-            {CABINET_KEY_FEATURES.map((f) => (
+            {C.CABINET_KEY_FEATURES.map((f) => (
               <li>{f}</li>
             ))}
           </ul>
@@ -93,12 +102,12 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
 
       <!-- 2 - Featured Models: 3-column grid, each = image + accordion -->
       <article class="soeteck-prefab-detail-block soeteck-cabinet-models">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>2 - </span>Featured Models</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>2 - </span>{C.CABINET_DETAIL_TITLES[1]}</h3>
         <div class="soeteck-prefab-rich-text soeteck-cabinet-models__intro">
-          <p>{CABINET_MODELS_INTRO}</p>
+          <p>{C.CABINET_MODELS_INTRO}</p>
         </div>
         <div class="soeteck-cabinet-model-grid">
-          {CABINET_FEATURED_MODELS.map((model, i) => (
+          {C.CABINET_FEATURED_MODELS.map((model, i) => (
             <div class="soeteck-cabinet-model-item">
               <div class="soeteck-cabinet-model-item__image-wrapper">
                 <img class="soeteck-cabinet-model-item__image" src={model.image} alt={model.hotspotLabel} width="284" height="284" loading="lazy" />
@@ -119,13 +128,13 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
                   </button>
                   <div class="soeteck-cabinet-accordion__content" data-accordion-content={i}>
                     <div class="soeteck-cabinet-accordion__content-inner">
-                      <p class="soeteck-cabinet-accordion__subhead">Integrated Systems:</p>
+                      <p class="soeteck-cabinet-accordion__subhead">{C.CABINET_ACCORDION_INTEGRATED}</p>
                       <ul class="soeteck-cabinet-check-list">
                         {model.integrated_systems.map((item) => (
                           <li><span class="soeteck-cabinet-check" aria-hidden="true">✓</span> {item}</li>
                         ))}
                       </ul>
-                      <p class="soeteck-cabinet-accordion__subhead">Key Advantages:</p>
+                      <p class="soeteck-cabinet-accordion__subhead">{C.CABINET_ACCORDION_ADVANTAGES}</p>
                       <ul class="soeteck-cabinet-bullet-list">
                         {model.key_advantages.map((item) => (
                           <li>{item}</li>
@@ -139,18 +148,18 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
           ))}
         </div>
         <div class="soeteck-prefab-rich-text soeteck-cabinet-models__outro">
-          <p>{CABINET_MODELS_OUTRO}</p>
+          <p>{C.CABINET_MODELS_OUTRO}</p>
         </div>
       </article>
 
       <!-- 3 - Core Infrastructure Modules + Critical Power + Thermal Management -->
       <article class="soeteck-prefab-detail-block soeteck-prefab-modules">
-        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>3 - </span>Core Infrastructure Modules</h3>
+        <h3 class="soeteck-subsection-title soeteck-prefab-detail-block__title"><span>3 - </span>{C.CABINET_DETAIL_TITLES[2]}</h3>
         <div class="soeteck-prefab-rich-text soeteck-prefab-modules__lead">
-          <p>The SOETECK cabinet modular data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.</p>
+          <p>{C.CABINET_MODULES_LEAD}</p>
         </div>
         <div class="soeteck-prefab-module-grid">
-          {CABINET_CORE_MODULES.map((module) => (
+          {C.CABINET_CORE_MODULES.map((module) => (
             <article class="soeteck-prefab-module-card">
               <span class={`soeteck-prefab-module-card__icon soeteck-prefab-module-card__icon--${module.icon}`} aria-hidden="true"></span>
               <h3 class="soeteck-card-title">{module.title}</h3>
@@ -162,11 +171,11 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
         <!-- Critical Power — Product Gallery Grid -->
         <section class="soeteck-prefab-product-group" aria-labelledby="cabinet-critical-power-title">
           <div class="soeteck-prefab-rich-text">
-            <h4 id="cabinet-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">Critical Power</h4>
-            <p>{CABINET_CRITICAL_POWER_TEXT}</p>
+            <h4 id="cabinet-critical-power-title" class="soeteck-minor-title soeteck-title-bordered">{C.CABINET_CRITICAL_POWER_TITLE}</h4>
+            <p>{C.CABINET_CRITICAL_POWER_TEXT}</p>
           </div>
           <div class="soeteck-prefab-product-gallery-grid" data-cabinet-gallery>
-            {CABINET_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
+            {C.CABINET_CRITICAL_POWER_PRODUCTS.map((product, pIdx) => {
               const panelId = `cabinet-critical-power-${pIdx}`;
               return (
                 <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
@@ -181,7 +190,7 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
                     ))}
                   </div>
                   {product.images.slice(0, 4).length > 1 && (
-                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} ${C.CABINET_GALLERY_ARIA}`}>
                       {product.images.slice(0, 4).map((img, iIdx) => (
                         <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
                                 type="button"
@@ -205,11 +214,11 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
         <!-- Thermal Management — Product Gallery Grid -->
         <section class="soeteck-prefab-product-group" aria-labelledby="cabinet-thermal-title">
           <div class="soeteck-prefab-rich-text">
-            <h4 id="cabinet-thermal-title" class="soeteck-minor-title soeteck-title-bordered">Thermal Management</h4>
-            <p>{CABINET_THERMAL_MANAGEMENT_TEXT}</p>
+            <h4 id="cabinet-thermal-title" class="soeteck-minor-title soeteck-title-bordered">{C.CABINET_THERMAL_TITLE}</h4>
+            <p>{C.CABINET_THERMAL_MANAGEMENT_TEXT}</p>
           </div>
           <div class="soeteck-prefab-product-gallery-grid" data-cabinet-gallery>
-            {CABINET_THERMAL_PRODUCTS.map((product, pIdx) => {
+            {C.CABINET_THERMAL_PRODUCTS.map((product, pIdx) => {
               const panelId = `cabinet-thermal-${pIdx}`;
               return (
                 <article class="soeteck-prefab-product-gallery" data-product-panel={panelId}>
@@ -224,7 +233,7 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
                     ))}
                   </div>
                   {product.images.slice(0, 4).length > 1 && (
-                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} gallery`}>
+                    <div class="soeteck-prefab-product-gallery__thumbs" role="tablist" aria-label={`${product.title} ${C.CABINET_GALLERY_ARIA}`}>
                       {product.images.slice(0, 4).map((img, iIdx) => (
                         <button class={`soeteck-prefab-product-gallery__thumb${iIdx === 0 ? ' is-active' : ''}`}
                                 type="button"
@@ -251,27 +260,19 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <!-- Specs Table -->
   <section class="soeteck-prefab-section soeteck-prefab-specs">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Featured Models and Specifications</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.CABINET_SPECS_TITLE}</h2>
       <div class="soeteck-prefab-table-wrap">
         <table class="soeteck-prefab-spec-table">
           <thead>
-            <tr class="soeteck-prefab-spec-table__images">
-              <th scope="col"></th>
-              {CABINET_SPEC_COLUMNS.map((col) => (
-                <th scope="col">
-                  <img src={col.image} alt={col.model} width="249" height="282" loading="lazy" />
-                </th>
-              ))}
-            </tr>
             <tr>
-              <th scope="col">Models</th>
-              {CABINET_SPEC_COLUMNS.map((col) => (
+              <th scope="col">{C.CABINET_SPEC_TABLE_MODELS}</th>
+              {C.CABINET_SPEC_COLUMNS.map((col) => (
                 <th scope="col">{col.model}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {CABINET_SPEC_ROWS.map((row) => (
+            {C.CABINET_SPEC_ROWS.map((row) => (
               <tr>
                 <th scope="row">{row[0]}</th>
                 {row.slice(1).map((cell) => (
@@ -282,7 +283,7 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
           </tbody>
         </table>
       </div>
-      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>SOETECK Cabinet Data Center Solution.pdf</a></p>
+      <p class="soeteck-prefab-pdf-link"><a href={brochureUrl} target="_blank" rel="noopener"><span aria-hidden="true">PDF</span>{C.CABINET_PDF_LINK_TEXT}</a></p>
     </div>
   </section>
 
@@ -290,17 +291,17 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <!-- Scenarios -->
   <section class="soeteck-prefab-section soeteck-prefab-scenarios">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Who Might Need Our CMDCs?</h2>
-      <p class="soeteck-prefab-section__subtitle">Application Scenarios: An integration of Power, Cooling &amp; Infrastructure Modules Supporting Reliable IT Operations &ndash; Where Cabinet Modular DC Delivers Unique Value</p>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.CABINET_SCENARIOS_TITLE}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.CABINET_SCENARIOS_SUBTITLE}</p>
       <div class="soeteck-prefab-scenario-grid">
-        {CABINET_SCENARIOS.map((scenario) => (
+        {C.CABINET_SCENARIOS.map((scenario) => (
           <article class="soeteck-prefab-scenario-card" data-scenario-card>
             <img class="soeteck-prefab-scenario-card__image" src={scenario.image} alt={scenario.title} width="436" height="237" loading="lazy" />
             <div class="soeteck-prefab-scenario-card__body">
               <h3 class="soeteck-card-title">{scenario.title}</h3>
-              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={`${scenario.title} details`}>
-                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">Solution Benefits</button>
-                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">Critical Pain Points</button>
+              <div class="soeteck-prefab-scenario-card__tabs" role="tablist" aria-label={`${scenario.title} ${C.CABINET_SCENARIO_DETAILS_ARIA}`}>
+                <button class="soeteck-prefab-scenario-card__tab is-active" type="button" role="tab" aria-selected="true" data-scenario-tab="benefits">{C.CABINET_TAB_BENEFITS}</button>
+                <button class="soeteck-prefab-scenario-card__tab" type="button" role="tab" aria-selected="false" data-scenario-tab="pain">{C.CABINET_TAB_PAIN}</button>
               </div>
               <div class="soeteck-prefab-scenario-card__panel is-active" data-scenario-panel="benefits">
                 <div class="soeteck-prefab-scenario-card__tags">
@@ -329,9 +330,9 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <!-- Featured Client Cases -->
   <section class="soeteck-prefab-section soeteck-prefab-cases">
     <div class="soeteck-container">
-      <h2 class="soeteck-section-title soeteck-prefab-section__title">Check Our Featured Client Cases</h2>
+      <h2 class="soeteck-section-title soeteck-prefab-section__title">{C.CABINET_CASES_TITLE}</h2>
       <div class="soeteck-prefab-case-grid">
-        {PREFAB_CLIENT_CASES.map((c) => (
+        {CASES.map((c) => (
           <article class="soeteck-prefab-case-card">
             <a class="soeteck-prefab-case-card__media" href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>
               <img class="soeteck-prefab-case-card__image" src={c.imgSrc} alt={c.title} width="436" height="240" loading="lazy" />
@@ -350,37 +351,24 @@ const bannerImage = '/resources/cabinet-modular-data-center-header.webp';
   <section class="soeteck-cta" id="cabinet-inquiry">
     <div class="soeteck-container soeteck-cta__inner">
       <div>
-        <p class="soeteck-eyebrow">Talk to an Engineer</p>
-        <h2>Get in Touch with SOETECK</h2>
-        <p>Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.</p>
+        <p class="soeteck-eyebrow">{C.CABINET_CONTACT_EYEBROW}</p>
+        <h2>{C.CABINET_CONTACT_TITLE}</h2>
+        <p>{C.CABINET_CONTACT_TEXT}</p>
         <ul class="soeteck-cta__checks">
-          <li>Project consultation</li>
-          <li>Technical configuration support</li>
-          <li>Regional follow-up</li>
+          {C.CABINET_CONTACT_CHECKS.map((check) => (
+            <li>{check}</li>
+          ))}
         </ul>
       </div>
       <div class="soeteck-cta__actions">
-        <a class="soeteck-cta__button" href={`/${lang}/contact/`}>Contact Us</a>
-        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">Download Brochure</a>
+        <a class="soeteck-cta__button" href={`/${lang}/contact-us/`}>{C.CABINET_CONTACT_BUTTON}</a>
+        <a class="soeteck-cta__button soeteck-cta__button--outline" href={brochureUrl} target="_blank" rel="noopener">{C.CABINET_CONTACT_BROCHURE}</a>
       </div>
     </div>
   </section>
 </div>
 
-    position: relative;
-    z-index: 2;
-    display: flex;
-    width: 25px;
-    height: 25px;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    background: rgba(75, 211, 170, 0.9);
-    color: #fff;
-    font-size: 16px;
-    font-weight: 400;
-
-<script>
+    <script>
   (function initCabinetGallery() {
     var root = document.querySelector('[data-cabinet-solution]');
     if (!root) return;

@@ -10,7 +10,7 @@ const ZH_NEWS_RELEASES_HERO: HeroConfig = {
   description: '数益科技官方公告、产品动态、展会活动及公司里程碑，面向合作伙伴、客户及媒体。',
   panelLabel: '官方动态',
   panelItems: ['产品发布', '展会活动', '公司里程碑'],
-  eyebrow: '新闻中心',
+  eyebrow: '数益新闻中心',
 };
 
 const ZH_BLOGS_HERO: HeroConfig = {
@@ -18,7 +18,7 @@ const ZH_BLOGS_HERO: HeroConfig = {
   description: '技术洞察、行业趋势及专家观点，聚焦数据中心电源、冷却及基础设施解决方案。',
   panelLabel: '技术洞察',
   panelItems: ['行业趋势', '技术指南', '最佳实践'],
-  eyebrow: '技术博客',
+  eyebrow: '数益展望',
 };
 
 const ZH_CASE_STUDIES_HERO: HeroConfig = {
@@ -26,7 +26,7 @@ const ZH_CASE_STUDIES_HERO: HeroConfig = {
   description: '实际部署案例与成功故事，展示数益科技如何解决复杂的电源与冷却挑战。',
   panelLabel: '成功案例',
   panelItems: ['全球部署', '定制方案', 'ROI 亮点'],
-  eyebrow: '客户案例',
+  eyebrow: '数益成功案例',
 };
 
 const ZH_SIDEBAR: SidebarContent = {
@@ -69,12 +69,20 @@ export const ARCHIVE_ZH: ArchiveContent = {
     featuredLabel: '精选文章',
     readMoreLabel: '开始阅读',
     sourceLabel: '数益科技技术团队',
+    featuredEyebrow: '编辑精选',
+    featuredTitle: '本周聚焦',
+    listEyebrow: '更多洞察',
+    listTitle: '探索文章归档',
     noArticles: '此分类暂无文章。',
   },
   caseStudyLabels: {
     featuredLabel: '精选案例',
     readMoreLabel: '查看案例',
     sourceLabel: '数益科技项目团队',
+    featuredEyebrow: '精选',
+    featuredTitle: '精选客户案例',
+    listEyebrow: '全部案例',
+    listTitle: '更多实际部署',
     noArticles: '此分类暂无案例。',
   },
   cta: {

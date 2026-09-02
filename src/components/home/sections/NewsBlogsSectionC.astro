@@ -8,6 +8,7 @@
  */
 import type { HomeContent } from '../home-content';
 import type { AdaptedArticleCard } from '@/lib/page-adapter';
+import { getUITranslation } from '@/lib/translations';
 
 interface Props {
   newsC: NonNullable<HomeContent['newsC']>;
@@ -30,7 +31,7 @@ function formatDate(d: string | null): string {
 <section class="home-news-blogs" aria-labelledby="news-blogs-title">
   <div class="soeteck-container">
     <div class="home-section__head">
-      <p class="home-section__eyebrow">{news.eyebrow}</p>
+      <p class="soeteck-eyebrow">{news.eyebrow}</p>
       <h2 id="news-blogs-title" class="home-section__title">{news.title}</h2>
       {news.text && <p class="home-section__lead">{news.text}</p>}
     </div>
@@ -57,7 +58,7 @@ function formatDate(d: string | null): string {
             </div>
           </a>
         )) : (
-          <p class="hnb-empty">No articles yet.</p>
+          <p class="hnb-empty">{getUITranslation(lang, 'common.noArticles')}</p>
         )}
       </div>
       <a href={newsC.newsLink} class="home-news-blogs__link">{newsC.viewAllNews}</a>
@@ -85,7 +86,7 @@ function formatDate(d: string | null): string {
             </div>
           </a>
         )) : (
-          <p class="hnb-empty">No articles yet.</p>
+          <p class="hnb-empty">{getUITranslation(lang, 'common.noArticles')}</p>
         )}
       </div>
       <a href={newsC.blogLink} class="home-news-blogs__link">{newsC.viewAllBlogs}</a>
@@ -107,7 +108,8 @@ function formatDate(d: string | null): string {
 
 /* ── Section head ─────────────────────────────────────────── */
 .home-section__head { max-width: 760px; margin: 0 auto 48px; text-align: center; }
-.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+/* 6.1 标准 Eyebrow — 元素只挂规范基类 .soeteck-eyebrow，此处仅覆盖间距（全局基类 20px → 规范 25px） */
+.home-section__head .soeteck-eyebrow { margin: 0 0 25px; padding: 0; }
 .home-section__title { margin: 0; font-size: clamp(1.85rem, 3.1vw, 2.5rem); font-weight: 700; line-height: 1.14; color: var(--soeteck-text); }
 .home-section__lead { margin: 14px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: var(--soeteck-text-soft); }
 

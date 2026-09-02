@@ -3,6 +3,9 @@ import type { AdaptedPage } from '@/lib/page-adapter';
 import NewsArchiveHero from '@/components/news-releases/NewsArchiveHero.astro';
 import FeaturedArticleCard from './FeaturedArticleCard.astro';
 import ArticleCard from './ArticleCard.astro';
+import SectionHeading from './SectionHeading.astro';
+import ArchivePagination from './ArchivePagination.astro';
+import ArchiveCta from './ArchiveCta.astro';
 import { ARCHIVE_EN } from '@/components/news-releases/news-releases-content';
 import { ARCHIVE_ZH } from '@/components/news-releases/news-releases-content-zh';
 import { ARCHIVE_RU } from '@/components/news-releases/news-releases-content-ru';
@@ -30,11 +33,12 @@ const heroConfig = archiveContent.blogs;
 const description = page.source.archive?.description || heroConfig.description;
 const allArticles = page.articles;
 
-// Page 1: first article is featured, rest in grid
+// First article is featured, the rest form the paginated grid
 const featuredArticle = allArticles.length > 0 ? allArticles[0] : null;
 const gridArticles = featuredArticle ? allArticles.slice(1) : [];
 
 const blogLabels = archiveContent.blogLabels;
+const BLOG_PER_PAGE = 9;
 ---
 
 <div class="soeteck-blog-archive-page">
@@ -45,9 +49,11 @@ const blogLabels = archiveContent.blogLabels;
     lang={lang}
     heroConfig={heroConfig}
   />
-  <div class="soeteck-container soeteck-blog-archive-page__container">
+
+  <section class="soeteck-container soeteck-blog-archive-page__content">
     {featuredArticle && (
       <div class="soeteck-blog-archive-page__featured">
+        <SectionHeading eyebrow={blogLabels.featuredEyebrow} title={blogLabels.featuredTitle} />
         <FeaturedArticleCard
           article={featuredArticle}
           label={blogLabels.featuredLabel}
@@ -56,22 +62,48 @@ const blogLabels = archiveContent.blogLabels;
         />
       </div>
     )}
-    {gridArticles.length > 0 && (
-      <div class="soeteck-blog-archive-page__grid">
-        {gridArticles.map((article) => (
-          <ArticleCard
-            article={article}
-            showAuthor={true}
-            sourceLabel={blogLabels.sourceLabel}
-            lang={lang}
-          />
-        ))}
+
+    {gridArticles.length > 0 ? (
+      <div class="soeteck-blog-archive-page__list">
+        <SectionHeading eyebrow={blogLabels.listEyebrow} title={blogLabels.listTitle} />
+        <div class="soeteck-blog-archive-page__grid">
+          {gridArticles.map((article, index) => {
+            const page = Math.floor(index / BLOG_PER_PAGE) + 1;
+            return (
+              <div
+                class="soeteck-blog-archive-page__grid-item"
+                data-page={page}
+                style={page === 1 ? undefined : 'display:none'}
+              >
+                <ArticleCard
+                  article={article}
+                  showAuthor={true}
+                  sourceLabel={blogLabels.sourceLabel}
+                  lang={lang}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <ArchivePagination
+          totalItems={gridArticles.length}
+          perPage={BLOG_PER_PAGE}
+          gridSelector=".soeteck-blog-archive-page__grid"
+        />
       </div>
+    ) : (
+      allArticles.length === 0 && (
+        <p class="soeteck-blog-archive-page__empty">{blogLabels.noArticles}</p>
+      )
     )}
-    {allArticles.length === 0 && (
-      <p class="soeteck-blog-archive-page__empty">{blogLabels.noArticles}</p>
-    )}
-  </div>
+  </section>
+
+  <ArchiveCta
+    title={archiveContent.cta.title}
+    buttonLabel={archiveContent.cta.buttonLabel}
+    buttonHref={`/${lang}/contact-us/`}
+    lang={lang}
+  />
 </div>
 
 <style>
@@ -79,18 +111,19 @@ const blogLabels = archiveContent.blogLabels;
     background: var(--soeteck-white);
   }
 
-  .soeteck-blog-archive-page__container {
+  /* 间距对齐新闻分类页（.soeteck-news-releases-page__container） */
+  .soeteck-blog-archive-page__content {
     padding: var(--soeteck-section-y-sm) 0 var(--soeteck-section-y);
-  }
-
-  .soeteck-blog-archive-page__featured {
-    margin-bottom: clamp(34px, 5vw, 72px);
   }
 
   .soeteck-blog-archive-page__grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
+  }
+
+  .soeteck-blog-archive-page__grid-item {
+    display: grid;
   }
 
   .soeteck-blog-archive-page__empty {

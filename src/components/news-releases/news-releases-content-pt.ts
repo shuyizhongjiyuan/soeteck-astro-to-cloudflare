@@ -10,7 +10,7 @@ const PT_NEWS_RELEASES_HERO: HeroConfig = {
   description: 'Anúncios oficiais da SOETECK, atualizações de produtos, novidades de eventos e marcos da empresa para parceiros, clientes e imprensa.',
   panelLabel: 'Atualizações oficiais',
   panelItems: ['Anúncios de produtos', 'Eventos e exposições', 'Marcos da empresa'],
-  eyebrow: 'Sala de imprensa',
+  eyebrow: 'Sala de imprensa Soeteck',
 };
 
 const PT_BLOGS_HERO: HeroConfig = {
@@ -18,7 +18,7 @@ const PT_BLOGS_HERO: HeroConfig = {
   description: 'Insights técnicos, tendências do setor e perspectivas de especialistas sobre energia, refrigeração e soluções de infraestrutura para data centers.',
   panelLabel: 'Insights técnicos',
   panelItems: ['Tendências do setor', 'Guias técnicos', 'Melhores práticas'],
-  eyebrow: 'Blog',
+  eyebrow: 'Insights Soeteck',
 };
 
 const PT_CASE_STUDIES_HERO: HeroConfig = {
@@ -26,7 +26,7 @@ const PT_CASE_STUDIES_HERO: HeroConfig = {
   description: 'Implementações reais e histórias de sucesso que mostram como as soluções SOETECK resolvem desafios complexos de energia e refrigeração.',
   panelLabel: 'Histórias de sucesso',
   panelItems: ['Projetos globais', 'Soluções personalizadas', 'Destaques de ROI'],
-  eyebrow: 'Casos de Clientes',
+  eyebrow: 'Histórias de sucesso Soeteck',
 };
 
 const PT_SIDEBAR: SidebarContent = {
@@ -69,12 +69,20 @@ export const ARCHIVE_PT: ArchiveContent = {
     featuredLabel: 'Artigo em destaque',
     readMoreLabel: 'Começar a ler',
     sourceLabel: 'Equipe Técnica SOETECK',
+    featuredEyebrow: 'Escolha do editor',
+    featuredTitle: 'Em destaque',
+    listEyebrow: 'Mais insights',
+    listTitle: 'Explore o arquivo',
     noArticles: 'Nenhum artigo encontrado nesta categoria.',
   },
   caseStudyLabels: {
     featuredLabel: 'Caso em destaque',
     readMoreLabel: 'Ver caso',
     sourceLabel: 'Equipe de Projetos SOETECK',
+    featuredEyebrow: 'Destaque',
+    featuredTitle: 'Caso de cliente em destaque',
+    listEyebrow: 'Todos os casos',
+    listTitle: 'Mais implantações reais',
     noArticles: 'Nenhum caso encontrado nesta categoria.',
   },
   cta: {

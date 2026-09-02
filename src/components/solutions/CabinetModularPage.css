@@ -5,6 +5,106 @@
   background: #fff;
 }
 
+/* Prefab-family shared section titles (Cabinet CSS was missing these — added for H2 spacing parity) */
+.soeteck-prefab-section__title {
+  max-width: 900px;
+  margin: 0 auto clamp(38px, 3vw, 50px);
+  text-align: center;
+}
+
+.soeteck-prefab-specs .soeteck-prefab-section__title {
+  margin-bottom: 40px;
+  color: var(--soeteck-primary);
+  font-weight: var(--soeteck-weight-semibold);
+  text-align: left;
+  margin-inline: 0;
+}
+
+/* Hero banner — unified to About hero standard (heights 540/420/360, breadcrumbs 20/15, About overlay gradient) */
+.soeteck-prefab-banner {
+  position: relative;
+  display: flex;
+  min-height: 540px;
+  align-items: center;
+  overflow: hidden;
+  background: var(--soeteck-dark, #202020);
+  color: #fff;
+}
+
+.soeteck-prefab-banner__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center center;
+}
+
+.soeteck-prefab-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(6, 21, 41, 0.88), rgba(10, 39, 73, 0.58), rgba(10, 39, 73, 0.16)), linear-gradient(180deg, rgba(6, 21, 41, 0.08), rgba(6, 21, 41, 0.42));
+}
+
+.soeteck-prefab-banner__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 540px;
+  padding-top: 0;
+}
+
+.soeteck-prefab-banner__inner .soeteck-breadcrumbs--hero {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  margin: 0;
+}
+
+.soeteck-prefab-banner__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 540px;
+  padding-block: 0;
+}
+
+.soeteck-prefab-banner__title {
+  max-width: none;
+  margin: 0;
+  color: #fff;
+  font-size: var(--soeteck-heading-lg, clamp(2.5rem, 4vw, 3.5rem));
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: 0;
+  white-space: nowrap; /* 桌面端 H1 单行不换行 */
+}
+
+@media (max-width: 991px) {
+  .soeteck-prefab-banner__inner,
+  .soeteck-prefab-banner__body {
+    min-height: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  .soeteck-prefab-banner__inner,
+  .soeteck-prefab-banner__body {
+    min-height: 360px;
+  }
+  .soeteck-prefab-banner__inner .soeteck-breadcrumbs--hero {
+    top: 15px;
+  }
+  .soeteck-prefab-banner__title {
+    white-space: normal;
+    max-width: 900px;
+  }
+}
+
 /* Banner subtitle */
 .soeteck-cabinet-banner__subtitle {
   max-width: 800px;
@@ -384,7 +484,7 @@
   .soeteck-prefab-scenario-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .soeteck-prefab-scenario-grid { grid-template-columns: 1fr; }
 }
 
@@ -395,6 +495,15 @@
   padding: var(--soeteck-section-y) 0;
   background: radial-gradient(circle at 78% 18%, rgba(0, 102, 204, 0.28), transparent 34%), linear-gradient(135deg, #061529 0%, #0a2749 56%, #061529 100%);
   color: #fff;
+}
+
+/* Desktop: unified CTA min-height (2026-09-02); flex centers content when min-height applies */
+@media (min-width: 1200px) {
+  .soeteck-cta {
+    display: flex;
+    align-items: center;
+    min-height: 460px;
+  }
 }
 
 .soeteck-cta::before {
@@ -500,7 +609,7 @@
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .soeteck-cta__actions {
     flex-direction: column;
     width: 100%;

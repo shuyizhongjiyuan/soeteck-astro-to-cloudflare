@@ -1,0 +1,300 @@
+/* =====================================================================
+   SOETECK Solutions Hub — "Precision Editorial" (brand-compliant)
+   ---------------------------------------------------------------------
+   Strictly on-brand per docs/brand/soeteck-brand-kit.md:
+   - Sora only (no display/mono fonts)
+   - single accent #1a85e5; Navy #0b1f3a only for deep blocks
+   - radius tokens: cards 14px (--soeteck-radius-lg), buttons 6px
+   - brand spacing/section-y tokens + hairline dividers (border #d7dce3)
+   - AI flagship = the page's only Navy block, using the brand
+     left→right navy gradient signature (echoes the hero overlay)
+   Banner (hero) untouched. Global CTA left intact.
+   ===================================================================== */
+
+.soeteck-solutions-hub {
+  --hub-content-width: var(--soeteck-container, 1200px);
+  --hub-gutter: var(--soeteck-gutter, 20px);
+  --hub-ink: var(--soeteck-text, #111827);
+  --hub-ink-soft: var(--soeteck-text-soft, #374151);
+  --hub-muted: var(--soeteck-muted, #6b7280);
+  --hub-border: var(--soeteck-border, #d7dce3);
+  --hub-border-soft: var(--soeteck-border-soft, #e5e7eb);
+  --hub-surface: var(--soeteck-surface, #f5f7fa);
+  --hub-blue: var(--soeteck-primary, #1a85e5);
+  --hub-blue-deep: var(--soeteck-primary-dark, #0067c5);
+  --hub-blue-soft: var(--soeteck-primary-soft, #e8f3ff);
+  --hub-navy: var(--soeteck-navy, #0b1f3a);
+  --hub-section-y: var(--soeteck-section-y, clamp(64px, 7vw, 112px));
+  --hub-card-gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  --hub-rad-card: var(--soeteck-radius-lg, 14px);
+  --hub-rad-btn: var(--soeteck-radius-sm, 6px);
+  background: #fff;
+  color: var(--hub-ink);
+  --soeteck-hub-content-width: var(--hub-content-width);
+  --soeteck-hub-content-gutter: var(--hub-gutter);
+}
+
+.soeteck-solutions-hub .soeteck-container {
+  width: min(var(--hub-content-width), calc(100% - (var(--hub-gutter) * 2)));
+  max-width: none;
+  padding-inline: 0;
+}
+
+/* brand eyebrow (Sora 14px bold uppercase blue) */
+/* =====================================================================
+   ① BANNER — untouched (required)
+   ===================================================================== */
+.soeteck-solutions-hub__banner { position: relative; overflow: hidden; background: var(--soeteck-dark, #0a1628); color: #fff; }
+.soeteck-solutions-hub__banner-image { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: center center; }
+.soeteck-solutions-hub__banner-overlay {
+  position: absolute; inset: 0;
+  /* hero 遮盖层对齐 products（2026-09-02） */
+  background: linear-gradient(90deg, #0b1f3ad6, #0b1f3a6b, #0b1f3a1f);
+}
+.soeteck-solutions-hub__banner-content { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 540px; }
+.soeteck-solutions-hub__banner-content .soeteck-breadcrumbs--hero { position: absolute; top: 20px; left: 0; width: 100%; margin: 0; }
+.soeteck-solutions-hub__banner-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-block: 0; min-height: 540px; }
+.soeteck-solutions-hub__banner-body h1 { max-width: 780px; margin: 0; color: #fff; font-size: var(--soeteck-heading-lg, 2.5rem); line-height: 1.08; }
+/* hero lead 对齐 products（--soeteck-text-lg / 1.65，2026-09-02） */
+.soeteck-solutions-hub__banner-body p { max-width: 760px; margin: 22px 0 0; color: rgba(255, 255, 255, 0.88); font-size: var(--soeteck-text-lg); line-height: 1.65; }
+@media (max-width: 991px) { .soeteck-solutions-hub__banner-content, .soeteck-solutions-hub__banner-body { min-height: 420px; } }
+@media (max-width: 768px) { .soeteck-solutions-hub__banner-content, .soeteck-solutions-hub__banner-body { min-height: 360px; } .soeteck-solutions-hub__banner-content .soeteck-breadcrumbs--hero { top: 15px; } }
+
+/* =====================================================================
+   ② STATS — editorial figures, hairline column dividers
+   ===================================================================== */
+.soeteck-solutions-hub__stats {
+  background: #fff;
+  border-top: 1px solid var(--hub-border);
+  border-bottom: 1px solid var(--hub-border);
+}
+.soeteck-solutions-hub__stats-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.soeteck-solutions-hub__stat {
+  position: relative;
+  padding: clamp(28px, 4vw, 44px) 28px clamp(24px, 3.5vw, 40px);
+  display: grid;
+  gap: 8px;
+  border-left: 1px solid var(--hub-border);
+}
+.soeteck-solutions-hub__stat:first-child { border-left: none; }
+.soeteck-solutions-hub__stat strong {
+  font-family: var(--soeteck-font-brand, 'Sora', sans-serif);
+  font-size: clamp(2rem, 4vw, 2.9rem);
+  font-weight: var(--soeteck-weight-bold, 700);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--hub-navy);
+  white-space: nowrap;
+}
+/* brand-blue accent rule under the figure */
+.soeteck-solutions-hub__stat strong { position: relative; padding-bottom: 14px; }
+.soeteck-solutions-hub__stat strong::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 34px;
+  height: 3px;
+  background: var(--hub-blue);
+}
+.soeteck-solutions-hub__stat span {
+  color: var(--hub-muted);
+  font-size: var(--soeteck-text-sm, 0.875rem);
+  line-height: 1.5;
+  max-width: 82%;
+}
+
+/* =====================================================================
+   ③ SECTION A — featured prefab solutions (editorial grid)
+   ===================================================================== */
+.soeteck-solutions-hub__band { padding: var(--hub-section-y) 0 0; }
+
+.soeteck-solutions-hub__band-info { max-width: 760px; padding: 0 0 clamp(24px, 3vw, 36px); }
+/* section number chip, Riach editorial rhythm (Sora, no mono) */
+.soeteck-solutions-hub__band-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.soeteck-solutions-hub__band-title {
+  margin: 14px 0 16px;
+  color: var(--hub-navy);
+  font-size: var(--soeteck-heading-lg, clamp(2.5rem, 4vw, 3.5rem));
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+}
+.soeteck-solutions-hub__band-subtitle {
+  margin: 0;
+  color: var(--hub-muted);
+  font-size: var(--soeteck-text-lg, 1.125rem);
+  line-height: 1.7;
+  max-width: 620px;
+}
+
+/* cards grid */
+.soeteck-solutions-hub__cards { padding: 0 0 var(--hub-section-y); }
+.soeteck-solutions-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--hub-card-gap);
+}
+.soeteck-solutions-hub__card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--hub-border-soft);
+  border-radius: var(--hub-rad-card);
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.24s ease-out, box-shadow 0.24s ease-out, border-color 0.24s ease-out;
+}
+.soeteck-solutions-hub__card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--soeteck-shadow-card, 0 18px 45px rgba(15, 23, 42, 0.12));
+  border-color: var(--hub-border);
+}
+.soeteck-solutions-hub__card-media {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: linear-gradient(135deg, #e7fbff, #d9ebff);
+  position: relative;
+}
+.soeteck-solutions-hub__card-image { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.soeteck-solutions-hub__card:hover .soeteck-solutions-hub__card-image { transform: scale(1.05); }
+.soeteck-solutions-hub__card-body { padding: clamp(18px, 2.2vw, 24px) clamp(18px, 2.2vw, 24px) clamp(20px, 2.4vw, 26px); display: flex; flex-direction: column; flex: 1; }
+.soeteck-solutions-hub__card-title { margin: 0 0 12px; color: var(--hub-navy); font-size: 1.25rem; line-height: 1.25; letter-spacing: -0.01em; }
+.soeteck-solutions-hub__card-desc { margin: 0 0 20px; color: var(--hub-muted); font-size: 0.95rem; line-height: 1.62; flex: 1; }
+.soeteck-solutions-hub__card-link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--hub-blue-deep);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  font-size: 0.95rem;
+}
+.soeteck-solutions-hub__card-link svg { transition: transform 0.2s ease; }
+.soeteck-solutions-hub__card:hover .soeteck-solutions-hub__card-link svg { transform: translateX(4px); }
+
+/* ── AI flagship — the page's single Navy block (brand signature) ── */
+.soeteck-solutions-hub__featured {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 56px);
+  align-items: center;
+  margin-top: clamp(36px, 5vw, 56px);
+  border-radius: var(--soeteck-radius-lg, 14px);
+  padding: clamp(24px, 3vw, 40px);
+  overflow: hidden;
+  color: #fff;
+  text-decoration: none;
+  transition: transform 0.24s ease-out, box-shadow 0.24s ease-out;
+}
+/* brand left→right navy gradient signature (echoes hero overlay) */
+.soeteck-solutions-hub__featured {
+  background:
+    linear-gradient(100deg, #0b1f3a 0%, #0b1f3a 45%, rgba(11, 31, 58, 0.9) 100%),
+    var(--hub-navy);
+  background-color: var(--hub-navy);
+}
+.soeteck-solutions-hub__featured::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 130% at 100% 0%, rgba(124, 192, 255, 0.16), transparent 55%),
+    linear-gradient(135deg, rgba(11, 31, 58, 0.9), rgba(11, 31, 58, 0.55));
+  z-index: 0;
+}
+.soeteck-solutions-hub__featured:hover { transform: translateY(-4px); box-shadow: 0 26px 56px rgba(10, 22, 40, 0.3); }
+.soeteck-solutions-hub__featured > * { position: relative; z-index: 1; }
+.soeteck-solutions-hub__featured-media { border-radius: 10px; overflow: hidden; }
+.soeteck-solutions-hub__featured-image { display: block; width: 100%; height: 100%; aspect-ratio: 4/3; object-fit: cover; }
+.soeteck-solutions-hub__featured-body { padding: clamp(6px, 1vw, 12px) clamp(4px, 1vw, 10px) 4px 0; }
+.soeteck-solutions-hub__featured-eyebrow { color: var(--soeteck-primary, #1a85e5); margin: 0 0 16px; font-size: 0.82rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: var(--soeteck-weight-bold, 700); }
+.soeteck-solutions-hub__featured-title { margin: 0 0 18px; font-size: clamp(1.4rem, 2.6vw, 1.9rem); line-height: 1.15; color: #fff; letter-spacing: -0.01em; }
+.soeteck-solutions-hub__featured-desc { margin: 0 0 26px; color: rgba(255, 255, 255, 0.84); line-height: 1.7; max-width: 560px; }
+.soeteck-solutions-hub__featured .soeteck-solutions-hub__card-link { color: var(--soeteck-primary, #1a85e5); font-weight: var(--soeteck-weight-semibold, 600); }
+
+/* =====================================================================
+   ④ SECTION B — industry applications (surface band)
+   ===================================================================== */
+.soeteck-solutions-hub__industries {
+  padding: var(--hub-section-y) 0;
+  background: var(--hub-surface);
+}
+.soeteck-solutions-hub__industry-head { max-width: 760px; padding-bottom: clamp(22px, 3vw, 34px); margin-bottom: clamp(24px, 3vw, 36px); }
+.soeteck-solutions-hub__industry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--hub-border);
+  border: 1px solid var(--hub-border);
+  border-radius: var(--soeteck-radius-lg, 14px);
+  overflow: hidden;
+}
+.soeteck-solutions-hub__industry-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  padding: clamp(22px, 2.6vw, 30px) clamp(20px, 2.4vw, 28px);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.24s ease-out;
+}
+.soeteck-solutions-hub__industry-card:hover { background: #fbfdff; }
+.soeteck-solutions-hub__industry-icon {
+  width: 44px; height: 44px; display: grid; place-items: center;
+  border-radius: 10px;
+  background: var(--hub-blue-soft);
+  color: var(--hub-blue);
+  margin-bottom: 18px;
+}
+.soeteck-solutions-hub__industry-icon svg { width: 22px; height: 22px; }
+.soeteck-solutions-hub__industry-name { margin: 0 0 8px; font-size: 1.05rem; line-height: 1.25; color: var(--hub-navy); }
+.soeteck-solutions-hub__industry-desc { margin: 0 0 18px; color: var(--hub-muted); font-size: 0.9rem; line-height: 1.6; flex: 1; }
+.soeteck-solutions-hub__industry-card .soeteck-solutions-hub__card-link { margin-top: auto; }
+
+/* 第 9 格占位卡（Explore More → 联系定制）：浅品牌蓝 tint + 品牌蓝点阵网格背景，
+   视觉上暗示"待填充的格子"，与 8 张实心白卡明确区分；hover 保持纹理只加深底色 */
+.soeteck-solutions-hub__industry-card--placeholder,
+.soeteck-solutions-hub__industry-card--placeholder:hover {
+  background-color: var(--hub-blue-soft);
+  background-image: radial-gradient(rgba(26, 133, 229, 0.14) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+.soeteck-solutions-hub__industry-card--placeholder:hover { background-color: #dceeff; }
+.soeteck-solutions-hub__industry-card--placeholder .soeteck-solutions-hub__industry-icon {
+  background: var(--hub-blue);
+  color: #fff;
+}
+.soeteck-solutions-hub__industry-card--placeholder .soeteck-solutions-hub__industry-name { color: var(--hub-blue-deep); }
+
+/* =====================================================================
+   responsive + reduced motion
+   ===================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .soeteck-solutions-hub__card:hover { transform: none; }
+  .soeteck-solutions-hub__featured:hover { transform: none; }
+  .soeteck-solutions-hub__card-image { transition: none; }
+}
+@media (max-width: 991px) {
+  .soeteck-solutions-hub__stats-inner { grid-template-columns: repeat(2, 1fr); }
+  .soeteck-solutions-hub__stat { border-left: none; border-top: 1px solid var(--hub-border); padding: 24px 20px; }
+  .soeteck-solutions-hub__stat:first-child { border-top: none; }
+  .soeteck-solutions-hub__grid { grid-template-columns: repeat(2, 1fr); }
+  .soeteck-solutions-hub__featured { grid-template-columns: 1fr; }
+  .soeteck-solutions-hub__industry-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .soeteck-solutions-hub__stats-inner { grid-template-columns: 1fr; }
+  .soeteck-solutions-hub__grid, .soeteck-solutions-hub__industry-grid { grid-template-columns: 1fr; }
+  .soeteck-solutions-hub { --soeteck-hub-content-gutter: 16px; }
+  .soeteck-solutions-hub__featured { padding: 22px; }
+}

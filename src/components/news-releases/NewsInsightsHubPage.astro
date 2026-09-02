@@ -1,0 +1,81 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { NEWS_INSIGHTS_HUB_EN } from './news-insights-hub-content';
+import { NEWS_INSIGHTS_HUB_ZH } from './news-insights-hub-content-zh';
+import { NEWS_INSIGHTS_HUB_RU } from './news-insights-hub-content-ru';
+import { NEWS_INSIGHTS_HUB_PT } from './news-insights-hub-content-pt';
+import { NEWS_INSIGHTS_HUB_ES } from './news-insights-hub-content-es';
+import type { NewsInsightsHubContent } from './news-insights-hub-content';
+import { fetchCategoryBanner } from '@/lib/content-api';
+import AboutCta from '@/components/about/AboutCta.astro';
+import './NewsInsightsHubPage.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+
+const contentMap: Record<string, NewsInsightsHubContent> = {
+  en: NEWS_INSIGHTS_HUB_EN,
+  zh: NEWS_INSIGHTS_HUB_ZH,
+  ru: NEWS_INSIGHTS_HUB_RU,
+  pt: NEWS_INSIGHTS_HUB_PT,
+  es: NEWS_INSIGHTS_HUB_ES,
+};
+const content = contentMap[lang] ?? NEWS_INSIGHTS_HUB_EN;
+const hero = content.hero;
+// hero 完全由后台「分类」的 Category Banner Image 字段驱动：未上传则不显示背景图，
+// 不做代码兜底（用户指示 2026-08-20）。
+const heroBannerImage =
+  (await fetchCategoryBanner('news-and-insights', lang).catch(() => null))?.bannerImage?.path ?? null;
+---
+
+<div class="soeteck-news-hub">
+  <!-- Hero Banner -->
+  <section class="soeteck-news-hub__banner" aria-labelledby="news-hub-title">
+      {heroBannerImage && (
+        <img class="soeteck-news-hub__banner-image" src={heroBannerImage} alt={hero.title} loading="eager" fetchpriority="high" />
+      )}
+      <div class="soeteck-news-hub__banner-overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-news-hub__banner-content">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-news-hub__banner-body">
+        <h1 id="news-hub-title" class="soeteck-page-title">{hero.title}</h1>
+        <p>{hero.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category cards -->
+  <section class="soeteck-news-hub__content" aria-labelledby="news-hub-categories-title">
+    <div class="soeteck-container">
+      <h2 id="news-hub-categories-title" class="soeteck-sr-only">{hero.title}</h2>
+      <div class="soeteck-news-hub__grid">
+        {content.categories.map((category) => (
+          <a class="soeteck-news-hub__card" href={`/${lang}${category.path}`}>
+            <div class="soeteck-news-hub__card-media">
+              <img class="soeteck-news-hub__card-image" src={category.image} alt={category.alt} width="640" height="420" loading="lazy" />
+            </div>
+            <div class="soeteck-news-hub__card-body">
+              <p class="soeteck-eyebrow soeteck-news-hub__card-eyebrow">{category.eyebrow}</p>
+              <h3 class="soeteck-card-title soeteck-news-hub__card-title">{category.title}</h3>
+              <p class="soeteck-news-hub__card-desc">{category.description}</p>
+              <span class="soeteck-news-hub__card-link" aria-hidden="true">
+                {content.cta.buttonLabel}
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M4 8h8M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA（统一模板 ADR-033） -->
+  <AboutCta lang={lang} id="news-hub-inquiry" />
+</div>

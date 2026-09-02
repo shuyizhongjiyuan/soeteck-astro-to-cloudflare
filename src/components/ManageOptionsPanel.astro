@@ -1,0 +1,137 @@
+---
+// ManageOptionsPanel.astro（内容页内联「Manage Options」三行开关）
+// WP 作者在正文 Custom-HTML 块放 <div class="soeteck-consent-settings"></div> 定义挂载点；
+// SimplePage 检测该 wrapper 后，把本组件渲染在它位置上。
+// 极简形态：三行 .soeteck-consent-row 开关（必要锁死），拨动即保存——无面板外框/标题/按钮。
+// 行为与底部 CookieConsent 同源：consent.ts / geo.ts / 同一份扁平 copy。
+import type { ConsentConfig, ConsentCopy } from '@/lib/content-api';
+
+interface Props {
+  consent?: ConsentConfig;
+  lang?: string;
+}
+
+const { consent, lang = 'en' } = Astro.props;
+
+const DEFAULTS: ConsentCopy = {
+  drawer_title: 'Cookie settings',
+  drawer_save: 'Confirm choices',
+  drawer_accept: 'Accept all',
+  accept: 'Accept all',
+  decline: 'Decline all',
+  cat_necessary_label: 'Necessary',
+  cat_necessary_desc: 'Required for the website to function and securely deliver pages.',
+  cat_analytics_label: 'Analytics',
+  cat_analytics_desc: 'Helps us understand how visitors use the site and improve it.',
+  cat_marketing_label: 'Marketing',
+  cat_marketing_desc: 'Used to show you relevant advertising across the web.',
+};
+
+const copy: ConsentCopy = { ...DEFAULTS, ...(consent?.copy ?? {}) };
+const categories = consent?.categories ?? ['necessary', 'analytics', 'marketing'];
+const eeaCodes = consent?.geoTiers?.eea ?? [];
+const enabled = consent?.enabled !== false; // 未配置时默认开启面板能力
+
+const runtimeConfig = { lang, eeaCodes, categories };
+---
+
+{enabled && (
+  <div class="soeteck-consent-settings" id="soeteck-consent-settings" data-mgmt-root>
+    <script type="application/json" set:html={JSON.stringify(runtimeConfig)}></script>
+
+    {categories.includes('analytics') && (
+      <div class="soeteck-consent-row" data-mgmt-row>
+        <div class="soeteck-consent-row__label-wrap">
+          <p class="soeteck-consent-row__label">{copy.cat_analytics_label}</p>
+          <p class="soeteck-consent-row__desc">{copy.cat_analytics_desc}</p>
+        </div>
+        <label class="soeteck-consent-switch">
+          <input class="soeteck-consent-switch__input" type="checkbox" data-mgmt-switch="analytics" aria-label={copy.cat_analytics_label} />
+          <span class="soeteck-consent-switch__knob"></span>
+        </label>
+      </div>
+    )}
+
+    {categories.includes('marketing') && (
+      <div class="soeteck-consent-row" data-mgmt-row>
+        <div class="soeteck-consent-row__label-wrap">
+          <p class="soeteck-consent-row__label">{copy.cat_marketing_label}</p>
+          <p class="soeteck-consent-row__desc">{copy.cat_marketing_desc}</p>
+        </div>
+        <label class="soeteck-consent-switch">
+          <input class="soeteck-consent-switch__input" type="checkbox" data-mgmt-switch="marketing" aria-label={copy.cat_marketing_label} />
+          <span class="soeteck-consent-switch__knob"></span>
+        </label>
+      </div>
+    )}
+
+    {categories.includes('necessary') && (
+      <div class="soeteck-consent-row" data-mgmt-row>
+        <div class="soeteck-consent-row__label-wrap">
+          <p class="soeteck-consent-row__label">{copy.cat_necessary_label}</p>
+          <p class="soeteck-consent-row__desc">{copy.cat_necessary_desc}</p>
+          <p class="soeteck-consent-row__note">Always on</p>
+        </div>
+        <label class="soeteck-consent-switch soeteck-consent-switch--disabled">
+          <input class="soeteck-consent-switch__input" type="checkbox" data-mgmt-switch="necessary" aria-label={copy.cat_necessary_label} checked disabled />
+          <span class="soeteck-consent-switch__knob"></span>
+        </label>
+      </div>
+    )}
+  </div>
+)}
+
+<script>
+  import {
+    resolveCategoryModes,
+    readStoredConsent,
+    saveConsent,
+  } from '@/lib/consent';
+  import { detectGeoRegion, hasGPC } from '@/lib/geo';
+  import type { GeoRegion } from '@/lib/geo';
+
+  const root = document.getElementById('soeteck-consent-settings') as HTMLElement | null;
+  if (root) {
+    const cfgEl = root.querySelector('script[type="application/json"]');
+    const cfg = cfgEl ? JSON.parse(cfgEl.textContent || '{}') : { lang: 'en', eeaCodes: [] as string[], categories: [] as string[] };
+    const switches = Array.from(root.querySelectorAll<HTMLInputElement>('[data-mgmt-switch]'));
+    let region: GeoRegion = 'eea';
+    let gpc = false;
+
+    function hideGlobalBanner(): void {
+      document.getElementById('soeteck-consent-banner')?.classList.remove('soeteck-consent-banner--enter', 'is-visible');
+    }
+    function syncSwitches(): void {
+      const stored = readStoredConsent();
+      const modes = resolveCategoryModes(region, stored, gpc);
+      switches.forEach((sw) => {
+        const cat = sw.dataset.mgmtSwitch;
+        if (!cat || cat === 'necessary') return;
+        sw.checked = modes[cat as 'analytics' | 'marketing'] === 'granted';
+      });
+    }
+    function readSwitchState(): { analytics: boolean; marketing: boolean } {
+      const get = (cat: 'analytics' | 'marketing') => {
+        if (!cfg.categories.includes(cat)) return true;
+        const el = root.querySelector<HTMLInputElement>(`[data-mgmt-switch="${cat}"]`);
+        return el ? el.checked : false;
+      };
+      return { analytics: get('analytics'), marketing: get('marketing') };
+    }
+
+    // 拨动即保存（必要不可动）→ 与顶部 banner 状态一致、隐藏首访 banner
+    switches.forEach((sw) => {
+      sw.addEventListener('change', () => {
+        saveConsent(readSwitchState());
+        hideGlobalBanner();
+      });
+    });
+
+    void (async () => {
+      const geo = await detectGeoRegion(cfg.eeaCodes);
+      region = geo.region;
+      gpc = hasGPC();
+      syncSwitches();
+    })();
+  }
+</script>

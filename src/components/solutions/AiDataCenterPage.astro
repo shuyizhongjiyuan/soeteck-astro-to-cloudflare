@@ -1,0 +1,338 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import AidcIcon from './AidcIcon.astro';
+import * as C_EN from './ai-data-center-content';
+import * as C_ZH from './ai-data-center-content-zh';
+import * as C_RU from './ai-data-center-content-ru';
+import * as C_PT from './ai-data-center-content-pt';
+import * as C_ES from './ai-data-center-content-es';
+import AboutCta from '@/components/about/AboutCta.astro';
+import './AiDataCenterPage.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+
+// 5 语言内容映射（translate-code-embedded 模式，Batch 3）
+const C_LANG_MAP: Record<string, typeof C_EN> = { en: C_EN, zh: C_ZH, ru: C_RU, pt: C_PT, es: C_ES };
+const C = C_LANG_MAP[lang] ?? C_EN;
+
+// hero 背景图：优先 ACF sections.heroImage（WP 后台可传），兜底默认 hero 图。
+// replace 剥掉 cms.soeteck.com 域名，统一成 /resources/ 相对路径。
+const heroOverride = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const bannerImage = heroOverride || C.AIDC_HERO.bannerImage;
+
+const contactHref = `/${lang}/contact-us/`;
+const withLang = (path: string) => `/${lang}${path}`;
+---
+
+<div class="soeteck-prefab-solution soeteck-aidc" data-aidc-solution>
+  <!-- Hero Banner -->
+  <section class="soeteck-prefab-banner" aria-labelledby="aidc-hero-title">
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt={C.AIDC_UI.heroImageAlt} width="1920" height="600" loading="eager" fetchpriority="high" />
+    <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-prefab-banner__inner">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-prefab-banner__body">
+        <p class="soeteck-eyebrow">{C.AIDC_HERO.eyebrow}</p>
+        <h1 id="aidc-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">{C.AIDC_HERO.title}</h1>
+        <p class="soeteck-aidc__hero-subtitle">{C.AIDC_HERO.subtitle}</p>
+        <div class="soeteck-aidc__hero-actions">
+          <a class="soeteck-aidc__hero-btn soeteck-aidc__hero-btn--primary" href={contactHref}>{C.AIDC_HERO.ctaPrimary.label}</a>
+          {C.BROCHURE_URL && (
+            <a class="soeteck-aidc__hero-btn soeteck-aidc__hero-btn--outline" href={C.BROCHURE_URL} target="_blank" rel="noopener">{C.AIDC_HERO.ctaSecondary.label}</a>
+          )}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pain Points -->
+  <section class="soeteck-prefab-section soeteck-aidc__pain" aria-labelledby="aidc-problem-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_PROBLEM.eyebrow}</p>
+      <h2 id="aidc-problem-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_PROBLEM.title}</h2>
+      <p class="soeteck-prefab-section__subtitle soeteck-aidc__pain-intro">{C.AIDC_PROBLEM.intro}</p>
+      <div class="soeteck-aidc__pain-grid">
+        {C.AIDC_PROBLEM.points.map((p) => (
+          <article class="soeteck-aidc__pain-card">
+            <span class={`soeteck-aidc__pain-icon soeteck-aidc__pain-icon--${p.icon}`}><AidcIcon name={p.icon} /></span>
+            <p class="soeteck-aidc__pain-stat"><strong>{p.stat}</strong> <span>{p.unit}</span></p>
+            <p class="soeteck-aidc__pain-text">{p.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Platform -->
+  <section class="soeteck-prefab-section soeteck-aidc__section--alt soeteck-aidc__platform" aria-labelledby="aidc-platform-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_PLATFORM.eyebrow}</p>
+      <h2 id="aidc-platform-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_PLATFORM.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_PLATFORM.intro}</p>
+      <div class="soeteck-aidc__pillar-grid">
+        {C.AIDC_PLATFORM.pillars.map((pillar) => (
+          <article class="soeteck-aidc__pillar-card">
+            <span class={`soeteck-aidc__pillar-icon soeteck-aidc__pillar-icon--${pillar.icon}`}><AidcIcon name={pillar.icon} /></span>
+            <h3 class="soeteck-card-title">{pillar.title}</h3>
+            <p>{pillar.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Configurations -->
+  <section class="soeteck-prefab-section soeteck-aidc__configs" aria-labelledby="aidc-configs-title">
+    <div class="soeteck-container">
+      <h2 id="aidc-configs-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_CONFIG_TABLE.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_CONFIG_TABLE.subtitle}</p>
+
+      <!-- Spec comparison table -->
+      <div class="soeteck-prefab-table-wrap soeteck-aidc__table-wrap">
+        <table class="soeteck-prefab-spec-table soeteck-aidc__config-table">
+          <thead>
+            <tr>
+              {C.AIDC_CONFIG_TABLE.headers.map((h) => (
+                <th scope="col">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {C.AIDC_CONFIG_TABLE.rows.map((row) => (
+              <tr>
+                <th scope="row">{row.label}</th>
+                {row.values.map((v) => (
+                  <td>{v}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Config cards -->
+      <div class="soeteck-aidc__config-grid">
+        {C.AIDC_CONFIGS.map((cfg) => (
+          <article class="soeteck-aidc__config-card" data-config-card>
+            <h3 class="soeteck-aidc__config-name">{cfg.name}</h3>
+            <p class="soeteck-aidc__config-tagline">{cfg.tagline}</p>
+            <ul class="soeteck-aidc__config-specs">
+              {cfg.specs.map((s) => (
+                <li><span>{s.label}:</span> {s.value}</li>
+              ))}
+            </ul>
+            <p class="soeteck-aidc__config-bestfor"><strong>{C.AIDC_UI.bestForLabel}</strong> {cfg.bestFor}</p>
+            <a class="soeteck-aidc__config-cta" href={contactHref}>{cfg.inquireLabel} →</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Cooling -->
+  <section class="soeteck-prefab-section soeteck-aidc__section--alt soeteck-aidc__cooling" aria-labelledby="aidc-cooling-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_COOLING.eyebrow}</p>
+      <h2 id="aidc-cooling-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_COOLING.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_COOLING.intro}</p>
+
+      <div class="soeteck-aidc__cooling-tabs" role="tablist" aria-label={C.AIDC_UI.coolingTablistAria}>
+        {C.AIDC_COOLING.tabs.map((tab, i) => (
+          <button class={`soeteck-aidc__cooling-tab${i === 0 ? ' is-active' : ''}`} type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-cooling-tab={tab.id}>
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {C.AIDC_COOLING.tabs.map((tab, i) => (
+        <div class={`soeteck-aidc__cooling-panel${i === 0 ? ' is-active' : ''}`} data-cooling-panel={tab.id} hidden={i !== 0}>
+          <div class="soeteck-aidc__cooling-media">
+            <img class="soeteck-aidc__cooling-image" src={tab.image} alt={tab.label} width="640" height="400" loading="lazy" />
+          </div>
+          <div class="soeteck-aidc__cooling-copy">
+            <h3 class="soeteck-card-title">{tab.label}</h3>
+            <p class="soeteck-aidc__cooling-text">{tab.text}</p>
+            <ul class="soeteck-aidc__cooling-bullets">
+              {tab.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Power -->
+  <section class="soeteck-prefab-section soeteck-aidc__power" aria-labelledby="aidc-power-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_POWER.eyebrow}</p>
+      <h2 id="aidc-power-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_POWER.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_POWER.intro}</p>
+      <div class="soeteck-aidc__power-layout">
+        <div class="soeteck-aidc__power-modules">
+          {C.AIDC_POWER.modules.map((m) => (
+            <article class="soeteck-aidc__power-card">
+              <span class={`soeteck-aidc__power-icon soeteck-aidc__power-icon--${m.icon}`}><AidcIcon name={m.icon} /></span>
+              <div>
+                <h3 class="soeteck-card-title">{m.title}</h3>
+                <p>{m.text}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="soeteck-aidc__power-media">
+          <img class="soeteck-aidc__power-image" src={C.AIDC_POWER.image} alt={C.AIDC_UI.powerImageAlt} width="640" height="480" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="soeteck-prefab-section soeteck-aidc__section--alt soeteck-aidc__timeline" aria-labelledby="aidc-timeline-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_TIMELINE.eyebrow}</p>
+      <h2 id="aidc-timeline-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_TIMELINE.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_TIMELINE.intro}</p>
+
+      <ol class="soeteck-aidc__timeline-steps">
+        {C.AIDC_TIMELINE.steps.map((step) => (
+          <li class="soeteck-aidc__timeline-step">
+            <span class="soeteck-aidc__timeline-month">{step.month}</span>
+            <h3 class="soeteck-aidc__timeline-title">{step.title}</h3>
+            <p>{step.text}</p>
+          </li>
+        ))}
+      </ol>
+
+      <div class="soeteck-aidc__timeline-compare">
+        <div class="soeteck-aidc__compare-block">
+          <span class="soeteck-aidc__compare-label">{C.AIDC_UI.compareTraditionalLabel}</span>
+          <span class="soeteck-aidc__compare-value">{C.AIDC_TIMELINE.compareTraditional}</span>
+        </div>
+        <div class="soeteck-aidc__compare-block soeteck-aidc__compare-block--highlight">
+          <span class="soeteck-aidc__compare-label">{C.AIDC_UI.compareSoeteckLabel}</span>
+          <span class="soeteck-aidc__compare-value">{C.AIDC_TIMELINE.compareSoeteck}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Global -->
+  <section class="soeteck-prefab-section soeteck-aidc__global" aria-labelledby="aidc-global-title">
+    <div class="soeteck-container">
+      <p class="soeteck-eyebrow soeteck-aidc__section-eyebrow">{C.AIDC_GLOBAL.eyebrow}</p>
+      <h2 id="aidc-global-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_GLOBAL.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_GLOBAL.text}</p>
+      <div class="soeteck-aidc__global-layout">
+        <div class="soeteck-aidc__global-facts">
+          {C.AIDC_GLOBAL.facts.map((f) => (
+            <div class="soeteck-aidc__global-fact">
+              <span class="soeteck-aidc__global-fact-value"><strong>{f.value}</strong></span>
+              <span class="soeteck-aidc__global-fact-label">{f.label}</span>
+            </div>
+          ))}
+          <div class="soeteck-aidc__global-flags">
+            {C.AIDC_GLOBAL.deploymentFlags.map((flag) => (
+              <span class="soeteck-aidc__global-flag">{flag}</span>
+            ))}
+          </div>
+        </div>
+        <div class="soeteck-aidc__global-media">
+          <img class="soeteck-aidc__global-image" src={C.AIDC_GLOBAL.image} alt={C.AIDC_UI.globalImageAlt} width="640" height="480" loading="lazy" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trusted by -->
+  <section class="soeteck-prefab-section soeteck-aidc__section--alt soeteck-aidc__clients" aria-labelledby="aidc-clients-title">
+    <div class="soeteck-container">
+      <h2 id="aidc-clients-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_UI.clientsTitle}</h2>
+      <div class="soeteck-prefab-case-grid">
+        {C.AIDC_CLIENTS.map((c) => (
+          <article class="soeteck-prefab-case-card">
+            <div class="soeteck-aidc__client-card">
+              <h3 class="soeteck-aidc__client-name">{c.name}</h3>
+              <p class="soeteck-aidc__client-desc">{c.description}</p>
+              <a class="soeteck-aidc__client-link" href={withLang(c.path)}>{C.AIDC_UI.readCaseStudy}</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Related ecosystem -->
+  <section class="soeteck-prefab-section soeteck-aidc__related" aria-labelledby="aidc-related-title">
+    <div class="soeteck-container">
+      <h2 id="aidc-related-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_UI.relatedTitle}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.AIDC_UI.relatedSubtitle}</p>
+      <div class="soeteck-aidc__related-grid">
+        {C.AIDC_RELATED.map((r) => (
+          <a class="soeteck-aidc__related-card" href={withLang(r.path)}>
+            <span class={`soeteck-aidc__related-icon soeteck-aidc__related-icon--${r.icon}`}><AidcIcon name={r.icon} /></span>
+            <h3 class="soeteck-card-title">{r.title}</h3>
+            <p>{r.description}</p>
+            <span class="soeteck-aidc__related-link">{C.AIDC_UI.learnMore}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="soeteck-prefab-section soeteck-aidc__section--alt soeteck-aidc__faq" aria-labelledby="aidc-faq-title">
+    <div class="soeteck-container soeteck-aidc__faq-container">
+      <h2 id="aidc-faq-title" class="soeteck-section-title soeteck-prefab-section__title">{C.AIDC_UI.faqTitle}</h2>
+      <div class="soeteck-aidc__faq-list">
+        {C.AIDC_FAQ.map((item) => (
+          <details class="soeteck-aidc__faq-item" name="aidc-faq">
+            <summary class="soeteck-aidc__faq-question">{item.q}</summary>
+            <div class="soeteck-aidc__faq-answer">
+              {item.a.map((p) => (
+                <p>{p}</p>
+              ))}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA（统一模板 ADR-033） -->
+  <AboutCta lang={lang} id="aidc-inquiry" />
+</div>
+
+<script>
+  (function () {
+    'use strict';
+    var root = document.querySelector('[data-aidc-solution]');
+    if (!root) return;
+    var tabs = root.querySelectorAll('[data-cooling-tab]');
+    var panels = root.querySelectorAll('[data-cooling-panel]');
+    function select(id) {
+      tabs.forEach(function (t) {
+        var active = t.getAttribute('data-cooling-tab') === id;
+        t.classList.toggle('is-active', active);
+        t.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      panels.forEach(function (p) {
+        var active = p.getAttribute('data-cooling-panel') === id;
+        p.classList.toggle('is-active', active);
+        p.hidden = !active;
+      });
+    }
+    tabs.forEach(function (t) {
+      t.addEventListener('click', function () {
+        select(t.getAttribute('data-cooling-tab'));
+      });
+    });
+  }());
+</script>

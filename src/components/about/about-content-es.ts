@@ -114,6 +114,15 @@ export const ABOUT_ES: AboutContent = {
   ctaEyebrow: 'Hable con un Ingeniero',
   ctaTitle: 'Comparta sus requisitos y obtenga una ruta de solución práctica.',
   ctaText: 'Informe el tipo de instalación, carga y región. Nuestro equipo ayudará a identificar la configuración ideal.',
-  ctaChecks: ['Consultoría de proyecto', 'Soporte técnico de configuración', 'Seguimiento regional'],
-  ctaButton: 'Solicitar Consultoría de Proyecto',
+  ctaChecks: [
+    { icon: 'manufacturing', label: 'Fabricación propia' },
+    { icon: 'turnkey', label: 'Implementación llave en mano' },
+    { icon: 'global', label: 'Red global de soporte' },
+  ],
+  ctaButtons: [
+    // 精简短译（2026-09-02）：避免 min-width 200px 按钮内折行，勿扩长
+    { label: 'Contáctenos', href: '/es/contact-us/' },
+    { label: 'Ver Productos', href: '/es/products/' },
+    { label: 'Ver soluciones', href: '/es/solutions/' },
+  ],
 };

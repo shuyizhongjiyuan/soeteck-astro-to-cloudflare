@@ -12,6 +12,12 @@ import NewsReleasesPage from '@/components/news-releases/NewsReleasesPage.astro'
 import PrefabContainerPage from '@/components/solutions/PrefabContainerPage.astro';
 import CabinetModularPage from '@/components/solutions/CabinetModularPage.astro';
 import RowModularPage from '@/components/solutions/RowModularPage.astro';
+import AisleModularPage from '@/components/solutions/AisleModularPage.astro';
+import DataCenterCoolingPage from '@/components/solutions/DataCenterCoolingPage.astro';
+import AiDataCenterPage from '@/components/solutions/AiDataCenterPage.astro';
+import SolutionsHubPage from '@/components/solutions/SolutionsHubPage.astro';
+import IndustryPage from '@/components/solutions/IndustryPage.astro';
+import NewsInsightsHubPage from '@/components/news-releases/NewsInsightsHubPage.astro';
 import ProductCategoryPage from '@/components/product-category/ProductCategoryPage.astro';
 import ProductCategoryLandingPage from '@/components/product-category/ProductCategoryLandingPage.astro';
 import ProductsPage from '@/components/products/ProductsPage.astro';
@@ -65,6 +71,18 @@ const { page, lang } = Astro.props;
     <CabinetModularPage page={page} lang={lang} />
   ) : page.kind === 'solutionRowModular' ? (
     <RowModularPage page={page} lang={lang} />
+  ) : page.kind === 'solutionAisleModular' ? (
+    <AisleModularPage page={page} lang={lang} />
+  ) : page.kind === 'solutionDataCenterCooling' ? (
+    <DataCenterCoolingPage page={page} lang={lang} />
+  ) : page.kind === 'solutionAiDataCenter' ? (
+    <AiDataCenterPage page={page} lang={lang} />
+  ) : page.kind === 'solutionsHub' ? (
+    <SolutionsHubPage page={page} lang={lang} />
+  ) : page.kind === 'industryTelecom' || page.kind === 'industryColocation' || page.kind === 'industryCloudHyperscale' || page.kind === 'industryInternet' || page.kind === 'industryFinance' || page.kind === 'industryGovernment' || page.kind === 'industryManufacturing' || page.kind === 'industryHealthcare' ? (
+    <IndustryPage page={page} lang={lang} />
+  ) : page.kind === 'newsInsightsHub' ? (
+    <NewsInsightsHubPage page={page} lang={lang} />
   ) : page.kind === 'simple' ? (
     <SimplePage page={page} lang={lang} />
   ) : (

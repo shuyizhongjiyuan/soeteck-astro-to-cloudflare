@@ -6,6 +6,7 @@
  */
 
 import { submitContactForm } from '@/lib/inquiry-form';
+import { CountrySelect } from '@/lib/country-select';
 
 const init = () => {
   // -------- Gallery --------
@@ -248,6 +249,15 @@ const init = () => {
     const tabsRoot = document.querySelector<HTMLElement>('[data-product-tabs]');
     if (tabsRoot) {
       activateProductTab(tabsRoot, initialTab);
+      // 深链（分类页 Get Quotation → #product-inquiry）：激活询盘 tab 后滚动到 tab 区
+      // 页面没有 id=#product-inquiry 的元素，浏览器原生锚点无效，需手动滚动；
+      // 减 sticky header 高度避让遮挡（.site-header, top:0, z-index 1000）
+      requestAnimationFrame(() => {
+        const headerEl = document.querySelector<HTMLElement>('.site-header');
+        const headerOffset = headerEl ? headerEl.offsetHeight : 0;
+        const top = tabsRoot.getBoundingClientRect().top + window.scrollY - headerOffset - 12;
+        window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+      });
     }
   }
 
@@ -346,7 +356,7 @@ const init = () => {
       submitBtn!.classList.add('is-loading');
       if (note) {
         note.className = 'soeteck-product-inquiry-form__note';
-        note.textContent = 'Submitting your inquiry...';
+        note.textContent = form.dataset.i18nPending || 'Submitting your inquiry...';
       }
 
       try {
@@ -354,7 +364,7 @@ const init = () => {
         // redirects to /thank-you/ on success
       } catch (err: any) {
         if (note) {
-          note.textContent = err.message || 'Submission failed. Please try again.';
+          note.textContent = err.message || form.dataset.i18nError || 'Submission failed. Please try again.';
           note.classList.add('soeteck-product-inquiry-form__note--error');
         }
         submitBtn!.disabled = false;
@@ -363,39 +373,78 @@ const init = () => {
     });
   });
 
-  // File upload toggle for product page
-  document.querySelectorAll<HTMLInputElement>('input[name="needs_upload"]').forEach(radio => {
-    radio.addEventListener('change', () => {
-      const fileSection = document.querySelector<HTMLElement>('.soeteck-product-inquiry__file');
-      if (!fileSection) return;
-      if (radio.value === 'yes' && radio.checked) {
-        fileSection.classList.add('is-visible');
-        fileSection.setAttribute('aria-hidden', 'false');
-      } else {
-        fileSection.classList.remove('is-visible');
-        fileSection.setAttribute('aria-hidden', 'true');
-      }
-    });
+  // -------- 国家选择器（共享 CountrySelect，contact 页同款） --------
+  document.querySelectorAll<HTMLElement>('[data-country-select]').forEach((el) => new CountrySelect(el));
+
+  // -------- Upload switch → 文件区展开 + 隐藏 radio 状态同步 --------
+  const uploadToggle = document.querySelector<HTMLInputElement>('[data-upload-toggle]');
+  const fileSectionSwitch = document.querySelector<HTMLElement>('.soeteck-product-inquiry__file');
+  const uploadYes = document.querySelector<HTMLInputElement>('[data-upload-yes]');
+  const uploadNo = document.querySelector<HTMLInputElement>('[data-upload-no]');
+  uploadToggle?.addEventListener('change', function () {
+    const checked = this.checked;
+    if (fileSectionSwitch) {
+      fileSectionSwitch.classList.toggle('is-visible', checked);
+      fileSectionSwitch.setAttribute('aria-hidden', String(!checked));
+    }
+    if (uploadYes) uploadYes.checked = checked;
+    if (uploadNo) uploadNo.checked = !checked;
   });
 
-  // File chip interaction
-  const fileTrigger = document.querySelector<HTMLButtonElement>('[data-product-file-trigger]');
-  const fileInput = document.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
-  const fileList = document.querySelector<HTMLElement>('[data-product-file-list]');
-  fileTrigger?.addEventListener('click', () => fileInput?.click());
-  fileInput?.addEventListener('change', () => {
-    const files = fileInput.files;
-    const fileSection = fileInput?.closest<HTMLElement>('.soeteck-product-inquiry__file');
-    if (!files || files.length === 0) {
-      if (fileList) fileList.textContent = 'No files selected';
-      fileSection?.classList.remove('has-file');
+  // -------- 增强文件 chips：合并去重 + 单 chip 移除 + Clear all --------
+  const fTrigger = document.querySelector<HTMLButtonElement>('[data-product-file-trigger]');
+  const fInput = document.querySelector<HTMLInputElement>('input[type="file"][name="file_upload[]"]');
+  const fList = document.querySelector<HTMLElement>('[data-product-file-list]');
+  const fClear = document.querySelector<HTMLButtonElement>('[data-product-file-clear]');
+  const fSection = document.querySelector<HTMLElement>('.soeteck-product-inquiry__file');
+  let pendingFiles: File[] = [];
+
+  const mergeFiles = (existing: File[], incoming: FileList | null): File[] => {
+    const fresh = Array.from(incoming || []);
+    const existingKeys = new Set(existing.map(f => `${f.name}-${f.size}`));
+    return [...existing, ...fresh.filter(f => !existingKeys.has(`${f.name}-${f.size}`))];
+  };
+  const setFileInput = (all: File[]): void => {
+    if (!fInput) return;
+    const dt = new DataTransfer();
+    all.forEach(f => dt.items.add(f));
+    fInput.files = dt.files;
+  };
+  const renderChips = (): void => {
+    const all = Array.from(fInput?.files || []);
+    if (all.length === 0) {
+      if (fList) fList.textContent = form.dataset.i18nNofiles || 'No files selected';
+      if (fClear) fClear.hidden = true;
+      fSection?.classList.remove('has-file');
       return;
     }
-    const names = Array.from(files).map(f => f.name);
-    const chips = names.map(name => `<span class="soeteck-contact-form__file-chip"><span class="soeteck-contact-form__file-chip-name">${name}</span></span>`).join('');
-    if (fileList) fileList.innerHTML = chips;
-    fileSection?.classList.add('has-file');
+    const chips = all.map((f, i) =>
+      `<span class="soeteck-contact-form__file-chip"><span class="soeteck-contact-form__file-chip-name">${f.name}</span><button type="button" class="soeteck-contact-form__file-remove" data-chip-remove="${i}" aria-label="Remove ${f.name}">×</button></span>`
+    ).join('');
+    if (fList) fList.innerHTML = chips;
+    if (fClear) fClear.hidden = false;
+    fSection?.classList.add('has-file');
+    document.querySelectorAll<HTMLButtonElement>('[data-chip-remove]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(btn.getAttribute('data-chip-remove') || '0', 10);
+        setFileInput(Array.from(fInput?.files || []).filter((_, k) => k !== idx));
+        renderChips();
+      });
+    });
+  };
+  fTrigger?.addEventListener('click', () => {
+    pendingFiles = Array.from(fInput?.files || []);
+    if (fInput) fInput.value = '';
+    fInput?.click();
   });
+  fInput?.addEventListener('change', () => {
+    const merged = mergeFiles(pendingFiles, fInput?.files ?? null);
+    setFileInput(merged);
+    pendingFiles = [];
+    renderChips();
+  });
+  fClear?.addEventListener('click', () => { setFileInput([]); renderChips(); });
 };
 
 if (document.readyState === 'loading') {

@@ -1,0 +1,161 @@
+---
+/**
+ * IndustryPage — 行业顶层解决方案页（通用模板，code-embedded）。
+ * 8 个行业共用此组件，内容按 page.slug 从 industry-content 映射取用。
+ * 本期仅英文、基础设计：hero + 3 痛点 + 产品映射 + 需求陈述 + CTA。
+ */
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import { INDUSTRY_CONTENT, type IndustryContent } from './industry-content';
+import { INDUSTRY_CONTENT_ZH } from './industry-content-zh';
+import { INDUSTRY_CONTENT_RU } from './industry-content-ru';
+import { INDUSTRY_CONTENT_PT } from './industry-content-pt';
+import AboutCta from '@/components/about/AboutCta.astro';
+import { INDUSTRY_CONTENT_ES } from './industry-content-es';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+
+// 由 route path 提取行业 key（/en/solutions/telecom/ → telecom；split 末段最稳）
+const pathKey = (page.routePath || '').split('/').filter(Boolean).pop() ?? '';
+
+// 正文内容按语言选择（translate-code-embedded 模式）；hero 图随行业走行业场景图
+const INDUSTRY_LANG_MAP: Record<string, Record<string, IndustryContent>> = {
+  en: INDUSTRY_CONTENT,
+  zh: INDUSTRY_CONTENT_ZH,
+  ru: INDUSTRY_CONTENT_RU,
+  pt: INDUSTRY_CONTENT_PT,
+  es: INDUSTRY_CONTENT_ES,
+};
+const c: IndustryContent = (INDUSTRY_LANG_MAP[lang] ?? INDUSTRY_CONTENT)[pathKey] ?? INDUSTRY_CONTENT['telecom'];
+
+const heroOverride = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const bannerImage = heroOverride || c.hero.bannerImage;
+const contactHref = `/${lang}/contact-us/`;
+const withLang = (path: string) => `/${lang}${path}`;
+---
+
+<div class="soeteck-industry-page">
+  <!-- Hero Banner -->
+  <section class="soeteck-prefab-banner" aria-labelledby="industry-hero-title">
+    <img class="soeteck-prefab-banner__image" src={bannerImage} alt={c.hero.alt} width="1920" height="600" loading="eager" fetchpriority="high" />
+    <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-prefab-banner__inner">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-prefab-banner__body">
+        <p class="soeteck-eyebrow">{c.hero.eyebrow}</p>
+        <h1 id="industry-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">{c.hero.title}</h1>
+        <p class="soeteck-industry__hero-subtitle">{c.hero.subtitle}</p>
+        <div class="soeteck-industry__hero-actions">
+          <a class="soeteck-industry__hero-btn soeteck-industry__hero-btn--primary" href={contactHref}>{c.hero.ctaPrimary}</a>
+          <a class="soeteck-industry__hero-btn soeteck-industry__hero-btn--outline" href={withLang(c.hero.ctaSecondaryLink)}>{c.hero.ctaSecondary}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 痛点 -->
+  <section class="soeteck-prefab-section" aria-labelledby="industry-pain-title">
+    <div class="soeteck-container">
+      <div class="soeteck-industry__section-head">
+        <p class="soeteck-eyebrow">{c.pains.eyebrow}</p>
+        <h2 id="industry-pain-title" class="soeteck-prefab-section__title">{c.pains.title}</h2>
+        <p class="soeteck-industry__section-lead">{c.pains.text}</p>
+      </div>
+      <div class="soeteck-industry__pains">
+        {c.pains.items.map((item) => (
+          <div class="soeteck-industry__pain-card">
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 产品映射 -->
+  <section class="soeteck-prefab-section soeteck-prefab-section--alt" aria-labelledby="industry-products-title">
+    <div class="soeteck-container">
+      <div class="soeteck-industry__section-head">
+        <p class="soeteck-eyebrow">{c.products.eyebrow}</p>
+        <h2 id="industry-products-title" class="soeteck-prefab-section__title">{c.products.title}</h2>
+        <p class="soeteck-industry__section-lead">{c.products.text}</p>
+      </div>
+      <div class="soeteck-industry__products">
+        {c.products.items.map((item) => (
+          <a class="soeteck-industry__product-card" href={withLang(item.path)}>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+            <span class="soeteck-industry__product-link">{c.products.ctaLabel} →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA（统一模板 ADR-033） -->
+  <AboutCta lang={lang} />
+</div>
+
+<style>
+.soeteck-industry__hero-subtitle {
+  max-width: 640px;
+  margin: 18px 0 0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.9);
+}
+.soeteck-industry__hero-actions { display: flex; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
+.soeteck-industry__hero-btn {
+  display: inline-flex; align-items: center; padding: 13px 30px;
+  border-radius: 999px; font-size: 15px; font-weight: 600; text-decoration: none;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+.soeteck-industry__hero-btn--primary { background: var(--soeteck-primary); color: #fff; }
+.soeteck-industry__hero-btn--primary:hover { background: var(--soeteck-primary-dark); }
+.soeteck-industry__hero-btn--outline { border: 1.5px solid rgba(255,255,255,0.6); color: #fff; }
+.soeteck-industry__hero-btn--outline:hover { background: rgba(255,255,255,0.12); }
+
+.soeteck-industry__section-head { max-width: 760px; margin: 0 auto; text-align: center; }
+.soeteck-industry__section-head .soeteck-eyebrow { display: block; margin: 0 0 25px; padding: 0; }
+.soeteck-industry__section-head .soeteck-prefab-section__title {
+  /* 对齐 AICoolit 参考页：标题→lead 用 padding-bottom 20px（非 margin） */
+  margin: 0;
+  padding-bottom: 20px;
+  font-size: clamp(1.85rem, 3.1vw, 3rem);
+  line-height: 1.14;
+}
+.soeteck-industry__section-lead { max-width: 620px; margin: 0 auto clamp(28px, 3vw, 40px); font-size: 1.02rem; line-height: 1.7; color: var(--soeteck-text-soft); text-align: center; }
+
+.soeteck-industry__pains { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.soeteck-industry__pain-card {
+  padding: 26px 24px; border-radius: var(--soeteck-radius);
+  background: #f4f8fd; border: 1px solid var(--soeteck-border-soft);
+}
+.soeteck-industry__pain-card h3 { margin: 0 0 10px; font-size: 1.06rem; font-weight: 700; }
+.soeteck-industry__pain-card p { margin: 0; font-size: 0.96rem; line-height: 1.65; color: var(--soeteck-text-soft); }
+
+.soeteck-industry__products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.soeteck-industry__product-card {
+  display: flex; flex-direction: column; padding: 26px 24px;
+  border-radius: var(--soeteck-radius); background: var(--soeteck-white);
+  border: 1px solid var(--soeteck-border); text-decoration: none;
+  transition: border-color 0.25s ease, transform 0.2s ease;
+}
+.soeteck-industry__product-card:hover { border-color: var(--soeteck-primary); transform: translateY(-3px); }
+.soeteck-industry__product-card h3 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 700; color: var(--soeteck-text); }
+.soeteck-industry__product-card p { margin: 0 0 14px; font-size: 0.95rem; line-height: 1.65; color: var(--soeteck-text-soft); }
+.soeteck-industry__product-link { margin-top: auto; font-size: 0.92rem; font-weight: 600; color: var(--soeteck-primary); }
+
+@media (max-width: 991px) {
+  .soeteck-industry__pains, .soeteck-industry__products { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .soeteck-industry__pains, .soeteck-industry__products { grid-template-columns: 1fr; }
+  .soeteck-industry__hero-actions { flex-direction: column; align-items: flex-start; }
+}
+</style>

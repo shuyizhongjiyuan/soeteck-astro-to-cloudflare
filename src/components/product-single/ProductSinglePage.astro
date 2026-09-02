@@ -8,6 +8,8 @@
 import type { AdaptedPage } from '@/lib/page-adapter';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import { getUITranslation } from '@/lib/translations';
+import '@/styles/inquiry-controls.css';
+import { COUNTRIES } from '@/lib/countries';
 
 interface Props {
   page: AdaptedPage;
@@ -28,6 +30,7 @@ const specifications = product.specifications ?? [];
 const variations = product.variations;
 const hasModelsTab = product.type === 'variable';
 const primaryCategory = product.primaryCategory;
+const relatedProducts = product.relatedProducts ?? [];
 const inquiryContext = product.inquiryContext ?? {
   productId: product.id ?? null,
   productTitle: product.title,
@@ -160,19 +163,19 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                  data-product-panel="overview">
           {product.overview && product.overview.trim() !== '' && (
             <div class="soeteck-product-tab-block">
-              <p class="soeteck-product-section__label">{t('overview')}</p>
+              <h2 class="soeteck-section-title">{t('overview')}</h2>
               <div class="soeteck-product-richtext" set:html={product.overview}></div>
             </div>
           )}
           {product.features && product.features.trim() !== '' && (
             <div class="soeteck-product-tab-block soeteck-product-tab-block--light">
-              <p class="soeteck-product-section__label">{t('keyFeatures')}</p>
+              <h2 class="soeteck-section-title">{t('keyFeatures')}</h2>
               <div class="soeteck-product-richtext soeteck-product-feature-list" set:html={product.features}></div>
             </div>
           )}
           {product.applications && product.applications.trim() !== '' && (
             <div class="soeteck-product-tab-block">
-              <p class="soeteck-product-section__label">{t('applications')}</p>
+              <h2 class="soeteck-section-title">{t('applications')}</h2>
               <div class="soeteck-product-richtext soeteck-product-applications-list" set:html={product.applications}></div>
             </div>
           )}
@@ -186,7 +189,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
           <section id="product-panel-models" class="soeteck-product-tab-panel"
                    role="tabpanel" tabindex="0" aria-labelledby="product-tab-models"
                    data-product-panel="models" hidden>
-            <p class="soeteck-product-section__label">{t('modelRange')}</p>
+            <h2 class="soeteck-section-title">{t('modelRange')}</h2>
             {product.modelDescription && product.modelDescription.trim() !== '' && (
               <div class="soeteck-product-richtext soeteck-product-panel-intro" set:html={product.modelDescription}></div>
             )}
@@ -215,7 +218,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
         <section id="product-panel-specifications" class="soeteck-product-tab-panel"
                  role="tabpanel" tabindex="0" aria-labelledby="product-tab-specifications"
                  data-product-panel="specifications" hidden>
-          <p class="soeteck-product-section__label">{t('technicalSpecifications')}</p>
+          <h2 class="soeteck-section-title">{t('technicalSpecifications')}</h2>
           {specifications.length > 0 ? (
             <>
               <div class="soeteck-product-spec-controls" data-spec-controls>
@@ -262,7 +265,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
         <section id="product-panel-downloads" class="soeteck-product-tab-panel"
                  role="tabpanel" tabindex="0" aria-labelledby="product-tab-downloads"
                  data-product-panel="downloads" hidden>
-          <p class="soeteck-product-section__label">{t('resources')}</p>
+          <h2 class="soeteck-section-title">{t('resources')}</h2>
           {downloads.length > 0 ? (
             <div class="soeteck-product-downloads">
               {downloads.map((d) => (
@@ -285,7 +288,7 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
             <h2 class="soeteck-section-title">{t('inquiryIntro')}</h2>
             <p>{t('inquiryDescription')}</p>
           </div>
-          <form class="soeteck-product-inquiry-form" method="post" action="#product-inquiry" data-product-inquiry-form>
+          <form class="soeteck-product-inquiry-form" method="post" action="#product-inquiry" data-product-inquiry-form data-i18n-pending={getUITranslation(lang, 'common.submitting')} data-i18n-error={getUITranslation(lang, 'common.submitFailed')} data-i18n-nofiles={t('noFilesSelected')}>
             <label class="soeteck-inquiry-field">
               <span>{t('formYourName')} <em>*</em></span>
               <input class="soeteck-field" type="text" name="name" autocomplete="name" />
@@ -294,10 +297,40 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
               <span>{t('formCompany')} <em>*</em></span>
               <input class="soeteck-field" type="text" name="company" autocomplete="organization" />
             </label>
-            <label class="soeteck-inquiry-field">
+            <div class="soeteck-inquiry-field">
               <span>{t('formCountry')} <em>*</em></span>
-              <input class="soeteck-field" type="text" name="country" autocomplete="country-name" placeholder={t('formCountryPlaceholder')} />
-            </label>
+              <div class="soeteck-country-select" data-country-select>
+                <button type="button" class="soeteck-country-select__trigger" data-country-trigger aria-haspopup="listbox" aria-expanded="false">
+                  <span class="soeteck-country-select__placeholder" data-country-placeholder>{t('formCountryPlaceholder')}</span>
+                  <svg class="soeteck-country-select__arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+                <div class="soeteck-country-select__dropdown" data-country-dropdown role="listbox" aria-label={t('formCountry')}>
+                  <div class="soeteck-country-select__search-wrap">
+                    <svg class="soeteck-country-select__search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                      <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.3"/>
+                      <path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                    </svg>
+                    <input type="text" class="soeteck-country-select__search" data-country-search placeholder={getUITranslation(lang, 'common.searchCountries')} autocomplete="off">
+                  </div>
+                  <div class="soeteck-country-select__list" data-country-list>
+                    {COUNTRIES.map((c, i) => (
+                      <button type="button" class="soeteck-country-select__option" role="option" data-country-value={c.code} data-country-name={c.name} data-index={i}>
+                        <span class="soeteck-country-select__flag"><img src={c.flagUrl} alt="" width="20" height="15" loading="lazy"></span>
+                        <span class="soeteck-country-select__name">{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <select name="country" data-country-native hidden aria-hidden="true">
+                <option value="">{t('formCountryPlaceholder')}</option>
+                {COUNTRIES.map(c => (
+                  <option value={c.name} data-country-code={c.code}>{c.name}</option>
+                ))}
+              </select>
+            </div>
             <label class="soeteck-inquiry-field">
               <span>{t('formPhone')}</span>
               <input class="soeteck-field" type="tel" name="phone" autocomplete="tel" />
@@ -318,22 +351,33 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
               <span>{t('formMessage')} <em>*</em></span>
               <textarea class="soeteck-field" name="message" rows="6"></textarea>
             </label>
-            <fieldset class="soeteck-inquiry-upload soeteck-inquiry-field--full">
-              <legend>{t('formUploadPrompt')}</legend>
-              <label><input type="radio" name="needs_upload" value="yes" /> {t('formYes')}</label>
-              <label><input type="radio" name="needs_upload" value="no" /> {t('formNo')}</label>
-            </fieldset>
-            <!-- 文件上传区域（与 ContactPage 一致） -->
-            <div class="soeteck-product-inquiry__file" aria-hidden="true" style="display:none;">
-              <span class="soeteck-product-inquiry__file-label">{t('uploadFiles')}</span>
-              <span class="soeteck-product-inquiry__file-control">
-                <button class="soeteck-product-inquiry__file-add" type="button" data-product-file-trigger tabindex="-1">
-                  <span class="soeteck-product-inquiry__file-icon" aria-hidden="true">+</span>
-                  <span class="soeteck-product-inquiry__file-action">{t('addFiles')}</span>
-                </button>
-                <span class="soeteck-product-inquiry__file-name" data-product-file-list>{t('noFilesSelected')}</span>
-              </span>
-              <input type="file" name="file_upload[]" multiple tabindex="-1" />
+            <div class="soeteck-product-inquiry__upload-wrap soeteck-inquiry-field--full">
+              <div class="soeteck-contact-form__upload-switch">
+                <span class="soeteck-contact-form__upload-switch-inner">
+                  <span class="soeteck-contact-form__upload-switch-label">{t('formUploadPrompt')}</span>
+                  <label class="soeteck-contact-form__upload-switch-track" aria-label={t('formUploadPrompt')}>
+                    <input type="checkbox" class="soeteck-contact-form__upload-switch-input" data-upload-toggle role="switch" aria-checked="false" />
+                    <span class="soeteck-contact-form__upload-switch-knob"></span>
+                  </label>
+                </span>
+                <input type="radio" name="needs_upload" value="yes" data-upload-yes hidden />
+                <input type="radio" name="needs_upload" value="no" data-upload-no checked hidden />
+              </div>
+              <!-- 文件上传区域（cities 版：Add + Clear all + 单 chip 移除，复用共享 inquiry-controls 样式） -->
+              <div class="soeteck-product-inquiry__file" aria-hidden="true">
+                <span class="soeteck-product-inquiry__file-label">{t('uploadFiles')}</span>
+                <span class="soeteck-contact-form__file-control">
+                  <span class="soeteck-contact-form__file-actions">
+                    <button class="soeteck-contact-form__file-add" type="button" data-product-file-trigger tabindex="-1">
+                      <span class="soeteck-contact-form__file-icon" aria-hidden="true">+</span>
+                      <span class="soeteck-contact-form__file-action">{t('addFiles')}</span>
+                    </button>
+                    <button type="button" class="soeteck-contact-form__file-clear" data-product-file-clear hidden>{getUITranslation(lang, 'archive.clearAll')}</button>
+                  </span>
+                  <span class="soeteck-contact-form__file-name" data-product-file-list>{t('noFilesSelected')}</span>
+                </span>
+                <input type="file" name="file_upload[]" multiple tabindex="-1" />
+              </div>
             </div>
             <input type="hidden" name="product_id" value={inquiryContext.productId ?? ''} data-inquiry-context="product_id" />
             <input type="hidden" name="product_name" value={inquiryContext.productTitle ?? ''} data-inquiry-context="product_name" />
@@ -351,6 +395,34 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
       </div>
     </section>
   </div>
+
+  {/* ============ RELATED PRODUCTS（全宽 surface 区块，背景样式参考文章 Related Articles） ============ */}
+  {relatedProducts.length > 0 && (
+    <section class="soeteck-product-related" aria-labelledby="product-related-title">
+      <div class="soeteck-product-related__inner">
+        <div class="related products">
+          <p class="soeteck-eyebrow">{t('relatedEyebrow')}</p>
+          <h2 id="product-related-title">{t('related')}</h2>
+          <ul class="products">
+            {relatedProducts.map((p) => {
+              const image = p.featuredImage ?? p.gallery?.[0];
+              return (
+                <li class="product">
+                  <a class="woocommerce-loop-product__link" href={p.path}>
+                    {image ? (
+                      <img src={image.path} alt={image.alt ?? p.title} loading="lazy" decoding="async" />
+                    ) : null}
+                    <span class="woocommerce-loop-product__title">{p.title}</span>
+                  </a>
+                  <a class="button" href={p.path}>{t('viewDetails')}</a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </section>
+  )}
 </div>
 
 <script>

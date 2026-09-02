@@ -1,0 +1,457 @@
+/* DataCenterCoolingPage styles — code-embedded solution page.
+   Reuses shared `soeteck-prefab-*` classes (banner/section/case-card/cta)
+   defined in PrefabContainerPage.css (bundled via PageDispatcher).
+   This file adds the page-specific product/application/service/why/moments sections. */
+
+/* Hero — eyebrow 样式走共享 .soeteck-prefab-banner .soeteck-eyebrow（6.2 hero 档）+ 基类 primary 色 */
+
+.soeteck-dcc__hero-subtitle {
+  max-width: 800px;
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: var(--soeteck-text-lg, clamp(1rem, 1.6vw, 1.2rem));
+  font-weight: 400;
+  line-height: 1.65;
+}
+
+/* Alternate band background for rhythm */
+.soeteck-dcc__section--alt {
+  background: var(--soeteck-surface, #f5f7fa);
+}
+
+/* Product grid (PAC + Fan Wall) */
+.soeteck-dcc__product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-dcc__product-grid--fanwall {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.soeteck-dcc__product-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 8px);
+  overflow: hidden;
+  background: var(--soeteck-white, #fff);
+  transition: transform var(--soeteck-transition-fast, 180ms ease),
+    box-shadow var(--soeteck-transition-fast, 180ms ease),
+    border-color var(--soeteck-transition-fast, 180ms ease);
+}
+
+.soeteck-dcc__product-card:hover {
+  border-color: rgba(26, 133, 229, 0.28);
+  box-shadow: var(--soeteck-shadow-card, 0 18px 45px rgba(15, 23, 42, 0.12));
+  transform: translateY(-2px);
+}
+
+.soeteck-dcc__product-media {
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--soeteck-media-bg, #f3f5f8);
+}
+
+.soeteck-dcc__product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 360ms ease;
+}
+
+.soeteck-dcc__product-card:hover .soeteck-dcc__product-image {
+  transform: scale(1.04);
+}
+
+.soeteck-dcc__product-body {
+  flex: 1;
+  padding: clamp(18px, 2vw, 24px);
+}
+
+.soeteck-dcc__product-name {
+  margin: 0;
+}
+
+/* 产品卡标题 = 链接：默认继承卡片标题色，hover 转品牌蓝（同 case-card 惯例） */
+.soeteck-dcc__product-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.soeteck-dcc__product-name a:hover {
+  color: var(--soeteck-primary);
+}
+
+.soeteck-dcc__product-capacity {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: var(--soeteck-primary-soft, #e8f3ff);
+  color: var(--soeteck-primary-dark, #0067c5);
+  font-size: var(--soeteck-text-sm, 0.875rem);
+  font-weight: var(--soeteck-weight-semibold, 600);
+  line-height: 1.3;
+}
+
+.soeteck-dcc__product-desc {
+  margin: 14px 0 0;
+  color: var(--soeteck-text-soft, #374151);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+/* Applications */
+.soeteck-dcc__applications-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-dcc__application-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--soeteck-border, #d7dce3);
+  border-radius: var(--soeteck-radius, 8px);
+  overflow: hidden;
+  background: var(--soeteck-white, #fff);
+  transition: transform var(--soeteck-transition-fast, 180ms ease),
+    box-shadow var(--soeteck-transition-fast, 180ms ease),
+    border-color var(--soeteck-transition-fast, 180ms ease);
+}
+
+.soeteck-dcc__application-card:hover {
+  border-color: rgba(26, 133, 229, 0.28);
+  box-shadow: var(--soeteck-shadow-card, 0 18px 45px rgba(15, 23, 42, 0.12));
+  transform: translateY(-2px);
+}
+
+.soeteck-dcc__application-media {
+  aspect-ratio: 3 / 2;
+  overflow: hidden;
+  background: var(--soeteck-media-bg, #f3f5f8);
+}
+
+.soeteck-dcc__application-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 360ms ease;
+}
+
+.soeteck-dcc__application-card:hover .soeteck-dcc__application-image {
+  transform: scale(1.04);
+}
+
+.soeteck-dcc__application-body {
+  flex: 1;
+  padding: clamp(18px, 2vw, 22px);
+}
+
+.soeteck-dcc__application-body h3 {
+  margin: 0;
+}
+
+.soeteck-dcc__application-body p {
+  margin: 12px 0 0;
+  color: var(--soeteck-text-soft, #374151);
+  font-size: var(--soeteck-text-sm, 0.875rem);
+  line-height: 1.62;
+}
+
+/* Services */
+.soeteck-dcc__services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--soeteck-card-gap, clamp(20px, 2.4vw, 32px));
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-dcc__service-card {
+  padding: clamp(20px, 2.4vw, 28px);
+  border: 1px solid var(--soeteck-border-soft, #e5e7eb);
+  border-radius: var(--soeteck-radius, 8px);
+  background: var(--soeteck-white, #fff);
+  text-align: center;
+  transition: transform var(--soeteck-transition-fast, 180ms ease),
+    box-shadow var(--soeteck-transition-fast, 180ms ease),
+    border-color var(--soeteck-transition-fast, 180ms ease);
+}
+
+.soeteck-dcc__service-card:hover {
+  border-color: rgba(26, 133, 229, 0.28);
+  box-shadow: var(--soeteck-shadow-card, 0 18px 45px rgba(15, 23, 42, 0.12));
+  transform: translateY(-2px);
+}
+
+.soeteck-dcc__service-card h3 {
+  margin: 0;
+}
+
+.soeteck-dcc__service-card p {
+  margin: 12px 0 0;
+  color: var(--soeteck-text-soft, #374151);
+  font-size: var(--soeteck-text-sm, 0.875rem);
+  line-height: 1.62;
+}
+
+.soeteck-dcc__service-icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  background-color: var(--soeteck-primary-dark, #0067c5);
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.soeteck-dcc__service-icon--factory { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 20h20v-2H2v2Zm2-3h2v-4H4v4Zm4 0h2v-4H8v4Zm4 0h2v-4h-2v4Zm4 0h2v-4h-2v4Zm3-6h-1.5V4L9 7v4H7a1 1 0 0 0-1 1v2h16v-2a1 1 0 0 0-1-1Z'/%3E%3C/svg%3E"); }
+.soeteck-dcc__service-icon--chat { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2Zm-9 9H8V9h3v2Zm5 0h-3V9h3v2Z'/%3E%3C/svg%3E"); }
+.soeteck-dcc__service-icon--pen { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25ZM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82Z'/%3E%3C/svg%3E"); }
+.soeteck-dcc__service-icon--gear { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.49.49 0 0 0-.48-.41h-3.84a.49.49 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87a.48.48 0 0 0 .12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32a.49.49 0 0 0-.12-.61l-2.01-1.58ZM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2Z'/%3E%3C/svg%3E"); }
+.soeteck-dcc__service-icon--check { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2Zm-1.2 14.6-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4-7 7Z'/%3E%3C/svg%3E"); }
+.soeteck-dcc__service-icon--headset { mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 1a9 9 0 0 0-9 9v7a3 3 0 0 0 3 3h3v-8H5v-2a7 7 0 0 1 14 0v2h-4v8h3a3 3 0 0 0 3-3v-7a9 9 0 0 0-9-9Z'/%3E%3C/svg%3E"); }
+
+/* Why Choose Us — dark slate background (matches original #54595f) */
+.soeteck-dcc__why {
+  padding: var(--soeteck-section-y) 0;
+  background: #54595f;
+  color: #fff;
+}
+
+.soeteck-dcc__why-title {
+  margin: 0 0 clamp(28px, 3vw, 40px);
+  color: #fff;
+  font-size: clamp(1.85rem, 3.1vw, 2.5rem);
+  font-weight: 600;
+  line-height: 1.14;
+  text-transform: capitalize;
+}
+
+.soeteck-dcc__why-block {
+  padding: clamp(20px, 2.4vw, 28px) 0;
+}
+
+.soeteck-dcc__why-block + .soeteck-dcc__why-block {
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.soeteck-dcc__why-block-title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.25rem, 2vw, 1.56rem);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.soeteck-dcc__why-block-text {
+  max-width: 980px;
+  margin: 14px 0 0;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: var(--soeteck-text-md, 1rem);
+  line-height: 1.7;
+}
+
+/* Advanced Manufacturing Facility — two-column: copy (left) | factory gallery (right) */
+.soeteck-dcc__why-block--manufacturing {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(24px, 3vw, 40px);
+  align-items: center;
+}
+
+.soeteck-dcc__why-manufacturing-copy {
+  min-width: 0;
+}
+
+/* Factory gallery — horizontal scrolling grid (matches original 150px×200px tiles) */
+.soeteck-dcc__why-factory {
+  display: grid;
+  grid-template-columns: repeat(12, 150px);
+  grid-template-rows: 200px 200px;
+  grid-auto-flow: column;
+  gap: 10px;
+  overflow-x: auto;
+  padding: 0 10px 10px 0;
+  cursor: grab;
+  user-select: none;
+  scrollbar-width: thin;
+  scrollbar-color: #4caf50 #f1f1f1;
+}
+
+.soeteck-dcc__why-factory:active {
+  cursor: grabbing;
+}
+
+.soeteck-dcc__why-factory-tile {
+  background-size: cover;
+  background-position: center;
+  border-radius: var(--soeteck-radius-sm, 6px);
+}
+
+.soeteck-dcc__why-factory-tile:nth-child(1),
+.soeteck-dcc__why-factory-tile:nth-child(2) {
+  grid-column: span 2;
+}
+
+/* Stats — white rounded cards (matches original rgb(255,255,255), radius 15px) */
+.soeteck-dcc__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: clamp(24px, 3vw, 32px);
+}
+
+.soeteck-dcc__stat {
+  flex: 1 1 0;
+  min-width: 140px;
+  padding: 30px 14px 20px;
+  border-radius: 15px;
+  background: #fff;
+  text-align: center;
+}
+
+.soeteck-dcc__stat-value {
+  display: block;
+  color: #296fba;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.soeteck-dcc__stat-value strong {
+  color: #296fba;
+}
+
+.soeteck-dcc__stat-label {
+  display: block;
+  margin-top: 8px;
+  color: #54595f;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Certificates — white cards on dark bg */
+.soeteck-dcc__certs {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: clamp(14px, 1.8vw, 20px);
+  margin-top: clamp(24px, 3vw, 32px);
+}
+
+.soeteck-dcc__cert {
+  margin: 0;
+  text-align: center;
+}
+
+.soeteck-dcc__cert-link {
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--soeteck-radius, 8px);
+  background: #fff;
+}
+
+.soeteck-dcc__cert-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  transition: transform 360ms ease;
+}
+
+.soeteck-dcc__cert-link:hover .soeteck-dcc__cert-image {
+  transform: scale(1.04);
+}
+
+.soeteck-dcc__cert figcaption {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: var(--soeteck-text-xs, 0.75rem);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Moments */
+.soeteck-dcc__moments-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(14px, 1.8vw, 20px);
+  margin-top: clamp(28px, 3vw, 40px);
+}
+
+.soeteck-dcc__moment {
+  display: block;
+  overflow: hidden;
+  border-radius: var(--soeteck-radius, 8px);
+  background: var(--soeteck-media-bg, #f3f5f8);
+}
+
+.soeteck-dcc__moment-image {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 360ms ease;
+}
+
+.soeteck-dcc__moment:hover .soeteck-dcc__moment-image {
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .soeteck-dcc__product-grid,
+  .soeteck-dcc__applications-grid,
+  .soeteck-dcc__services-grid,
+  .soeteck-dcc__moments-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .soeteck-dcc__product-grid--fanwall {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .soeteck-dcc__certs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .soeteck-dcc__why-block--manufacturing {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .soeteck-dcc__product-grid,
+  .soeteck-dcc__product-grid--fanwall,
+  .soeteck-dcc__applications-grid,
+  .soeteck-dcc__services-grid,
+  .soeteck-dcc__moments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .soeteck-dcc__stats {
+    flex-direction: column;
+  }
+
+  .soeteck-dcc__stat {
+    min-width: 0;
+  }
+
+  .soeteck-dcc__certs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .soeteck-dcc__certs {
+    grid-template-columns: 1fr;
+  }
+}

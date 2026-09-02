@@ -174,10 +174,10 @@ export const AICOOLIT_CDU_TABS = [
     description: 'Efficient outdoor heat rejection systems. Our Adiabatic Dry Coolers utilize smart spray assist to maintain high cooling capacity even during peak summer temperatures, while conserving water compared to traditional towers.',
     tags: ['Water Saving', 'Low Noise', 'Smart Controls', 'EC Fan Technology'],
     products: [
-      { image: '/resources/SOETECK-V-Shaped-Integrated-Outdoor-Air-Cooled-Condenser-1.webp', alt: 'SOETECK V-Shaped Outdoor Air Cooled Condenser', title: 'Dry Coolers', url: '' },
+      { image: '/resources/SOETECK-V-Shaped-Integrated-Outdoor-Air-Cooled-Condenser-1.webp', alt: 'SOETECK V-Shaped Outdoor Air Cooled Condenser', title: 'Dry Coolers', url: '/products/thermal-management/heat-rejection/soeteck-v-shaped-integrated-outdoor-air-cooled-condenser/' },
     ],
     contentTitle: 'Dry Coolers & Cooling Towers',
-    contentUrl: '',
+    contentUrl: '/products/thermal-management/heat-rejection/soeteck-v-shaped-integrated-outdoor-air-cooled-condenser/',
   },
 ];
 
@@ -240,3 +240,92 @@ export const AICOOLIT_CTA_OFFERS = [
 ];
 
 export const AICOOLIT_GPU_BADGES = ['NVIDIA HGX', 'INTEL Gaudi', 'AMD Instinct'];
+
+// ─── Page-level template copy (moved out of AICoolitPage.astro hardcode, Batch 3 i18n) ───
+// Strings containing HTML (<br>, <em>, <strong>, &trade;) are rendered via set:html in the template.
+
+export const AICOOLIT_NAV = {
+  ariaLabel: 'Page sections',
+  brandSubtitle: 'Liquid Cooling Data Center',
+};
+
+export const AICOOLIT_HERO = {
+  title: 'Liquid Cooling<br>Data Center',
+  subtitle: 'Delivered <em>Anywhere.</em>',
+  intro: 'Liquid Cooling has been the next-gen thermal management solution for data centers in the AI era. Soeteck <strong>AICoolit&trade;</strong> integrates Direct-to-Chip or Immersion cooling into ISO standard containers, enabling 100kW per rack density. Bypass lengthy construction cycles and get your compute cluster operational in weeks.',
+  ctaModels: 'View Models',
+  ctaWhitepaper: 'Get Whitepaper',
+  badgesLabel: 'Engineering validated for',
+  imgAlt: 'AICoolit Liquid Cooling Data Center Series',
+};
+
+export const AICOOLIT_WHY = {
+  eyebrow: 'The Competitive Edge',
+  title: 'Why Liquid + Container?',
+  lead: 'In the AI boom, traditional infrastructure is the bottleneck. AICoolit fuses "Container Flexibility" with "Liquid Cooling Density," offering a superior third option.',
+};
+
+export const AICOOLIT_MODELS = {
+  eyebrow: 'The Product Lineup',
+  title: 'Choose Your Scale',
+  badges: ['ISO Standard Containers', 'Factory Prefabricated'],
+  downloadSpecs: 'Download {series} Specs',
+};
+
+export const AICOOLIT_COMPONENTS = {
+  eyebrow: 'The Featured Components',
+  title: 'Engineering Core',
+  lead: 'A seamless integration of industrial ruggedness and microscopic precision. Designed as a unified system, not just a collection of parts.',
+};
+
+export const AICOOLIT_SHELL = {
+  layer1Badge: 'LAYER 01: THE FORTRESS',
+  layer1Title: 'Industrial-Grade ISO Shell',
+  layer1Desc: 'The container is not just a box; it\'s the primary defense line. We re-engineer standard ISO shipping containers with reinforced steel, creating a hermetically sealed environment that protects high-value compute assets from extreme external conditions.',
+  layer1ImgAlt: 'Container data center',
+  divider: 'INSIDE THE SHELL',
+  layer2Badge: 'LAYER 02: THE INTERNAL SYSTEM',
+  layer2Title: 'Precision Liquid Loop',
+  layer2Desc: 'Controlling the manufacturing of CDUs, Manifolds, and Tanks in-house, <strong>AICoolit&trade;</strong> series guarantee seamless compatibility and supply chain security for your critical infrastructure.',
+  tabsAriaLabel: 'Component details',
+};
+
+export const AICOOLIT_TRUST_HEAD = {
+  ariaLabel: 'Certifications and standards',
+  heading: 'Trusted by Global Leaders & Standards',
+};
+
+export const AICOOLIT_SUPPLY_HEAD = {
+  eyebrow: 'Supply Chain Security',
+  title: 'Built for Scale.<br />Delivered Globally.',
+  lead: 'In the AI race, supply chain certainty is everything. SOETECK owns the entire manufacturing process—from sheet metal fabrication to precision liquid loop assembly. We guarantee capacity when you need it most.',
+  imgAlt: 'SOETECK factory production line',
+};
+
+export const AICOOLIT_FAQ_HEAD = {
+  eyebrow: 'Common Questions',
+  title: 'Expert Answers',
+  lead: 'Everything you need to know about deploying liquid-cooled modular data centers.',
+};
+
+export const AICOOLIT_CTA = {
+  title: 'Start Your AI Journey Today',
+  lead: 'Don\'t let infrastructure be your bottleneck. Configure your liquid-cooled data center and get a preliminary engineering layout within 24 hours.',
+};
+
+export const AICOOLIT_FORM = {
+  title: 'Request A Quote',
+  nameLabel: 'Your Name:',
+  namePlaceholder: 'Your name',
+  emailLabel: 'Email:',
+  emailPlaceholder: 'your@email.com',
+  companyLabel: 'Company:',
+  companyPlaceholder: 'Company name',
+  phoneLabel: 'Phone:',
+  phonePlaceholder: 'Phone / WhatsApp',
+  subjectLabel: 'Your Subject:',
+  subjectPlaceholder: 'e.g., AICoolit Series I Quote Request',
+  messageLabel: 'Your Message:',
+  messagePlaceholder: 'Tell us about your project requirements...',
+  submit: 'Submit',
+};

@@ -1,7 +1,10 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import ManageOptionsPanel from '@/components/ManageOptionsPanel.astro';
+import { fetchGlobalConfig } from '@/lib/content-api';
 import { getUITranslation } from '@/lib/translations';
 import type { AdaptedPage } from '@/lib/page-adapter';
+import type { ConsentConfig } from '@/lib/content-api';
 
 interface Props {
   page: AdaptedPage;
@@ -10,11 +13,28 @@ interface Props {
 
 const { page, lang = 'en' } = Astro.props;
 const t = (key: string): string => getUITranslation(lang, key);
-const contentHtml = page.source.page?.contentHtml ?? '';
+const rawContentHtml = page.source.page?.contentHtml ?? '';
 const modified = page.source.page?.modified ?? null;
 const localeMap: Record<string, string> = { en: 'en-US', zh: 'zh-CN', ru: 'ru-RU', pt: 'pt-BR', es: 'es-ES' };
 const dateLocale = localeMap[lang] ?? 'en-US';
 const displayDate = modified ? new Date(modified).toLocaleDateString(dateLocale, { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+
+// 内容驱动组件挂载：作者在正文 Custom-HTML 块放 <div class="soeteck-consent-settings"></div>
+// → 在挂载点位置渲染可交互的 ManageOptionsPanel（行为与底部 CookieConsent 同源）
+const WRAPPER = /<div\s+class="soeteck-consent-settings"[^>]*><\/div>/i;
+const m = rawContentHtml.match(WRAPPER);
+let contentHtml = rawContentHtml;
+let partA = '';
+let partB = '';
+let consentCfg: ConsentConfig | undefined;
+if (m) {
+  const idx = m.index ?? 0;
+  partA = rawContentHtml.slice(0, idx);
+  partB = rawContentHtml.slice(idx + m[0].length);
+  contentHtml = '';
+  const gc = await fetchGlobalConfig(lang);
+  consentCfg = gc.consent;
+}
 ---
 
 <div class="soeteck-simple-page">
@@ -28,13 +48,19 @@ const displayDate = modified ? new Date(modified).toLocaleDateString(dateLocale,
     </div>
   </div>
 
-  <div class="soeteck-container soeteck-simple-page__body">
-    {contentHtml ? (
+  <article class="soeteck-container soeteck-simple-page__body">
+    {m ? (
+      <div class="entry-content soeteck-simple-page__content">
+        <div set:html={partA}></div>
+        <ManageOptionsPanel consent={consentCfg} lang={lang} client:load />
+        <div set:html={partB}></div>
+      </div>
+    ) : contentHtml ? (
       <div class="entry-content soeteck-simple-page__content" set:html={contentHtml}></div>
     ) : (
-      <p class="soeteck-simple-page__empty">No content available.</p>
+      <p class="soeteck-simple-page__empty">{t('common.noContent')}</p>
     )}
-  </div>
+  </article>
 </div>
 
 <style>

@@ -186,7 +186,7 @@
 
 /* ── Responsive ────────────────────────────────────────────────────────────── */
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .soeteck-gallery-slider__nav {
     width: 36px;
     height: 36px;

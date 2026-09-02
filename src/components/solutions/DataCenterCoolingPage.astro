@@ -1,0 +1,246 @@
+---
+import type { AdaptedPage } from '@/lib/page-adapter';
+import Breadcrumbs from '@/components/Breadcrumbs.astro';
+import * as C_EN from './data-center-cooling-content';
+import * as C_ZH from './data-center-cooling-content-zh';
+import * as C_RU from './data-center-cooling-content-ru';
+import * as C_PT from './data-center-cooling-content-pt';
+import * as C_ES from './data-center-cooling-content-es';
+import AboutCta from '@/components/about/AboutCta.astro';
+import './DataCenterCoolingPage.css';
+
+export interface Props {
+  page: AdaptedPage;
+  lang: string;
+}
+
+const { page, lang } = Astro.props;
+// 正文内容按语言选择（translate-code-embedded 模式，Batch 3 namespace 接线）
+const C_LANG_MAP: Record<string, typeof C_EN> = { en: C_EN, zh: C_ZH, ru: C_RU, pt: C_PT, es: C_ES };
+const C = C_LANG_MAP[lang] ?? C_EN;
+const hero = C.DCC_HERO;
+// CTA 转化点：真实询价/联系页（对齐 Header/Footer 的 globalConfig.urls.contact
+// 当前解析为 /en/contact-us/；`/contact/` 在 dev 实测 404，勿回退旧路径）
+---
+
+<div class="soeteck-prefab-solution soeteck-dcc" data-dcc-solution>
+  <!-- Hero Banner -->
+  <section class="soeteck-prefab-banner" aria-labelledby="dcc-hero-title">
+    <img class="soeteck-prefab-banner__image" src={hero.bannerImage} alt={hero.bannerAlt} width="1920" height="600" loading="eager" fetchpriority="high" />
+    <div class="soeteck-prefab-banner__overlay" aria-hidden="true"></div>
+    <div class="soeteck-container soeteck-prefab-banner__inner">
+      <Breadcrumbs items={page.breadcrumbs} class="soeteck-breadcrumbs--hero" lang={lang} />
+      <div class="soeteck-prefab-banner__body">
+        <p class="soeteck-eyebrow">{hero.eyebrow}</p>
+        <h1 id="dcc-hero-title" class="soeteck-page-title soeteck-prefab-banner__title">{hero.title}</h1>
+        <p class="soeteck-dcc__hero-subtitle">{hero.subtitle}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Precision Air Conditioners -->
+  <section class="soeteck-prefab-section" aria-labelledby="dcc-pac-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-pac-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_INTRO.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_SECTION_INTRO.subtitle}</p>
+      <div class="soeteck-dcc__product-grid">
+        {C.DCC_PAC_PRODUCTS.map((product) => (
+          <article class="soeteck-dcc__product-card">
+            <a class="soeteck-dcc__product-media" href={`/${lang}${product.link}`} aria-label={product.name}>
+              <img class="soeteck-dcc__product-image" src={product.image} alt={product.name} width="480" height="360" loading="lazy" />
+            </a>
+            <div class="soeteck-dcc__product-body">
+              <h3 class="soeteck-card-title soeteck-dcc__product-name"><a href={`/${lang}${product.link}`}>{product.name}</a></h3>
+              <p class="soeteck-dcc__product-capacity">{product.capacity}</p>
+              <p class="soeteck-dcc__product-desc">{product.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Fan Wall -->
+  <section class="soeteck-prefab-section soeteck-dcc__section--alt" aria-labelledby="dcc-fanwall-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-fanwall-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_FANWALL.title}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_SECTION_FANWALL.subtitle}</p>
+      <div class="soeteck-dcc__product-grid soeteck-dcc__product-grid--fanwall">
+        {C.DCC_FANWALL_PRODUCTS.map((product) => (
+          <article class="soeteck-dcc__product-card">
+            <a class="soeteck-dcc__product-media" href={`/${lang}${product.link}`} aria-label={product.name}>
+              <img class="soeteck-dcc__product-image" src={product.image} alt={product.name} width="480" height="360" loading="lazy" />
+            </a>
+            <div class="soeteck-dcc__product-body">
+              <h3 class="soeteck-card-title soeteck-dcc__product-name"><a href={`/${lang}${product.link}`}>{product.name}</a></h3>
+              <p class="soeteck-dcc__product-capacity">{product.capacity}</p>
+              <p class="soeteck-dcc__product-desc">{product.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Applications -->
+  <section class="soeteck-prefab-section" aria-labelledby="dcc-applications-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-applications-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_HEADINGS.applications}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_APPLICATIONS_INTRO}</p>
+      <div class="soeteck-dcc__applications-grid">
+        {C.DCC_APPLICATIONS.map((app) => (
+          <article class="soeteck-dcc__application-card">
+            <div class="soeteck-dcc__application-media">
+              <img class="soeteck-dcc__application-image" src={app.image} alt={app.title} width="480" height="320" loading="lazy" />
+            </div>
+            <div class="soeteck-dcc__application-body">
+              <h3 class="soeteck-card-title">{app.title}</h3>
+              <p>{app.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="soeteck-prefab-section soeteck-dcc__section--alt" aria-labelledby="dcc-services-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-services-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_HEADINGS.services}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_SERVICES_INTRO}</p>
+      <div class="soeteck-dcc__services-grid">
+        {C.DCC_SERVICES.map((service) => (
+          <article class="soeteck-dcc__service-card">
+            <span class={`soeteck-dcc__service-icon soeteck-dcc__service-icon--${service.icon}`} aria-hidden="true"></span>
+            <h3 class="soeteck-card-title">{service.title}</h3>
+            <p>{service.description}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Us -->
+  <section class="soeteck-dcc__why" aria-labelledby="dcc-why-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-why-title" class="soeteck-dcc__why-title">{C.DCC_WHY.title}</h2>
+
+      <!-- Advanced Manufacturing Facility (two-column: text+stats | factory gallery) -->
+      <article class="soeteck-dcc__why-block soeteck-dcc__why-block--manufacturing">
+        <div class="soeteck-dcc__why-manufacturing-copy">
+          <h3 class="soeteck-dcc__why-block-title">{C.DCC_WHY.manufacturing.title}</h3>
+          <p class="soeteck-dcc__why-block-text">{C.DCC_WHY.manufacturing.description}</p>
+          <div class="soeteck-dcc__stats" aria-label={C.DCC_WHY.manufacturing.statsAria}>
+            {C.DCC_WHY.manufacturing.stats.map((stat) => (
+              <div class="soeteck-dcc__stat">
+                <span class="soeteck-dcc__stat-value"><strong>{stat.value}</strong>{stat.suffix}</span>
+                <span class="soeteck-dcc__stat-label">{stat.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div class="soeteck-dcc__why-factory" data-dcc-factory>
+          {C.DCC_WHY.manufacturing.factoryImages.map((img) => (
+            <div class="soeteck-dcc__why-factory-tile" style={{ backgroundImage: `url(${img})` }} role="img" aria-label={C.DCC_WHY.manufacturing.factoryAria}></div>
+          ))}
+        </div>
+      </article>
+
+      <!-- Featured Certificates -->
+      <article class="soeteck-dcc__why-block">
+        <h3 class="soeteck-dcc__why-block-title">{C.DCC_WHY.certificates.title}</h3>
+        <p class="soeteck-dcc__why-block-text">{C.DCC_WHY.certificates.description}</p>
+        <div class="soeteck-dcc__certs" aria-label={C.DCC_WHY.certificates.certsAria}>
+          {C.DCC_WHY.certificates.items.map((cert) => (
+            <figure class="soeteck-dcc__cert">
+              <a class="soeteck-dcc__cert-link" href={cert.image} data-soeteck-lightbox data-lightbox-src={cert.image} data-lightbox-group="dcc-certificates" aria-label={cert.label}>
+                <img class="soeteck-dcc__cert-image" src={cert.image} alt={cert.label} loading="lazy" />
+              </a>
+              <figcaption>{cert.label}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Featured Case Studies -->
+  <section class="soeteck-prefab-section soeteck-dcc__section--alt" aria-labelledby="dcc-cases-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-cases-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_HEADINGS.cases}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_CASES_INTRO}</p>
+      <div class="soeteck-prefab-case-grid">
+        {C.DCC_CLIENT_CASES.map((c) => (
+          <article class="soeteck-prefab-case-card">
+            <a class="soeteck-prefab-case-card__media" href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>
+              <img class="soeteck-prefab-case-card__image" src={c.imgSrc} alt={c.title} width="436" height="240" loading="lazy" />
+            </a>
+            <div class="soeteck-prefab-case-card__body">
+              <h3 class="soeteck-card-title"><a href={`/${lang}/news-and-insights/client-case-studies/${c.slug}/`}>{c.title}</a></h3>
+              <p>{c.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Moments with Clients -->
+  <section class="soeteck-prefab-section" aria-labelledby="dcc-moments-title">
+    <div class="soeteck-container">
+      <h2 id="dcc-moments-title" class="soeteck-section-title soeteck-prefab-section__title">{C.DCC_SECTION_HEADINGS.moments}</h2>
+      <p class="soeteck-prefab-section__subtitle">{C.DCC_MOMENTS_INTRO}</p>
+      <div class="soeteck-dcc__moments-grid">
+        {C.DCC_MOMENTS_IMAGES.map((moment) => (
+          <a class="soeteck-dcc__moment" href={moment.src} data-soeteck-lightbox data-lightbox-src={moment.src} data-lightbox-group="dcc-moments" aria-label={moment.alt}>
+            <img class="soeteck-dcc__moment-image" src={moment.src} alt={moment.alt} loading="lazy" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA（统一模板 ADR-033） -->
+  <AboutCta lang={lang} id="dcc-inquiry" />
+</div>
+
+<script>
+  // Factory gallery horizontal drag-scroll (matches original Bricks behavior)
+  (function () {
+    'use strict';
+    const containers = document.querySelectorAll<HTMLElement>('[data-dcc-factory]');
+    containers.forEach((container) => {
+      let isDragging = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      container.addEventListener('mousedown', (e: MouseEvent) => {
+        isDragging = true;
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+        container.style.cursor = 'grabbing';
+        container.style.userSelect = 'none';
+      });
+
+      container.addEventListener('mousemove', (e: MouseEvent) => {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 2;
+        container.scrollLeft = scrollLeft - walk;
+      });
+
+      container.addEventListener('mouseup', () => {
+        isDragging = false;
+        container.style.cursor = 'grab';
+        container.style.userSelect = '';
+      });
+
+      container.addEventListener('mouseleave', () => {
+        isDragging = false;
+        container.style.cursor = 'grab';
+        container.style.userSelect = '';
+      });
+    });
+  }());
+</script>

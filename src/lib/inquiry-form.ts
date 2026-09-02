@@ -44,22 +44,27 @@ export interface InquiryResult {
 /**
  * 字段验证错误 → 用户友好提示
  */
-const FIELD_ERRORS: Record<string, { en: string; zh: string }> = {
-  name:    { en: 'Please enter your name.', zh: '请输入您的姓名。' },
-  email:   { en: 'Please enter a valid email address.', zh: '请输入有效的邮箱地址。' },
-  company: { en: 'Please enter your company name.', zh: '请输入公司名称。' },
-  country: { en: 'Please select your country.', zh: '请选择您所在的国家。' },
-  phone:   { en: 'Please enter a valid phone number.', zh: '请输入有效的电话号码。' },
-  message: { en: 'Please enter your message.', zh: '请输入留言内容。' },
+type FormLang = 'en' | 'zh' | 'ru' | 'pt' | 'es';
+
+const FIELD_ERRORS: Record<string, Record<FormLang, string>> = {
+  name:    { en: 'Please enter your name.', zh: '请输入您的姓名。', ru: 'Пожалуйста, введите ваше имя.', pt: 'Por favor, informe seu nome.', es: 'Por favor, ingrese su nombre.' },
+  email:   { en: 'Please enter a valid email address.', zh: '请输入有效的邮箱地址。', ru: 'Пожалуйста, введите корректный адрес электронной почты.', pt: 'Por favor, informe um e-mail válido.', es: 'Por favor, ingrese un correo electrónico válido.' },
+  company: { en: 'Please enter your company name.', zh: '请输入公司名称。', ru: 'Пожалуйста, введите название вашей компании.', pt: 'Por favor, informe o nome da sua empresa.', es: 'Por favor, ingrese el nombre de su empresa.' },
+  country: { en: 'Please select your country.', zh: '请选择您所在的国家。', ru: 'Пожалуйста, выберите вашу страну.', pt: 'Por favor, selecione seu país.', es: 'Por favor, seleccione su país.' },
+  phone:   { en: 'Please enter a valid phone number.', zh: '请输入有效的电话号码。', ru: 'Пожалуйста, введите корректный номер телефона.', pt: 'Por favor, informe um telefone válido.', es: 'Por favor, ingrese un número de teléfono válido.' },
+  message: { en: 'Please enter your message.', zh: '请输入留言内容。', ru: 'Пожалуйста, введите текст сообщения.', pt: 'Por favor, escreva sua mensagem.', es: 'Por favor, ingrese su mensaje.' },
 };
 
-const GENERIC = {
+const GENERIC: Record<FormLang, string> = {
   en: 'Submission failed. Please try again or contact us directly.',
   zh: '提交失败，请重试或直接联系我们。',
+  ru: 'Не удалось отправить. Попробуйте ещё раз или свяжитесь с нами напрямую.',
+  pt: 'Falha no envio. Tente novamente ou entre em contato conosco diretamente.',
+  es: 'Error al enviar. Inténtelo de nuevo o contáctenos directamente.',
 };
 
 function friendlyError(errBody: any, lang: string): string {
-  const l = lang === 'zh' ? 'zh' : 'en';
+  const l: FormLang = (['zh', 'ru', 'pt', 'es'] as string[]).includes(lang) ? (lang as FormLang) : 'en';
   const params = errBody?.data?.params;
   const msg: string = errBody?.message || '';
 

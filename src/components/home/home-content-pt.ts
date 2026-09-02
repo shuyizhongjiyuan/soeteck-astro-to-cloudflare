@@ -4,37 +4,84 @@ export const HOME_PT: HomeContent = {
   hero: {
     slides: [
       {
-        image: '/hero/hero-slide-1.png',
-        eyebrow: 'Soluções Turnkey',
-        title: 'Construído em Fábrica.',
-        titleAccent: 'Pronto no Local.',
-        subtitle: 'Data centers em contêineres pré-fabricados completos — energia, refrigeração, supressão de incêndio e monitoramento — tudo integrado, tudo testado em fábrica, entregue como uma única unidade turnkey em semanas, não meses.',
-        ctaPrimary: 'Explorar Soluções',
+        image: '/hero/hero-slide-1.webp',
+
+        eyebrow: 'SOETECK · Fornecedor de Data Centers Prefabricados',
+
+        title: 'Entregue em semanas,',
+
+        titleAccent: 'não em anos.',
+
+        subtitle: 'Data centers contenedorizados, com contenimento de corredores, em fila e de gabinete único da SOETECK — com energia, refrigeração e supressão de incêndio integradas em fábrica e cada unidade pronta para operar no dia da chegada, para clústeres de IA, sites de borda e recuperação de desastres no mundo todo.',
+
+        ctaPrimary: 'Explorar soluções',
+
         ctaPrimaryLink: '/pt/solutions/',
-        ctaSecondary: 'Falar com um Especialista',
+
+        ctaSecondary: 'Falar com um especialista',
+
         ctaSecondaryLink: '/pt/contact-us/',
+
       },
       {
-        image: '/hero/hero-slide-2.png',
-        eyebrow: 'Refrigeração Pronta para IA',
-        title: 'Refrigeração a Líquido para',
-        titleAccent: 'Cargas de Trabalho de IA',
-        subtitle: 'A refrigeração a líquido direto no chip elimina o throttling térmico em densidades de rack de 100kW+. Projetado especificamente para clusters de treinamento com GPU.',
-        ctaPrimary: 'Ver AICoolit',
-        ctaPrimaryLink: '/pt/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/',
-        ctaSecondary: 'Solicitar Orçamento',
+        image: '/hero/hero-slide-2.webp',
+
+        eyebrow: 'Infraestrutura de IA prefabricada de pilha completa',
+
+        title: 'Data centers de IA,',
+
+        titleAccent: 'projetados como um só.',
+
+        subtitle: 'Gabinetes de GPU agora passam de 100kW, e a refrigeração a ar não acompanha. Projetamos energia, refrigeração líquida, racks e monitoramento como um stack de IA integrado, e enviamos prefabricado e turnkey, operante no dia da chegada.',
+
+        ctaPrimary: 'Veja como é construído',
+
+        ctaPrimaryLink: '/pt/solutions/data-center-solutions/ai-data-center/',
+
+        ctaSecondary: 'Solicitar orçamento',
+
         ctaSecondaryLink: '/pt/contact-us/',
+
       },
       {
-        image: '/hero/hero-slide-3.png',
-        eyebrow: 'Entrega Global',
-        title: 'Testado em Fábrica.',
-        titleAccent: 'Plug-and-Play.',
-        subtitle: 'Da nossa fábrica ao seu local em semanas — não meses. Implantado em mais de 50 países, em todos os climas e todos os padrões de rede elétrica.',
-        ctaPrimary: 'Ver Produtos',
-        ctaPrimaryLink: '/pt/products/',
-        ctaSecondary: 'Contactar Vendas',
+        image: '/hero/hero-slide-1.webp',
+
+        eyebrow: 'Parceiro turnkey',
+
+        title: 'Entrega de ponta a ponta,',
+
+        titleAccent: 'responsabilidade única.',
+
+        subtitle: 'Uma equipe cuida de tudo: engenharia, produção fabril, logística global, comissionamento e pós-venda — você recebe as chaves com um único parceiro responsável.',
+
+        ctaPrimary: 'Falar com um especialista',
+
+        ctaPrimaryLink: '/pt/contact-us/',
+
+        ctaSecondary: 'Contactar vendas',
+
         ctaSecondaryLink: '/pt/contact-us/',
+
+      },
+      {
+        image: '/hero/hero-slide-3.webp',
+
+        eyebrow: 'Prova global',
+
+        title: 'Implantado em',
+
+        titleAccent: 'mais de 50 países.',
+
+        subtitle: 'Do calor do deserto ao frio ártico, em cada padrão comum de rede elétrica, nossas unidades mantêm plataformas de treinamento de IA, nós de borda e sites críticos operando 24/7.',
+
+        ctaPrimary: 'Ler casos de sucesso',
+
+        ctaPrimaryLink: '/pt/news-and-insights/client-case-studies/',
+
+        ctaSecondary: 'Contactar vendas',
+
+        ctaSecondaryLink: '/pt/contact-us/',
+
       },
     ],
   },
@@ -57,21 +104,30 @@ export const HOME_PT: HomeContent = {
     title: 'Confiança em Indústrias Críticas',
     text: 'De operadoras de telecomunicações a hiperscaladores de IA, as organizações mais exigentes do mundo dependem da SOETECK para infraestrutura crítica de energia e refrigeração.',
     items: [
-      { icon: 'telecom', title: 'Telecomunicações', image: { path: '/home/industry-telecom.png', alt: 'Infraestrutura de data center de telecomunicações' }, ctaLink: '/pt/solutions/' },
-      { icon: 'finance', title: 'Finanças e Bancos', image: { path: '/home/industry-finance.png', alt: 'Confiabilidade de data center financeiro' }, ctaLink: '/pt/solutions/' },
-      { icon: 'government', title: 'Governo e Setor Público', image: { path: '/home/industry-government.png', alt: 'Infraestrutura segura governamental' }, ctaLink: '/pt/solutions/' },
-      { icon: 'cloud', title: 'Nuvem e Internet', image: { path: '/home/industry-cloud.png', alt: 'Infraestrutura de provedor de serviços em nuvem' }, ctaLink: '/pt/solutions/' },
-      { icon: 'ai', title: 'IA e Grandes Modelos', image: { path: '/home/industry-gpu.png', alt: 'Infraestrutura de computação de IA' }, ctaLink: '/pt/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/' },
-      { icon: 'manufacturing', title: 'Manufatura', image: { path: '/home/industry-manufacturing.png', alt: 'Data center de manufatura industrial' }, ctaLink: '/pt/solutions/' },
-      { icon: 'submarine', title: 'Estações de Pouso de Cabos Submarinos', image: { path: '/home/industry-submarine.png', alt: 'Infraestrutura de estação de pouso de cabo submarino' }, ctaLink: '/pt/solutions/' },
+      { icon: 'telecom', title: 'Telecomunicações', image: { path: '/home/industry-telecom.png', alt: 'Infraestrutura de data center de telecomunicações' }, ctaLink: '/pt/solutions/telecom/' },
+      { icon: 'colocation', title: 'Colocação', image: { path: '/home/industry-colocation.png', alt: 'Infraestrutura de data center de colocation' }, ctaLink: '/pt/solutions/colocation/' },
+      { icon: 'cloud', title: 'Nuvem e Internet', image: { path: '/home/industry-cloud.png', alt: 'Infraestrutura de provedor de serviços em nuvem' }, ctaLink: '/pt/solutions/cloud-hyperscale/' },
+      { icon: 'internet', title: 'Internet', image: { path: '/home/industry-internet.png', alt: 'Infraestrutura de data center de plataformas de internet' }, ctaLink: '/pt/solutions/internet/' },
+      { icon: 'finance', title: 'Finanças e Bancos', image: { path: '/home/industry-finance.png', alt: 'Confiabilidade de data center financeiro' }, ctaLink: '/pt/solutions/finance/' },
+      { icon: 'government', title: 'Governo e Setor Público', image: { path: '/home/industry-government.png', alt: 'Infraestrutura segura governamental' }, ctaLink: '/pt/solutions/government/' },
+      { icon: 'manufacturing', title: 'Manufatura', image: { path: '/home/industry-manufacturing.png', alt: 'Data center de manufatura industrial' }, ctaLink: '/pt/solutions/manufacturing/' },
+      { icon: 'healthcare', title: 'Saúde', image: { path: '/home/industry-healthcare.png', alt: 'Infraestrutura de data center de saúde' }, ctaLink: '/pt/solutions/healthcare/' },
     ],
   },
 
   solutions: {
-    eyebrow: 'Soluções Turnkey',
+    eyebrow: 'Soluções Pré-Fabricadas e Turnkey',
     title: 'Soluções Completas de Data Center',
     text: 'De únicos gabinetes a campus de vários megawatts — pré-engenheirados, testados em fábrica e entregues como unidades integradas completas.',
     cards: [
+      {
+        title: 'Data Center de IA',
+        text: 'Infraestrutura de IA pré-fabricada para cargas de trabalho de GPU. Os módulos de contêiner chegam com refrigeração líquida integrada e energia de alta densidade — testados em fábrica e prontos para computação na chegada.',
+        image: { path: '/resources/ai-data-center/ai-data-center-hero.webp', alt: 'Data center de IA' },
+        features: ['Online em 90–120 dias', 'Até 120 kW/rack', 'PUE tão baixo quanto 1.08'],
+        cta: 'Ver Detalhes',
+        ctaLink: '/pt/solutions/data-center-solutions/ai-data-center/',
+      },
       {
         title: 'Data Center Containerizado',
         text: 'Um data center completo selado dentro de um contêiner ISO de 20ft ou 40ft. Energia, refrigeração, supressão de incêndio e monitoramento — tudo integrado, tudo testado em fábrica.',
@@ -122,7 +178,7 @@ export const HOME_PT: HomeContent = {
           { title: 'Ar-Condicionado de Precisão de Sala', image: { path: '/resources/room-chilled-water-cooling-home-11-768x768.webp', alt: 'Ar-condicionado de precisão montado em sala' }, hoverImage: { path: '/resources/room-chilled-water-cooling-home-3-768x768.webp', alt: 'Refrigeração a água gelada de sala' }, ctaLink: '/pt/products/thermal-management/precision-air-conditioning/room-cooling/' },
           { title: 'Ar-Condicionado de Precisão em Fileira', image: { path: '/resources/Inrow-cooling-split-DX-home-2-768x768.webp', alt: 'Ar-condicionado de precisão em fileira' }, hoverImage: { path: '/resources/Inrow-cooling-split-DX-home-1-768x768.webp', alt: 'Refrigeração em fileira' }, ctaLink: '/pt/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
           { title: 'Ar-Condicionado de Precisão de Rack', image: { path: '/resources/rack-cooling-1.webp', alt: 'Ar-condicionado de precisão de rack' }, hoverImage: { path: '/resources/rack-cooling-4-768x768.webp', alt: 'Refrigeração de rack' }, ctaLink: '/pt/products/thermal-management/precision-air-conditioning/rack-cooling/' },
-          { title: 'Ar-Condicionado de Gabinete Externo', image: { path: '/resources/outdoor-enclosure-cooling-home-2-768x768.webp', alt: 'Ar-condicionado de precisão de gabinete externo' }, hoverImage: { path: '/resources/outdoor-enclosure-cooling-home-1-768x768.webp', alt: 'Refrigeração de gabinete' }, ctaLink: '/pt/products/thermal-management/precision-air-conditioning/telecom-enclosure-air-conditioner/' },
+          { title: 'Ar-Condicionado de Gabinete Externo', image: { path: '/resources/outdoor-enclosure-cooling-home-2-768x768.webp', alt: 'Ar-condicionado de precisão de gabinete externo' }, hoverImage: { path: '/resources/outdoor-enclosure-cooling-home-1-768x768.webp', alt: 'Refrigeração de gabinete' }, ctaLink: '/pt/products/thermal-management/telecom-enclosure-air-conditioner/' },
         ],
       },
       {
@@ -138,17 +194,17 @@ export const HOME_PT: HomeContent = {
   },
 
   services: {
-    eyebrow: 'Entrega End-to-End',
-    title: 'Do Projeto à Comissionamento',
-    text: 'Um parceiro, um contrato, uma equipe. A SOETECK assume toda a entrega — desde o design colaborativo até os testes em fábrica e o comissionamento no local.',
+    eyebrow: 'Nossos serviços',
+    title: 'O que entregamos para você',
+    text: 'Da primeira conversa a anos de operação — a SOETECK é dona do ciclo de vida completo. Isso significa para o seu projeto:',
     image: { path: '/resources/soeteck-factory-1.jpg', alt: 'Fábrica de manufatura SOETECK' },
     steps: [
-      { num: '01', title: 'Projeto', text: 'Engenharia colaborativa com modelagem 3D e simulação térmica CFD.' },
-      { num: '02', title: 'Fabricação', text: 'Produção interna de UPS, refrigeração, PDUs e gabinetes.' },
-      { num: '03', title: 'Integração', text: 'Montagem e configuração em nível de sistema em nossa fábrica.' },
-      { num: '04', title: 'Teste', text: 'Testes em carga total, validação térmica e verificação de failover.' },
-      { num: '05', title: 'Transporte', text: 'Logística global segura com supervisão porta a porta.' },
-      { num: '06', title: 'Comissionamento', text: 'Instalação no local, comissionamento e treinamento dos operadores.' },
+      { num: '01', icon: 'design', title: 'Projeto gratuito', text: 'Conte-nos os requisitos de energia, refrigeração e site — receba gratuitamente uma solução de data center com layout 3D e simulação térmica.' },
+      { num: '02', icon: 'manufacture', title: 'Fabricação própria', text: 'UPS, refrigeração de precisão, distribuição de energia e gabinetes projetados e fabricados em nossa própria fábrica — sem intermediários e com qualidade controlada.' },
+      { num: '03', icon: 'test', title: 'Testes de aceitação', text: 'Cada unidade passa por testes de carga plena antes do envio — você pode testemunhar no local ou por vídeo: validado antes de sair da fábrica.' },
+      { num: '04', icon: 'ship', title: 'Logística e alfândega', text: 'FOB, CIF ou DDP — frete, documentação e desembaraço por nossa conta; entregas em mais de 50 países cobrem todos os padrões de rede.' },
+      { num: '05', icon: 'install', title: 'Instalação e treinamento', text: 'Nossos engenheiros instalam, comissionam no site e treinam sua equipe local — sem terceirização e sem lacunas de responsabilidade.' },
+      { num: '06', icon: 'support', title: 'Pós-venda e peças', text: 'Garantia de 2 anos, suporte 7×24, monitoramento remoto e envio emergencial de peças — um contrato, uma equipe, responsabilidade total.' },
     ],
   },
 
@@ -184,26 +240,98 @@ export const HOME_PT: HomeContent = {
     eyebrow: 'Histórico Global',
     title: 'Confiança Onde o Uptime é Inegociável',
     text: 'Dos desertos do Oriente Médio aos trópicos do Sudeste Asiático, os data centers da SOETECK mantêm a infraestrutura crítica funcionando 24 horas.',
+    ctaAll: 'Ver Todos os Casos de Estudo',
+    projectsAllLink: '/pt/news-and-insights/client-case-studies/',
     cards: [
       {
-        title: 'Recuperação de Desastres da Saudi Telecom',
+        title: 'Saudi Telecom',
         location: 'Riad, Arábia Saudita',
-        metric: '10',
-        metricLabel: 'Semanas para Implantar',
-        text: 'Um data center de recuperação de desastres totalmente containerizado para as operações críticas da Saudi Telecom. Carga de TI de 400kW com redundância N+1.',
-        image: { path: '/resources/prefab-modular-data-center-of-Saudi-Telecom-0.webp', alt: 'Data center de recuperação de desastres da Saudi Telecom' },
-        cta: 'Ver Caso de Estudo',
-        ctaLink: '/pt/case-studies/',
+        metric: '2',
+        metricLabel: 'Data Centers de Contêiner 40ft',
+        text: 'Dois data centers containerizados móveis OLT de 40 pés para a Saudi Telecom: alimentação DC dupla com baterias de reserva e 7 OLTs em cada unidade, para operação ininterrupta.',
+        image: { path: '/resources/prefab-modular-data-center-of-Saudi-Telecom-0.webp', alt: 'Data center containerizado da Saudi Telecom' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/driving-innovation-soeteck-provides-saudi-telecom-with-advanced-mobile-olt-container-data-center-solutions/',
+        testimonial: {
+          quote: 'O cliente expressou satisfação com os resultados, acreditando que o data center containerizado lançou uma base sólida para seu desenvolvimento de longo prazo.',
+          author: 'Saudi Telecom',
+          role: 'Projeto DR, Oriente Médio',
+        },
       },
       {
-        title: 'Rede Regional de Edge',
-        location: 'Sudeste Asiático',
-        metric: '12',
-        metricLabel: 'Locais Implantados',
-        text: 'Data centers micromódulo distribuídos em 12 locais para uma operadora de telecomunicações regional.',
-        image: { path: '/resources/soeteck-racks-and-cabinets.webp', alt: 'Implantação de edge computing no Sudeste Asiático' },
-        cta: 'Ver Caso de Estudo',
-        ctaLink: '/pt/case-studies/',
+        title: 'GRD Qatar',
+        location: 'Catar',
+        metric: '24/7',
+        metricLabel: 'Operação Estável',
+        text: 'Um data center containerizado personalizado para a GRD, mantendo dados críticos estáveis 24/7 em clima de calor e tempestades de areia — apoiando sua transformação digital.',
+        image: { path: '/resources/soeteck-racks-and-cabinets.webp', alt: 'Data center containerizado da GRD Qatar' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/grd-qatar-gets-24-7-stable-data-via-soetecks-custom-containerized-data-center/',
+        testimonial: {
+          quote: 'O data center containerizado foi implantado rapidamente e opera nossas cargas 24/7, mesmo sob calor extremo e tempestades de areia.',
+          author: 'GRD',
+          role: 'Operações, Filial no Catar',
+        },
+      },
+      {
+        title: 'Telecom Fiji',
+        location: 'Fiji',
+        metric: '45',
+        metricLabel: 'kW ACs Anticorrosivos',
+        text: 'Estações costeiras atualizadas com condicionadores de precisão anticorrosivos de 20kW e 45kW, substituindo unidades domésticas no ambiente salino e úmido.',
+        image: { path: '/home/industry-submarine.png', alt: 'Resfriamento de precisão em estação costeira da Telecom Fiji' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/telecom-fiji-enhances-network-stability-with-soetecks-precision-cooling-solutions-featuring-anti-corrosion-design/',
+        testimonial: {
+          quote: 'Os condicionadores anticorrosivos de precisão restauraram o resfriamento estável em nossas estações costeiras — equipamentos que antes falhavam no ar salino.',
+          author: 'Telecom Fiji',
+          role: 'Operações de Rede',
+        },
+      },
+      {
+        title: 'Open DC Malaysia',
+        location: 'Malásia',
+        metric: '100',
+        metricLabel: 'kW Resfriamento Modular',
+        text: 'Dois conjuntos de unidades modulares de resfriamento a ar de 100kW reformam as salas de servidores compactas da Open DC Malaysia — upgrade onde unidades convencionais não cabiam.',
+        image: { path: '/home/industry-gpu.png', alt: 'Retrofit do data center Open DC Malaysia' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/open-dc-malaysia-deploys-modular-100kw-air-cooled-precision-cooling-for-data-center-retrofit/',
+        testimonial: {
+          quote: 'As unidades modulares da SOETECK cabem onde sistemas convencionais não conseguiam, dando às nossas salas reformadas resfriamento confiável de classe 100kW.',
+          author: 'Open DC Malaysia',
+          role: 'Engenharia de Instalações',
+        },
+      },
+      {
+        title: 'WebSat Media',
+        location: 'Singapura',
+        metric: 'N+1',
+        metricLabel: 'Redundância de Resfriamento',
+        text: 'Cinco condicionadores de precisão de 70kW em redundância N+1 mantêm a infraestrutura de satélite e transmissão da WebSat Media online para clientes globais.',
+        image: { path: '/home/scenario-remote.png', alt: 'Resfriamento do data center WebSat Media' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/websat-media-optimizes-data-center-infrastructure-with-soetecks-cooling-solutions/',
+        testimonial: {
+          quote: 'Com redundância N+1 em cinco unidades de precisão, nossas plataformas de satélite e transmissão permanecem online para clientes em todos os continentes.',
+          author: 'WebSat Media',
+          role: 'Infraestrutura de Data Center',
+        },
+      },
+      {
+        title: 'Sinus-Dochi LLC',
+        location: 'Mongólia',
+        metric: 'In-Row',
+        metricLabel: 'Resfriamento de Precisão',
+        text: 'Um sistema de resfriamento de precisão In-Row para uma líder mongol de engenharia HVAC — compressores inverter DC, ventiladores EC e redundância N+1 reduzem o PUE do data center, com controle inteligente levando o resfriamento até a fonte de calor.',
+        image: { path: '/resources/a-project-of-Sinus-Dochi-LLC-2.webp', alt: 'Resfriamento de precisão In-Row Sinus-Dochi LLC' },
+        cta: 'Ler História Completa',
+        ctaLink: '/pt/news-and-insights/client-case-studies/sinus-dochi-llc-reduces-pue-and-enhances-cooling-efficiency-with-soetecks-smart-precision-cooling-system/',
+        testimonial: {
+          quote: 'O sistema inteligente de resfriamento de precisão In-Row reduziu o PUE do nosso data center e manteve a temperatura precisa — eficiência e confiabilidade em uma única solução.',
+          author: 'Sinus-Dochi LLC',
+          role: 'Engenharia HVAC, Mongólia',
+        },
       },
     ],
   },
@@ -240,8 +368,34 @@ export const HOME_PT: HomeContent = {
     text: 'Conte-nos seus requisitos — energia, refrigeração, área, prazo. Vamos projetar a solução ideal e entregá-la turnkey.',
     cards: [
       { icon: 'products', title: 'Consultar Catálogo', text: 'Explore a gama completa de produtos de energia, refrigeração e gabinetes que fabricamos internamente.', cta: 'Ver Produtos', ctaLink: '/pt/products/' },
-      { icon: 'solutions', title: 'Obter Solução Personalizada', text: 'Receba uma recomendação sob medida para sua carga de trabalho, local e requisitos específicos de capacidade.', cta: 'Consultar Especialista', ctaLink: '/pt/contact-us/' },
+      { icon: 'solutions', title: 'Obter Solução Personalizada', text: 'Receba uma recomendação sob medida para sua carga de trabalho, local e requisitos específicos de capacidade.', cta: 'Explorar Soluções', ctaLink: '/pt/solutions/' },
       { icon: 'engineering', title: 'Falar com Engenharia', text: 'Contate diretamente nossa equipe de engenharia para projetos complexos de integração personalizada e design-build.', cta: 'Enviar Consulta', ctaLink: '/pt/contact-us/' },
     ],
   },
+
+  productsIntro: {
+    eyebrow: 'Fabricação Própria',
+    title: 'Energia e Refrigeração, Projetados pela SOETECK',
+    text: 'Sistemas UPS, refrigeração de precisão, distribuição de energia e gabinetes — projetados e fabricados em nossa própria fábrica, para que cada componente atenda às especificações.',
+  },
+
+  transition: {
+    eyebrow: 'A Solução',
+    title: 'Quatro Arquiteturas Turnkey',
+    text: 'Cada data center SOETECK sai de fábrica pronto para o site. De infraestrutura de IA turnkey a implantações containerizadas, micromodulares e modulares em fileira — escolha o modelo ideal para seu local, densidade e cronograma.',
+  },
+
+  newsC: {
+    newsLabel: 'Notícias',
+    newsLink: '/pt/news-and-insights/news-releases/',
+    blogLabel: 'Blogs',
+    blogLink: '/pt/news-and-insights/blogs/',
+    viewAllNews: 'Ver todas as notícias →',
+    viewAllBlogs: 'Ver todos os blogs →',
+    newsEyebrow: 'Últimas notícias',
+    newsTitle: 'Notícias e anúncios da empresa',
+    blogEyebrow: 'Insights de especialistas',
+    blogTitle: 'Blogs técnicos e liderança de pensamento',
+  },
+
 };

@@ -81,18 +81,18 @@
         "es": "Industrias"
       },
       "industryTelecom": {
-        "en": "Telecom & 5G",
-        "zh": "电信与5G",
-        "ru": "Телеком и 5G",
-        "pt": "Telecomunicações e 5G",
-        "es": "Telecomunicaciones y 5G"
+        "en": "Telecom",
+        "zh": "电信",
+        "ru": "Телеком",
+        "pt": "Telecom",
+        "es": "Telecom"
       },
       "industryFinance": {
-        "en": "Finance & Banking",
-        "zh": "金融与银行",
-        "ru": "Финансы и банки",
-        "pt": "Finanças e Bancos",
-        "es": "Finanzas y Banca"
+        "en": "Finance",
+        "zh": "金融",
+        "ru": "Финансы",
+        "pt": "Finanças",
+        "es": "Finanzas"
       },
       "industryGovernment": {
         "en": "Government",
@@ -103,10 +103,38 @@
       },
       "industryColocation": {
         "en": "Colocation",
-        "zh": "托管数据中心",
+        "zh": "数据中心托管",
         "ru": "Колокация",
         "pt": "Colocação",
         "es": "Colocación"
+      },
+      "industryCloudHyperscale": {
+        "en": "Cloud & Hyperscale",
+        "zh": "云与超大规模",
+        "ru": "Облако и гиперскейл",
+        "pt": "Nuvem e Hyperscale",
+        "es": "Nube e Hyperscale"
+      },
+      "industryInternet": {
+        "en": "Internet",
+        "zh": "互联网",
+        "ru": "Интернет",
+        "pt": "Internet",
+        "es": "Internet"
+      },
+      "industryManufacturing": {
+        "en": "Manufacturing",
+        "zh": "制造",
+        "ru": "Производство",
+        "pt": "Manufatura",
+        "es": "Fabricación"
+      },
+      "industryHealthcare": {
+        "en": "Healthcare",
+        "zh": "医疗",
+        "ru": "Здравоохранение",
+        "pt": "Saúde",
+        "es": "Sanidad"
       },
       "customSolution": {
         "en": "Need a custom solution?",
@@ -128,6 +156,13 @@
         "ru": "Изучить решения",
         "pt": "Explorar soluções",
         "es": "Explorar soluciones"
+      },
+      "exploreAidc": {
+        "en": "Explore AIDC",
+        "zh": "探索 AIDC",
+        "ru": "Изучить AIDC",
+        "pt": "Explorar AIDC",
+        "es": "Explorar AIDC"
       }
     },
     "hero": {
@@ -316,6 +351,20 @@
         "ru": "Похожие продукты",
         "pt": "Produtos relacionados",
         "es": "Productos relacionados"
+      },
+      "relatedEyebrow": {
+        "en": "Explore More",
+        "zh": "探索更多",
+        "ru": "Смотреть ещё",
+        "pt": "Explorar mais",
+        "es": "Explorar más"
+      },
+      "getQuotation": {
+        "en": "Get Quotation",
+        "zh": "获取报价",
+        "ru": "Получить предложение",
+        "pt": "Solicitar Cotação",
+        "es": "Solicitar Cotización"
       },
       "salesContact": {
         "en": "Sales Contact",
@@ -874,6 +923,27 @@
         "pt": "Desculpe, mas nada correspondeu aos seus termos de pesquisa. Tente novamente com palavras-chave diferentes.",
         "es": "Lo sentimos, pero no encontramos resultados para su búsqueda. Intente de nuevo con otras palabras clave."
       },
+      "enterKeyword": {
+        "en": "Start typing to search the site",
+        "zh": "输入关键词开始搜索",
+        "ru": "Введите текст для поиска по сайту",
+        "pt": "Digite para pesquisar no site",
+        "es": "Empieza a escribir para buscar en el sitio"
+      },
+      "searchLoadError": {
+        "en": "Search is temporarily unavailable",
+        "zh": "搜索暂时不可用",
+        "ru": "Поиск временно недоступен",
+        "pt": "A busca está temporariamente indisponível",
+        "es": "La búsqueda no está disponible temporalmente"
+      },
+      "searchLoadErrorDesc": {
+        "en": "The search index could not be loaded. Please refresh and try again.",
+        "zh": "无法加载搜索索引，请刷新后重试。",
+        "ru": "Не удалось загрузить индекс поиска. Обновите страницу и попробуйте снова.",
+        "pt": "Não foi possível carregar o índice de busca. Atualize e tente novamente.",
+        "es": "No se pudo cargar el índice de búsqueda. Actualice la página e inténtelo de nuevo."
+      },
       "previous": {
         "en": "Previous",
         "zh": "上一页",
@@ -950,6 +1020,139 @@
         "ru": "Популярные страницы",
         "pt": "Páginas populares",
         "es": "Páginas populares"
+      },
+      "submitting": {
+        "en": "Submitting your inquiry...",
+        "zh": "正在提交您的询盘...",
+        "ru": "Отправляем ваш запрос...",
+        "pt": "Enviando sua consulta...",
+        "es": "Enviando su consulta..."
+      },
+      "submitFailed": {
+        "en": "Submission failed. Please try again or contact us directly.",
+        "zh": "提交失败，请重试或直接联系我们。",
+        "ru": "Не удалось отправить запрос. Попробуйте ещё раз или свяжитесь с нами напрямую.",
+        "pt": "Falha no envio. Tente novamente ou entre em contato conosco diretamente.",
+        "es": "Error al enviar. Inténtelo de nuevo o contáctenos directamente."
+      },
+      "noArticles": {
+        "en": "No articles yet.",
+        "zh": "暂无文章。",
+        "ru": "Статей пока нет.",
+        "pt": "Nenhum artigo ainda.",
+        "es": "Aún no hay artículos."
+      },
+      "testimonialPlaceholder": {
+        "en": "We look forward to helping your team create value — and earning your trust along the way.",
+        "zh": "我们期待助力您的团队创造价值，并赢得您的信任。",
+        "ru": "Мы поможем вашей команде создавать ценность — и завоевывать ваше доверие.",
+        "pt": "Esperamos ajudar sua equipe a gerar valor — e conquistar sua confiança.",
+        "es": "Esperamos ayudar a su equipo a crear valor y ganar su confianza."
+      },
+      "testimonialCta": {
+        "en": "Become Our Next Client →",
+        "zh": "成为我们的下一个客户 →",
+        "ru": "Станьте нашим следующим клиентом →",
+        "pt": "Torne-se nosso próximo cliente →",
+        "es": "Conviértase en nuestro próximo cliente →"
+      },
+      "searchFor": {
+        "en": "Search for:",
+        "zh": "搜索：",
+        "ru": "Поиск:",
+        "pt": "Pesquisar:",
+        "es": "Buscar:"
+      },
+      "articleTags": {
+        "en": "Tags",
+        "zh": "标签",
+        "ru": "Теги",
+        "pt": "Tags",
+        "es": "Etiquetas"
+      },
+      "authorInfo": {
+        "en": "Author information",
+        "zh": "作者信息",
+        "ru": "Информация об авторе",
+        "pt": "Informações do autor",
+        "es": "Información del autor"
+      },
+      "writtenBy": {
+        "en": "Written by",
+        "zh": "作者",
+        "ru": "Автор",
+        "pt": "Escrito por",
+        "es": "Escrito por"
+      },
+      "searchCountries": {
+        "en": "Search countries...",
+        "zh": "搜索国家/地区...",
+        "ru": "Поиск стран...",
+        "pt": "Pesquisar países...",
+        "es": "Buscar países..."
+      },
+      "noContent": {
+        "en": "No content available.",
+        "zh": "暂无内容。",
+        "ru": "Содержимое недоступно.",
+        "pt": "Nenhum conteúdo disponível.",
+        "es": "No hay contenido disponible."
+      },
+      "errorLoadingPage": {
+        "en": "Error loading page",
+        "zh": "页面加载出错",
+        "ru": "Ошибка загрузки страницы",
+        "pt": "Erro ao carregar a página",
+        "es": "Error al cargar la página"
+      },
+      "removeFile": {
+        "en": "Remove {name}",
+        "zh": "移除 {name}",
+        "ru": "Удалить {name}",
+        "pt": "Remover {name}",
+        "es": "Eliminar {name}"
+      },
+      "pocType": {
+        "en": "Type:",
+        "zh": "类型：",
+        "ru": "Тип:",
+        "pt": "Tipo:",
+        "es": "Tipo:"
+      },
+      "pocSku": {
+        "en": "SKU:",
+        "zh": "SKU：",
+        "ru": "Артикул:",
+        "pt": "SKU:",
+        "es": "SKU:"
+      },
+      "pocProductsInCategory": {
+        "en": "{count} products in current WordPress category.",
+        "zh": "当前 WordPress 分类下有 {count} 个产品。",
+        "ru": "{count} товаров в текущей категории WordPress.",
+        "pt": "{count} produtos na categoria WordPress atual.",
+        "es": "{count} productos en la categoría actual de WordPress."
+      },
+      "pocArticlesInCategory": {
+        "en": "{count} articles in current WordPress category.",
+        "zh": "当前 WordPress 分类下有 {count} 篇文章。",
+        "ru": "{count} статей в текущей категории WordPress.",
+        "pt": "{count} artigos na categoria WordPress atual.",
+        "es": "{count} artículos en la categoría actual de WordPress."
+      },
+      "getStarted": {
+        "en": "Get Started",
+        "zh": "开启合作",
+        "ru": "Начните с нами",
+        "pt": "Comece agora",
+        "es": "Comience ahora"
+      },
+      "exploreSolutions": {
+        "en": "Explore Solutions",
+        "zh": "探索解决方案",
+        "ru": "Изучить решения",
+        "pt": "Explorar Soluções",
+        "es": "Explorar Soluciones"
       }
     },
     "keepReading": {
@@ -1031,6 +1234,13 @@
         "ru": "Политика Cookie",
         "pt": "Política de Cookies",
         "es": "Política de Cookies"
+      },
+      "tagline": {
+        "en": "Prefab & Turnkey Data Center Solutions Provider",
+        "zh": "预制化与交钥匙数据中心解决方案提供商",
+        "ru": "Поставщик сборных и комплексных решений для центров обработки данных",
+        "pt": "Provedor de soluções pré-fabricadas e turnkey para data centers",
+        "es": "Proveedor de soluciones prefabricadas y llave en mano para centros de datos"
       }
     },
     "category": {
@@ -1098,7 +1308,7 @@
         "es": "Blog"
       },
       "caseStudies": {
-        "en": "Case Studies",
+        "en": "Client Case Studies",
         "zh": "客户案例",
         "ru": "Кейсы клиентов",
         "pt": "Casos de Clientes",
@@ -1109,72 +1319,100 @@
       "liquidCoolingDC": {
         "en": "Liquid Cooling DC",
         "zh": "液冷数据中心",
-        "ru": "Жидкостное охлаждение ДЦ",
+        "ru": "ЦОД с жидкостным охлаждением",
         "pt": "Data Center com Resfriamento Líquido",
         "es": "Centro de Datos con Enfriamiento Líquido"
       },
       "prefabContainerDC": {
         "en": "Prefab Container DC",
         "zh": "预制集装箱数据中心",
-        "ru": "Контейнерный ДЦ",
-        "pt": "Data Center Prefabricado em Container",
-        "es": "Centro de Datos Prefabricado en Contenedor"
+        "ru": "Контейнерный ЦОД",
+        "pt": "Data Center Modular em Contêiner",
+        "es": "Centro de Datos Modular en Contenedor"
       },
       "cabinetModularDC": {
         "en": "Cabinet Modular DC",
-        "zh": "柜式模块化数据中心",
-        "ru": "Шкафный модульный ДЦ",
+        "zh": "智能机柜",
+        "ru": "Модульный ЦОД в шкафу",
         "pt": "Data Center Modular em Armário",
-        "es": "Centro de Datos Modular en Gabinete"
+        "es": "Centro de Datos Modular en Rack"
       },
       "rowModularDC": {
         "en": "Row Modular DC",
-        "zh": "列式模块化数据中心",
-        "ru": "Рядный модульный ДЦ",
+        "zh": "行级模块化数据中心",
+        "ru": "Рядный модульный ЦОД",
         "pt": "Data Center Modular em Fileira",
-        "es": "Centro de Datos Modular en Fila"
+        "es": "Centro de Datos Modular en Hilera"
       },
       "aisleModularDC": {
         "en": "Aisle Modular DC",
         "zh": "微模块数据中心",
-        "ru": "Проходной модульный ДЦ",
-        "pt": "Data Center Modular em Corredor",
-        "es": "Centro de Datos Modular en Pasillo"
+        "ru": "Микромодульный ЦОД",
+        "pt": "Data Center Micromodular",
+        "es": "Centro de Datos Micromodular"
+      },
+      "aiDataCenter": {
+        "en": "AI Data Center",
+        "zh": "人工智能数据中心",
+        "ru": "ЦОД для ИИ",
+        "pt": "Data Center de IA",
+        "es": "Centro de Datos para IA"
+      },
+      "dataCenterCooling": {
+        "en": "Data Center Cooling",
+        "zh": "数据中心制冷解决方案",
+        "ru": "Решения для охлаждения ЦОД",
+        "pt": "Soluções de Resfriamento para Data Centers",
+        "es": "Soluciones de Enfriamiento para Centros de Datos"
       },
       "liquidCoolingDCDesc": {
-        "en": "Prefabricated AI infrastructure with 100kW+ per rack density. Deploy liquid-cooled compute clusters in weeks, not years.",
-        "zh": "预制化AI基础设施，单机架密度100kW+。将液冷计算集群的部署时间从年缩短到周。",
-        "ru": "Сборная ИИ-инфраструктура с плотностью 100кВт+ на стойку. Развертывание жидкостного охлаждения за недели, а не годы.",
-        "pt": "Infraestrutura de IA pré-fabricada com densidade de 100kW+ por rack. Implante clusters refrigerados a líquido em semanas.",
-        "es": "Infraestructura de IA prefabricada con densidad de 100kW+ por rack. Despliegue clústeres refrigerados por líquido en semanas."
+        "en": "Liquid-cooled AI containers, 100kW+ per rack.",
+        "zh": "液冷AI集装箱，单架100kW+。",
+        "ru": "Жидкостное охлаждение для ИИ, 100кВт+ на стойку.",
+        "pt": "Contêineres refrigerados a líquido para IA, 100kW+ por rack.",
+        "es": "Contenedores refrigerados por líquido para IA, 100kW+ por rack."
       },
       "prefabContainerDCDesc": {
-        "en": "Modular, scalable containerized data centers for rapid deployment. Ideal for edge, emergency, and remote operations.",
-        "zh": "模块化、可扩展的集装箱数据中心，实现快速部署。适用于边缘计算、应急和远程作业。",
-        "ru": "Модульные масштабируемые контейнерные ЦОД для быстрого развертывания. Идеально для периферии, ЧС и удаленных объектов.",
-        "pt": "Data centers containerizados modulares e escaláveis para implantação rápida. Ideal para edge computing, emergências e operações remotas.",
-        "es": "Centros de datos modularizados y escalables para despliegue rápido. Ideal para edge computing, emergencias y operaciones remotas."
+        "en": "Factory-built, ISO-shipped container data centers.",
+        "zh": "工厂预制、ISO集装箱数据中心。",
+        "ru": "Сборные контейнерные ЦОД с ISO-доставкой.",
+        "pt": "Data centers em contêiner pré-fabricados, enviados via ISO.",
+        "es": "Centros de datos en contenedor prefabricados, con envío ISO."
       },
       "cabinetModularDCDesc": {
-        "en": "All-in-one modular data center in a cabinet footprint. Pre-configured power, cooling, and IT for small to mid-scale deployments.",
-        "zh": "柜式一体化模块化数据中心。预配置电源、冷却和IT设备，适合中小规模部署。",
-        "ru": "Моноблочный модульный ЦОД в форм-факторе шкафа. Предварительно настроенное питание, охлаждение и ИТ-оборудование.",
-        "pt": "Data center modular tudo-em-um em um gabinete. Energia, refrigeração e TI pré-configurados para implantações de pequeno a médio porte.",
-        "es": "Centro de datos modular todo-en-uno en un gabinete. Energía, refrigeración y TI preconfigurados para despliegues de pequeña y mediana escala."
+        "en": "All-in-one cabinet-scale modular data center.",
+        "zh": "柜式一体化模块化数据中心。",
+        "ru": "Моноблочный модульный ЦОД в шкафу.",
+        "pt": "Data center modular tudo-em-um em gabinete.",
+        "es": "Centro de datos modular todo-en-uno en gabinete."
       },
       "rowModularDCDesc": {
-        "en": "Row-level modular data center delivering flexible capacity. Scale cooling and power incrementally as your IT load grows.",
-        "zh": "列级模块化数据中心，提供弹性容量。随IT负载增长逐步扩展冷却和供电能力。",
-        "ru": "Рядный модульный ЦОД с гибкой емкостью. Масштабируйте охлаждение и питание по мере роста ИТ-нагрузки.",
-        "pt": "Data center modular em fileira com capacidade flexível. Escale refrigeração e energia conforme sua carga de TI cresce.",
-        "es": "Centro de datos modular en fila con capacidad flexible. Escale refrigeración y energía a medida que crece su carga de TI."
+        "en": "Scalable row-level modular data center.",
+        "zh": "可扩展列式模块化数据中心。",
+        "ru": "Масштабируемый рядный модульный ЦОД.",
+        "pt": "Data center modular em fileira, escalável.",
+        "es": "Centro de datos modular en fila, escalable."
       },
       "aisleModularDCDesc": {
-        "en": "Micro-modular data center for high-density edge deployments. Maximize compute per square meter with integrated infrastructure.",
-        "zh": "微模块数据中心，适用于高密度边缘部署。集成基础设施，最大化每平方米算力。",
-        "ru": "Микро-модульный ЦОД для высокоплотных периферийных развертываний. Максимум вычислений на кв.м. с интегрированной инфраструктурой.",
-        "pt": "Data center micro-modular para implantações de borda de alta densidade. Maximize a computação por metro quadrado com infraestrutura integrada.",
-        "es": "Centro de datos micro-modular para despliegues de borde de alta densidad. Maximice la computación por metro cuadrado con infraestructura integrada."
+        "en": "High-density micro-modular data center.",
+        "zh": "高密度微模块数据中心。",
+        "ru": "Высокоплотный микро-модульный ЦОД.",
+        "pt": "Data center micro-modular de alta densidade.",
+        "es": "Centro de datos micro-modular de alta densidad."
+      },
+      "aiDataCenterDesc": {
+        "en": "Ready-to-deploy, liquid-cooled AI infrastructure — 120 days, worldwide.",
+        "zh": "即装即用、液冷的 AI 基础设施 — 120 天、全球交付。",
+        "ru": "ИИ-инфраструктура с жидкостным охлаждением — запуск за 120 дней, по всему миру.",
+        "pt": "Infraestrutura de IA refrigerada a líquido, pronta para implantar — 120 dias, em todo o mundo.",
+        "es": "Infraestructura de IA refrigerada por líquido, lista para desplegar — 120 días en todo el mundo."
+      },
+      "dataCenterCoolingDesc": {
+        "en": "Precision cooling — room, in-row, rack, fan wall.",
+        "zh": "精密空调——机房、行间、机柜、风墙。",
+        "ru": "Прецизионное охлаждение — комнатное, межрядное, стоечное, вентиляторное.",
+        "pt": "Resfriamento de precisão — sala, entre fileiras, rack, fan wall.",
+        "es": "Refrigeración de precisión — sala, entre filas, rack, muro de ventiladores."
       }
     },
     "products": {
@@ -1188,26 +1426,26 @@
       "dcPowerSystems": {
         "zh": "直流电源系统",
         "ru": "Системы постоянного тока",
-        "pt": "Sistemas de Energia CC",
-        "es": "Sistemas de Energía CC"
+        "pt": "Sistemas CC",
+        "es": "Sistemas CC"
       },
       "powerDistribution": {
         "zh": "电力分配",
-        "ru": "Распределение электроэнергии",
+        "ru": "Распределение энергии",
         "pt": "Distribuição de Energia",
         "es": "Distribución de Energía"
       },
       "staticTransferSwitches": {
         "zh": "静态转换开关",
         "ru": "Статические переключатели",
-        "pt": "Chaves Estáticas de Transferência",
-        "es": "Conmutadores Estáticos de Transferencia"
+        "pt": "Chaves Estáticas",
+        "es": "Conmutadores Estáticos"
       },
       "buswayAndBusduct": {
         "zh": "母线槽",
         "ru": "Шинопроводы",
-        "pt": "Dutos e Barramentos",
-        "es": "Canalizaciones y Barrajes"
+        "pt": "Barramentos",
+        "es": "Canalizaciones"
       },
       "battery": {
         "zh": "电池",
@@ -1217,85 +1455,85 @@
       },
       "liquidCoolingSolutions": {
         "zh": "液冷解决方案",
-        "ru": "Жидкостное охлаждение",
-        "pt": "Soluções de Resfriamento Líquido",
-        "es": "Soluciones de Enfriamiento Líquido"
+        "ru": "Решения жидкостного охлаждения",
+        "pt": "Soluções de Refrigeração Líquida",
+        "es": "Soluciones de Refrigeración Líquida"
       },
       "precisionAirConditioning": {
         "zh": "精密空调",
-        "ru": "Прецизионные кондиционеры",
-        "pt": "Ar-Condicionado de Precisão",
+        "ru": "Прецизионное кондиционирование",
+        "pt": "Ar Condicionado de Precisão",
         "es": "Aire Acondicionado de Precisión"
       },
       "roomCooling": {
         "zh": "房间级冷却",
-        "ru": "Комнатное охлаждение",
+        "ru": "Охлаждение помещений",
         "pt": "Refrigeração de Sala",
         "es": "Refrigeración de Sala"
       },
       "inRowCooling": {
-        "zh": "列间冷却",
-        "ru": "Межрядное охлаждение",
-        "pt": "Refrigeração entre Fileiras",
-        "es": "Refrigeración entre Filas"
+        "zh": "列间空调",
+        "ru": "Внутрирядовое охлаждение",
+        "pt": "Refrigeração em Linha",
+        "es": "Refrigeración en Fila"
       },
       "rackCooling": {
-        "zh": "机架级冷却",
+        "zh": "机柜空调",
         "ru": "Охлаждение стойки",
         "pt": "Refrigeração de Rack",
         "es": "Refrigeración de Rack"
       },
       "pumpedRefrigerantCooling": {
-        "zh": "泵送制冷剂冷却",
-        "ru": "Охлаждение хладагентом",
-        "pt": "Refrigeração com Fluído Bombgeado",
-        "es": "Refrigeración con Fluido Bombeado"
+        "zh": "泵送制冷剂散热",
+        "ru": "Охлаждение с насосным хладагентом",
+        "pt": "Refrigeração por Refrigerante Bombeado",
+        "es": "Refrigeración por Refrigerante Bombeado"
       },
       "telecomEnclosureAirConditioner": {
         "zh": "通信机柜空调",
         "ru": "Кондиционер для телекоммуникационных шкафов",
-        "pt": "Ar-Condicionado para Gabinetes de Telecomunicações",
-        "es": "Aire Acondicionado para Gabinetes de Telecomunicaciones"
+        "pt": "Ar Condicionado para Gabinete de Telecomunicações",
+        "es": "Aire Acondicionado para Gabinete de Telecomunicaciones"
       },
       "heatRejection": {
         "zh": "散热系统",
-        "ru": "Системы отвода тепла",
+        "ru": "Отвод тепла",
         "pt": "Rejeição de Calor",
         "es": "Rechazo de Calor"
       },
       "evaporativeFreeCooling": {
         "zh": "蒸发式自然冷却",
         "ru": "Испарительное свободное охлаждение",
-        "pt": "Resfriamento Evaporativo Gratuito",
-        "es": "Enfriamiento Evaporativo Gratuito"
+        "pt": "Resfriamento Livre Evaporativo",
+        "es": "Refrigeración Libre Evaporativa"
       },
       "freeCoolingChillers": {
         "zh": "自然冷却冷水机组",
-        "ru": "Чиллеры с свободным охлаждением",
-        "pt": "Chillers com Resfriamento Gratuito",
-        "es": "Chillers con Enfriamiento Gratuito"
+        "ru": "Чиллеры свободного охлаждения",
+        "pt": "Chillers de Resfriamento Livre",
+        "es": "Chillers de Refrigeración Libre"
       },
       "integratedContainments": {
-        "zh": "一体化机柜",
-        "ru": "Интегрированные контейнеры",
-        "pt": "Contêineres Integrados",
-        "es": "Contenedores Integrados"
+        "zh": "集成式密闭通道",
+        "ru": "Интегрированные системы ограничения",
+        "pt": "Contenções Integradas",
+        "es": "Contenciones Integradas"
       },
       "outdoorEnclosures": {
-        "zh": "户外机柜",
-        "ru": "Уличные шкафы",
+        "zh": "室外机柜",
+        "ru": "Наружные корпуса",
         "pt": "Gabinetes Externos",
         "es": "Gabinetes Exteriores"
       },
       "racksAndCabinets": {
-        "zh": "机柜",
+        "zh": "机架与机柜",
         "ru": "Стойки и шкафы",
         "pt": "Racks e Armários",
         "es": "Racks y Gabinetes"
       },
       "monitoringHost": {
         "zh": "监控主机",
-        "ru": "Мониторинговый хост",
+        "ru": "Хост мониторинга",
         "pt": "Host de Monitoramento",
         "es": "Host de Monitoreo"
       },
@@ -1303,25 +1541,48 @@
         "zh": "电池监控系统",
         "ru": "Система мониторинга аккумуляторов",
         "pt": "Sistema de Monitoramento de Bateria",
-        "es": "Sistema de Monitoreo de Baterías"
+        "es": "Sistema de Monitoreo de Batería"
       },
       "environmentalSensor": {
         "zh": "环境传感器",
-        "ru": "Датчик окружающей среды",
-        "pt": "Sensor Ambiental",
-        "es": "Sensor Ambiental"
+        "ru": "Датчики окружающей среды",
+        "pt": "Sensores Ambientais",
+        "es": "Sensores Ambientales"
       },
       "rackAssetManagement": {
         "zh": "机架资产管理",
         "ru": "Управление активами стойки",
-        "pt": "Gestão de Ativos do Rack",
-        "es": "Gestión de Activos del Rack"
+        "pt": "Gestão de Ativos de Rack",
+        "es": "Gestión de Activos de Rack"
       },
       "kvm": {
         "zh": "KVM切换器",
-        "ru": "KVM-коммутатор",
+        "ru": "KVM",
         "pt": "KVM",
         "es": "KVM"
+      }
+    },
+    "testimonials": {
+      "eyebrow": {
+        "en": "Client Feedback",
+        "zh": "客户评价",
+        "ru": "Отзывы клиентов",
+        "pt": "Feedback de clientes",
+        "es": "Opiniones de clientes"
+      },
+      "title": {
+        "en": "What Our Clients Say",
+        "zh": "客户怎么说",
+        "ru": "Что говорят наши клиенты",
+        "pt": "O que nossos clientes dizem",
+        "es": "Lo que dicen nuestros clientes"
+      },
+      "lead": {
+        "en": "Real feedback from the teams we've helped design, build, and deploy — and we look forward to partnering with you on your next project.",
+        "zh": "来自我们帮助设计、建设与部署的团队的真实反馈——期待与您携手下一个项目。",
+        "ru": "Реальные отзывы команд, которым мы помогли спроектировать, построить и развернуть инфраструктуру — и мы ждём партнёрства с вами над вашим следующим проектом.",
+        "pt": "Feedback real das equipes que ajudamos a projetar, construir e implantar — e aguardamos uma parceria com você no seu próximo projeto.",
+        "es": "Comentarios reales de los equipos a los que hemos ayudado a diseñar, construir y desplegar — y esperamos asociarnos con usted en su próximo proyecto."
       }
     }
   },

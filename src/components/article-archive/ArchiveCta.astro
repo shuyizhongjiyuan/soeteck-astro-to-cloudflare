@@ -18,12 +18,32 @@ const { title, buttonLabel, buttonHref, lang = 'en' } = Astro.props;
 
 <style>
   .archive-cta {
-    margin-top: clamp(48px, 6vw, 80px);
+    position: relative;
+    overflow: hidden;
     padding: var(--soeteck-section-y-sm) 0;
-    background: var(--soeteck-text);
+    background: radial-gradient(circle at 78% 18%, rgba(0, 102, 204, 0.28), transparent 34%), linear-gradient(135deg, #061529 0%, #0a2749 56%, #061529 100%);
+    color: #fff;
+  }
+
+  .archive-cta::before {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+
+  /* Desktop: unified CTA min-height (2026-09-02); flex centers content when min-height applies */
+  @media (min-width: 1200px) {
+    .archive-cta {
+      display: flex;
+      align-items: center;
+      min-height: 460px;
+    }
   }
 
   .archive-cta__inner {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -47,7 +67,7 @@ const { title, buttonLabel, buttonHref, lang = 'en' } = Astro.props;
     flex-shrink: 0;
     min-height: 48px;
     padding: 0 28px;
-    border-radius: var(--soeteck-radius-sm);
+    border-radius: var(--soeteck-radius-pill); /* §12: pill */
     background: var(--soeteck-primary);
     color: #fff;
     font-size: var(--soeteck-text-md);
@@ -65,11 +85,14 @@ const { title, buttonLabel, buttonHref, lang = 'en' } = Astro.props;
   }
 
   @media (max-width: 768px) {
+    .archive-cta { padding-block: 56px; }
+    .archive-cta::before { display: none; }
     .archive-cta__inner {
       flex-direction: column;
-      align-items: flex-start;
+      align-items: stretch;
       text-align: left;
+      gap: 24px;
     }
-
+    .archive-cta__button { width: 100%; justify-content: center; }
   }
 </style>

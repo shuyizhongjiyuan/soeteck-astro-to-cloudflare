@@ -4,9 +4,9 @@ export const ROW_HERO_SUBTITLE =
   'SOETECK row modular data center solutions deliver integrated, efficient, and reliable options tailored for modern IT deployments.';
 
 export const ROW_OVERVIEW_PARAGRAPHS = [
-  '<p>In the rapidly evolving digital infrastructure landscape, the demand for efficient and scalable data center solutions is growing due to advancements in <strong>AI</strong>, <strong>IoT</strong>, and high-speed connectivity. SOETECK addresses this need with its <strong>Row Modular Data Center</strong>, designed to overcome traditional data center challenges like limited scalability and lengthy setup times. This modular architecture allows for configurations like building with LEGO, enabling organizations to scale easily by adding or removing components. The plug-and-play design ensures operational readiness in a few hours.</p>',
-  '<p>The <strong>SOETECK Row Modular Data Center</strong> is built for reliability, featuring an intelligent monitoring system that tracks temperature, humidity, and power consumption. Its <strong>IP55</strong>-rated enclosure protects sensitive equipment from dust and moisture, while advanced thermal management and high-efficiency UPS systems achieve a Power Usage Effectiveness (PUE) as low as <strong>1.2</strong>, ensuring significant energy savings.</p>',
-  '<p>Widely used across finance, healthcare, manufacturing, and education, this solution reduces construction costs by <strong>30%</strong>, cuts installation times by <strong>90%</strong>, and optimizes space utilization by up to <strong>80%</strong>. Additionally, SOETECK\'s unified management platform provides seamless remote monitoring and control, enhancing the overall user experience.</p>',
+  '<p>The <strong>SOETECK Row Modular Data Center</strong> scales the way building blocks do: you add or remove components as compute grows, and the plug-and-play setup is ready in a few hours rather than weeks. That makes it a practical answer when capacity needs to move quickly.</p>',
+  '<p>Each row is built for reliability. An IP55 enclosure keeps out dust and moisture, intelligent monitoring tracks temperature, humidity, and power, and high-efficiency UPS plus thermal management hold PUE to 1.2 or lower.</p>',
+  '<p>The design is in service across finance, healthcare, manufacturing, and education. Against a conventional build it lowers construction cost by 30%, shortens installation by 90%, and uses up to 80% less space, with a unified platform handling remote monitoring and control.</p>',
 ];
 
 // Hotspot image for Rack Cooling DC (same as cabinet)
@@ -227,3 +227,90 @@ export const ROW_SCENARIOS = [
 ];
 
 // Reuse client cases from prefab-content.ts
+
+// ===== Batch 3 i18n: page chrome previously hardcoded in RowModularPage.astro =====
+
+// Hero
+export const ROW_HERO_TITLE = 'Row Modular Data Center';
+export const ROW_HERO_IMAGE_ALT = 'Row modular data center';
+export const ROW_VIDEO_ARIA_LABEL = 'Play Row Modular Data Center video';
+// Injected into the client script via data-video-fallback-title (no hardcoded copy in <script>)
+export const ROW_VIDEO_FALLBACK_TITLE = 'Soeteck solution video';
+
+// Overview + CTA row
+export const ROW_OVERVIEW_TITLE = 'Modular Data Centers, Built Block by Block';
+export const ROW_CTA_BROCHURE = 'GET BROCHURE';
+export const ROW_CTA_CONTACT = 'CONTACT US';
+
+// Closer Look
+export const ROW_INSIDE_TITLE = 'Inside the Row Modular Data Center';
+export const ROW_UNITS_TITLE = 'Two Typical Units of RMDC';
+export const ROW_TABLIST_ARIA = 'Select cooling type';
+export const ROW_TAB_RACK = 'Rack-Cooling DC';
+export const ROW_TAB_INROW = 'In-Row-Cooling DC';
+export const ROW_RACK_DIAGRAM_ALT = 'Rack cooling DC diagram';
+export const ROW_INROW_DIAGRAM_ALT = 'In-row cooling DC diagram';
+
+// Lead paragraph with embedded product links. "{LANG}" is replaced with "/<lang>"
+// by the template at render time (keeps the /${lang}/ prefix behavior of the original markup).
+export const ROW_UNITS_LEAD_HTML =
+  'SOETECK row&nbsp;<strong>modular data center</strong>&nbsp;solutions deliver integrated, efficient, and reliable options tailored for modern IT deployments. These solutions can be composed of either single cabinets with&nbsp;<a href="{LANG}/products/thermal-management/in-row-cooling/" target="_blank" rel="noopener"><strong>in-row cooling systems</strong></a>&nbsp;or single cabinets with integrated&nbsp;<a href="{LANG}/products/thermal-management/rack-cooling/" target="_blank" rel="noopener"><strong>rack-mounted cooling units</strong></a>, providing flexibility to accommodate a wide range of applications. Designed to ensure optimal performance and security for critical infrastructure, SOETECK offers tailored configurations to meet diverse customer needs.';
+
+export const ROW_KEY_FEATURES_LABEL = 'Key Features:';
+export const ROW_KEY_FEATURES = [
+  '<strong>Safety and Reliability</strong>: Constructed to high safety standards, our cabinets feature robust fire resistance, water resistance, and advanced security measures, including a multi-faceted access control system for enhanced protection.',
+  '<strong>Rapid Deployment</strong>: The modular architecture facilitates quick setup and installation, enabling businesses to achieve operational readiness within a short timeframe.',
+  '<strong>Flexible Scalability</strong>: Our solutions support easy expansion to meet evolving demands, allowing organizations to scale up seamlessly as their needs grow.',
+  '<strong>High Density and Efficiency</strong>: The design maximizes space utilization for high computing power, supporting configurations of up to 20kW per cabinet while minimizing energy consumption for operational efficiency.',
+  '<strong>Intelligent Management</strong>: Equipped with comprehensive monitoring and management systems, our data centers provide effective oversight and maintenance capabilities, ensuring reliable operations through real-time alerts and fault localization.',
+];
+
+// Build Your Data Center Like LEGO
+export const ROW_LEGO_TITLE = 'Build Your Data Center Like LEGO';
+export const ROW_LEGO_INTRO =
+  'At SOETECK, we believe in the power of modularity. Our row modular data center solutions allow you to build and expand your infrastructure effortlessly, much like assembling with LEGO bricks. Each component can be easily added or modified to fit your evolving needs.';
+
+export const ROW_EVOLVE_RACK_TEXT =
+  'The integrated rack cooling cabinet-based row modular data center provides a compact solution optimized for energy efficiency. With cooling capacities from 3.5 kW to 90 kW, it can handle high-power applications effectively. Featuring advanced security measures and comprehensive monitoring capabilities, this design ensures a secure and resilient operational environment.';
+export const ROW_EVOLVE_INROW_TEXT =
+  'The in-row cooling cabinet-based row modular data center supports high-density deployments with power capacities up to 20 kW per cabinet. Its modular design allows for easy scalability, adapting effortlessly to business growth. With IP55 protection and real-time monitoring, it enhances operational efficiency while minimizing energy consumption.';
+export const ROW_EVOLVE_SUMMARY =
+  'Our row modular data center solutions are designed with advanced modularity and flexibility in mind. Each cabinet incorporates expandable monitoring systems that communicate via bus-level protocols, allowing for seamless integration of additional critical equipment in the future. The modular cooling options offer various capacities, from 3.5 kW to 12 kW for rack cooling and 5 kW to 90 kW for row cooling, ensuring efficient thermal management. Additionally, the power system is modular, ranging from 3 kVA to 200 kVA, so you can easily adapt and expand your power capabilities as needed. With features like IP55 protection against dust and water and a robust design for high-density deployments of up to 20 kW per cabinet, your data center will maintain security, reliability, and efficiency as it grows.';
+
+// Core Infrastructure Modules
+export const ROW_MODULES_TITLE = 'Core Infrastructure Modules';
+export const ROW_MODULES_LEAD =
+  'The SOETECK row modular data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system.';
+
+export const ROW_CRITICAL_POWER_HEADING = 'Critical Power';
+export const ROW_THERMAL_HEADING = 'Thermal Management';
+export const ROW_GALLERY_ARIA = 'gallery';
+
+// Specs table
+export const ROW_SPECS_TITLE = 'Featured Models';
+export const ROW_SPEC_HEADER_MODELS = 'Models';
+export const ROW_PDF_LINK_TEXT = 'SOETECK Row Modular Data Center Solution.pdf';
+
+// Scenarios
+export const ROW_SCENARIOS_TITLE = 'Who Needs a Row Modular Data Center?';
+export const ROW_SCENARIOS_SUBTITLE =
+  'Application Scenarios: An integration of Power, Cooling & Infrastructure Modules Supporting Reliable IT Operations – Where Row Modular DC Delivers Unique Value';
+export const ROW_SCENARIO_DETAILS_ARIA = 'details';
+export const ROW_TAB_BENEFITS = 'Solution Benefits';
+export const ROW_TAB_PAIN = 'Critical Pain Points';
+
+// Client cases section
+export const ROW_CASES_TITLE = 'Row Modular Data Center Case Studies';
+
+// Bottom contact CTA
+export const ROW_CONTACT_EYEBROW = 'Talk to an Engineer';
+export const ROW_CONTACT_TITLE = 'Get in Touch with SOETECK';
+export const ROW_CONTACT_TEXT =
+  'Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.';
+export const ROW_CONTACT_CHECKS = [
+  'Project consultation',
+  'Technical configuration support',
+  'Regional follow-up',
+];
+export const ROW_CONTACT_BUTTON = 'Contact Us';
+export const ROW_CONTACT_BROCHURE = 'Download Brochure';

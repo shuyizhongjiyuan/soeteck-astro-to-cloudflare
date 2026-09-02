@@ -10,7 +10,7 @@ const ES_NEWS_RELEASES_HERO: HeroConfig = {
   description: 'Anuncios oficiales de SOETECK, actualizaciones de productos, noticias de eventos e hitos de la empresa para socios, clientes y medios.',
   panelLabel: 'Actualizaciones oficiales',
   panelItems: ['Anuncios de productos', 'Eventos y exposiciones', 'Hitos de la empresa'],
-  eyebrow: 'Sala de prensa',
+  eyebrow: 'Sala de prensa Soeteck',
 };
 
 const ES_BLOGS_HERO: HeroConfig = {
@@ -18,7 +18,7 @@ const ES_BLOGS_HERO: HeroConfig = {
   description: 'Información técnica, tendencias del sector y perspectivas de expertos sobre energía, refrigeración y soluciones de infraestructura para centros de datos.',
   panelLabel: 'Información técnica',
   panelItems: ['Tendencias del sector', 'Guías técnicas', 'Mejores prácticas'],
-  eyebrow: 'Blog',
+  eyebrow: 'Insights Soeteck',
 };
 
 const ES_CASE_STUDIES_HERO: HeroConfig = {
@@ -26,7 +26,7 @@ const ES_CASE_STUDIES_HERO: HeroConfig = {
   description: 'Implementaciones reales e historias de éxito que muestran cómo las soluciones SOETECK resuelven desafíos complejos de energía y refrigeración.',
   panelLabel: 'Historias de éxito',
   panelItems: ['Proyectos globales', 'Soluciones personalizadas', 'Aspectos destacados de ROI'],
-  eyebrow: 'Casos de Clientes',
+  eyebrow: 'Historias de éxito Soeteck',
 };
 
 const ES_SIDEBAR: SidebarContent = {
@@ -69,12 +69,20 @@ export const ARCHIVE_ES: ArchiveContent = {
     featuredLabel: 'Artículo destacado',
     readMoreLabel: 'Comenzar a leer',
     sourceLabel: 'Equipo Técnico de SOETECK',
+    featuredEyebrow: 'Selección del editor',
+    featuredTitle: 'En el punto de mira',
+    listEyebrow: 'Más perspectivas',
+    listTitle: 'Explora el archivo',
     noArticles: 'No se encontraron artículos en esta categoría.',
   },
   caseStudyLabels: {
     featuredLabel: 'Caso destacado',
     readMoreLabel: 'Ver caso',
     sourceLabel: 'Equipo de Proyectos SOETECK',
+    featuredEyebrow: 'Destacado',
+    featuredTitle: 'Caso de cliente destacado',
+    listEyebrow: 'Todos los casos',
+    listTitle: 'Más implementaciones reales',
     noArticles: 'No se encontraron casos en esta categoría.',
   },
   cta: {

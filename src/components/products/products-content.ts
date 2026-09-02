@@ -14,19 +14,19 @@
 
 export const CATEGORY_IMAGES: Record<string, { path: string; alt: string }> = {
   'critical-power': {
-    path: '/resources/soeteck-critical-power-banner.webp',
+    path: '/resources/soeteck-critical-power.webp',
     alt: 'Soeteck Critical Power solutions — UPS, DC power, power distribution',
   },
   'thermal-management': {
-    path: '/resources/soeteck-thermal-management-banner.webp',
+    path: '/resources/soeteck-thermal-management.webp',
     alt: 'Soeteck Thermal Management solutions — precision cooling, liquid cooling',
   },
   'racks-enclosures': {
-    path: '/resources/soeteck-racks-enclosures-banner.webp',
+    path: '/resources/soeteck-racks-enclosures.webp',
     alt: 'Soeteck Racks & Enclosures — server racks, outdoor enclosures',
   },
   'monitoring-management': {
-    path: '/resources/soeteck-monitoring-management-banner.webp',
+    path: '/resources/soeteck-monitoring-management.webp',
     alt: 'Soeteck Monitoring & Management solutions',
   },
 };
@@ -38,6 +38,8 @@ export const CATEGORY_IMAGES: Record<string, { path: string; alt: string }> = {
 export interface SubcategoryLink {
   name: string;
   path: string;
+  /** 第三层子分类（如 Precision Air Conditioning 下的 room/in-row/rack/pumped cooling） */
+  children?: SubcategoryLink[];
 }
 
 export interface CategoryCard {
@@ -51,10 +53,18 @@ export interface CategoryCard {
   viewAllLabel: string;
 }
 
+export interface ProductsCta {
+  eyebrow: string;
+  title: string;
+  text: string;
+  buttonLabel: string;
+}
+
 export interface ProductsContent {
   heroTitle: string;
   heroDescription: string;
   categories: CategoryCard[];
+  cta: ProductsCta;
 }
 
 // ---------------------------------------------------------------------------
@@ -96,7 +106,16 @@ export const PRODUCTS_EN: ProductsContent = {
       viewAllLabel: 'View All Thermal Management',
       subcategories: [
         { name: 'Liquid Cooling Solutions', path: '/products/thermal-management/liquid-cooling-solutions/' },
-        { name: 'Precision Air Conditioning', path: '/products/thermal-management/precision-air-conditioning/' },
+        {
+          name: 'Precision Air Conditioning',
+          path: '/products/thermal-management/precision-air-conditioning/',
+          children: [
+            { name: 'Room Cooling', path: '/products/thermal-management/precision-air-conditioning/room-cooling/' },
+            { name: 'In-Row Cooling', path: '/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
+            { name: 'Rack Cooling', path: '/products/thermal-management/precision-air-conditioning/rack-cooling/' },
+            { name: 'Pumped Refrigerant Cooling', path: '/products/thermal-management/precision-air-conditioning/pumped-refrigerant-cooling/' },
+          ],
+        },
         { name: 'Telecom Enclosure Air Conditioner', path: '/products/thermal-management/telecom-enclosure-air-conditioner/' },
         { name: 'Heat Rejection', path: '/products/thermal-management/heat-rejection/' },
         { name: 'Free Cooling Chillers', path: '/products/thermal-management/free-cooling-chillers/' },
@@ -115,7 +134,6 @@ export const PRODUCTS_EN: ProductsContent = {
       subcategories: [
         { name: 'Racks & Cabinets', path: '/products/racks-enclosures/racks-cabinets/' },
         { name: 'Outdoor Enclosures', path: '/products/racks-enclosures/outdoor-enclosures/' },
-        { name: 'Integrated Containments', path: '/products/racks-enclosures/integrated-containments/' },
       ],
     },
     {
@@ -136,4 +154,11 @@ export const PRODUCTS_EN: ProductsContent = {
       ],
     },
   ],
+
+  cta: {
+    eyebrow: 'Get in Touch',
+    title: "Let's build your critical infrastructure together",
+    text: 'Talk to a Soeteck specialist about power, cooling, racks, and monitoring solutions for your next project.',
+    buttonLabel: 'Contact Us',
+  },
 };

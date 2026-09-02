@@ -6,9 +6,9 @@ export const CABINET_HERO_SUBTITLE =
 export const CABINET_OVERVIEW_IMAGE = '/resources/cabinet-dc-1-1024x798.webp';
 
 export const CABINET_OVERVIEW_PARAGRAPHS = [
-  '<p>In today\'s data-driven world, the demand for efficient data processing is rapidly growing with the rise of <strong>5G</strong>, <strong>IoT</strong>, and <strong>AI</strong>. To meet this need, SOETECK has developed the <strong>Cabinet Modular Data Center</strong>, which addresses common challenges in traditional data centers, including long setup times and high operational costs. Our modular design allows for flexible configurations ranging from 1 to 10 cabinets, features high seismic resistance, and can be installed in just one hour thanks to its plug-and-play design.</p>',
-  '<p>The SOETECK Cabinet Modular Data Center delivers exceptional value with an intelligent monitoring system that tracks temperature, humidity, and power usage in real time, enhancing safety and reliability. Its fully sealed <strong>IP5X</strong> design effectively separates hot and cold airflows while keeping noise levels below <strong>49 decibels</strong>, creating a comfortable working environment. With high-efficiency UPS systems and variable-speed cooling, it achieves a low Power Usage Effectiveness (PUE) of <strong>1.4</strong> for significant energy savings.</p>',
-  '<p>Widely used in banking, education, healthcare, manufacturing, and government sectors, SOETECK\'s solutions are designed to meet diverse data processing needs. Compared to traditional setups, they can reduce construction costs by <strong>30%</strong>, cut setup times by <strong>90%</strong>, and save up to <strong>80%</strong> in space. Our unified management platform allows for seamless remote monitoring and maintenance, enhancing overall user experience.</p>',
+  '<p>The <strong>SOETECK Cabinet Modular Data Center (CMDC)</strong> packs power, cooling, and monitoring into a single sealed unit. It handles the network demand behind 5G, IoT, and AI without the long setup and high operating cost of a traditional facility, and it scales from one to ten cabinets.</p>',
+  '<p>Each unit is sealed to IP5X, so hot and cold airflow stay separate and noise stays under 49 dB. Intelligent monitoring tracks temperature, humidity, and power in real time, while high-efficiency UPS and variable-speed cooling hold PUE to about 1.4.</p>',
+  '<p>The CMDC is used in banking, education, healthcare, manufacturing, and government. Against a conventional build it cuts construction cost by 30%, setup time by 90%, and space by up to 80%. A unified management platform gives remote monitoring and maintenance from one dashboard, with strong seismic resistance built in.</p>',
 ];
 
 export const CABINET_HOTSPOT_IMAGE = '/resources/cabinet-modular-data-center-2.webp';
@@ -253,5 +253,71 @@ export const CABINET_SCENARIOS = [
     application: 'Cloud data centers, enterprise IT expansion',
   },
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Page shell strings (moved from CabinetModularPage.astro template, 2026-09-02
+// Batch 3 5-language pass). Language files mirror these exports 1:1.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Hero
+export const CABINET_HERO_TITLE = 'Cabinet Modular Data Center';
+export const CABINET_HERO_IMAGE_ALT = 'Cabinet modular data center';
+
+// Overview section
+export const CABINET_OVERVIEW_TITLE = 'Micro Data Centers for 5G, IoT, and AI';
+export const CABINET_OVERVIEW_IMAGE_ALT = 'Cabinet modular data center overview';
+export const CABINET_CTA_BROCHURE = 'GET BROCHURE';
+export const CABINET_CTA_CONTACT = 'CONTACT US';
+
+// "Closer Look" section
+export const CABINET_CLOSER_TITLE = 'Inside the Cabinet Modular Data Center';
+// Titles of the 3 numbered detail blocks (the "1 - / 2 - / 3 - " prefix stays in the template)
+export const CABINET_DETAIL_TITLES = [
+  'Typical Designs of CMDCs',
+  'Featured Models',
+  'Core Infrastructure Modules',
+];
+export const CABINET_HOTSPOT_IMAGE_ALT = 'Typical design of a cabinet modular data center';
+export const CABINET_DESIGN_TEXT =
+  'The cabinet modular data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.';
+export const CABINET_KEY_FEATURES_LABEL = 'Key Features:';
+export const CABINET_ACCORDION_INTEGRATED = 'Integrated Systems:';
+export const CABINET_ACCORDION_ADVANTAGES = 'Key Advantages:';
+export const CABINET_MODULES_LEAD =
+  'The SOETECK cabinet modular data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.';
+export const CABINET_CRITICAL_POWER_TITLE = 'Critical Power';
+export const CABINET_THERMAL_TITLE = 'Thermal Management';
+// Word appended after a product title in the gallery tablist aria-label ("{title} gallery")
+export const CABINET_GALLERY_ARIA = 'gallery';
+
+// Specs table section
+export const CABINET_SPECS_TITLE = 'Featured Models';
+export const CABINET_SPEC_TABLE_MODELS = 'Models';
+export const CABINET_PDF_LINK_TEXT = 'SOETECK Cabinet Data Center Solution.pdf';
+
+// Scenarios section
+export const CABINET_SCENARIOS_TITLE = 'Who Needs a Cabinet Modular Data Center?';
+export const CABINET_SCENARIOS_SUBTITLE =
+  'Application Scenarios: An integration of Power, Cooling & Infrastructure Modules Supporting Reliable IT Operations – Where Cabinet Modular DC Delivers Unique Value';
+// Word appended after a scenario title in the tablist aria-label ("{title} details")
+export const CABINET_SCENARIO_DETAILS_ARIA = 'details';
+export const CABINET_TAB_BENEFITS = 'Solution Benefits';
+export const CABINET_TAB_PAIN = 'Critical Pain Points';
+
+// Client cases section
+export const CABINET_CASES_TITLE = 'Cabinet Modular Data Center Case Studies';
+
+// Bottom contact CTA
+export const CABINET_CONTACT_EYEBROW = 'Talk to an Engineer';
+export const CABINET_CONTACT_TITLE = 'Get in Touch with SOETECK';
+export const CABINET_CONTACT_TEXT =
+  'Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.';
+export const CABINET_CONTACT_CHECKS = [
+  'Project consultation',
+  'Technical configuration support',
+  'Regional follow-up',
+];
+export const CABINET_CONTACT_BUTTON = 'Contact Us';
+export const CABINET_CONTACT_BROCHURE = 'Download Brochure';
 
 // Reuse client cases from prefab-content.ts - import via PREFAB_CLIENT_CASES

@@ -4,6 +4,7 @@ import PageDispatcher from '@/components/PageDispatcher.astro';
 import { fetchPocRoutes, fetchRouteContent } from '@/lib/content-api';
 import { adaptPage } from '@/lib/page-adapter';
 import { buildBreadcrumbSchema } from '@/lib/schema';
+import { getUITranslation } from '@/lib/translations';
 
 const languages = ['en', 'zh', 'ru', 'pt', 'es'];
 
@@ -43,9 +44,9 @@ try {
     routeType: route.routeType,
     routePath: route.path,
     language: lang,
-    title: 'Error loading page',
-    seo: { title: 'Error', canonical: '', robots: 'noindex' },
-    breadcrumbs: [{ label: 'Home', path: `/${lang}/` }],
+    title: getUITranslation(lang, 'common.errorLoadingPage'),
+    seo: { title: getUITranslation(lang, 'common.errorLoadingPage'), canonical: '', robots: 'noindex' },
+    breadcrumbs: [{ label: getUITranslation(lang, 'nav.home'), path: `/${lang}/` }],
     heroImage: null,
     contentHtml: '',
     media: [],

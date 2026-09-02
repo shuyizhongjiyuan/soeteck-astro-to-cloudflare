@@ -33,12 +33,11 @@ const orderedFilters = filterGroupOrder
   .filter((f): f is ContentApiFilterGroup => !!f);
 
 // Translations for product card buttons (must be defined before configJson)
-const salesContactLabel = getUITranslation(lang, 'product.salesContact');
+const getQuotationLabel = getUITranslation(lang, 'product.getQuotation');
 const viewDetailsLabel = getUITranslation(lang, 'product.viewDetails');
 const modelsLabel = getUITranslation(lang, 'product.models');
 const showMoreLabel = getUITranslation(lang, 'product.showMore');
 const showLessLabel = getUITranslation(lang, 'product.showLess');
-const localizedContactUrl = lang === 'en' ? '/en/contact-us/' : `/${lang}/contact-us/`;
 
 // Archive UI translations
 const filtersLabel = getUITranslation(lang, 'archive.filters');
@@ -60,9 +59,8 @@ const configJson = JSON.stringify({
   defaultPerPage,
   allowedPerPage,
   defaultSort,
-  contactUrl: localizedContactUrl,
   labels: {
-    salesContact: salesContactLabel,
+    getQuotation: getQuotationLabel,
     viewDetails: viewDetailsLabel,
     models: modelsLabel,
     showMore: showMoreLabel,
@@ -208,7 +206,7 @@ const configJson = JSON.stringify({
 
           <div class="soeteck-product-toolbar">
             <div class="soeteck-product-toolbar__count">
-              <p id="product-result-count">Showing {products.length} of {products.length} results</p>
+              <p id="product-result-count">{showingAllLabel.replace('{count}', String(products.length))}</p>
             </div>
 
             <div class="soeteck-product-toolbar__controls">
@@ -278,7 +276,7 @@ const configJson = JSON.stringify({
                         )}
                       </div>
                       <div class="soeteck-product-list-card__actions">
-                        <a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href={localizedContactUrl}>{salesContactLabel}</a>
+                        <a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href={`${product.path}#product-inquiry`}>{getQuotationLabel}</a>
                         <a class="soeteck-product-list-card__button" href={product.path} target="_blank" rel="noopener noreferrer">{viewDetailsLabel}</a>
                         {product.type === 'variable' && (
                           <button class="soeteck-product-list-card__button show-variations" type="button" data-target={`variations-${product.id}`} aria-controls={`variations-${product.id}`} aria-expanded="false">{modelsLabel}</button>
@@ -330,9 +328,8 @@ const configJson = JSON.stringify({
   var filterGroups = config.filters || [];
   var perPage = config.defaultPerPage || 5;
   var sort = config.defaultSort || 'default';
-  var contactUrl = config.contactUrl || '/en/contact-us/';
   var labels = config.labels || {};
-  var salesContactLabel = labels.salesContact || 'Sales Contact';
+  var getQuotationLabel = labels.getQuotation || 'Get Quotation';
   var viewDetailsLabel = labels.viewDetails || 'View Details';
   var modelsLabel = labels.models || 'Models';
   var showMoreLabel = labels.showMore || 'Show more';
@@ -397,7 +394,7 @@ const configJson = JSON.stringify({
         slidesHtml + '</span></span>' + dotsHtml;
     }
 
-    var actionsHtml = '<a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href="' + contactUrl + '">' + salesContactLabel + '</a>' +
+    var actionsHtml = '<a class="soeteck-product-list-card__button soeteck-product-list-card__button-primary" href="' + product.path + '#product-inquiry">' + getQuotationLabel + '</a>' +
       '<a class="soeteck-product-list-card__button" href="' + product.path + '" target="_blank" rel="noopener noreferrer">' + viewDetailsLabel + '</a>';
     if (product.type === 'variable') {
       actionsHtml += '<button class="soeteck-product-list-card__button show-variations" type="button" data-target="variations-' + product.id + '" aria-controls="variations-' + product.id + '" aria-expanded="false">' + modelsLabel + '</button>';
@@ -973,7 +970,7 @@ const configJson = JSON.stringify({
   z-index: 1;
   display: flex;
   flex-direction: column;
-  min-height: 480px;
+  min-height: 540px;
 }
 /* :global() 让样式作用到子组件Breadcrumbs内部的类 */
 .soeteck-product-cat-hero__content :global(.soeteck-breadcrumbs--hero) {
@@ -990,10 +987,13 @@ const configJson = JSON.stringify({
   flex-direction: column;
   justify-content: center;
   padding-block: 0;
-  min-height: 480px;
+  min-height: 540px;
 }
 .soeteck-product-cat-hero .soeteck-eyebrow {
-  color: rgba(255, 255, 255, 0.82);
+  /* 6.2 Hero Eyebrow — 深浅背景统一品牌蓝（基类 primary），字号/字距/间距对齐 hero 档 */
+  margin: 0 0 28px;
+  font-size: 17px;
+  letter-spacing: 0.1em;
 }
 
 
@@ -1329,6 +1329,18 @@ body:global(.has-mobile-product-filters-open) {
   font-weight: var(--soeteck-weight-bold);
 }
 
+/* Intro 富文本内链 — link-style-standard 正文链接类别 */
+.soeteck-product-results__intro :global(a) {
+  color: var(--soeteck-primary);
+}
+
+.soeteck-product-results__intro :global(a:hover) {
+  color: var(--soeteck-primary-dark);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
 /* Toolbar */
 .soeteck-product-toolbar {
   display: flex;
@@ -1564,7 +1576,7 @@ body:global(.has-mobile-product-filters-open) {
   color: var(--soeteck-text);
   font-size: var(--soeteck-text-sm);
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
 }
 
 /* Card Actions */
@@ -2081,7 +2093,7 @@ body:global(.has-mobile-product-filters-open) {
   :global(.soeteck-product-list-item__models) {
     padding-inline: 0;
   }
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .soeteck-product-cat-hero__content :global(.soeteck-breadcrumbs--hero) {
       top: 15px;
     }
@@ -2097,7 +2109,7 @@ body:global(.has-mobile-product-filters-open) {
     display: -webkit-box;
     overflow: hidden;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     margin-top: 12px;
   }
 

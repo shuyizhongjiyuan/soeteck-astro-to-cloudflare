@@ -1,5 +1,5 @@
 ---
-import type { AdaptedPage } from '@/lib/page-adapter';
+import type { AdaptedPage, PageImage } from '@/lib/page-adapter';
 import { getUITranslation } from '@/lib/translations';
 import Breadcrumbs from '@/components/Breadcrumbs.astro';
 import { CONTACT_EN, type ContactContent, COUNTRIES } from './contact-content';
@@ -36,19 +36,39 @@ const wechat = contactData.wechat || (page.sections?.company_contact_data?.wecha
 const address = contactData.address || (page.sections?.company_contact_data?.address) || 'Floor 21, Building 8, China Sound Valley, No. 3333, Xiyou Road, Hefei, China';
 const addressUrl = contactData.address_url || (page.sections?.company_contact_data?.address_url) || '';
 const mapEmbed = contactData.map_embed || (page.sections?.company_contact_data?.map_embed) || '';
-const intro = contactData.inquiry_default_intro || (page.sections?.company_contact_data?.inquiry_default_intro) || 'Tell us your industry and interests for tailored solutions and quotes.';
-const submitLabel = contactData.inquiry_submit_label || (page.sections?.company_contact_data?.inquiry_submit_label) || 'Submit';
+// ACF Option 的 inquiry_default_intro / inquiry_submit_label 是单语言字段（恒存英文值），
+// 非英文语言若直接使用会露出英文 → 英文保留 ACF 编辑入口，非英文走多语言文案。
+// intro 文案暂内联（shared.json 正被其他窗口重构，稳定后可迁 common.inquiryIntro）；
+// submitLabel 复用既有 product.formSubmit。
+const inquiryIntroMap: Record<string, string> = {
+  en: 'Tell us your industry and interests for tailored solutions and quotes.',
+  zh: '请告诉我们您的行业与需求，我们将为您提供定制方案与报价。',
+  ru: 'Расскажите о вашей отрасли и задачах — мы подготовим индивидуальное решение и предложение.',
+  pt: 'Conte-nos seu setor e suas necessidades para soluções e cotações personalizadas.',
+  es: 'Cuéntenos su sector y sus necesidades para ofrecerle soluciones y cotizaciones a medida.',
+};
+const intro = lang === 'en'
+  ? (contactData.inquiry_default_intro || (page.sections?.company_contact_data?.inquiry_default_intro) || inquiryIntroMap.en)
+  : (inquiryIntroMap[lang] || inquiryIntroMap.en);
+const submitLabel = lang === 'en'
+  ? (contactData.inquiry_submit_label || (page.sections?.company_contact_data?.inquiry_submit_label) || 'Submit')
+  : t('product.formSubmit');
 const socials = contactData.socials || (page.sections?.company_contact_data?.socials) || {};
+
+// hero 背景图：优先 ACF「Hero Background Image」(page.sections.heroImage)，兜底页面特色图(page.heroImage)。
+// replace 剥掉可能的 cms.soeteck.com 域名，统一成 /resources/ 相对路径（与解决方案页同款，ADR-020）。
+const heroField = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const contactHeroImage: PageImage | null = heroField ? { path: heroField, alt: '' } : page.heroImage;
 ---
 
 <div class="soeteck-contact-page">
     <!-- Hero Section -->
     <section class="soeteck-contact-hero" aria-labelledby="soeteck-contact-title">
-      {page.heroImage && (
+      {contactHeroImage && (
         <img
           class="soeteck-contact-hero__image"
-          src={page.heroImage.path}
-          alt={page.heroImage.alt || ''}
+          src={contactHeroImage.path}
+          alt={contactHeroImage.alt || ''}
           fetchpriority="high"
           loading="eager"
         />
@@ -69,7 +89,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
         <div class="soeteck-contact-main__grid">
           <div class="soeteck-contact-form-card soeteck-card">
             <h2 id="soeteck-contact-form-title" class="soeteck-section-title">{c.formTitle}</h2>
-            <form class="soeteck-contact-form" data-contact-form aria-describedby="soeteck-contact-form-note">
+            <form class="soeteck-contact-form" data-contact-form data-i18n-pending={t('common.submitting')} data-i18n-error={t('common.submitFailed')} data-i18n-nofiles={t('product.noFilesSelected')} data-i18n-remove={t('common.removeFile')} aria-describedby="soeteck-contact-form-note">
               <div class="soeteck-contact-form__grid">
                 <label>
                   <input type="text" name="name" autocomplete="name" placeholder={t('product.formYourName')} aria-label={t('product.formYourName')} />
@@ -91,7 +111,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
                           <circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.3"/>
                           <path d="M10.5 10.5L13 13" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
                         </svg>
-                        <input type="text" class="soeteck-country-select__search" data-country-search placeholder="Search countries..." autocomplete="off">
+                        <input type="text" class="soeteck-country-select__search" data-country-search placeholder={t('common.searchCountries')} autocomplete="off">
                       </div>
                       <div class="soeteck-country-select__list" data-country-list>
                         {countries.map((c, i) => (
@@ -149,7 +169,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
                       <span class="soeteck-contact-form__file-icon" aria-hidden="true">+</span>
                       <span class="soeteck-contact-form__file-action">{t('product.addFiles')}</span>
                     </button>
-                    <button type="button" class="soeteck-contact-form__file-clear" data-file-clear hidden>Clear all</button>
+                    <button type="button" class="soeteck-contact-form__file-clear" data-file-clear hidden>{t('archive.clearAll')}</button>
                   </span>
                   <span class="soeteck-contact-form__file-name" data-file-list>{t('product.noFilesSelected')}</span>
                 </span>
@@ -249,6 +269,9 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
 <script>
   import { submitContactForm } from '@/lib/inquiry-form';
 
+  // 模板经 data-i18n-* 注入的翻译值（SSR 已按语言渲染）
+  const i18n = (document.querySelector<HTMLElement>('[data-contact-form]'))?.dataset ?? {};
+
   document.querySelector<HTMLFormElement>('[data-contact-form]')
     ?.addEventListener('submit', async (event) => {
       event.preventDefault();
@@ -261,13 +284,13 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
       submitBtn!.disabled = true;
       submitBtn!.classList.add('is-loading');
       note!.hidden = false;
-      note!.textContent = 'Submitting your inquiry...';
+      note!.textContent = i18n.i18nPending || 'Submitting your inquiry...';
 
       try {
         await submitContactForm(form, fileInput);
         // submitContactForm handles redirect on success
       } catch (err: any) {
-        note!.textContent = err.message || 'Submission failed. Please try again or contact us directly.';
+        note!.textContent = err.message || i18n.i18nError || 'Submission failed. Please try again or contact us directly.';
         note!.classList.add('soeteck-contact-form__note--error');
         submitBtn!.disabled = false;
         submitBtn!.classList.remove('is-loading');
@@ -320,7 +343,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
   function refreshFileChips(): void {
     const allFiles = Array.from(fileInput?.files || []);
     if (allFiles.length === 0) {
-      if (fileList) fileList.textContent = 'No files selected';
+      if (fileList) fileList.textContent = i18n.i18nNofiles || 'No files selected';
       if (fileClear) fileClear.hidden = true;
       fileSection?.classList.remove('has-file');
       return;
@@ -328,7 +351,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     const chips = allFiles.map((f, i) => {
       return `<span class="soeteck-contact-form__file-chip" data-chip-index="${i}">
         <span class="soeteck-contact-form__file-chip-name">${f.name}</span>
-        <button type="button" class="soeteck-contact-form__file-remove" data-chip-remove="${i}" aria-label="Remove ${f.name}">×</button>
+        <button type="button" class="soeteck-contact-form__file-remove" data-chip-remove="${i}" aria-label="${(i18n.i18nRemove || 'Remove {name}').replace('{name}', f.name)}">×</button>
       </span>`;
     }).join('');
     if (fileList) fileList.innerHTML = chips;
@@ -526,7 +549,8 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
   .soeteck-contact-hero__overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(11, 31, 58, 0.82), rgba(11, 31, 58, 0.4), rgba(11, 31, 58, 0.1));
+    /* hero 遮盖层对齐 products（2026-09-02） */
+    background: linear-gradient(90deg, #0b1f3ad6, #0b1f3a6b, #0b1f3a1f);
   }
 
   .soeteck-contact-hero__content {
@@ -534,7 +558,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     z-index: 1;
     display: flex;
     flex-direction: column;
-    min-height: 480px;
+    min-height: 540px;
   }
   /* Marketing-focused Hero layout: breadcrumbs absolute positioned */
   .soeteck-contact-hero__content .soeteck-breadcrumbs--hero {
@@ -551,7 +575,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     flex-direction: column;
     justify-content: center;
     padding-block: 0;
-    min-height: 480px;
+    min-height: 540px;
   }
 
   .soeteck-contact-hero h1 {
@@ -561,14 +585,16 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     font-size: var(--soeteck-heading-lg);
     font-weight: var(--soeteck-weight-bold);
     line-height: 1.08;
+    white-space: nowrap; /* 桌面端 H1 单行不换行 */
   }
 
   .soeteck-contact-hero p {
     max-width: 720px;
     margin: 22px 0 0;
     color: rgba(255, 255, 255, 0.88);
-    font-size: clamp(1.05rem, 1.4vw, 1.35rem);
-    line-height: 1.6;
+    /* hero lead 对齐 products（--soeteck-text-lg / 1.65，2026-09-02） */
+    font-size: var(--soeteck-text-lg);
+    line-height: 1.65;
   }
 
   .soeteck-contact-main.soeteck-section-light {
@@ -905,7 +931,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
   /* ── Upload switch toggle ── */
   .soeteck-contact-form__upload-switch {
     display: block;
-    margin: 24px 0 24px;
+    margin: 24px 0 0;   /* 上传开关 ↔ 文件区距离与产品询盘统一（下方交给文件区自身 margin） */
     -webkit-user-select: none;
     user-select: none;
   }
@@ -975,7 +1001,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
 
   .soeteck-contact-form__file.is-visible {
     max-height: 320px;
-    margin-top: 24px;
+    margin-top: 10px;   /* 与上传开关的间距统一为约 10px（同产品询盘） */
   }
 
   .soeteck-contact-form__file-label {
@@ -1399,6 +1425,9 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     .soeteck-contact-hero__content {
       min-height: 420px;
     }
+    .soeteck-contact-hero__body {
+      min-height: 420px;
+    }
 
     .soeteck-contact-main__grid {
       grid-template-columns: 1fr;
@@ -1409,7 +1438,7 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .soeteck-contact-hero__content {
       min-height: 360px;
     }
@@ -1419,9 +1448,12 @@ const socials = contactData.socials || (page.sections?.company_contact_data?.soc
     .soeteck-contact-hero__body {
       min-height: 360px;
     }
+    .soeteck-contact-hero h1 {
+      white-space: normal;
+    }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .soeteck-contact-hero__content {
       min-height: 360px;
     }

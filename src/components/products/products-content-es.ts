@@ -11,7 +11,7 @@ export const PRODUCTS_ES: ProductsContent = {
       title: 'Energía Crítica',
       description:
         'Sistemas de alimentación ininterrumpida, sistemas de corriente continua, distribución de energía, conmutadores de transferencia estática, busway y baterías para garantizar la operación continua de equipos críticos.',
-      image: '/resources/soeteck-critical-power-banner.webp',
+      image: '/resources/soeteck-critical-power.webp',
       imageAlt: 'Soluciones Soeteck de Energía Crítica — UPS, corriente continua, distribución',
       viewAllUrl: '/products/critical-power/',
       viewAllLabel: 'Ver toda Energía Crítica',
@@ -29,13 +29,22 @@ export const PRODUCTS_ES: ProductsContent = {
       title: 'Gestión Térmica',
       description:
         'Soluciones de aire acondicionado de precisión, refrigeración líquida, rechazo de calor y enfriamiento gratuito para centros de datos, salas de telecomunicaciones y entornos de computación de alta densidad.',
-      image: '/resources/soeteck-thermal-management-banner.webp',
+      image: '/resources/soeteck-thermal-management.webp',
       imageAlt: 'Soluciones Soeteck de Gestión Térmica — refrigeración de precisión, refrigeración líquida',
       viewAllUrl: '/products/thermal-management/',
       viewAllLabel: 'Ver toda Gestión Térmica',
       subcategories: [
         { name: 'Soluciones de Refrigeración Líquida', path: '/products/thermal-management/liquid-cooling-solutions/' },
-        { name: 'Aire Acondicionado de Precisión', path: '/products/thermal-management/precision-air-conditioning/' },
+        {
+          name: 'Aire Acondicionado de Precisión',
+          path: '/products/thermal-management/precision-air-conditioning/',
+          children: [
+            { name: 'Refrigeración de Sala', path: '/products/thermal-management/precision-air-conditioning/room-cooling/' },
+            { name: 'Refrigeración entre Filas', path: '/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
+            { name: 'Refrigeración de Rack', path: '/products/thermal-management/precision-air-conditioning/rack-cooling/' },
+            { name: 'Refrigeración con Fluido Bombeado', path: '/products/thermal-management/precision-air-conditioning/pumped-refrigerant-cooling/' },
+          ],
+        },
         { name: 'Aire Acondicionado para Telecom', path: '/products/thermal-management/telecom-enclosure-air-conditioner/' },
         { name: 'Rechazo de Calor', path: '/products/thermal-management/heat-rejection/' },
         { name: 'Chillers de Enfriamiento Gratuito', path: '/products/thermal-management/free-cooling-chillers/' },
@@ -47,14 +56,13 @@ export const PRODUCTS_ES: ProductsContent = {
       title: 'Racks y Gabinetes',
       description:
         'Racks de servidor, gabinetes exteriores y soluciones integradas que brindan soporte modular y protección para infraestructura crítica de TI e instalaciones.',
-      image: '/resources/soeteck-racks-enclosures-banner.webp',
+      image: '/resources/soeteck-racks-enclosures.webp',
       imageAlt: 'Soeteck Racks y Gabinetes — racks de servidor, gabinetes exteriores',
       viewAllUrl: '/products/racks-enclosures/',
       viewAllLabel: 'Ver todos Racks y Gabinetes',
       subcategories: [
         { name: 'Racks y Armarios', path: '/products/racks-enclosures/racks-cabinets/' },
         { name: 'Gabinetes Exteriores', path: '/products/racks-enclosures/outdoor-enclosures/' },
-        { name: 'Contenciones Integradas', path: '/products/racks-enclosures/integrated-containments/' },
       ],
     },
     {
@@ -62,7 +70,7 @@ export const PRODUCTS_ES: ProductsContent = {
       title: 'Monitoreo y Gestión',
       description:
         'Monitoreo de infraestructura, controles inteligentes, sensores ambientales y sistemas de gestión centralizados para aumentar la disponibilidad y eficiencia del equipo.',
-      image: '/resources/soeteck-monitoring-management-banner.webp',
+      image: '/resources/soeteck-monitoring-management.webp',
       imageAlt: 'Soluciones Soeteck de Monitoreo y Gestión',
       viewAllUrl: '/products/monitoring-management/',
       viewAllLabel: 'Ver todo Monitoreo y Gestión',
@@ -75,4 +83,11 @@ export const PRODUCTS_ES: ProductsContent = {
       ],
     },
   ],
+
+  cta: {
+    eyebrow: 'Contáctenos',
+    title: 'Construyamos juntos su infraestructura crítica',
+    text: 'Hable con un especialista de Soeteck sobre soluciones de energía, refrigeración, racks y monitoreo para su próximo proyecto.',
+    buttonLabel: 'Contáctenos',
+  },
 };

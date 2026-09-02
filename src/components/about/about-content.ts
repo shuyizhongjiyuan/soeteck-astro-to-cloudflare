@@ -127,8 +127,8 @@ export interface AboutContent {
   ctaEyebrow: string;
   ctaTitle: string;
   ctaText: string;
-  ctaChecks: string[];
-  ctaButton: string;
+  ctaChecks: Array<string | { icon?: string; label: string }>;
+  ctaButtons: Array<{ label: string; href: string }>;
 }
 
 // ---------------------------------------------------------------------------
@@ -249,6 +249,15 @@ export const ABOUT_EN: AboutContent = {
   ctaEyebrow: 'Talk to an Engineer',
   ctaTitle: 'Get in Touch with SOETECK',
   ctaText: 'Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.',
-  ctaChecks: ['Project consultation', 'Technical configuration support', 'Regional follow-up'],
-  ctaButton: 'Request Project Consultation',
+  ctaChecks: [
+    { icon: 'manufacturing', label: 'In-house Manufacturing' },
+    { icon: 'turnkey', label: 'Turnkey Deployment' },
+    { icon: 'global', label: 'Global Support Network' },
+  ],
+  ctaButtons: [
+    // 首位 Talk to Engineering（主按钮），文案对齐首页三卡 title 与 shared.json 黄金源（2026-09-02 定名）
+    { label: 'Talk to Engineering', href: '/en/contact-us/' },
+    { label: 'Browse Products', href: '/en/products/' },
+    { label: 'Explore Solutions', href: '/en/solutions/' },
+  ],
 };

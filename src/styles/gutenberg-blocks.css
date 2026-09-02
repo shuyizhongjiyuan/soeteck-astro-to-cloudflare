@@ -495,7 +495,7 @@
 .wp-block-columns.are-vertically-aligned-bottom {
   align-items: flex-end;
 }
-@media (max-width: 781px) {
+@media (max-width: 768px) {
   .wp-block-columns:not(.is-not-stacked-on-mobile) > .wp-block-column {
     flex-basis: 100% !important;
   }
@@ -1261,7 +1261,7 @@ body:not(.editor-styles-wrapper) .wp-block-cover:not(.wp-block-cover:has(.wp-blo
   width: 100%;
   margin-right: 0;
 }
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .wp-block-gallery:not(.has-nested-images).columns-3 .blocks-gallery-image, .wp-block-gallery:not(.has-nested-images).columns-3 .blocks-gallery-item,
   .blocks-gallery-grid:not(.has-nested-images).columns-3 .blocks-gallery-image,
   .blocks-gallery-grid:not(.has-nested-images).columns-3 .blocks-gallery-item {
@@ -1503,7 +1503,7 @@ figure.wp-block-gallery.has-nested-images {
 .wp-block-gallery.has-nested-images.columns-1 figure.wp-block-image:not(#individual-image) {
   width: 100%;
 }
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .wp-block-gallery.has-nested-images.columns-3 figure.wp-block-image:not(#individual-image) {
     width: calc(33.3333333333% - var(--wp--style--unstable-gallery-gap, 16px) * 0.6666666667);
   }
@@ -1806,7 +1806,7 @@ h6.has-text-align-left[style*=writing-mode]:where([style*=vertical-lr]) {
 .wp-lightbox-overlay .wp-lightbox-navigation-button-next[hidden] {
   display: none;
 }
-@media (min-width: 960px) {
+@media (min-width: 992px) {
   .wp-lightbox-overlay .wp-lightbox-navigation-button-prev,
   .wp-lightbox-overlay .wp-lightbox-navigation-button-next {
     bottom: 50%;
@@ -2069,7 +2069,7 @@ ul {
 * If the style were set on mobile first, on desktop styles,
 * we would have no way of setting the style again to the inline style.
 */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .wp-block-media-text.is-stacked-on-mobile {
     grid-template-columns: 100% !important;
   }
@@ -2491,7 +2491,7 @@ button.wp-block-navigation-item__content {
   right: auto;
   left: 0;
 }
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .wp-block-navigation__responsive-container:not(.hidden-by-default):not(.is-menu-open) {
     display: block;
     width: 100%;
@@ -2823,7 +2823,7 @@ p.has-text-align-left[style*="writing-mode:vertical-lr"] {
   display: block;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .wp-block-post-template-is-layout-grid.wp-block-post-template-is-layout-grid.wp-block-post-template-is-layout-grid.wp-block-post-template-is-layout-grid {
     grid-template-columns: 1fr;
   }

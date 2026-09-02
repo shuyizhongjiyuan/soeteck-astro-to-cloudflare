@@ -7,6 +7,8 @@ const { contentHtml } = Astro.props;
 
 // CSS 始终导入（体积小，~3KB，仅在 gallery 页面生效）
 import '@/styles/simply-gallery-slider.css';
+// WooCommerce 产品块网格样式（仅含 product-collection 的文章页生效）
+import '@/styles/wc-product-collection.css';
 ---
 
 <div class="entry-content soeteck-single-post__content" set:html={contentHtml}></div>

@@ -16,11 +16,11 @@
   left: 50%;
   bottom: 18px;
   z-index: 9990;
-  width: min(960px, calc(100vw - 28px));
+  width: min(1100px, calc(100vw - 28px));
   display: flex;
   align-items: center;
   gap: 22px;
-  padding: 13px 18px;
+  padding: 20px 24px;
   background: rgba(245, 248, 253, 0.95);
   backdrop-filter: blur(12px) saturate(1.2);
   -webkit-backdrop-filter: blur(12px) saturate(1.2);
@@ -62,7 +62,7 @@
 .soeteck-consent-banner__eyebrow { display: none; }
 
 .soeteck-consent-banner__copy { min-width: 0; flex: 1 1 auto; display: flex; align-items: baseline; flex-wrap: wrap; column-gap: 8px; row-gap: 2px; }
-.soeteck-consent-banner__title { margin: 0; font-size: 0.9375rem; font-weight: var(--soeteck-weight-bold); line-height: 1.3; white-space: nowrap; }
+.soeteck-consent-banner__title { margin: 0; font-size: 1rem; font-weight: var(--soeteck-weight-bold); line-height: 1.3; white-space: nowrap; }
 .soeteck-consent-banner__body { margin: 0; color: var(--soeteck-text-soft); font-size: 0.8125rem; line-height: 1.5; }
 .soeteck-consent-banner__body a { color: var(--soeteck-primary); font-weight: 600; text-decoration: none; border-bottom: 1px solid currentColor; }
 .soeteck-consent-banner__body a:hover { color: var(--soeteck-primary-dark); }
@@ -200,7 +200,31 @@
 .soeteck-consent-row__label-wrap { min-width: 0; flex: 1; }
 .soeteck-consent-row__label { margin: 0; font-size: 0.9375rem; font-weight: var(--soeteck-weight-semibold); line-height: 1.35; }
 .soeteck-consent-row__desc { margin: 3px 0 0; color: var(--soeteck-muted); font-size: 0.8125rem; line-height: 1.55; }
-.soeteck-consent-row__note { margin: 4px 0 0; color: var(--soeteck-muted); font-size: 0.75rem; font-weight: var(--soeteck-weight-medium); font-style: italic; }
+/* 「Always on」状态胶囊：亮绿底 + 状态圆点，一眼即状态而非注释文本 */
+.soeteck-consent-row__note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0 0;
+  padding: 3px 10px;
+  width: fit-content;
+  border-radius: 999px;
+  background: #e9f9f0;
+  color: #11a35c;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+.soeteck-consent-row__note::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2fd37f;
+  flex: 0 0 8px;
+}
 
 /* 开关 — 46×24 品牌蓝 switch */
 .soeteck-consent-switch {
@@ -252,7 +276,7 @@
 .soeteck-consent-toast.is-visible { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
 /* ═══════════════ 响应式 ═══════════════ */
-@media (max-width: 760px) {
+@media (max-width: 768px) {
   .soeteck-consent-banner {
     width: calc(100vw - 16px);
     bottom: max(8px, env(safe-area-inset-bottom, 0px));

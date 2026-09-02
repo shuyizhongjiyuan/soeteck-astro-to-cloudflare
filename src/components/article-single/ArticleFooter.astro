@@ -15,19 +15,19 @@ const hasPrevNext = article.prevPost || article.nextPost;
 
 <div class="soeteck-single-post__footer">
   {article.tags.length > 0 && (
-    <div class="soeteck-single-post__tags" aria-label="Article tags">
-      <span class="soeteck-single-post__tags-label">Tags</span>
+    <div class="soeteck-single-post__tags" aria-label={getUITranslation(lang, 'common.articleTags')}>
+      <span class="soeteck-single-post__tags-label">{getUITranslation(lang, 'common.articleTags')}</span>
       {article.tags.map((tag) => <a class="soeteck-single-post__tag" href={tag.path}>{tag.name}</a>)}
     </div>
   )}
 
   {showAuthorCard && (
-    <section class="soeteck-single-post__author-card" aria-label="Author information">
+    <section class="soeteck-single-post__author-card" aria-label={getUITranslation(lang, 'common.authorInfo')}>
       {article.author!.avatar && (
         <img class="soeteck-single-post__author-avatar" src={article.author!.avatar} alt={article.author!.name} width="72" height="72" loading="lazy" />
       )}
       <div class="soeteck-single-post__author-body">
-        <p class="soeteck-single-post__author-label">Written by</p>
+        <p class="soeteck-single-post__author-label">{getUITranslation(lang, 'common.writtenBy')}</p>
         <h2 class="soeteck-card-title soeteck-single-post__author-name">{article.author!.name}</h2>
         {article.author!.description && <p class="soeteck-single-post__author-description">{article.author!.description}</p>}
       </div>
@@ -190,7 +190,7 @@ const hasPrevNext = article.prevPost || article.nextPost;
     display: none;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .soeteck-single-post__prev-next {
       grid-template-columns: 1fr;
     }

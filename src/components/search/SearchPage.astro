@@ -9,85 +9,311 @@ export interface Props {
 }
 
 const { page, lang } = Astro.props;
-const t = (key: string): string => getUITranslation(lang, key);
 
-// Search query from URL or API
-const searchQuery = Astro.url.searchParams.get('s') || Astro.url.searchParams.get('q') || '';
-const totalResults = page.source?.searchResults?.total ?? 0;
-const results = page.source?.searchResults?.items ?? [];
-const currentPage = Number(Astro.url.searchParams.get('page')) || 1;
-const perPage = 10;
-const totalPages = Math.ceil(totalResults / perPage);
+const t = (key: string): string => getUITranslation(lang, key);
+const lookup = (key: string, fallback: string): string => {
+  const v = t(key);
+  return v === key ? fallback : v;
+};
+
+const searchIndexUrl = `/search-index/${lang}.json`;
+
+// 类型徽标（服务端按语言算好，交给客户端脚本使用）
+// 细分键（news_releases/blogs/case_studies/solution）由客户端按 URL 归类：
+// 索引只有 routeType（article 等），细分类别要靠路径识别。
+const typeLabels: Record<string, string> = {
+  product: lookup('nav.products', 'Products'),
+  product_category: lookup('nav.products', 'Products'),
+  solution: lookup('nav.solutions', 'Solutions'),
+  news_releases: lookup('category.newsReleases', 'News Releases'),
+  blogs: lookup('category.blogs', 'Blogs'),
+  case_studies: lookup('category.caseStudies', 'Case Studies'),
+  home: lookup('nav.home', 'Home'),
+  page: lookup('common.page', 'Page'),
+  article: lookup('common.post', 'Post'),
+  article_category_archive: lookup('nav.news', 'News'),
+};
+
+// 客户端文案（多语言）
+const ui = {
+  resultsFound: t('common.resultsFound'),
+  searchResultsFor: t('common.searchResultsFor'),
+  noResultsFound: t('common.noResultsFound'),
+  noResultsDesc: t('common.noResultsDesc'),
+  enterKeyword: t('common.enterKeyword'),
+  search: t('common.search'),
+  orTry: t('common.orTrySearching'),
+  popular: t('common.popularPages'),
+  loadError: t('common.searchLoadError'),
+  loadErrorDesc: t('common.searchLoadErrorDesc'),
+  previous: t('common.previous'),
+  next: t('common.next'),
+  readmore: t('common.readmore'),
+  searching: t('common.searchPlaceholder'),
+};
+
+// 无查询时的「热门入口」（静态推荐，可日后改 data）
+const popularLinks = [
+  { label: typeLabels.product, url: `/${lang}/products/` },
+  { label: typeLabels.solution, url: `/${lang}/solutions/` },
+  { label: t('nav.news'), url: `/${lang}/news-and-insights/` },
+  { label: t('nav.about'), url: `/${lang}/about-soeteck/` },
+  { label: t('nav.contact'), url: `/${lang}/contact-us/` },
+];
 ---
 
-<div class="soeteck-search-page">
-    <section class="soeteck-search-header">
-      <div class="soeteck-container">
-        <Breadcrumbs items={page.breadcrumbs} lang={lang} />
-        <h1 class="soeteck-page-title">
-          {t('common.searchResultsFor')}: <span>{searchQuery}</span>
-        </h1>
-        <p class="soeteck-search-count">
-          {totalResults} {t('common.resultsFound')}
-        </p>
-      </div>
-    </section>
-
-    <div class="soeteck-container soeteck-search-results">
-      {results.length > 0 ? (
-        <>
-          <div class="soeteck-search-results__list">
-            {results.map((result: any) => (
-              <article class="soeteck-search-result-card">
-                <div class="soeteck-search-result-card__type">
-                  {result.type === 'product' ? t('nav.products') : result.type === 'page' ? t('nav.home') : t('common.post')}
-                </div>
-                <h2 class="soeteck-search-result-card__title">
-                  <a href={result.path || result.url}>{result.title}</a>
-                </h2>
-                {result.excerpt && (
-                  <p class="soeteck-search-result-card__excerpt">{result.excerpt}</p>
-                )}
-                <a class="soeteck-search-result-card__link" href={result.path || result.url}>
-                  {t('common.readmore')} &rarr;
-                </a>
-              </article>
-            ))}
-          </div>
-
-          {totalPages > 1 && (
-            <nav class="soeteck-search-pagination" aria-label="Search results pagination">
-              {currentPage > 1 && (
-                <a class="soeteck-search-pagination__prev" href={`?s=${encodeURIComponent(searchQuery)}&page=${currentPage - 1}`}>
-                  &larr; {t('common.previous')}
-                </a>
-              )}
-              <span class="soeteck-search-pagination__info">
-                {t('common.page')} {currentPage} / {totalPages}
-              </span>
-              {currentPage < totalPages && (
-                <a class="soeteck-search-pagination__next" href={`?s=${encodeURIComponent(searchQuery)}&page=${currentPage + 1}`}>
-                  {t('common.next')} &rarr;
-                </a>
-              )}
-            </nav>
-          )}
-        </>
-      ) : (
-        <div class="soeteck-search-no-results">
-          <div class="soeteck-search-no-results__icon" aria-hidden="true">🔍</div>
-          <h2>{t('common.noResultsFound')}</h2>
-          <p>{t('common.noResultsDesc')}</p>
-          <form class="soeteck-search-form" action={`/${lang}/`} method="get" role="search">
-            <label class="soeteck-search-form__field">
-              <input type="search" name="s" placeholder={t('common.search')} aria-label={t('common.search')} />
-            </label>
-            <button class="soeteck-button soeteck-button-primary" type="submit">{t('common.search')}</button>
-          </form>
-        </div>
-      )}
+<div
+  class="soeteck-search-page"
+  id="soeteck-search-root"
+  data-lang={lang}
+  data-index={searchIndexUrl}
+  data-search-path={`/${lang}/search/`}
+>
+  <section class="soeteck-search-header">
+    <div class="soeteck-container">
+      <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+      <h1 class="soeteck-page-title">
+        <span id="soeteck-search-label">{ui.searchResultsFor}</span>
+        <span id="soeteck-query" tabindex="-1"></span>
+      </h1>
+      <p class="soeteck-search-count" id="soeteck-count" role="status" aria-live="polite"></p>
     </div>
+  </section>
+
+  <section class="soeteck-container soeteck-search-results">
+    <div id="soeteck-results"><p class="soeteck-search-loading">…</p></div>
+  </section>
 </div>
+
+<script is:inline define:vars={{ ui, typeLabels, popularLinks }}>
+  const SEARCH_I18N = ui;
+  const SEARCH_TYPE_LABELS = typeLabels;
+  const SEARCH_POPULAR = popularLinks;
+
+  (function () {
+    const root = document.getElementById('soeteck-search-root');
+    if (!root) return;
+    const lang = root.getAttribute('data-lang') || 'en';
+    const indexUrl = root.getAttribute('data-index') || '/search-index/' + lang + '.json';
+    const action = root.getAttribute('data-search-path') || '/' + lang + '/search/';
+
+    const resultsEl = document.getElementById('soeteck-results');
+    const queryEl = document.getElementById('soeteck-query');
+    const countEl = document.getElementById('soeteck-count');
+    const I18N = SEARCH_I18N;
+    const TYPE_LABELS = SEARCH_TYPE_LABELS;
+    const POPULAR = SEARCH_POPULAR;
+
+    function esc(s) {
+      return String(s == null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    // 规范化：小写 + 去组合变音符（pt/es/ru 的变体音困惑）
+    function norm(s) {
+      return String(s == null ? '' : s).toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+    }
+    function tokenize(q) {
+      return norm(q).split(/[^0-9A-Za-zÀ-ɏЀ-ӿ一-鿿]/).filter(Boolean);
+    }
+    // 安全高亮：先 esc 再包 <mark>（数据均视为不可信）
+    function highlight(text, toks) {
+      const src = String(text || '');
+      if (!toks.length) return esc(src);
+      const lower = norm(src);
+      let out = '', idx = 0;
+      while (idx < src.length) {
+        let hit = -1, hl = 0;
+        for (let i = 0; i < toks.length; i++) {
+          const tk = toks[i];
+          if (!tk) continue;
+          const at = lower.indexOf(tk, idx);
+          if (at >= 0 && (hit < 0 || at < hit)) { hit = at; hl = tk.length; }
+        }
+        if (hit < 0) { out += esc(src.slice(idx)); break; }
+        out += esc(src.slice(idx, hit)) + '<mark>' + esc(src.substr(hit, hl)) + '</mark>';
+        idx = hit + hl;
+      }
+      return out;
+    }
+    // 简单相关性评分：标题 > 摘要 > URL，词元全中加分
+    function score(doc, qn, toks) {
+      const tn = norm(doc.title), en = norm(doc.excerpt || ''), un = norm(doc.url || '');
+      let s = 0, all = true, any = false;
+      if (tn.indexOf(qn) >= 0) s += 100;
+      if (tn.indexOf(qn) === 0) s += 30;
+      if (en.indexOf(qn) >= 0) s += 25;
+      if (un.indexOf(qn) >= 0) s += 18;
+      for (let i = 0; i < toks.length; i++) {
+        const tk = toks[i];
+        if (tn.indexOf(tk) >= 0) { s += 14; any = true; }
+        else if (en.indexOf(tk) >= 0) { s += 6; any = true; }
+        else all = false;
+      }
+      if (all && toks.length > 1) s += 25;
+      if (doc.type === 'product') s += 6;
+      else if (doc.type === 'product_category') s += 4;
+      return any ? s : 0;
+    }
+    function inlineForm() {
+      return '<form class="soeteck-search-inline-form" role="search" method="get" action="' + esc(action) + '">'
+        + '<input type="search" name="s" value="" placeholder="' + esc(I18N.search) + '" aria-label="' + esc(I18N.search) + '">'
+        + '<button type="submit">' + esc(I18N.search) + '</button>'
+        + '</form>';
+    }
+    function popularPanel() {
+      let items = POPULAR.map(function (p) {
+        return '<a class="soeteck-search-popular-link" href="' + esc(p.url) + '">' + esc(p.label) + '</a>';
+      }).join('');
+      return '<div class="soeteck-search-popular">'
+        + '<p class="soeteck-search-popular__title">' + esc(I18N.popular) + '</p>'
+        + '<div class="soeteck-search-popular__list">' + items + '</div>'
+        + '</div>';
+    }
+    function pageWindow(cur, pages) {
+      const set = new Set([1, pages, cur]);
+      for (let d = -2; d <= 2; d++) set.add(cur + d);
+      const vals = Array.from(set).filter((p) => p >= 1 && p <= pages).sort((a, b) => a - b);
+      const out = [];
+      let prev = 0;
+      for (const p of vals) {
+        if (prev && p - prev > 1) out.push('…');
+        out.push(p);
+        prev = p;
+      }
+      return out;
+    }
+    // 分页：方块数字按钮（与 ArchivePagination 的 .page-numbers 规范一致）
+    function pagination(q, cur, pages) {
+      const qs = 's=' + encodeURIComponent(q);
+      const items = pageWindow(cur, pages);
+      let html = '<nav class="soeteck-search-pagination" aria-label="Pagination"><ul class="page-numbers">';
+      if (cur > 1) {
+        html += '<li><a class="page-numbers prev" href="?' + qs + '&page=' + (cur - 1) + '" aria-label="' + esc(I18N.previous) + '">&laquo;</a></li>';
+      }
+      for (let k = 0; k < items.length; k++) {
+        const p = items[k];
+        if (p === '…') {
+          html += '<li><span class="page-numbers pages-dots" aria-hidden="true">&hellip;</span></li>';
+          continue;
+        }
+        if (p === cur) {
+          html += '<li><span class="page-numbers current" aria-current="page">' + p + '</span></li>';
+        } else {
+          html += '<li><a class="page-numbers" href="?' + qs + '&page=' + p + '">' + p + '</a></li>';
+        }
+      }
+      if (cur < pages) {
+        html += '<li><a class="page-numbers next" href="?' + qs + '&page=' + (cur + 1) + '" aria-label="' + esc(I18N.next) + '">&raquo;</a></li>';
+      }
+      return html + '</ul></nav>';
+    }
+
+    function renderNoQuery() {
+      queryEl.textContent = '';
+      countEl.textContent = '';
+      resultsEl.innerHTML = '<div class="soeteck-search-no-results">'
+        + '<div class="soeteck-search-no-results__icon" aria-hidden="true">🔍</div>'
+        + '<h2>' + esc(I18N.enterKeyword) + '</h2>'
+        + inlineForm()
+        + popularPanel()
+        + '</div>';
+    }
+    function renderError() {
+      queryEl.textContent = '';
+      countEl.textContent = '';
+      resultsEl.innerHTML = '<div class="soeteck-search-no-results">'
+        + '<div class="soeteck-search-no-results__icon" aria-hidden="true">⚠️</div>'
+        + '<h2>' + esc(I18N.loadError) + '</h2>'
+        + '<p>' + esc(I18N.loadErrorDesc) + '</p>'
+        + inlineForm()
+        + '</div>';
+    }
+    // 类型细分：索引只有 routeType，靠 URL 路径识别 归档子类/方案页
+    function classify(doc) {
+      const u = String(doc.url || '').replace(/^\/[a-z]{2}\//, '/');
+      if (u.startsWith('/news-and-insights/news-releases/') || u === '/news-and-insights/news-releases/') return 'news_releases';
+      if (u.startsWith('/news-and-insights/blogs/') || u === '/news-and-insights/blogs/') return 'blogs';
+      if (u.startsWith('/news-and-insights/client-case-studies/') || u === '/news-and-insights/client-case-studies/') return 'case_studies';
+      if (u.startsWith('/solutions/')) return 'solution';
+      return doc.type;
+    }
+
+    function renderResults(docs, q, page) {
+      const per = 10;
+      const toks = tokenize(q);
+      const qn = norm(q);
+      const matched = docs
+        .map(function (d) { return { d: d, s: score(d, qn, toks) }; })
+        .filter(function (m) { return m.s > 0; })
+        .sort(function (a, b) {
+          return b.s - a.s || a.d.title.length - b.d.title.length || (a.d.url < b.d.url ? -1 : 1);
+        })
+        .map(function (m) { return m.d; });
+
+      const total = matched.length;
+      const pages = Math.max(1, Math.ceil(total / per));
+      let cur = page;
+      if (cur < 1) cur = 1;
+      if (cur > pages) cur = pages;
+      const slice = matched.slice((cur - 1) * per, cur * per);
+
+      queryEl.textContent = q;
+      countEl.textContent = total + ' ' + I18N.resultsFound;
+
+      if (total === 0) {
+        resultsEl.innerHTML = '<div class="soeteck-search-no-results">'
+          + '<div class="soeteck-search-no-results__icon" aria-hidden="true">🔍</div>'
+          + '<h2>' + esc(I18N.noResultsFound) + '</h2>'
+          + '<p>' + esc(I18N.noResultsDesc) + '</p>'
+          + inlineForm()
+          + '</div>';
+        return;
+      }
+
+      let html = '<div class="soeteck-search-results__list">';
+      slice.forEach(function (d) {
+        const typeKey = classify(d);
+        const label = TYPE_LABELS[typeKey] || TYPE_LABELS[d.type] || d.type;
+        html += '<article class="soeteck-search-result-card">'
+          + (label ? '<div class="soeteck-search-result-card__type">' + esc(label) + '</div>' : '')
+          + '<h2 class="soeteck-search-result-card__title"><a href="' + esc(d.url) + '">' + highlight(d.title, toks) + '</a></h2>'
+          + '<p class="soeteck-search-result-card__excerpt">' + highlight(d.excerpt, toks) + '</p>'
+          + '<a class="soeteck-search-result-card__link" href="' + esc(d.url) + '">' + esc(I18N.readmore) + ' &rarr;</a>'
+          + '</article>';
+      });
+      html += '</div>';
+      if (pages > 1) html += pagination(q, cur, pages);
+      resultsEl.innerHTML = html;
+
+      // 焦点管理：搜索词落地后移动焦点到结果标题，方便读屏
+      if (queryEl && document.activeElement === document.body) queryEl.focus();
+    }
+
+    // 入口
+    const qs = new URLSearchParams(window.location.search);
+    const q = (qs.get('s') || qs.get('q') || '').trim();
+    let page = parseInt(qs.get('page') || '1', 10);
+    if (isNaN(page) || page < 1) page = 1;
+
+    if (!q) { renderNoQuery(); return; }
+
+    countEl.textContent = '…';
+    fetch(indexUrl, { credentials: 'same-origin' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (payload) {
+        const docs = (payload && Array.isArray(payload.docs)) ? payload.docs : [];
+        renderResults(docs, q, page);
+      })
+      .catch(function () {
+        renderError();
+      });
+  })();
+</script>
 
 <style is:global>
   .soeteck-search-page {
@@ -95,17 +321,53 @@ const totalPages = Math.ceil(totalResults / perPage);
   }
 
   .soeteck-search-header {
-    padding: var(--soeteck-section-y-sm) 0;
+    /* 面包屑绝对定位模式（§1.4 统一规则）：面包屑始终位于 header 顶部边缘
+       20px（≥481px）/ 15px，左对齐容器；标题块垂直居中，不因风格改变。 */
+    position: relative;
     background: var(--soeteck-surface);
   }
 
-  .soeteck-search-header .soeteck-page-title {
-    margin-top: 24px;
-    margin-bottom: 8px;
+  .soeteck-search-header .soeteck-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: clamp(260px, 34vw, 380px);
+    padding-top: clamp(56px, 8vw, 88px); /* 给 absolute 面包屑让位 */
+    padding-bottom: var(--soeteck-section-y-sm);
   }
 
-  .soeteck-search-header .soeteck-page-title span {
+  .soeteck-search-header .soeteck-container .soeteck-breadcrumbs {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    margin: 0; /* 覆盖 Breadcrumbs 组件 scoped margin，避免双倍偏移（aicoolit-breadcrumb-positioning-fix） */
+  }
+  @media (min-width: 481px) {
+    .soeteck-search-header .soeteck-container .soeteck-breadcrumbs {
+      top: 20px;
+    }
+  }
+
+  .soeteck-search-header .soeteck-page-title {
+    /* H1 = Hero 标题规范（design-token-standard：h1 用 --soeteck-heading-lg，line-height 1.08） */
+    margin: 0 0 8px;
+    font-size: var(--soeteck-heading-lg);
+    line-height: 1.08;
+  }
+
+  .soeteck-search-header #soeteck-query {
+    display: inline-block;
+    margin-left: 8px;
     color: var(--soeteck-primary);
+    font-weight: 600;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+  #soeteck-query:focus {
+    outline: none;
   }
 
   .soeteck-search-count {
@@ -115,146 +377,287 @@ const totalPages = Math.ceil(totalResults / perPage);
   }
 
   .soeteck-search-results {
+    padding: 40px 0 64px;
+    min-height: 320px;
+  }
+
+  .soeteck-search-loading {
+    color: var(--soeteck-muted);
+    text-align: center;
     padding: 40px 0;
   }
 
   .soeteck-search-results__list {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+    /* 单列 grid + grid-auto-rows:1fr → 所有行等高（取最高卡），
+       卡片标题保持自然高度（不设 min-height），Learn more 锚底填充空白 */
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 1fr;
+    gap: 20px;
   }
 
   .soeteck-search-result-card {
+    display: flex;
+    flex-direction: column;
     padding: 24px;
     background: var(--soeteck-white);
     border: 1px solid var(--soeteck-border-soft);
     border-radius: var(--soeteck-radius-lg);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: border-color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast), transform var(--soeteck-transition-fast);
+  }
+  .soeteck-search-result-card:hover,
+  .soeteck-search-result-card:focus-within {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+    transform: translateY(-2px);
   }
 
   .soeteck-search-result-card__type {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     color: var(--soeteck-primary);
     font-weight: 600;
     margin-bottom: 8px;
   }
 
   .soeteck-search-result-card__title {
-    font-size: 1.25rem;
-    margin: 0 0 12px;
+    /* 单行 + 省略号截断（产品分类列表同款：overflow:hidden + text-overflow:ellipsis + white-space:nowrap） */
+    font-size: 1.3rem;
+    line-height: 1.3;
+    margin: 0 0 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
-
   .soeteck-search-result-card__title a {
     color: var(--soeteck-text);
     text-decoration: none;
   }
-
   .soeteck-search-result-card__title a:hover {
     color: var(--soeteck-primary);
   }
+  .soeteck-search-result-card__title mark,
+  .soeteck-search-result-card__excerpt mark {
+    background: var(--soeteck-primary-soft);
+    color: var(--soeteck-primary-dark);
+    border-radius: 3px;
+    padding: 0 2px;
+  }
 
   .soeteck-search-result-card__excerpt {
+    /* 两行摘要盒：短摘要/无摘要也占两行高 → 卡片等高（链接不随文本浮动） */
+    min-height: 3.2em;
     color: var(--soeteck-muted);
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   .soeteck-search-result-card__link {
+    /* align-items 默认 stretch 会把链接拉全宽 → 用 align-self:flex-start 恢复内容宽度 */
+    align-self: flex-start;
+    margin-top: auto; /* 锚到底部，配合等高盒 */
     display: inline-block;
-    margin-top: 12px;
     color: var(--soeteck-primary);
     font-weight: 500;
     text-decoration: none;
   }
-
   .soeteck-search-result-card__link:hover {
     color: var(--soeteck-primary-dark);
     text-decoration: underline;
   }
 
+  /* 分页：方块数字按钮（对齐 ArchivePagination / .page-numbers 站内规范） */
   .soeteck-search-pagination {
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .soeteck-search-pagination ul.page-numbers {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    list-style: none;
+  }
+
+  .soeteck-search-pagination ul.page-numbers li {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    list-style: none;
+  }
+  .soeteck-search-pagination ul.page-numbers li::before,
+  .soeteck-search-pagination ul.page-numbers li::after,
+  .soeteck-search-pagination ul.page-numbers li + li::before {
+    display: none;
+    content: none;
+  }
+
+  /* 按钮盒子只作用于 li 内的 a/span（勿命中 ul.page-numbers 容器，否则 UL 被挤成 42px 换行成竖排） */
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    margin-top: 48px;
-    padding: 24px 0;
-  }
-
-  .soeteck-search-pagination__prev,
-  .soeteck-search-pagination__next {
-    color: var(--soeteck-primary);
-    font-weight: 500;
-    text-decoration: none;
-  }
-
-  .soeteck-search-pagination__prev:hover,
-  .soeteck-search-pagination__next:hover {
-    color: var(--soeteck-primary-dark);
-    text-decoration: underline;
-  }
-
-  .soeteck-search-pagination__info {
-    color: var(--soeteck-muted);
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    min-height: 42px;
+    padding: 0;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-sm);
+    background: transparent;
+    color: var(--soeteck-text);
+    font-family: var(--soeteck-font-ui);
     font-size: var(--soeteck-text-sm);
+    font-weight: var(--soeteck-weight-medium);
+    line-height: 1;
+    text-decoration: none;
+    transition: border-color var(--soeteck-transition-fast), background-color var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+  }
+
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers.prev,
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers.next {
+    font-size: 16px;
+  }
+
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers:hover,
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers.current {
+    border-color: var(--soeteck-primary);
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+  }
+
+  .soeteck-search-pagination ul.page-numbers > li > .page-numbers.pages-dots {
+    border-color: transparent;
+    background: transparent;
+    color: var(--soeteck-muted);
+    min-width: 20px;
+    width: auto;
+    cursor: default;
   }
 
   .soeteck-search-no-results {
     text-align: center;
-    padding: 60px 20px;
+    padding: 48px 20px;
   }
-
   .soeteck-search-no-results__icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
+    font-size: 3.4rem;
+    margin-bottom: 18px;
   }
-
   .soeteck-search-no-results h2 {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     color: var(--soeteck-text);
   }
-
-  .soeteck-search-no-results p {
+  .soeteck-search-no-results > p {
     color: var(--soeteck-muted);
-    margin-bottom: 24px;
+    margin-bottom: 26px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
-  .soeteck-search-form {
+  .soeteck-search-inline-form {
     display: flex;
     gap: 10px;
-    max-width: 400px;
+    max-width: 420px;
+    margin: 0 auto 28px;
+    align-items: center;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-pill);
+    background: var(--soeteck-white);
+    padding: 4px 6px 4px 18px;
+    transition: border-color var(--soeteck-transition-fast), box-shadow var(--soeteck-transition-fast);
+  }
+  .soeteck-search-inline-form:focus-within {
+    border-color: var(--soeteck-primary);
+    box-shadow: 0 0 0 3px var(--soeteck-primary-soft);
+  }
+  .soeteck-search-inline-form input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    padding: 0;
+    height: 38px;
+    font-size: var(--soeteck-text-md);
+    color: var(--soeteck-text);
+    background: transparent;
+  }
+  .soeteck-search-inline-form button {
+    flex: 0 0 auto;
+    height: 38px;
+    padding: 0 22px;
+    border: 0;
+    border-radius: var(--soeteck-radius-pill);
+    background: var(--soeteck-primary);
+    color: var(--soeteck-white);
+    font-size: var(--soeteck-text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--soeteck-transition-fast);
+  }
+  .soeteck-search-inline-form button:hover {
+    background: var(--soeteck-primary-dark);
+  }
+
+  .soeteck-search-popular {
+    max-width: 640px;
     margin: 0 auto;
   }
-
-  .soeteck-search-form__field {
-    flex: 1;
+  .soeteck-search-popular__title {
+    font-size: var(--soeteck-text-sm);
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--soeteck-muted);
+    margin-bottom: 14px;
   }
-
-  .soeteck-search-form__field input {
-    width: 100%;
-    min-height: 48px;
-    padding: 8px 14px;
-    border: 1px solid var(--soeteck-border);
-    border-radius: var(--soeteck-radius-sm);
-    font-size: var(--soeteck-text-md);
+  .soeteck-search-popular__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
   }
-
-  .soeteck-search-form__field input:focus-visible {
+  .soeteck-search-popular-link {
+    padding: 9px 18px;
+    border: 1px solid var(--soeteck-border-soft);
+    border-radius: var(--soeteck-radius-pill);
+    color: var(--soeteck-text-soft);
+    font-size: var(--soeteck-text-sm);
+    text-decoration: none;
+    transition: border-color var(--soeteck-transition-fast), color var(--soeteck-transition-fast);
+  }
+  .soeteck-search-popular-link:hover {
+    color: var(--soeteck-primary);
     border-color: var(--soeteck-primary);
-    box-shadow: 0 0 0 3px rgba(26, 133, 229, 0.14);
-    outline: none;
   }
 
-  @media (max-width: 640px) {
-    .soeteck-search-form {
+  @media (max-width: 768px) {
+    .soeteck-search-inline-form {
       flex-direction: column;
+      border-radius: var(--soeteck-radius-lg);
+      padding: 10px;
     }
-
-    .soeteck-search-pagination {
-      flex-direction: column;
-      gap: 12px;
+    .soeteck-search-inline-form input {
+      width: 100%;
+      height: 42px;
+    }
+    .soeteck-search-inline-form button {
+      width: 100%;
     }
   }
 </style>

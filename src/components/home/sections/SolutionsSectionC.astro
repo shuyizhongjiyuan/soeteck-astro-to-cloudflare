@@ -23,13 +23,13 @@ const headText = transition?.text ?? solutions.text;
 <section class="home-solutions-c" id="home-solutions-c" aria-labelledby="solutions-c-title">
   <div class="soeteck-container">
     <div class="home-section__head home-section__head">
-      <p class="home-section__eyebrow">{solutions.eyebrow}</p>
+      <p class="soeteck-eyebrow">{solutions.eyebrow}</p>
       <h2 id="solutions-c-title" class="home-section__title">{headTitle}</h2>
       <p class="home-section__lead">{headText}</p>
     </div>
 
     {/* Roadmap — 方案 → 三个架构的过渡引言 */}
-    <div class="home-solutions-c__roadmap" aria-label="Three turnkey architectures">
+    <div class="home-solutions-c__roadmap" aria-label="Prefab &amp; turnkey architecture lineup">
       {cards.map((card, i) => (
         <span class="home-solutions-c__roadmap-item">0{i + 1} · {card.short ?? card.title}</span>
       ))}
@@ -69,7 +69,8 @@ const headText = transition?.text ?? solutions.text;
 
 /* ── Section head ─────────────────────────────────────────── */
 .home-section__head { max-width: 760px; margin: 0 auto 48px; text-align: center; }
-.home-section__eyebrow { margin: 0 0 30px; color: var(--soeteck-primary); font-size: var(--soeteck-text-xs); font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+/* 6.1 标准 Eyebrow — 元素只挂规范基类 .soeteck-eyebrow，此处仅覆盖间距（全局基类 20px → 规范 25px） */
+.home-section__head .soeteck-eyebrow { margin: 0 0 25px; padding: 0; }
 .home-section__title { margin: 0; font-size: clamp(1.9rem, 3.2vw, 2.6rem); font-weight: 800; line-height: 1.12; color: var(--soeteck-text); }
 .home-section__lead { margin: 16px auto 0; max-width: 620px; font-size: 1.05rem; line-height: 1.7; color: var(--soeteck-text-soft); }
 

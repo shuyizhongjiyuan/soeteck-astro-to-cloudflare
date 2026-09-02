@@ -49,6 +49,14 @@ export interface FeaturedCardLabels {
   featuredLabel: string;
   /** Read-more link text (e.g. "Start reading") */
   readMoreLabel: string;
+  /** Eyebrow kicker above the featured section h2 */
+  featuredEyebrow: string;
+  /** h2 title for the featured section */
+  featuredTitle: string;
+  /** Eyebrow kicker above the article-list section h2 */
+  listEyebrow: string;
+  /** h2 title for the article-list section */
+  listTitle: string;
 }
 
 export interface EmptyStateLabels {
@@ -110,7 +118,7 @@ export const NEWS_RELEASES_HERO: HeroConfig = {
   description: 'Official Soeteck announcements, product updates, event news, and company milestones for partners, customers, and media.',
   panelLabel: 'Official updates',
   panelItems: ['Product announcements', 'Events & exhibitions', 'Company milestones'],
-  eyebrow: 'Newsroom',
+  eyebrow: 'Soeteck Newsroom',
 };
 
 export const BLOGS_HERO: HeroConfig = {
@@ -118,7 +126,7 @@ export const BLOGS_HERO: HeroConfig = {
   description: 'Technical insights, industry trends, and expert perspectives on data center power, cooling, and infrastructure solutions.',
   panelLabel: 'Technical insights',
   panelItems: ['Industry trends', 'Technical guides', 'Best practices'],
-  eyebrow: 'Blogs',
+  eyebrow: 'Soeteck Insights',
 };
 
 export const CASE_STUDIES_HERO: HeroConfig = {
@@ -126,7 +134,7 @@ export const CASE_STUDIES_HERO: HeroConfig = {
   description: 'Real-world deployments and success stories showcasing how Soeteck solutions solve complex power and cooling challenges.',
   panelLabel: 'Success stories',
   panelItems: ['Global deployments', 'Custom solutions', 'ROI highlights'],
-  eyebrow: 'Case Studies',
+  eyebrow: 'Soeteck Success Stories',
 };
 
 export const NEWSROOM_TOPICS: string[] = ['Product Updates', 'Events', 'Company News', 'Partnerships'];
@@ -173,12 +181,20 @@ export const ARCHIVE_EN: ArchiveContent = {
     featuredLabel: 'Featured article',
     readMoreLabel: 'Start reading',
     sourceLabel: 'Soeteck Technical Team',
+    featuredEyebrow: 'Editor\'s Pick',
+    featuredTitle: 'In the Spotlight',
+    listEyebrow: 'More Insights',
+    listTitle: 'Explore the Archive',
     noArticles: 'No articles found in this category.',
   },
   caseStudyLabels: {
     featuredLabel: 'Featured case study',
     readMoreLabel: 'View case study',
     sourceLabel: 'Soeteck Project Team',
+    featuredEyebrow: 'Featured',
+    featuredTitle: 'Featured Case Study',
+    listEyebrow: 'All Case Studies',
+    listTitle: 'More Real-world Deployments',
     noArticles: 'No case studies found in this category.',
   },
   cta: {

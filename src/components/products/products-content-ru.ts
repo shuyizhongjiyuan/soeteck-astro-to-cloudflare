@@ -11,7 +11,7 @@ export const PRODUCTS_RU: ProductsContent = {
       title: 'Критическое электропитание',
       description:
         'Источники бесперебойного питания, системы постоянного тока, распределение электроэнергии, статические переключатели, шинопроводы и аккумуляторные решения для непрерывной работы критического оборудования.',
-      image: '/resources/soeteck-critical-power-banner.webp',
+      image: '/resources/soeteck-critical-power.webp',
       imageAlt: 'Soeteck решения для критического электропитания — ИБП, постоянный ток, распределение',
       viewAllUrl: '/products/critical-power/',
       viewAllLabel: 'Все решения электропитания',
@@ -29,13 +29,22 @@ export const PRODUCTS_RU: ProductsContent = {
       title: 'Тепловое управление',
       description:
         'Решения для прецизионного кондиционирования, жидкостного охлаждения, отвода тепла и естественного охлаждения для центров обработки данных, телекоммуникационных помещений и сред с высокой плотностью вычислений.',
-      image: '/resources/soeteck-thermal-management-banner.webp',
+      image: '/resources/soeteck-thermal-management.webp',
       imageAlt: 'Soeteck решения для теплового управления — прецизионное охлаждение, жидкостное охлаждение',
       viewAllUrl: '/products/thermal-management/',
       viewAllLabel: 'Все решения теплового управления',
       subcategories: [
         { name: 'Решения для жидкостного охлаждения', path: '/products/thermal-management/liquid-cooling-solutions/' },
-        { name: 'Прецизионные кондиционеры', path: '/products/thermal-management/precision-air-conditioning/' },
+        {
+          name: 'Прецизионные кондиционеры',
+          path: '/products/thermal-management/precision-air-conditioning/',
+          children: [
+            { name: 'Комнатное охлаждение', path: '/products/thermal-management/precision-air-conditioning/room-cooling/' },
+            { name: 'Межрядное охлаждение', path: '/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
+            { name: 'Охлаждение стойки', path: '/products/thermal-management/precision-air-conditioning/rack-cooling/' },
+            { name: 'Охлаждение хладагентом', path: '/products/thermal-management/precision-air-conditioning/pumped-refrigerant-cooling/' },
+          ],
+        },
         { name: 'Кондиционеры для телекоммуникационных шкафов', path: '/products/thermal-management/telecom-enclosure-air-conditioner/' },
         { name: 'Отвод тепла', path: '/products/thermal-management/heat-rejection/' },
         { name: 'Чиллеры свободного охлаждения', path: '/products/thermal-management/free-cooling-chillers/' },
@@ -47,14 +56,13 @@ export const PRODUCTS_RU: ProductsContent = {
       title: 'Стойки и корпуса',
       description:
         'Серверные стойки, уличные корпуса и интегрированные решения, обеспечивающие модульную поддержку и защиту критической ИТ-инфраструктуры.',
-      image: '/resources/soeteck-racks-enclosures-banner.webp',
+      image: '/resources/soeteck-racks-enclosures.webp',
       imageAlt: 'Soeteck стойки и корпуса — серверные стойки, уличные корпуса',
       viewAllUrl: '/products/racks-enclosures/',
       viewAllLabel: 'Все стойки и корпуса',
       subcategories: [
         { name: 'Стойки и шкафы', path: '/products/racks-enclosures/racks-cabinets/' },
         { name: 'Уличные корпуса', path: '/products/racks-enclosures/outdoor-enclosures/' },
-        { name: 'Интегрированные ограждения', path: '/products/racks-enclosures/integrated-containments/' },
       ],
     },
     {
@@ -62,7 +70,7 @@ export const PRODUCTS_RU: ProductsContent = {
       title: 'Мониторинг и управление',
       description:
         'Системы мониторинга инфраструктуры, интеллектуального управления, датчики окружающей среды и централизованные системы для повышения доступности и эффективности оборудования.',
-      image: '/resources/soeteck-monitoring-management-banner.webp',
+      image: '/resources/soeteck-monitoring-management.webp',
       imageAlt: 'Soeteck решения для мониторинга и управления',
       viewAllUrl: '/products/monitoring-management/',
       viewAllLabel: 'Все решения мониторинга',
@@ -75,4 +83,11 @@ export const PRODUCTS_RU: ProductsContent = {
       ],
     },
   ],
+
+  cta: {
+    eyebrow: 'Свяжитесь с нами',
+    title: 'Построим вашу критическую инфраструктуру вместе',
+    text: 'Обсудите с экспертом Soeteck решения по электропитанию, охлаждению, стойкам и мониторингу для вашего проекта.',
+    buttonLabel: 'Связаться',
+  },
 };

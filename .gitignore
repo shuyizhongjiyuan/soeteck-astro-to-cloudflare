@@ -5,3 +5,7 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# 构建期搜索索引（scripts/build-search-index.mjs 生成，部署前由 build 前置生成）
+public/search-index/
+.cache/

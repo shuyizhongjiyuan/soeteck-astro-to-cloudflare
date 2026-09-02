@@ -11,7 +11,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       title: '关键电源',
       description:
         '不间断电源、直流电源系统、配电设备、静态转换开关、母线槽和蓄电池解决方案，确保关键设备的持续运行。',
-      image: '/resources/soeteck-critical-power-banner.webp',
+      image: '/resources/soeteck-critical-power.webp',
       imageAlt: 'Soeteck 关键电源解决方案 — UPS、直流电源、配电',
       viewAllUrl: '/products/critical-power/',
       viewAllLabel: '查看全部关键电源',
@@ -29,13 +29,22 @@ export const PRODUCTS_ZH: ProductsContent = {
       title: '热管理',
       description:
         '精密空调、液冷、散热和自然冷却解决方案，适用于数据中心、电信机房和高密度计算环境。',
-      image: '/resources/soeteck-thermal-management-banner.webp',
+      image: '/resources/soeteck-thermal-management.webp',
       imageAlt: 'Soeteck 热管理解决方案 — 精密冷却、液冷',
       viewAllUrl: '/products/thermal-management/',
       viewAllLabel: '查看全部热管理',
       subcategories: [
         { name: '液冷解决方案', path: '/products/thermal-management/liquid-cooling-solutions/' },
-        { name: '精密空调', path: '/products/thermal-management/precision-air-conditioning/' },
+        {
+          name: '精密空调',
+          path: '/products/thermal-management/precision-air-conditioning/',
+          children: [
+            { name: '机房空调', path: '/products/thermal-management/precision-air-conditioning/room-cooling/' },
+            { name: '列间空调', path: '/products/thermal-management/precision-air-conditioning/in-row-cooling/' },
+            { name: '机柜空调', path: '/products/thermal-management/precision-air-conditioning/rack-cooling/' },
+            { name: '泵送制冷剂散热', path: '/products/thermal-management/precision-air-conditioning/pumped-refrigerant-cooling/' },
+          ],
+        },
         { name: '通信机柜空调', path: '/products/thermal-management/telecom-enclosure-air-conditioner/' },
         { name: '散热', path: '/products/thermal-management/heat-rejection/' },
         { name: '自由冷却冷水机组', path: '/products/thermal-management/free-cooling-chillers/' },
@@ -47,14 +56,13 @@ export const PRODUCTS_ZH: ProductsContent = {
       title: '机架与机柜',
       description:
         '服务器机架、户外机柜和集成解决方案，为关键IT和基础设施提供模块化支撑和保护。',
-      image: '/resources/soeteck-racks-enclosures-banner.webp',
+      image: '/resources/soeteck-racks-enclosures.webp',
       imageAlt: 'Soeteck 机架与机柜 — 服务器机架、户外机柜',
       viewAllUrl: '/products/racks-enclosures/',
       viewAllLabel: '查看全部机架与机柜',
       subcategories: [
         { name: '机架和机柜', path: '/products/racks-enclosures/racks-cabinets/' },
         { name: '户外机柜', path: '/products/racks-enclosures/outdoor-enclosures/' },
-        { name: '集成封闭系统', path: '/products/racks-enclosures/integrated-containments/' },
       ],
     },
     {
@@ -62,7 +70,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       title: '监控与管理',
       description:
         '基础设施监控、智能控制、环境传感器和集中管理系统，提高设备可用性和效率。',
-      image: '/resources/soeteck-monitoring-management-banner.webp',
+      image: '/resources/soeteck-monitoring-management.webp',
       imageAlt: 'Soeteck 监控与管理解决方案',
       viewAllUrl: '/products/monitoring-management/',
       viewAllLabel: '查看全部监控与管理',
@@ -75,4 +83,11 @@ export const PRODUCTS_ZH: ProductsContent = {
       ],
     },
   ],
+
+  cta: {
+    eyebrow: '联系我们',
+    title: '与数益科技一起构建关键基础设施',
+    text: '向数益科技顾问咨询适用于您项目的电源、冷却、机架与监控解决方案。',
+    buttonLabel: '联系我们',
+  },
 };

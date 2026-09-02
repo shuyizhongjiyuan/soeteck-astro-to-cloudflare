@@ -1,9 +1,9 @@
 // Prefabricated Container Data Center solution content data
 
 export const PREFAB_OVERVIEW_PARAGRAPHS = [
-  '<strong>Container data centers</strong> offer a swift and efficient alternative to traditional data centers, enabling rapid deployment to meet varying IT demands. Their <strong>prefabricated and modular architecture</strong> allows for extensive customization, ensuring a secure and adaptable infrastructure that aligns with evolving market needs.',
-  'SOETECK\'s <strong>prefabricated containerized data center solutions</strong> focus on delivering exceptional value through advanced technologies such as power management and thermal control. Our systems provide flexibility and scalability, reducing costs while effectively addressing client requirements. We collaborate closely with customers to tailor each deployment to their specific needs, helping them excel in a competitive landscape.',
-  'We outperform Huawei in serving SMBs. While our robust supply chain and expertise equip us to handle large-scale projects, our service-driven approach ensures we meet the demands of smaller clients with better cost-efficiency. For example, during <a href="/en/news-and-insights/client-case-studies/driving-innovation-soeteck-provides-saudi-telecom-with-advanced-mobile-olt-container-data-center-solutions/">DR project for Saudi Telecom</a>, we swiftly refined our solutions through proactive communication to align with the client\'s evolving technical needs.',
+  '<strong>Container data centers</strong> get compute in place faster than a conventional build does. Because the architecture is prefabricated and modular, a deployment can be sized and customized for the site, then adapted as needs change.',
+  'SOETECK\'s prefabricated containerized data centers keep operating costs down through tighter power management and thermal control. Units are flexible and scalable, and because we engineer each one with the customer, it is shaped to the actual workload rather than a generic spec.',
+  'For SMBs this approach is also cost-effective: our service-led model lets us beat Huawei on price without sacrificing support. When a project grows, our supply chain still handles large-scale builds. See the <a href="/{lang}/news-and-insights/client-case-studies/driving-innovation-soeteck-provides-saudi-telecom-with-advanced-mobile-olt-container-data-center-solutions/">DR project for Saudi Telecom</a>, where we refined the design in close dialogue with the client.',
 ];
 
 export const PREFAB_HOTSPOTS = [
@@ -26,7 +26,7 @@ export const PREFAB_CORE_MODULES = [
   { title: 'Intelligent Monitoring System', text: 'Operational status monitoring', icon: 'chart' },
 ];
 
-export const PREFAB_HOTSPOT_IMAGE = '/resources/container-data-center-3-1024x683.webp';
+export const PREFAB_HOTSPOT_IMAGE: string = '/resources/container-data-center-3-1024x683.webp';
 
 export const PREFAB_MODEL_VIEWS_20FT = [
   {
@@ -188,7 +188,7 @@ export const PREFAB_CLIENT_CASES = [
 ];
 
 // Critical Power & Thermal Management (used by both prefab and cabinet pages)
-export const PREFAB_CRITICAL_POWER_TEXT =
+export const PREFAB_CRITICAL_POWER_TEXT: string =
   'The SOETECK solution incorporates an efficient power distribution system, featuring a range of rack-mounted UPS units and custom-designed distribution modules. Customers can choose from either rack-mounted lithium batteries or lead-acid batteries to suit their needs. We also offer tailored UPS selection services, along with comprehensive distribution design and manufacturing. Furthermore, based on your required backup duration, we provide a variety of battery options, including battery packs, battery cabinets, and battery racks.';
 
 export const PREFAB_CRITICAL_POWER_PRODUCTS = [
@@ -236,7 +236,7 @@ export const PREFAB_CRITICAL_POWER_PRODUCTS = [
   },
 ];
 
-export const PREFAB_THERMAL_MANAGEMENT_TEXT =
+export const PREFAB_THERMAL_MANAGEMENT_TEXT: string =
   'SOETECK offers comprehensive cooling solutions tailored for data centers and base stations, including room-level, row-level, and rack-level precision air conditioning systems. To effectively address the cooling demands of high-density computing applications within individual cabinets, our rack-level and row-level precision air conditioning systems are designed for efficiency and cost-effectiveness.';
 
 export const PREFAB_THERMAL_PRODUCTS = [
@@ -282,3 +282,92 @@ export const PREFAB_THERMAL_PRODUCTS = [
     ],
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Page-level copy (moved from PrefabContainerPage.astro hardcode, Batch 3 i18n)
+// `{lang}` inside content strings is replaced with the active language prefix
+// at render time; slugs themselves stay untranslated (ADR-029 link policy).
+// ---------------------------------------------------------------------------
+
+export const PREFAB_PAGE_HERO = {
+  title: 'Prefabricated Container Data Center',
+  bannerAlt: 'Prefabricated container data center project',
+  videoAriaLabel: 'Play Prefabricated Container Data Center video',
+  videoThumbAlt: 'Prefab modular data center project video preview',
+};
+
+export const PREFAB_VIDEO_FALLBACK_TITLE: string = 'Soeteck solution video';
+
+export const PREFAB_OVERVIEW_HEADING: string = 'Containerized Data Centers, Delivered Fast';
+
+export const PREFAB_CTA_ROW = {
+  getBrochure: 'GET BROCHURE',
+  contactUs: 'CONTACT US',
+};
+
+export const PREFAB_CLOSER_HEADING: string = 'Inside the Container Data Center';
+
+export const PREFAB_DETAIL_BLOCKS = {
+  typical: {
+    num: '1 - ',
+    title: 'A typical design of PCDCs',
+    imageAlt: 'Typical design of a prefabricated container data center',
+    lead: 'The containerized data center provides an integrated solution for power distribution, cooling management, fire safety, and structured cabling. It is designed to offer safety, reliability, and efficiency in a compact format.',
+    featuresLabel: 'Key Features:',
+    features: [
+      'Safety and Reliability: Built to high safety standards with multiple protective measures, including fire resistance, water resistance, and enhanced security features.',
+      'Rapid Deployment: The design enables quick setup and installation, allowing for operational readiness in a short timeframe.',
+      'Flexible Scalability: Modular architecture supports easy expansion to accommodate changing requirements.',
+      'High Density and Efficiency: Efficient use of space allows for high computing power while minimizing resource consumption.',
+      'Intelligent Management: Equipped with monitoring and management systems for effective oversight and maintenance.',
+    ],
+  },
+  models: {
+    num: '2 - ',
+    title: 'Meet with two typical models',
+    intro: 'SOETECK prefabricated container data centers come in various sizes to accommodate differing business needs. Here, we introduce two typical dimensions: the 20-foot and the 40-foot containers, each designed to deliver efficient and flexible computing solutions.',
+    fullViewLabel: 'Full View',
+    ft20Title: '20ft container data center',
+    ft20Desc: 'The 20-foot container data center is a compact solution ideal for businesses with moderate computing requirements. Its small footprint allows for easy deployment in both urban and remote locations.',
+    ft40Title: '40ft container data center',
+    ft40Desc: 'The 40-foot container data center is designed for larger-scale deployments, offering expanded capacity for high-density computing while maintaining the same rapid deployment benefits.',
+  },
+  modules: {
+    num: '3 - ',
+    title: 'Core Infrastructure Modules',
+    lead: 'The SOETECK containerized data center solution consists of several key components, including the cabinet system, thermal control system, critical power supply, security system and dynamic environment system. Here, you will find details about several core modules.',
+  },
+};
+
+export const PREFAB_PRODUCT_GROUPS = {
+  criticalPower: 'Critical Power',
+  thermal: 'Thermal Management',
+  galleryAria: '{title} gallery',
+};
+
+export const PREFAB_SPECS = {
+  heading: 'Featured Models',
+  modelsLabel: 'Models',
+  pdfLinkText: 'SOETECK Prefabricated Container Data Center.pdf',
+};
+
+export const PREFAB_SCENARIOS_HEADING: string = 'Who Needs a Container Data Center?';
+
+export const PREFAB_SCENARIOS_SUBTITLE: string = 'An integration of Power, Cooling & Infrastructure Modules Supporting Reliable IT Operations – Where Modular DC Delivers Unique Value';
+
+export const PREFAB_SCENARIO_UI = {
+  benefitsTab: 'Solution Benefits',
+  painTab: 'Critical Pain Points',
+  detailsAria: '{title} details',
+};
+
+export const PREFAB_CASES_HEADING: string = 'Container Data Center Case Studies';
+
+export const PREFAB_CTA_SECTION = {
+  eyebrow: 'Talk to an Engineer',
+  title: 'Get in Touch with SOETECK',
+  text: 'Share your facility requirements and get a practical solution path. Tell us your project type, capacity needs, and timeline — our team will help identify the right configuration.',
+  checks: ['Project consultation', 'Technical configuration support', 'Regional follow-up'],
+  contactButton: 'Contact Us',
+  brochureButton: 'Download Brochure',
+};

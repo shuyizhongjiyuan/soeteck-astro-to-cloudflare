@@ -40,7 +40,10 @@ const content = contentMap[lang] ?? ABOUT_EN;
 const aboutSections = page.sections?.about ?? {};
 const heroEyebrow = page.sections?.hero?.eyebrow ?? content.heroEyebrow;
 const heroTitle = page.sections?.hero?.title ?? page.title;
-const heroImage: PageImage = page.heroImage ?? ABOUT_HERO_FALLBACK;
+// hero 背景图：优先 ACF「Hero Background Image」(page.sections.heroImage)，兜底页面特色图，再兜底硬编码图(ABOUT_HERO_FALLBACK)。
+// replace 剥掉可能的 cms.soeteck.com 域名，统一成 /resources/ 相对路径（Contact/方案页同款，ADR-020）。
+const heroField = page.sections?.heroImage?.replace(/^https?:\/\/[^/]+/, '');
+const heroImage: PageImage = heroField ? { path: heroField, alt: '' } : (page.heroImage ?? ABOUT_HERO_FALLBACK);
 
 // Use translation values with content file fallbacks
 const lead = aboutSections.lead ?? content.lead;
@@ -88,7 +91,7 @@ const ctaEyebrow = aboutSections.ctaEyebrow ?? content.ctaEyebrow;
 const ctaTitle = aboutSections.ctaTitle ?? content.ctaTitle;
 const ctaText = aboutSections.ctaText ?? content.ctaText;
 const ctaChecks = aboutSections.ctaChecks ?? content.ctaChecks;
-const ctaButton = aboutSections.ctaButton ?? content.ctaButton;
+const ctaButtons = aboutSections.ctaButtons ?? content.ctaButtons;
 ---
 <div class="soeteck-about-page">
   <AboutHero title={heroTitle} lead={lead} image={heroImage} breadcrumbs={page.breadcrumbs} eyebrow={heroEyebrow} lang={lang} />
@@ -162,7 +165,7 @@ const ctaButton = aboutSections.ctaButton ?? content.ctaButton;
 
   <AboutGlobalNetwork image={ABOUT_WORLD_MAP} nodes={networkCards} eyebrow={networkEyebrow} title={networkTitle} text={networkText} />
   <AboutTimeline milestones={milestones} eyebrow={timelineEyebrow} title={timelineTitle} text={timelineText} visionLabel={visionLabel} visionText={visionText} missionLabel={missionLabel} missionText={missionText} />
-  <AboutCta href="/en/contact-us/" eyebrow={ctaEyebrow} title={ctaTitle} text={ctaText} checks={ctaChecks} button={ctaButton} />
+  <AboutCta eyebrow={ctaEyebrow} title={ctaTitle} text={ctaText} checks={ctaChecks} buttons={ctaButtons} />
 </div>
 
 <style>
@@ -204,6 +207,14 @@ const ctaButton = aboutSections.ctaButton ?? content.ctaButton;
   .proof h2 {
     margin: 0;
     color: var(--soeteck-text);
+  }
+
+  /* 6.1 标准 Eyebrow — 基类样式 + 间距覆盖（全局基类 20px → 规范 25px），intro/proof/factory 三处 section */
+  .intro .soeteck-eyebrow,
+  .proof .soeteck-eyebrow,
+  .factory .soeteck-eyebrow {
+    margin: 0 0 25px;
+    padding: 0;
   }
 
   .intro p:not(.soeteck-eyebrow),
@@ -328,7 +339,7 @@ const ctaButton = aboutSections.ctaButton ?? content.ctaButton;
 
   /* section padding 已统一到 --soeteck-section-y 变量，768px 移动端覆盖已移除 */
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .factory__capabilities {
       grid-template-columns: 1fr;
     }

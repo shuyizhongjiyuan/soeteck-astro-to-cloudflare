@@ -400,7 +400,7 @@ export async function fetchRouteContent(route: PocRoute, lang: string = 'en'): P
     throw new Error(`Failed to fetch ${route.path}: ${response.status}`);
   }
 
-  return normalizeMediaUrls(await response.json()) as ContentApiResponse;
+  return normalizeMediaUrls(rewriteProductLinks(await response.json(), lang)) as ContentApiResponse;
 }
 
 /**
@@ -459,7 +459,33 @@ export async function fetchPreviewContent(
   if (!response.ok) {
     throw new Error(`Preview fetch failed for post ${postId}: ${response.status}`);
   }
-  return normalizeMediaUrls(await response.json()) as ContentApiResponse;
+  return normalizeMediaUrls(rewriteProductLinks(await response.json(), lang)) as ContentApiResponse;
+}
+
+/**
+ * 把 WooCommerce product-collection 块渲染出的 CMS 产品绝对链接
+ * （https://cms.soeteck.com/products/...）改写为前端相对路径（/{lang}/products/...）。
+ *
+ * 背景：文章正文内嵌的 woocommerce/product-collection 块由 CMS 渲染成产品卡片，
+ * 其 href 指向 cms 域名；CMS 产品 slug 与前端 /{lang}/products/... 路由完全一致
+ * （所有语言的文章里该块都输出英文产品 slug），因此仅需替换 host + 加语言前缀
+ * 即可对齐前端。配套样式见 gutenberg-blocks.css 的
+ * `.wp-block-woocommerce-product-template` 区块。经 JSON.stringify 全局替换，
+ * 任何包含该绝对链接的字段（contentHtml 等）都会生效。
+ */
+function rewriteProductLinks<T>(data: T, lang: string): T {
+  const raw = JSON.stringify(data);
+  // CMS 产品绝对链接 → 前端相对路径（当前语言前缀）。
+  // product-collection 块的查询会拉入多语言翻译产品（permalink 带 -espanol/-portugues/
+  // -русский/-中文 后缀），先把这些后缀剥离（仅限 cms 产品路径尾部），再替换 host，
+  // 使每个产品卡对齐到「当前语言」的产品页（前端各语言产品页均存在），避免 404。
+  const rewritten = raw
+    .replace(
+      /https?:\/\/cms\.soeteck\.com\/products\/([^"']+?)-(espanol|portugues|русский|中文|%e4%b8%ad%e6%96%87)(?=["'\s/])/g,
+      'https://cms.soeteck.com/products/$1'
+    )
+    .replace(/https?:\/\/cms\.soeteck\.com\/products\//g, `/${lang}/products/`);
+  return JSON.parse(rewritten);
 }
 
 function endpointForRouteType(routeType: RouteType): string {

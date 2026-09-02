@@ -25,8 +25,7 @@
     padding-bottom: 0;
 }
 
-.soeteck-product-tabs,
-.soeteck-product-section {
+.soeteck-product-tabs {
     position: relative;
 }
 
@@ -175,7 +174,7 @@
     min-height: 360px;
     border-radius: 14px;
     background: #eef4fb;
-    color: #64748b;
+    color: var(--soeteck-muted);
     font-weight: 700;
 }
 
@@ -183,30 +182,29 @@
     padding-top: 0;
 }
 
-.soeteck-product-section__label {
-    margin: 0 0 16px;
-    color: var(--soeteck-primary);
-    font-size: 12px;
+/* 面板内 section 标题 —— 统一 H2，22px */
+.soeteck-product-tab-panel .soeteck-section-title {
+    margin: 0 0 18px;
+    font-family: var(--soeteck-font-heading);
+    color: #1d6ec8;
+    font-size: 22px;
     font-weight: 700;
-    letter-spacing: .12em;
-    text-transform: uppercase;
+    line-height: 1.25;
 }
 
 .soeteck-product-hero__eyebrow {
     margin: 0 0 28px;
-    color: #1d4f8f;
+    color: var(--soeteck-primary);
     font-size: 17px;
     font-weight: 700;
-    letter-spacing: .12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    font-size: 17px;
-    letter-spacing: 0;
 }
 
 .soeteck-product-hero__title {
     margin: 0 0 18px;
     font-family: var(--soeteck-font-heading);
-    color: var(--soeteck-primary, #1d4f8f);
+    color: var(--soeteck-text);
     font-size: 38px;
     font-weight: 700;
     line-height: 1.2;
@@ -216,7 +214,7 @@
 .soeteck-product-hero__overview {
     margin-top: 0;
     font-family: var(--soeteck-font-body);
-    color: #475569;
+    color: var(--soeteck-text-soft);
     font-size: 16px;
     line-height: 1.75;
 }
@@ -236,19 +234,19 @@
 
 .soeteck-product-highlight {
     border-radius: 10px;
-    background: #f8fafc;
+    background: var(--soeteck-surface);
     padding: 8px 11px;
 }
 
 .soeteck-product-highlight dt {
-    color: #0f172a;
+    color: var(--soeteck-text);
     font-size: 13px;
     font-weight: 700;
 }
 
 .soeteck-product-highlight dd {
     margin: 3px 0 0;
-    color: #64748b;
+    color: var(--soeteck-muted);
     font-size: 14px;
     line-height: 1.35;
 }
@@ -316,6 +314,7 @@
 .soeteck-product-tabs__panels {
     width: min(900px, calc(100% - (var(--soeteck-gutter) * 2)));
     margin-inline: auto;
+    min-height: 600px;   /* 各面板内容高度不一，设最小高度避免 tab 切换时跳动 */
     border: 1px solid #e5e7eb;
     background: #fff;
     padding: clamp(34px, 4vw, 56px) clamp(28px, 4vw, 50px);
@@ -347,15 +346,9 @@
     padding: 0;
 }
 
-.soeteck-product-section {
-    margin: 0 0 clamp(42px, 6vw, 78px);
-    background: #fff;
-    padding: clamp(10px, 2vw, 18px) 0 0;
-}
-
 .soeteck-product-richtext {
     font-family: var(--soeteck-font-body);
-    color: #475569;
+    color: var(--soeteck-text-soft);
     font-size: 16px;
     line-height: 1.78;
 }
@@ -363,7 +356,7 @@
 .soeteck-product-richtext h2,
 .soeteck-product-richtext h3,
 .soeteck-product-richtext h4 {
-    color: #0f172a;
+    color: var(--soeteck-text);
     line-height: 1.22;
 }
 
@@ -392,24 +385,29 @@
 }
 
 .soeteck-product-feature-list ul,
-.soeteck-product-feature-list ol {
+.soeteck-product-feature-list ol,
+.soeteck-product-applications-list ul,
+.soeteck-product-applications-list ol {
     margin: 0;
     padding-left: 0;
     list-style: none;
 }
 
-.soeteck-product-feature-list li {
+.soeteck-product-feature-list li,
+.soeteck-product-applications-list li {
     position: relative;
     padding-left: 20px;
-    color: #334155;
+    color: var(--soeteck-text-soft);
     line-height: 1.65;
 }
 
-.soeteck-product-feature-list li + li {
+.soeteck-product-feature-list li + li,
+.soeteck-product-applications-list li + li {
     margin-top: 8px;
 }
 
-.soeteck-product-feature-list li::before {
+.soeteck-product-feature-list li::before,
+.soeteck-product-applications-list li::before {
     content: '';
     position: absolute;
     top: .72em;
@@ -421,14 +419,13 @@
 }
 
 .soeteck-product-feature-list p + ul,
-.soeteck-product-feature-list p + ol {
+.soeteck-product-feature-list p + ol,
+.soeteck-product-applications-list p + ul,
+.soeteck-product-applications-list p + ol {
     margin-top: 12px;
 }
 
-.soeteck-product-applications-list ul,
-.soeteck-product-applications-list ol {
-    padding-left: 0;
-}
+/* Applications 列表 li 样式已并入上方 feature-list 选择器组，与 Key Features 统一（蓝点、无 list-style、同间距） */
 
 .soeteck-product-panel-intro {
     margin-bottom: 22px;
@@ -436,7 +433,7 @@
 
 .variations-table {
     overflow-x: auto;
-    background: #f8fafc;
+    background: var(--soeteck-surface);
     cursor: grab;
     user-select: none;
 }
@@ -485,7 +482,7 @@ table.variations-table {
 }
 
 .variations-table td {
-    color: #475569;
+    color: var(--soeteck-text-soft);
 }
 
 .variations-table tr:hover td {
@@ -504,7 +501,7 @@ table.variations-table {
     font-family: var(--soeteck-font-ui);
     background: transparent;
     padding: 0;
-    color: #475569;
+    color: var(--soeteck-text-soft);
     cursor: pointer;
     font: inherit;
     font-size: 13px;
@@ -556,7 +553,7 @@ table.variations-table {
     border-radius: 0;
     background: transparent;
     padding: 23px 38px 23px var(--soeteck-spec-cell-x);
-    color: #475569;
+    color: var(--soeteck-text-soft);
     cursor: pointer;
     font: inherit;
     font-size: 15px;
@@ -581,7 +578,7 @@ table.variations-table {
     position: absolute;
     right: 14px;
     top: 50%;
-    color: #475569;
+    color: var(--soeteck-text-soft);
     font-size: 20px;
     font-weight: 700;
     line-height: 1;
@@ -596,7 +593,7 @@ table.variations-table {
 
 .soeteck-product-spec-table tr:not(.soeteck-product-spec-table__group) th {
     width: 40%;
-    color: #0f172a;
+    color: var(--soeteck-text);
     font-weight: 700;
 }
 
@@ -611,7 +608,7 @@ table.variations-table {
 }
 
 .soeteck-product-spec-table td {
-    color: #526173;
+    color: var(--soeteck-text-soft);
     font-weight: 400;
 }
 
@@ -627,9 +624,9 @@ table.variations-table {
     justify-content: space-between;
     gap: 16px;
     border-radius: 10px;
-    background: #f8fafc;
+    background: var(--soeteck-surface);
     padding: 16px 18px;
-    color: #0f172a;
+    color: var(--soeteck-text);
 }
 
 .soeteck-product-download:hover {
@@ -644,9 +641,9 @@ table.variations-table {
     margin: 0;
     font-family: var(--soeteck-font-body);
     border-radius: 14px;
-    background: #f8fafc;
+    background: var(--soeteck-surface);
     padding: 18px;
-    color: #64748b;
+    color: var(--soeteck-muted);
 }
 
 .soeteck-product-inquiry {
@@ -658,12 +655,12 @@ table.variations-table {
 }
 
 .soeteck-product-inquiry h2 {
-    margin: 0 0 22px;
+    margin: 0 0 18px;
     font-family: var(--soeteck-font-heading);
     color: #1d6ec8;
-    font-size: clamp(26px, 3vw, 34px);
-    font-weight: 800;
-    line-height: 1.18;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.25;
 }
 
 .soeteck-product-inquiry__intro p {
@@ -709,7 +706,7 @@ table.variations-table {
     border-radius: 6px;
     background: #fff;
     padding: 11px 14px;
-    color: #0f172a;
+    color: var(--soeteck-text);
     font: inherit;
     transition: border-color 180ms ease, box-shadow 180ms ease;
 }
@@ -740,31 +737,8 @@ textarea.soeteck-field {
     border-color: #16a34a;
 }
 
-.soeteck-inquiry-upload {
-    display: flex;
-    font-family: var(--soeteck-font-ui);
-    flex-wrap: wrap;
-    gap: 10px 16px;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    color: #111827;
-    font-size: 14px;
-}
-
-.soeteck-inquiry-upload legend {
-    flex: 0 0 100%;
-    margin-bottom: 2px;
-    padding: 0;
-}
-
-.soeteck-inquiry-upload label {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-
 .soeteck-inquiry-submit {
+    margin-top: 7px;   /* 表单网格 gap 18px + 7 = 25px，使「上传区 → 提交按钮」间距与 contact 一致 */
     min-height: 46px;
     font-family: var(--soeteck-font-ui);
     border: 0;
@@ -820,7 +794,7 @@ textarea.soeteck-field {
 .soeteck-product-inquiry-form__note {
     min-height: 22px;
     margin: 0;
-    color: #64748b;
+    color: var(--soeteck-muted);
     font-size: 14px;
     font-weight: 500;
 }
@@ -831,98 +805,42 @@ textarea.soeteck-field {
 
 /* ── File upload area (product page) ── */
 .soeteck-product-inquiry__file {
-    grid-column: 1 / -1;
     max-height: 0;
+    margin-top: 0;
     overflow: hidden;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-4px);
-    transition: max-height 220ms ease, margin-top 220ms ease, opacity 160ms ease, transform 200ms ease;
+    transition: max-height 300ms ease, margin-top 300ms ease;   /* 进入动画与 contact 一致（下滑进入） */
 }
 
 .soeteck-product-inquiry__file.is-visible {
-    max-height: 220px;
-    margin-top: 6px;
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
+    max-height: 320px;
+    margin-top: 10px;   /* 正 margin → 进入下滑、退出上收，机制与 contact 一致；间距 10px 同 contact */
+}
+
+/* 上传开关 ↔ 文件区（同一格内，间距由文件区自身 margin-top 提供，与 contact 一致） */
+.soeteck-product-inquiry-form .soeteck-contact-form__upload-switch {
+    margin: 0;
 }
 
 .soeteck-product-inquiry__file-label {
     display: block;
-    margin-bottom: 6px;
-    color: #111827;
-    font-size: 14px;
+    margin-bottom: 8px;
+    font-size: 0.8125rem;   /* 字号对齐 contact */
     font-weight: 600;
+    color: var(--soeteck-text);
 }
 
-.soeteck-product-inquiry__file-control {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: start;
-    min-height: 50px;
-    padding: 8px 12px;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: #fff;
-    transition: border-color 180ms ease, box-shadow 180ms ease;
+/* 文件区 has-file 高亮（内层用共享 soeteck-contact-form__file-* 类） */
+.soeteck-product-inquiry__file.has-file .soeteck-contact-form__file-control {
+    border-color: rgba(26, 133, 229, 0.35);
 }
 
-.soeteck-product-inquiry__file-control:hover,
-.soeteck-product-inquiry__file:focus-within .soeteck-product-inquiry__file-control {
-    border-color: #1d8fe8;
-    box-shadow: 0 0 0 3px rgba(29, 143, 232, 0.08);
-}
-
-.soeteck-product-inquiry__file-add {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    min-height: 34px;
-    padding: 0 10px 0 0;
-    border: 0;
-    background: transparent;
-    color: #111827;
-    cursor: pointer;
-    font: inherit;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.soeteck-product-inquiry__file-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 34px;
-    width: 34px;
-    height: 34px;
-    border: 1px solid rgba(29, 143, 232, 0.22);
-    border-radius: 50%;
-    background: rgba(29, 143, 232, 0.06);
-    color: #1d8fe8;
-    font-size: 1.2rem;
-    font-weight: 600;
-    line-height: 1;
-    transition: background 180ms ease, color 180ms ease, transform 180ms ease;
-}
-
-.soeteck-product-inquiry__file-add:hover .soeteck-product-inquiry__file-icon,
-.soeteck-product-inquiry__file-add:focus-visible .soeteck-product-inquiry__file-icon {
+.soeteck-product-inquiry__file.has-file .soeteck-contact-form__file-icon {
     background: #1d8fe8;
     color: #fff;
-    transform: scale(1.05);
 }
 
-.soeteck-product-inquiry__file-name {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    align-items: center;
-    min-height: 34px;
-    color: #94a3b8;
-    font-size: 13px;
-    font-weight: 500;
+.soeteck-product-inquiry__file.has-file .soeteck-contact-form__file-name {
+    color: var(--soeteck-text-soft);
 }
 
 .soeteck-product-inquiry__file input[type="file"] {
@@ -933,13 +851,16 @@ textarea.soeteck-field {
     opacity: 0;
 }
 
-.soeteck-product-inquiry__file.has-file .soeteck-product-inquiry__file-control {
-    border-color: rgba(29, 143, 232, 0.4);
+/* Related Products —— 全宽 surface 区块（背景样式参考文章 Related Articles：var(--soeteck-surface) + 内层容器） */
+.soeteck-product-related {
+    background: var(--soeteck-surface);
+    padding: var(--soeteck-section-y-sm) 0;
 }
 
-.soeteck-product-inquiry__file.has-file .soeteck-product-inquiry__file-icon {
-    background: #1d8fe8;
-    color: #fff;
+.soeteck-product-related__inner {
+    width: min(var(--soeteck-product-content-width), calc(100% - (var(--soeteck-product-content-gutter) * 2)));
+    margin-inline: auto;
+    padding-inline: 0;
 }
 
 .soeteck-product-related .related.products {
@@ -950,7 +871,7 @@ textarea.soeteck-field {
 .soeteck-product-related .related.products > h2 {
     margin: 0 0 clamp(20px, 3vw, 34px);
     font-family: var(--soeteck-font-heading);
-    color: #0f172a;
+    color: var(--soeteck-text);
     font-size: clamp(24px, 3vw, 36px);
     line-height: 1.2;
 }
@@ -1008,7 +929,7 @@ textarea.soeteck-field {
     aspect-ratio: 4 / 3;
     object-fit: contain;
     margin: 0 0 12px;
-    background: #f8fafc;
+    background: var(--soeteck-surface);
 }
 
 .soeteck-product-related ul.products li.product .woocommerce-loop-product__title {
@@ -1016,7 +937,7 @@ textarea.soeteck-field {
     min-height: calc(14px * 1.45 * 3);
     margin: 0;
     overflow: hidden;
-    color: #0f172a;
+    color: var(--soeteck-text);
     font-size: 14px;
     font-weight: 700;
     line-height: 1.45;
@@ -1028,8 +949,8 @@ textarea.soeteck-field {
     display: block;
     width: 100%;
     margin: auto 0 0;
-    border-top: 1px solid #e2e8f0;
-    background: #f8fafc;
+    border-top: 1px solid #e5e7eb;
+    background: var(--soeteck-surface);
     padding: 11px 14px;
     color: #1d4f8f;
     font-size: 13px;
@@ -1047,10 +968,6 @@ textarea.soeteck-field {
     .soeteck-product-hero,
     .soeteck-product-inquiry {
         grid-template-columns: 1fr;
-    }
-
-    .soeteck-product-hero__summary {
-        padding-top: 0;
     }
 
     .soeteck-product-related ul.products {
@@ -1170,7 +1087,7 @@ textarea.soeteck-field {
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .soeteck-product-related ul.products {
         grid-template-columns: minmax(0, 1fr);
         justify-items: center;
@@ -1195,10 +1112,6 @@ textarea.soeteck-field {
 @media (max-width: 480px) {
     .soeteck-product-highlights {
         grid-template-columns: 1fr;
-    }
-
-    .soeteck-product-section {
-        padding-top: 0;
     }
 
     .soeteck-product-gallery__nav {

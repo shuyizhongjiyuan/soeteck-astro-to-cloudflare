@@ -19,15 +19,16 @@ const { slides, fullscreen = false } = Astro.props;
         alt=""
         width="1920"
         height="1080"
+        fetchpriority={i === 0 ? 'high' : 'auto'}
       />
     ))}
   </div>
   <div class="home-hero__overlay" aria-hidden="true"></div>
   {/* Slideshow text — one set per slide, toggled by JS */}
-  <div class="soeteck-container home-hero__content">
+  <div class="soeteck-container home-hero__content" aria-live="polite" aria-atomic="true">
     {slides.map((slide, i) => (
       <div class={`home-hero__text${i === 0 ? ' home-hero__text--active' : ''}`} data-index={String(i)}>
-        <p class="home-hero__eyebrow">{slide.eyebrow}</p>
+        <p class="soeteck-eyebrow home-hero__eyebrow">{slide.eyebrow}</p>
         <h1 class="home-hero__title">
           {slide.title}<br /><span class="home-hero__title-accent">{slide.titleAccent}</span>
         </h1>
@@ -51,12 +52,6 @@ const { slides, fullscreen = false } = Astro.props;
       />
     ))}
   </div>
-  {/* Scroll-down hint — fullscreen variant only */}
-  {fullscreen && (
-    <a href="#home-products-c" class="home-hero__scroll-hint" aria-label="Scroll to explore">
-      <span></span>
-    </a>
-  )}
 </section>
 
 <style>
@@ -69,7 +64,7 @@ const { slides, fullscreen = false } = Astro.props;
   height: 90vh;
 }
 .home-hero--fullscreen {
-  height: 100vh;
+  height: 85vh;
 }
 /* ── Slideshow ────────────────────────────────────────────── */
 .home-hero__slideshow {
@@ -101,8 +96,8 @@ const { slides, fullscreen = false } = Astro.props;
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(100deg, rgba(11, 31, 58, 0.92) 0%, rgba(11, 31, 58, 0.72) 42%, rgba(11, 31, 58, 0.28) 100%),
-    linear-gradient(180deg, rgba(11, 31, 58, 0.2) 0%, rgba(11, 31, 58, 0.55) 100%);
+    linear-gradient(100deg, #0b1f3af7 0%, #0b1f3ad1 10%, #0b1f3a1a 65%),
+    linear-gradient(#0b1f3a33 0%, #0b1f3a8c 100%);
 }
 .home-hero__content {
   position: absolute;
@@ -159,14 +154,16 @@ const { slides, fullscreen = false } = Astro.props;
   transition: opacity 0.4s ease 450ms, filter 0.5s ease 450ms, transform 0.4s ease 450ms;
 }
 /* ── Individual element styles ──────────────────────────── */
+/* 6.2 Hero Eyebrow — weight/transform/line-height 由全局 .soeteck-eyebrow 基类提供；
+   深浅背景统一 primary 蓝（§6.2，2026-09-01 sunwei 决策，见 memory home-eyebrow-unification） */
 .home-hero__eyebrow {
   max-width: 680px;
-  margin: 0 0 24px;
+  margin: 0 0 28px;
   color: var(--soeteck-primary);
-  font-size: 17px;
-  font-weight: var(--soeteck-weight-bold);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  /* clamp 移动端下限防长文案 nowrap 溢出，桌面端解析到规范值 17px */
+  font-size: clamp(11px, 1.4vw, 17px);
+  letter-spacing: 0.1em;
+  white-space: nowrap;
 }
 .home-hero__title {
   max-width: 680px;
@@ -213,7 +210,8 @@ const { slides, fullscreen = false } = Astro.props;
 .home-hero__dots {
   position: absolute;
   bottom: 32px;
-  right: 48px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 10px;
   z-index: 2;
@@ -268,7 +266,7 @@ const { slides, fullscreen = false } = Astro.props;
 }
 
 /* ── HERO RESPONSIVE ──────────────────────────────────────── */
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .home-hero { height: 380px; }
   .home-hero--fullscreen { height: 92vh; }
   .home-hero__actions { flex-direction: column; align-items: stretch; }
@@ -316,8 +314,9 @@ const { slides, fullscreen = false } = Astro.props;
 
   var current = 0;
   var total   = slides.length;
-  var INTERVAL = 4000;
+  var INTERVAL = 7000;
   var timer   = null;
+  var wasHovering = false;
 
   /* ── Slide + text switching ──────────────────────────────── */
   function goToSlide(index) {
@@ -358,6 +357,28 @@ const { slides, fullscreen = false } = Astro.props;
       goToSlide(idx);
       startAutoplay();
     });
+  });
+
+  /* ── Hover → pause autoplay (可读性) ─────────────────────── */
+  hero.addEventListener('mouseenter', function() {
+    wasHovering = true;
+    stopAutoplay();
+  });
+  hero.addEventListener('mouseleave', function() {
+    wasHovering = false;
+    startAutoplay();
+  });
+
+  /* ── Keyboard left/right → switch slide ──────────────────── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      // 仅当 hero 在视口可见或焦点在 hero 内时接管方向键
+      var rect = hero.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      if (e.key === 'ArrowRight') { goToSlide((current + 1) % total); }
+      else { goToSlide((current - 1 + total) % total); }
+      startAutoplay();
+    }
   });
 
   /* ── Parallax on scroll ──────────────────────────────────── */

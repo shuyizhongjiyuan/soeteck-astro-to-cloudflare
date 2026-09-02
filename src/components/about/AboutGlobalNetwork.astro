@@ -60,6 +60,12 @@ const { image, nodes, eyebrow = 'Global Network & Industrial Partners', title = 
     color: var(--soeteck-text);
   }
 
+  /* 6.1 标准 Eyebrow — 基类样式 + 间距覆盖（全局基类 20px → 规范 25px） */
+  .global .soeteck-eyebrow {
+    margin: 0 0 25px;
+    padding: 0;
+  }
+
   .global p:not(.soeteck-eyebrow) {
     margin: 22px 0 0;
     color: var(--soeteck-text-soft);

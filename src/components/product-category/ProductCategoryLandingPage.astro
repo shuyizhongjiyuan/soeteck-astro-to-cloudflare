@@ -19,8 +19,11 @@ const category = source.category;
 const landingChildren = source.landingChildren ?? source.children ?? [];
 
 const title = category?.name ?? page.title;
+// 分类描述统一来自 ACF product_category_description（富文本 HTML）——
+// hero 副标题为纯文本层，剥离 HTML 标签（与 ProductCategoryPage.astro 同规则）
+const stripHtml = (s: string) => s.replace(/<[^>]*>/g, '').trim();
 const heroSubtitle = source.archiveConfig?.heroSubtitle
-  || category?.description
+  || (category?.description ? stripHtml(category.description) : '')
   || (category?.slug === 'critical-power'
     ? 'Uninterruptible power supplies, DC power systems, power distribution, static transfer switches, busway, and battery solutions to ensure continuous operation of critical equipment.'
     : null);
@@ -164,7 +167,7 @@ const children: LandingChild[] = landingChildren.map((c: any) => ({
   z-index: 1;
   display: flex;
   flex-direction: column;
-  min-height: 480px;
+  min-height: 540px;
   width: min(var(--soeteck-cat-landing-width), calc(100% - (var(--soeteck-cat-landing-gutter) * 2)));
   max-width: none;
   padding-inline: 0;
@@ -184,7 +187,7 @@ const children: LandingChild[] = landingChildren.map((c: any) => ({
   flex-direction: column;
   justify-content: center;
   padding-block: 0;
-  min-height: 480px;
+  min-height: 540px;
 }
 
 .soeteck-product-cat-landing__hero-title {
@@ -310,6 +313,18 @@ const children: LandingChild[] = landingChildren.map((c: any) => ({
   margin: 0;
 }
 
+/* 子分类描述富文本内链 — link-style-standard 正文链接类别 */
+.soeteck-product-cat-landing__card-desc :global(a) {
+  color: var(--soeteck-primary);
+}
+
+.soeteck-product-cat-landing__card-desc :global(a:hover) {
+  color: var(--soeteck-primary-dark);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
 /* ========================================
    Responsive
    ======================================== */
@@ -337,7 +352,7 @@ const children: LandingChild[] = landingChildren.map((c: any) => ({
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .soeteck-product-cat-landing__hero-content {
     min-height: 360px;
   }

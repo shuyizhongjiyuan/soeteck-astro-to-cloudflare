@@ -36,8 +36,10 @@ const steps = content.steps;
 
 <div class="soeteck-thank-you-page">
     <section class="soeteck-thank-you-hero" aria-labelledby="soeteck-thank-you-title">
-      <div class="soeteck-container">
+      <div class="soeteck-container soeteck-thank-you-hero__breadcrumbs">
         <Breadcrumbs items={page.breadcrumbs} lang={lang} />
+      </div>
+      <div class="soeteck-container">
         <div class="soeteck-thank-you-card">
           <div class="soeteck-thank-you-card__mark" aria-hidden="true"></div>
           <p class="soeteck-eyebrow">{t('product.requestReceived')}</p>
@@ -112,6 +114,19 @@ const steps = content.steps;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.5);
     pointer-events: none;
+  }
+
+  .soeteck-thank-you-hero__breadcrumbs {
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  /* 绝对定位后，<nav> 的 margin 由 absolute 容器管理，覆盖默认间距避免双倍偏移 */
+  .soeteck-thank-you-hero__breadcrumbs .soeteck-breadcrumbs {
+    margin: 0;
   }
 
 .soeteck-thank-you-card {
@@ -268,9 +283,13 @@ const steps = content.steps;
     }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .soeteck-thank-you-hero {
       padding-top: 34px;
+    }
+
+    .soeteck-thank-you-hero__breadcrumbs {
+      top: 15px;
     }
 
     .soeteck-thank-you-card {

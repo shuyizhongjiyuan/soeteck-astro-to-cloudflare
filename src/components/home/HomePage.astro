@@ -6,6 +6,10 @@
  */
 import { adaptArticleCard, type AdaptedPage, type AdaptedArticleCard } from '@/lib/page-adapter';
 import { HOME_EN, type HomeContent } from './home-content';
+import { HOME_ZH } from './home-content-zh';
+import { HOME_RU } from './home-content-ru';
+import { HOME_PT } from './home-content-pt';
+import { HOME_ES } from './home-content-es';
 import HeroSection from './sections/HeroSection.astro';
 import CtaSection from './sections/CtaSection.astro';
 import ProductsSectionC from './sections/ProductsSectionC.astro';
@@ -13,6 +17,7 @@ import SolutionsSectionC from './sections/SolutionsSectionC.astro';
 import IndustrySection from './sections/IndustrySection.astro';
 import ServiceSectionHome from './sections/ServiceSectionHome.astro';
 import CaseCarouselSection from './sections/CaseCarouselSection.astro';
+import TestimonialsSection from './sections/TestimonialsSection.astro';
 import NewsBlogsSectionC from './sections/NewsBlogsSectionC.astro';
 
 interface Props {
@@ -21,9 +26,71 @@ interface Props {
 }
 
 const { page, lang } = Astro.props;
-void page;
 
-const c: HomeContent = HOME_EN;
+// 首页正文内容按语言选择（code-embedded ③，translate-code-embedded 模式）；
+// hero 幻灯片与案例轮播仍走 CMS ACF 覆盖（语言页空 → 英文 21880 回退）。
+const HOME_CONTENT_MAP: Record<string, HomeContent> = {
+  en: HOME_EN,
+  zh: HOME_ZH,
+  ru: HOME_RU,
+  pt: HOME_PT,
+  es: HOME_ES,
+};
+const c: HomeContent = HOME_CONTENT_MAP[lang] ?? HOME_EN;
+
+// Home hero := ACF `sections.heroSlides` 覆盖（语言页→英文页兜底由 Content API 完成），空则走 home-content.ts 常量。
+// 每行字段：image/eyebrow/title/title_accent/lead/cta_primary(_link)/cta_secondary(_link)
+const acfSlides = (page.sections as Record<string, any> | undefined)?.heroSlides;
+const heroSlides: HomeContent['hero']['slides'] = (Array.isArray(acfSlides) && acfSlides.length > 0)
+  ? acfSlides.map((row: Record<string, any>, idx: number) => {
+      const fb = c.hero.slides[idx] ?? c.hero.slides[c.hero.slides.length - 1];
+      return {
+        image: String(row.image || '').replace(/^https?:\/\/[^/]+/, '') || fb.image,
+        eyebrow: String(row.eyebrow || fb.eyebrow),
+        title: String(row.title || fb.title),
+        titleAccent: String(row.title_accent || fb.titleAccent),
+        subtitle: String(row.lead || fb.subtitle),
+        ctaPrimary: String(row.cta_primary || fb.ctaPrimary),
+        ctaPrimaryLink: String(row.cta_primary_link || fb.ctaPrimaryLink),
+        ctaSecondary: String(row.cta_secondary || fb.ctaSecondary),
+        ctaSecondaryLink: String(row.cta_secondary_link || fb.ctaSecondaryLink),
+      };
+    })
+  : c.hero.slides;
+
+// Home case carousel := ACF `sections.caseCarouselItems` 覆盖（home 专属组，语言页→英文页兜底由 Content API 完成），
+// 空则走 home-content.ts 常量。每行字段：image/title/location/text/cta/cta_link/metric/metric_label/
+// testimonial_quote/testimonial_author/testimonial_role；行内缺省逐字段回退常量（卡片顺序 1..6）。
+const acfCases = (page.sections as Record<string, any> | undefined)?.caseCarouselItems;
+const projects: HomeContent['projects'] = (Array.isArray(acfCases) && acfCases.length > 0)
+  ? {
+      ...c.projects,
+      cards: acfCases.map((row: Record<string, any>, idx: number) => {
+        const fb = c.projects.cards[idx] ?? c.projects.cards[c.projects.cards.length - 1];
+        const testimonialQuote = String(row.testimonial_quote || fb.testimonial?.quote || '');
+        return {
+          title: String(row.title || fb.title),
+          location: String(row.location || fb.location),
+          metric: String(row.metric || fb.metric),
+          metricLabel: String(row.metric_label || fb.metricLabel),
+          text: String(row.text || fb.text),
+          image: {
+            path: String(row.image || '').replace(/^https?:\/\/[^/]+/, '') || fb.image.path,
+            alt: String(row.title || fb.image.alt),
+          },
+          cta: String(row.cta || fb.cta),
+          ctaLink: String(row.cta_link || fb.ctaLink),
+          testimonial: testimonialQuote
+            ? {
+                quote: testimonialQuote,
+                author: String(row.testimonial_author || fb.testimonial?.author || ''),
+                role: String(row.testimonial_role || fb.testimonial?.role || ''),
+              }
+            : undefined,
+        };
+      }),
+    }
+  : c.projects;
 
 // Fetch latest news and blog articles
 let newsArticles: AdaptedArticleCard[] = [];
@@ -42,7 +109,7 @@ try {
 ---
 
 <div class="soeteck-home-page soeteck-home-page--C">
-  <HeroSection slides={c.hero.slides} fullscreen />
+  <HeroSection slides={heroSlides} fullscreen />
   {c.productsIntro && <ProductsSectionC intro={c.productsIntro} productCategories={c.productCategories} />}
   <SolutionsSectionC solutions={c.solutions} transition={c.transition} />
 
@@ -50,7 +117,8 @@ try {
 
   <ServiceSectionHome data={c.services} />
 
-  <CaseCarouselSection data={c.projects} />
+  <CaseCarouselSection data={projects} />
+  <TestimonialsSection projects={projects} lang={lang} />
   {c.newsC && <NewsBlogsSectionC newsC={c.newsC} news={c.news} newsArticles={newsArticles} blogArticles={blogArticles} lang={lang} />}
   <CtaSection data={c.cta} />
 </div>

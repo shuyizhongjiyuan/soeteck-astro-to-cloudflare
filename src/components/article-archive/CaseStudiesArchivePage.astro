@@ -4,6 +4,8 @@ import NewsArchiveHero from '@/components/news-releases/NewsArchiveHero.astro';
 import FeaturedArticleCard from './FeaturedArticleCard.astro';
 import ArticleCard from './ArticleCard.astro';
 import ArchiveCta from './ArchiveCta.astro';
+import SectionHeading from './SectionHeading.astro';
+import ArchivePagination from './ArchivePagination.astro';
 import { ARCHIVE_EN } from '@/components/news-releases/news-releases-content';
 import { ARCHIVE_ZH } from '@/components/news-releases/news-releases-content-zh';
 import { ARCHIVE_RU } from '@/components/news-releases/news-releases-content-ru';
@@ -32,9 +34,11 @@ const csLabels = archiveContent.caseStudyLabels;
 const description = page.source.archive?.description || heroConfig.description;
 const allArticles = page.articles;
 
-// Page 1: first article is featured, rest in grid
+// First case study is featured, the rest form the paginated grid
 const featuredArticle = allArticles.length > 0 ? allArticles[0] : null;
 const gridArticles = featuredArticle ? allArticles.slice(1) : [];
+
+const CASE_PER_PAGE = 8;
 ---
 
 <div class="soeteck-case-studies-page">
@@ -45,9 +49,11 @@ const gridArticles = featuredArticle ? allArticles.slice(1) : [];
     lang={lang}
     heroConfig={heroConfig}
   />
-  <div class="soeteck-container soeteck-case-studies-page__container">
+
+  <section class="soeteck-container soeteck-case-studies-page__content">
     {featuredArticle && (
       <div class="soeteck-case-studies-page__featured">
+        <SectionHeading eyebrow={csLabels.featuredEyebrow} title={csLabels.featuredTitle} />
         <FeaturedArticleCard
           article={featuredArticle}
           label={csLabels.featuredLabel}
@@ -56,22 +62,42 @@ const gridArticles = featuredArticle ? allArticles.slice(1) : [];
         />
       </div>
     )}
-    {gridArticles.length > 0 && (
-      <div class="soeteck-case-studies-page__grid">
-        {gridArticles.map((article) => (
-          <ArticleCard
-            article={article}
-            showAuthor={true}
-            sourceLabel={csLabels.sourceLabel}
-            lang={lang}
-          />
-        ))}
+
+    {gridArticles.length > 0 ? (
+      <div class="soeteck-case-studies-page__list">
+        <SectionHeading eyebrow={csLabels.listEyebrow} title={csLabels.listTitle} />
+        <div class="soeteck-case-studies-page__grid">
+          {gridArticles.map((article, index) => {
+            const page = Math.floor(index / CASE_PER_PAGE) + 1;
+            return (
+              <div
+                class="soeteck-case-studies-page__grid-item"
+                data-page={page}
+                style={page === 1 ? undefined : 'display:none'}
+              >
+                <ArticleCard
+                  article={article}
+                  showAuthor={true}
+                  sourceLabel={csLabels.sourceLabel}
+                  lang={lang}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <ArchivePagination
+          totalItems={gridArticles.length}
+          perPage={CASE_PER_PAGE}
+          gridSelector=".soeteck-case-studies-page__grid"
+        />
       </div>
+    ) : (
+      allArticles.length === 0 && (
+        <p class="soeteck-case-studies-page__empty">{csLabels.noArticles}</p>
+      )
     )}
-    {allArticles.length === 0 && (
-      <p class="soeteck-case-studies-page__empty">{csLabels.noArticles}</p>
-    )}
-  </div>
+  </section>
+
   <ArchiveCta
     title={archiveContent.cta.title}
     buttonLabel={archiveContent.cta.buttonLabel}
@@ -85,18 +111,19 @@ const gridArticles = featuredArticle ? allArticles.slice(1) : [];
     background: var(--soeteck-white);
   }
 
-  .soeteck-case-studies-page__container {
+  /* 间距对齐新闻分类页（.soeteck-news-releases-page__container） */
+  .soeteck-case-studies-page__content {
     padding: var(--soeteck-section-y-sm) 0 var(--soeteck-section-y);
-  }
-
-  .soeteck-case-studies-page__featured {
-    margin-bottom: clamp(34px, 5vw, 72px);
   }
 
   .soeteck-case-studies-page__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
+  }
+
+  .soeteck-case-studies-page__grid-item {
+    display: grid;
   }
 
   .soeteck-case-studies-page__empty {
