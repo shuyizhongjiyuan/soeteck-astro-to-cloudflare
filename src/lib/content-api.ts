@@ -99,6 +99,7 @@ export interface GlobalConfigResponse {
   };
   urls: {
     home: string;
+    about?: string;
     contact: string;
     search: string;
     terms: string;
@@ -229,7 +230,7 @@ export interface ContentApiFilterGroup {
 }
 
 export interface ContentApiArchiveConfig {
-  introBlocks: Array<{ text: string; prefix?: string }>;
+  introBlocks: Array<{ text: string; prefix?: string; html?: string }>;
   heroSubtitle?: string | null;
   defaultSort: string;
   defaultPerPage: number;
@@ -266,6 +267,7 @@ export interface ContentApiResponse {
   category?: {
     id?: string | null;
     name: string;
+    slug?: string;
     description: string;
     count: number;
   };

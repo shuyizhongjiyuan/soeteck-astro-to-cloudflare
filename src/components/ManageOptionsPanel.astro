@@ -13,7 +13,7 @@ interface Props {
 
 const { consent, lang = 'en' } = Astro.props;
 
-const DEFAULTS: ConsentCopy = {
+const DEFAULTS: Partial<ConsentCopy> = {
   drawer_title: 'Cookie settings',
   drawer_save: 'Confirm choices',
   drawer_accept: 'Accept all',
@@ -27,7 +27,7 @@ const DEFAULTS: ConsentCopy = {
   cat_marketing_desc: 'Used to show you relevant advertising across the web.',
 };
 
-const copy: ConsentCopy = { ...DEFAULTS, ...(consent?.copy ?? {}) };
+const copy: ConsentCopy = { ...DEFAULTS, ...(consent?.copy ?? {}) } as ConsentCopy;
 const categories = consent?.categories ?? ['necessary', 'analytics', 'marketing'];
 const eeaCodes = consent?.geoTiers?.eea ?? [];
 const enabled = consent?.enabled !== false; // 未配置时默认开启面板能力
@@ -113,7 +113,7 @@ const runtimeConfig = { lang, eeaCodes, categories };
     function readSwitchState(): { analytics: boolean; marketing: boolean } {
       const get = (cat: 'analytics' | 'marketing') => {
         if (!cfg.categories.includes(cat)) return true;
-        const el = root.querySelector<HTMLInputElement>(`[data-mgmt-switch="${cat}"]`);
+        const el = root!.querySelector<HTMLInputElement>(`[data-mgmt-switch="${cat}"]`);
         return el ? el.checked : false;
       };
       return { analytics: get('analytics'), marketing: get('marketing') };

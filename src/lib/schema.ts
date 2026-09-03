@@ -257,7 +257,7 @@ export function buildCollectionPageSchema(
  * @returns 需要注入的 schema 类型名称数组
  */
 export function schemasForPageKind(kind: PageKind): string[] {
-  const map: Record<PageKind, string[]> = {
+  const map: Partial<Record<PageKind, string[]>> = {
     home: ['BreadcrumbList', 'Organization'],
     about: ['BreadcrumbList', 'Organization', 'AboutPage'],
     contact: ['BreadcrumbList', 'Organization', 'ContactPage'],

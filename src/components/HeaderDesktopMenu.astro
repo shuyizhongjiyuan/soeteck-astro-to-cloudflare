@@ -1,0 +1,193 @@
+---
+// HeaderDesktopMenu — 桌面主导航（从 Header.astro 原样提取的 <nav> 块）
+// 零行为改动：JSX/class/逻辑与原 Header 内联版本逐字一致；仅 helper 调用补传 lang 参数。
+import type { MenuItem } from '@/lib/content-api';
+import AidcIcon from './solutions/AidcIcon.astro';
+import { getUITranslation } from '@/lib/translations';
+import {
+  localizePath,
+  translateNav,
+  translateCategoryTitle,
+  detectMenuType,
+  solutionIconMap,
+  solutionDescMap,
+  categoryMap,
+} from '@/lib/header-helpers';
+
+interface Props {
+  items: MenuItem[];
+  lang: string;
+}
+
+const { items, lang } = Astro.props;
+---
+
+<nav id="site-navigation" class="main-navigation" aria-label="Primary menu">
+  <ul class="primary-menu">
+    {items.map(item => {
+      const titleKey = item.title.toLowerCase()
+      const isContact = titleKey === 'contact us'
+      if (isContact) return null
+
+      const hasChildren = !!(item.children && item.children.length)
+      const menuType = detectMenuType(item)
+      const variantClass =
+        menuType === 'product' ? ' menu-products' :
+        menuType === 'solution' ? ' menu-solutions' :
+        menuType === 'news' ? ' menu-news' : ''
+
+      // Solutions 导航 Bento 网格：Featured = AI Data Center（路径兜底），其余小卡
+      const solutionChildren = item.children ?? []
+      const normPath = (p: string) => p.replace(/^\/[a-z]{2}\//, '/')
+      const featuredSolution = solutionChildren.find((c: any) => normPath(c.path || '').endsWith('/solutions/data-center-solutions/ai-data-center/')) ?? solutionChildren[0]
+      const featuredIsAidc = !!featuredSolution && normPath(featuredSolution.path || '').endsWith('/solutions/data-center-solutions/ai-data-center/')
+      const otherSolutions = solutionChildren.filter((c: any) => c !== featuredSolution)
+
+      return (
+        <li class={`primary-menu-item${hasChildren ? ' has-megamenu' : ''}${variantClass}`}>
+          <a class="primary-menu-link" href={localizePath(item.path, lang)}>
+            {translateNav(item.title, lang)}
+          </a>
+
+          {hasChildren && (
+            <>
+              <button class="submenu-toggle" type="button" aria-expanded="false" aria-label={`Open ${item.title} menu`}>
+                <svg class="dropdown-chevron" aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" focusable="false">
+                  <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <div class="megamenu-panel" aria-label={item.title}>
+                {menuType === 'news' && (
+                  <div class="news-megamenu-inner">
+                    {(item.children ?? []).map(newsCategory => {
+                      const categoryKey = newsCategory.title.toLowerCase()
+                      const subtitles = {
+                        'news releases': getUITranslation(lang, 'megamenu.newsSubtitle1'),
+                        'blogs': getUITranslation(lang, 'megamenu.newsSubtitle2'),
+                        'client case studies': getUITranslation(lang, 'megamenu.newsSubtitle3'),
+                      }
+                      const subtitle = (subtitles as any)[categoryKey] || ''
+                      const np = (newsCategory as any).newsPosts as { featured: any; list: any[] } | undefined
+                      const featuredPost = np?.featured ?? null
+                      const latestPosts = np?.list ?? []
+
+                      return (
+                        <section class="news-megamenu-column">
+                          <a class="megamenu-heading" href={localizePath(newsCategory.path, lang)}>
+                            <span class="megamenu-heading__marker" aria-hidden="true"></span>
+                            <span class="megamenu-heading-text">{translateCategoryTitle(newsCategory.title, lang)}</span>
+                          </a>
+                          {subtitle && <p class="news-megamenu-subtitle">{subtitle}</p>}
+
+                          {featuredPost ? (
+                            <a class="news-featured-card" href={localizePath(featuredPost.path, lang)}>
+                              {featuredPost.featuredImage && (
+                                <span class="news-featured-image">
+                                  <img src={featuredPost.featuredImage.path} alt={featuredPost.title} loading="lazy">
+                                  <span class="news-date-badge">{featuredPost.date}</span>
+                                </span>
+                              )}
+                              <span class="news-featured-title">{featuredPost.title}</span>
+                              {featuredPost.excerpt && (
+                                <span class="news-featured-excerpt">{featuredPost.excerpt}</span>
+                              )}
+                            </a>
+                          ) : (
+                            <a class="news-featured-placeholder" href={localizePath(newsCategory.path, lang)}>
+                              <span class="news-featured-icon" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                  <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 12h10" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                              </span>
+                            </a>
+                          )}
+
+                          {latestPosts.length > 0 && (
+                            <ul class="news-latest-list">
+                              {latestPosts.map((post: any) => (
+                                <li>
+                                  <a href={localizePath(post.path, lang)}>
+                                    <span class="news-date-badge">{post.date}</span>
+                                    <span>{post.title}</span>
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </section>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {menuType === 'solution' && (
+                  <div class="solutions-megamenu-inner">
+                    <div class="solutions-megamenu-main">
+                      <p class="solutions-megamenu-title">{getUITranslation(lang, 'megamenu.prefabDC')}</p>
+                      <div class="solutions-bento">
+                        <a class="solutions-bento-featured" href={localizePath(featuredSolution.path, lang)}>
+                          <span class="solutions-bento-featured__icon"><AidcIcon name={(solutionIconMap[featuredSolution.title] || 'gpu') as any} size={30} /></span>
+                          <span class="solutions-bento-featured__title">{getUITranslation(lang, categoryMap[featuredSolution.title] || 'solutions.aiDataCenter')}</span>
+                          <span class="solutions-bento-featured__desc">{getUITranslation(lang, solutionDescMap[featuredSolution.title] || 'solutions.aiDataCenterDesc')}</span>
+                          <span class="solutions-bento-featured__explore">
+                            {getUITranslation(lang, featuredIsAidc ? 'megamenu.exploreAidc' : 'megamenu.exploreSolutions')}
+                            <span class="solutions-bento-featured__arrow" aria-hidden="true">→</span>
+                          </span>
+                        </a>
+                        <div class="solutions-bento-grid">
+                          {otherSolutions.map(solution => (
+                            <a class="solutions-bento-item" href={localizePath(solution.path, lang)}>
+                              <span class="solutions-bento-item__icon"><AidcIcon name={(solutionIconMap[solution.title] || 'grid') as any} size={22} /></span>
+                              <span class="solutions-bento-item__title">{getUITranslation(lang, categoryMap[solution.title] || 'solutions.prefabContainerDC')}</span>
+                              <span class="solutions-bento-item__desc">{getUITranslation(lang, solutionDescMap[solution.title] || 'solutions.prefabContainerDCDesc')}</span>
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <aside class="solutions-megamenu-sidebar">
+                      <p class="solutions-megamenu-title">{getUITranslation(lang, 'megamenu.industries')}</p>
+                      <ul class="solutions-industry-list">
+                        <li><a href={localizePath('/en/solutions/telecom/', lang)}>{getUITranslation(lang, 'megamenu.industryTelecom')}</a></li>
+                        <li><a href={localizePath('/en/solutions/colocation/', lang)}>{getUITranslation(lang, 'megamenu.industryColocation')}</a></li>
+                        <li><a href={localizePath('/en/solutions/cloud-hyperscale/', lang)}>{getUITranslation(lang, 'megamenu.industryCloudHyperscale')}</a></li>
+                        <li><a href={localizePath('/en/solutions/internet/', lang)}>{getUITranslation(lang, 'megamenu.industryInternet')}</a></li>
+                        <li><a href={localizePath('/en/solutions/finance/', lang)}>{getUITranslation(lang, 'megamenu.industryFinance')}</a></li>
+                        <li><a href={localizePath('/en/solutions/government/', lang)}>{getUITranslation(lang, 'megamenu.industryGovernment')}</a></li>
+                        <li><a href={localizePath('/en/solutions/manufacturing/', lang)}>{getUITranslation(lang, 'megamenu.industryManufacturing')}</a></li>
+                        <li><a href={localizePath('/en/solutions/healthcare/', lang)}>{getUITranslation(lang, 'megamenu.industryHealthcare')}</a></li>
+                      </ul>
+                    </aside>
+                  </div>
+                )}
+
+                {menuType === 'product' && (
+                  <div class="megamenu-inner">
+                    {(item.children ?? []).map(column => (
+                      <div class="megamenu-column">
+                        <a class="megamenu-heading" href={localizePath(column.path, lang)}>
+                          <span class="megamenu-heading__marker" aria-hidden="true"></span>
+                          <span class="megamenu-heading-text">{translateCategoryTitle(column.title, lang)}</span>
+                        </a>
+
+                        {column.children && (
+                          <ul class="megamenu-list">
+                            {column.children.map(child => (
+                              <li>
+                                <a href={localizePath(child.path, lang)}>{translateCategoryTitle(child.title, lang)}</a>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+        </li>
+      )
+    })}
+  </ul>
+</nav>

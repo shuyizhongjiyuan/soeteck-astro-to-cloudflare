@@ -308,7 +308,7 @@ const chipIcon = /* svg */ `<svg viewBox="0 0 24 24" fill="currentColor" aria-hi
   function readSwitchState(): { analytics: boolean; marketing: boolean } {
     const get = (cat: 'analytics' | 'marketing') => {
       if (!cfg.categories.includes(cat)) return true; // 类别未启用视为全开
-      const el = root.querySelector<HTMLInputElement>(`[data-consent-switch="${cat}"]`);
+      const el = root!.querySelector<HTMLInputElement>(`[data-consent-switch="${cat}"]`);
       return el ? el.checked : false;
     };
     return { analytics: get('analytics'), marketing: get('marketing') };

@@ -1,0 +1,138 @@
+---
+// HeaderMobileMenu — 移动端菜单 overlay（从 Header.astro 原样提取）
+// 零行为改动：JSX/class/逻辑与原内联版本逐字一致；helper 调用补传 lang 参数。
+import type { MenuItem } from '@/lib/content-api';
+import { getUITranslation } from '@/lib/translations';
+import { localizePath, translateNav, translateCategoryTitle, getLanguageUrl } from '@/lib/header-helpers';
+
+interface Props {
+  items: MenuItem[];
+  languages: Array<{ slug: string; name: string; flag: { path: string } }>;
+  lang: string;
+  contactUrl: string;
+  logoUrl: string;
+}
+
+const { items, languages, lang, contactUrl, logoUrl } = Astro.props;
+const currentPath = Astro.url.pathname;
+---
+
+<div id="mobile-menu-overlay" class="mobile-menu-overlay" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="mobile-menu-sidebar">
+    <div class="mobile-menu-header">
+      <button class="mobile-menu-close" type="button" aria-label="Close menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <a class="mobile-menu-logo" href={localizePath("/en/", lang)} rel="home" aria-label="Soeteck">
+        <img src={logoUrl} alt="Soeteck" width="140" height="auto">
+      </a>
+    </div>
+    <div class="mobile-menu-content">
+      <nav class="mobile-nav" aria-label="Mobile menu">
+        <ul class="mobile-nav-list">
+          {items.map(item => {
+            const titleKey = item.title.toLowerCase()
+            const isContact = titleKey === 'contact us'
+            if (isContact) return null
+
+            const hasChildren = !!(item.children && item.children.length)
+
+            return (
+              <li class={`mobile-menu-item${hasChildren ? ' mobile-has-submenu' : ''}`}>
+                {hasChildren ? (
+                  <div class="mobile-menu-toggle-item">
+                    <a class="mobile-menu-parent-link" href={localizePath(item.path, lang)}>{translateNav(item.title, lang)}</a>
+                    <button class="mobile-menu-toggle-button" type="button" aria-expanded="false" aria-label={`Toggle ${item.title} menu`}>
+                      <svg class="mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="m19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+                ) : (
+                  <a class="mobile-menu-link" href={localizePath(item.path, lang)}>
+                    {translateNav(item.title, lang)}
+                  </a>
+                )}
+
+                {hasChildren && (
+                  <div class="mobile-submenu">
+                    <div class="mobile-submenu-content">
+                      {(item.children ?? []).map(column => {
+                        const hasGrandChildren = !!(column.children && column.children.length)
+
+                        return (
+                          <div class={`mobile-accordion-section${hasGrandChildren ? ' mobile-has-nested' : ''}`}>
+                            <div class="mobile-accordion-toggle">
+                              <a class="mobile-accordion-main-link" href={localizePath(column.path, lang)}>{translateCategoryTitle(column.title, lang)}</a>
+                              {hasGrandChildren && (
+                                <button class="mobile-accordion-toggle-button" type="button" aria-expanded="false" aria-label={`Toggle ${column.title} section`}>
+                                  <svg class="mobile-accordion-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                    <path d="m19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                  </svg>
+                                </button>
+                              )}
+                            </div>
+
+                            {hasGrandChildren && (
+                              <div class="mobile-accordion-nested">
+                                {(column.children ?? []).map(child => {
+                                  const hasGreatGrandChildren = !!(child.children && child.children.length)
+
+                                  return hasGreatGrandChildren ? (
+                                    <div class="mobile-accordion-section mobile-has-nested">
+                                      <div class="mobile-accordion-toggle mobile-accordion-toggle-link-style">
+                                        <a class="mobile-accordion-main-link" href={localizePath(child.path, lang)}>{translateCategoryTitle(child.title, lang)}</a>
+                                        <button class="mobile-accordion-toggle-button" type="button" aria-expanded="false" aria-label={`Toggle ${child.title} section`}>
+                                          <svg class="mobile-accordion-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                            <path d="m19.5 8.25l-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                          </svg>
+                                        </button>
+                                      </div>
+                                      <div class="mobile-accordion-nested">
+                                        {(child.children ?? []).map(grandChild => (
+                                          <a href={localizePath(grandChild.path, lang)} class="mobile-accordion-sub-link">
+                                            {translateCategoryTitle(grandChild.title, lang)}
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <a href={localizePath(child.path, lang)} class="mobile-accordion-sub-link">
+                                      {translateCategoryTitle(child.title, lang)}
+                                    </a>
+                                  )
+                                })}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+      <div class="mobile-menu-footer">
+        <div class="mobile-lang-switcher">
+          <span class="mobile-lang-title">{getUITranslation(lang, 'common.language')}</span>
+          <div class="mobile-lang-options">
+            {languages.map(l => (
+              <a class={`mobile-lang-option${l.slug === lang ? ' active' : ''}`} href={getLanguageUrl(l.slug, currentPath)}>
+                <img src={l.flag.path} alt={l.name} width="18" height="12">
+                <span>{l.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+        <a class="mobile-contact-btn" href={contactUrl}>
+          {translateNav('Contact Us', lang)}
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

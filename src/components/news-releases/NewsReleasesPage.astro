@@ -36,8 +36,8 @@ const heroConfig = normalizedPath.startsWith('/news-and-insights/blogs')
     ? archiveContent.caseStudies
     : archiveContent.newsReleases;
 
-const featuredIds = new Set(page.featuredArticles.map((article) => article.id).filter((id): id is number => typeof id === 'number'));
-const pressArticles = page.articles.filter((article) => !featuredIds.has(article.id ?? -1));
+const featuredIds = new Set(page.featuredArticles.map((article) => String(article.id ?? '')));
+const pressArticles = page.articles.filter((article) => !featuredIds.has(String(article.id ?? '')));
 const fallbackPressArticles = pressArticles.length > 0 ? pressArticles : page.articles;
 const featuredArticles = page.featuredArticles.length > 0 ? page.featuredArticles : page.articles.slice(0, 3);
 const description = page.source.archive?.description || heroConfig.description;

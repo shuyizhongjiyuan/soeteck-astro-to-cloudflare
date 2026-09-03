@@ -65,7 +65,7 @@ const children: LandingChild[] = landingChildren.map((c: any) => ({
     <section class="soeteck-product-cat-landing__hero">
       {bannerImage && (
         <>
-          <img class="soeteck-product-cat-landing__hero-image" src={bannerImage.path ?? bannerImage.url ?? ''} alt={bannerImage.alt ?? title} fetchpriority="high" loading="eager" />
+          <img class="soeteck-product-cat-landing__hero-image" src={bannerImage.path} alt={bannerImage.alt ?? title} fetchpriority="high" loading="eager" />
           <div class="soeteck-product-cat-landing__hero-overlay"></div>
         </>
       )}

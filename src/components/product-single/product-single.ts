@@ -413,7 +413,7 @@ const init = () => {
   const renderChips = (): void => {
     const all = Array.from(fInput?.files || []);
     if (all.length === 0) {
-      if (fList) fList.textContent = form.dataset.i18nNofiles || 'No files selected';
+      if (fList) fList.textContent = fInput?.form?.dataset.i18nNofiles || 'No files selected';
       if (fClear) fClear.hidden = true;
       fSection?.classList.remove('has-file');
       return;
