@@ -4,7 +4,7 @@ import NewsArchiveHero from './NewsArchiveHero.astro';
 import NewsroomFeaturedSlider from './NewsroomFeaturedSlider.astro';
 import NewsroomPressList from './NewsroomPressList.astro';
 import NewsroomSidebar from './NewsroomSidebar.astro';
-import ArchiveCta from '@/components/article-archive/ArchiveCta.astro';
+import AboutCta from '@/components/about/AboutCta.astro';
 import { ARCHIVE_EN } from './news-releases-content';
 import { ARCHIVE_ZH } from './news-releases-content-zh';
 import { ARCHIVE_RU } from './news-releases-content-ru';
@@ -54,12 +54,7 @@ const description = page.source.archive?.description || heroConfig.description;
     </div>
   </section>
 
-  <ArchiveCta
-    title={archiveContent.cta.title}
-    buttonLabel={archiveContent.cta.buttonLabel}
-    buttonHref={`/${lang}/contact-us/`}
-    lang={lang}
-  />
+  <AboutCta lang={lang} />
 </div>
 
 <style>

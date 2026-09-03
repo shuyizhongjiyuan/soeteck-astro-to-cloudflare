@@ -5,7 +5,7 @@ import FeaturedArticleCard from './FeaturedArticleCard.astro';
 import ArticleCard from './ArticleCard.astro';
 import SectionHeading from './SectionHeading.astro';
 import ArchivePagination from './ArchivePagination.astro';
-import ArchiveCta from './ArchiveCta.astro';
+import AboutCta from '@/components/about/AboutCta.astro';
 import { ARCHIVE_EN } from '@/components/news-releases/news-releases-content';
 import { ARCHIVE_ZH } from '@/components/news-releases/news-releases-content-zh';
 import { ARCHIVE_RU } from '@/components/news-releases/news-releases-content-ru';
@@ -98,12 +98,7 @@ const BLOG_PER_PAGE = 9;
     )}
   </section>
 
-  <ArchiveCta
-    title={archiveContent.cta.title}
-    buttonLabel={archiveContent.cta.buttonLabel}
-    buttonHref={`/${lang}/contact-us/`}
-    lang={lang}
-  />
+  <AboutCta lang={lang} />
 </div>
 
 <style>
