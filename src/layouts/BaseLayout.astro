@@ -3,6 +3,10 @@ import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
 import CookieConsent from '@/components/CookieConsent.astro';
 import { fetchGlobalConfig } from '@/lib/content-api';
+// Gutenberg 核心块样式（ADR-012）：contentHtml 中的 .wp-block-* 类依赖此文件。
+// 2026-09-04 恢复：1ba00f7（inquiry 提交）曾误删该 import，导致文章正文
+// table/embed/columns/quote/separator/对齐预设等块样式全部缺失。
+import '@/styles/gutenberg-blocks.css';
 
 interface Props {
   title: string;
@@ -22,6 +26,8 @@ const tracking = globalConfig.tracking;
 const consent = globalConfig.consent;
 const gtmId = tracking?.gtmId ?? '';
 const isProd = import.meta.env.PROD;
+// 首选：非 EEA 且已有地区缓存的国家，head 同步把同意提前到位（首包不再 denied）
+const eeaCodes = consent?.geoTiers?.eea ?? [];
 ---
 <!doctype html>
 <html lang={lang}>
@@ -57,6 +63,39 @@ const isProd = import.meta.env.PROD;
     ) : (
       <script is:inline>window.dataLayer = window.dataLayer || [];</script>
     )}
+    {/* ═══ 同步 geo 预判（ADR-023 修复，2026-09-04）——有地区缓存且非 EEA 时，在 GTM 加载前把同意提前到位，
+          避免首包以 denied 发出（page_view 不计 / 自定义事件不发）。纯同步 `<1ms`，无网络、无阻塞。 */}
+    {isProd ? (
+      <script is:inline set:html={`
+        (function(){
+          try{
+            var DATA = window.dataLayer = window.dataLayer || [];
+            if(!window.gtag){ window.gtag = function(){ DATA.push(arguments); }; }
+            var gRaw = localStorage.getItem('soeteck_geo');
+            if(!gRaw){ return; }
+            var gO = JSON.parse(gRaw);
+            var ctry = (gO && gO.country || '').toUpperCase();
+            if(!ctry){ return; }
+            var EEA = ${JSON.stringify(eeaCodes)};
+            for(var i=0;i<EEA.length;i++){ if(EEA[i]===ctry){ return; } } /* EEA:保持默认 deny，等用户/模块 */
+            var st = null;
+            try { var cRaw = localStorage.getItem('soeteck_consent'); if(cRaw){ st = JSON.parse(cRaw); } } catch(e){}
+            var us = (ctry==='US'||ctry==='USA');
+            var gpc = window.navigator && navigator.globalPrivacyControl === true;
+            var analytics = (us && st && st.analytics === false) ? false : true;
+            var marketing = us ? ((st && st.marketing === false) || gpc ? false : true) : true; /* rest 恒 grant */
+            window.gtag('consent','update',{
+              'analytics_storage': analytics  ? 'granted' : 'denied',
+              'ad_storage':        marketing  ? 'granted' : 'denied',
+              'ad_user_data':      marketing  ? 'granted' : 'denied',
+              'ad_personalization':marketing  ? 'granted' : 'denied',
+              'functionality_storage':'granted',
+              'security_storage':'granted'
+            });
+          }catch(e){}
+        })();
+      `} />
+    ) : null}
     {/* ═══ Google Tag Manager（生产 + gtmId 才注入） === */}
     {isProd && gtmId && (
       <script is:inline>
