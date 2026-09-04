@@ -53,6 +53,23 @@ export default {
     }
 
     // Serve pre-built static assets
-    return env.ASSETS.fetch(request);
+    // 缺失资产（无 asset、无 _redirects 命中）会使 ASSETS.fetch 抛异常 → error 1101 → 500。
+    // 2026-09-04 修复：catch 后返回品牌 404（/404 由 Auto-trailing-slash 映射到 404.html），全站死链回归真 404。
+    try {
+      return await env.ASSETS.fetch(request);
+    } catch {
+      const notFound = await env.ASSETS.fetch(new Request(new URL('/404', url.origin)))
+        .catch(() => null);
+      if (notFound && notFound.ok) {
+        return new Response(notFound.body, {
+          status: 404,
+          headers: { 'content-type': notFound.headers.get('content-type') || 'text/html; charset=utf-8' },
+        });
+      }
+      return new Response('Not Found', {
+        status: 404,
+        headers: { 'content-type': 'text/plain; charset=utf-8' },
+      });
+    }
   },
 };
