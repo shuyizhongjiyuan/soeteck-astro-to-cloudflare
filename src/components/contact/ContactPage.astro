@@ -123,7 +123,6 @@ const contactHeroImage: PageImage | null = heroField ? { path: heroField, alt: '
                       </div>
                     </div>
                   </div>
-                  <!-- 隐藏的原生 select，用于表单提交 -->
                   <select name="country" data-country-native hidden aria-hidden="true">
                     <option value="">{t('product.formCountryPlaceholder')}</option>
                     {countries.map(c => (
@@ -156,7 +155,6 @@ const contactHeroImage: PageImage | null = heroField ? { path: heroField, alt: '
                     <span class="soeteck-contact-form__upload-switch-knob"></span>
                   </label>
                 </span>
-                <!-- Hidden radios for form submission -->
                 <input type="radio" name="needs_file_upload" value="yes" data-upload-yes hidden />
                 <input type="radio" name="needs_file_upload" value="no" data-upload-no checked hidden />
               </div>

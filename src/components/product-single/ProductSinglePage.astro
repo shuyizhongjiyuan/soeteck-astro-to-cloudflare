@@ -363,7 +363,6 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                 <input type="radio" name="needs_upload" value="yes" data-upload-yes hidden />
                 <input type="radio" name="needs_upload" value="no" data-upload-no checked hidden />
               </div>
-              <!-- 文件上传区域（cities 版：Add + Clear all + 单 chip 移除，复用共享 inquiry-controls 样式） -->
               <div class="soeteck-product-inquiry__file" aria-hidden="true">
                 <span class="soeteck-product-inquiry__file-label">{t('uploadFiles')}</span>
                 <span class="soeteck-contact-form__file-control">
