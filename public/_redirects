@@ -4,7 +4,8 @@
 # 上限：2000 静态重定向 + 100 动态。本文件随 git 部署（push 触发 Workers 构建即生效）。
 #
 # 来源：docs/collaboration/tasks/2026-08-13-sunwei-astro-launch/checklist-60-url-gaps.md
-# 维护：由 checklist 已确认 301 项转写；G2(earthfirst) 跳过、G7/G8/G9 待查生产、G1 待确认后补。
+# 维护：由 checklist 已确认 301 项转写
+# 受控实验 2026-09-04-2（验证 _redirects 冻结是否随缓存重置消失）；G2(earthfirst) 跳过、G7/G8/G9 待查生产、G1 待确认后补。
 # 2026-09-04 云端构建触发 #2（consent 1500ms 修复进线上验证；本地兜底构建并行）：v18(0be65e03) 未携带本文件根规则（git 集成构建 checkout 疑旧），本次注释版重推验证。
 # G4（2026-08-14）：/news-and-insights/ 现在是真实 hub 页（NewsInsightsHubPage），移除 5 条 301。
 
