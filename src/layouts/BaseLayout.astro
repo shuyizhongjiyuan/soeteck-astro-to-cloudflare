@@ -21,10 +21,9 @@ interface Props {
 const { title, description, canonical, robots = 'index,follow', lang = 'en', localizedPaths, schemas } = Astro.props;
 const globalConfig = await fetchGlobalConfig(lang);
 
-// ── 追踪与同意配置（ADR-023 / spec 2026-08-20-consent-tracking-design） ──
-const tracking = globalConfig.tracking;
+// ── 同意配置（ADR-023 / spec 2026-08-20-consent-tracking-design） ──
+// GTM 由 Cloudflare Google Tag Gateway 边缘注入（度量路径 /3f64，2026-09-04 定案），页面不再原生加载
 const consent = globalConfig.consent;
-const gtmId = tracking?.gtmId ?? '';
 const isProd = import.meta.env.PROD;
 // 首选：非 EEA 且已有地区缓存的国家，head 同步把同意提前到位（首包不再 denied）
 const eeaCodes = consent?.geoTiers?.eea ?? [];
@@ -96,17 +95,7 @@ const eeaCodes = consent?.geoTiers?.eea ?? [];
         })();
       `} />
     ) : null}
-    {/* ═══ Google Tag Manager（生产 + gtmId 才注入） === */}
-    {isProd && gtmId && (
-      <script is:inline>
-        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-        })(window,document,'script','dataLayer','{gtmId}');
-      </script>
-    )}
-    {/* ═══ End Google Tag Manager === */}
+    {/* ═══ GTM：由 Cloudflare Google Tag Gateway 边缘注入（度量路径 /3f64），此处不再原生加载（2026-09-04） === */}
 
     <title>{title}</title>
     <link rel="canonical" href={canonical} />
@@ -126,12 +115,6 @@ const eeaCodes = consent?.geoTiers?.eea ?? [];
     ))}
   </head>
   <body>
-    {/* GTM noscript fallback（生产 + gtmId） */}
-    {isProd && gtmId && (
-      <noscript>
-        <iframe src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`} height="0" width="0" style={{ display: 'none', visibility: 'hidden' }}></iframe>
-      </noscript>
-    )}
     <Header globalConfig={globalConfig} lang={lang} />
     <main id="main" class="site-main">
       <slot />
