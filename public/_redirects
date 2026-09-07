@@ -37,13 +37,63 @@
 /zh/solutions/liquid-cooling-solutions /zh/solutions/liquid-cooling-solutions/aicoolit-liquid-cooling-data-center/ 301
 
 # ─────────────────────────────────────────────────────────────
-# G8 — container-ai 博客（5 条，生产站有原文 35414 → 待复刻到 CMS，非 301；复刻前暂不写规则）
-
-# G9 — do-i-need 博客（5 条，生产站有原文 35424 → 待复刻到 CMS，非 301；复刻前暂不写规则）
+# 2026-09-07 上线清理批次（sunwei 决策，来源 = 新旧 sitemap 差集 40 条）
+#  · /xx/faq → 首页 301（FAQ 内容未开工的**临时**占位；日后做 FAQ 页时改为指向真实页）
+#  · /xx/faq/{after-sales-warranty,orders-shipping,technical-customization} → 410（FAQ 子页未开工，出索引）
+#  · /xx/news-and-insights/earthfirst → 410（ESG 页规划未开工；上线时同 URL 恢复）
+#  · /xx/uncategorized → 410（WP 默认垃圾分类归档）
+#  · /xx/news-and-insights/container-...（旧浅路径）→ 301 归位（CMS 主分类已补 Blogs，规范路径带 /blogs/）
+#
+# FAQ hub → 首页（临时）
+/en/faq /en/ 301
+/en/faq/ /en/ 301
+/es/faq /es/ 301
+/es/faq/ /es/ 301
+/ru/faq /ru/ 301
+/ru/faq/ /ru/ 301
+/pt/faq /pt/ 301
+/pt/faq/ /pt/ 301
+/zh/faq /zh/ 301
+/zh/faq/ /zh/ 301
+# FAQ 旧子页 → 410
+/en/faq/after-sales-warranty* 410
+/es/faq/after-sales-warranty* 410
+/ru/faq/after-sales-warranty* 410
+/pt/faq/after-sales-warranty* 410
+/zh/faq/after-sales-warranty* 410
+/en/faq/orders-shipping* 410
+/es/faq/orders-shipping* 410
+/ru/faq/orders-shipping* 410
+/pt/faq/orders-shipping* 410
+/zh/faq/orders-shipping* 410
+/en/faq/technical-customization* 410
+/es/faq/technical-customization* 410
+/ru/faq/technical-customization* 410
+/pt/faq/technical-customization* 410
+/zh/faq/technical-customization* 410
+# earthfirst → 410（ESG 未开工）
+/en/news-and-insights/earthfirst* 410
+/es/news-and-insights/earthfirst* 410
+/ru/news-and-insights/earthfirst* 410
+/pt/news-and-insights/earthfirst* 410
+/zh/news-and-insights/earthfirst* 410
+# uncategorized → 410
+/en/uncategorized* 410
+/es/uncategorized* 410
+/ru/uncategorized* 410
+/pt/uncategorized* 410
+/zh/uncategorized* 410
+# container 旧浅路径 → 301 归位（规范路径带 /blogs/）
+/en/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /en/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
+/es/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /es/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
+/ru/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /ru/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
+/pt/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /pt/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
+/zh/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /zh/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
 
 # ─────────────────────────────────────────────────────────────
-# G7 — ai-server-liquid-cooling（5 条，待查生产确认后定 301/404）
-# ⚠️ 待确认（ai-server-liquid-cooling 生产是否有此页）
+# G8/G9/G7 — 三篇博客 2026-09-07 已确认全迁入 CMS，URL 与旧站一致，无需规则：
+#   container-ai（旧 35414 → CMS 36289；已补主分类 Blogs，规范 URL /news-and-insights/blogs/…，重建后 200）
+#   do-i-need（旧 35424 → CMS 36291）、ai-server-liquid-cooling（→ CMS 36423），旧 URL 均已 307→200
 
 # ─────────────────────────────────────────────────────────────
 # 通用前缀规则（generic_prefix，1 条覆盖 228 个旧 URL）

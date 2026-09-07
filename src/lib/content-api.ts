@@ -447,24 +447,6 @@ export async function fetchCategoryBanner(slug: string, lang = 'en'): Promise<Ca
 }
 
 /**
- * Fetch preview content for a post by ID (any status, draft included).
- * Requires a valid HMAC token for authentication.
- */
-export async function fetchPreviewContent(
-  postId: string,
-  lang: string = 'en',
-  token: string
-): Promise<ContentApiResponse> {
-  const params = new URLSearchParams({ id: postId, lang, token });
-  const url = `${API_BASE_URL}/wp-json/soeteck/v1/preview?${params}`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Preview fetch failed for post ${postId}: ${response.status}`);
-  }
-  return normalizeMediaUrls(rewriteProductLinks(await response.json(), lang)) as ContentApiResponse;
-}
-
-/**
  * 把 WooCommerce product-collection 块渲染出的 CMS 产品绝对链接
  * （https://cms.soeteck.com/products/...）改写为前端相对路径（/{lang}/products/...）。
  *
