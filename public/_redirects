@@ -39,9 +39,9 @@
 # ─────────────────────────────────────────────────────────────
 # 2026-09-07 上线清理批次（sunwei 决策，来源 = 新旧 sitemap 差集 40 条）
 #  · /xx/faq → 首页 301（FAQ 内容未开工的**临时**占位；日后做 FAQ 页时改为指向真实页）
-#  · /xx/faq/{after-sales-warranty,orders-shipping,technical-customization} → 410（FAQ 子页未开工，出索引）
-#  · /xx/news-and-insights/earthfirst → 410（ESG 页规划未开工；上线时同 URL 恢复）
-#  · /xx/uncategorized → 410（WP 默认垃圾分类归档）
+#  · /xx/faq/{after-sales-warranty,orders-shipping,technical-customization} → 410（FAQ 子页未开工，出索引；worker.js 实现）
+#  · /xx/news-and-insights/earthfirst → 410（ESG 页规划未开工；上线时同 URL 恢复；worker.js 实现）
+#  · /xx/uncategorized → 410（WP 默认垃圾分类归档；worker.js 实现）
 #  · /xx/news-and-insights/container-...（旧浅路径）→ 301 归位（CMS 主分类已补 Blogs，规范路径带 /blogs/）
 #
 # FAQ hub → 首页（临时）
@@ -55,34 +55,8 @@
 /pt/faq/ /pt/ 301
 /zh/faq /zh/ 301
 /zh/faq/ /zh/ 301
-# FAQ 旧子页 → 410
-/en/faq/after-sales-warranty* 410
-/es/faq/after-sales-warranty* 410
-/ru/faq/after-sales-warranty* 410
-/pt/faq/after-sales-warranty* 410
-/zh/faq/after-sales-warranty* 410
-/en/faq/orders-shipping* 410
-/es/faq/orders-shipping* 410
-/ru/faq/orders-shipping* 410
-/pt/faq/orders-shipping* 410
-/zh/faq/orders-shipping* 410
-/en/faq/technical-customization* 410
-/es/faq/technical-customization* 410
-/ru/faq/technical-customization* 410
-/pt/faq/technical-customization* 410
-/zh/faq/technical-customization* 410
-# earthfirst → 410（ESG 未开工）
-/en/news-and-insights/earthfirst* 410
-/es/news-and-insights/earthfirst* 410
-/ru/news-and-insights/earthfirst* 410
-/pt/news-and-insights/earthfirst* 410
-/zh/news-and-insights/earthfirst* 410
-# uncategorized → 410
-/en/uncategorized* 410
-/es/uncategorized* 410
-/ru/uncategorized* 410
-/pt/uncategorized* 410
-/zh/uncategorized* 410
+# FAQ 子页 / earthfirst / uncategorized → 410 已迁至 worker.js（GONE_PREFIXES）：
+# Workers Static Assets `_redirects` 不支持 410（destination 必填，仅 301/302/303/307/308/200），见 src/worker.js 说明。
 # container 旧浅路径 → 301 归位（规范路径带 /blogs/）
 /en/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /en/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301
 /es/news-and-insights/container-ai-data-center-solution-are-rewriting-the-rules* /es/news-and-insights/blogs/container-ai-data-center-solution-are-rewriting-the-rules/ 301

@@ -8,6 +8,25 @@
  */
 const ALLOWED_ORIGIN = 'https://soeteck.com';
 
+// 2026-09-07 上线清理批次：旧站垃圾 URL → 410 Gone（出索引）。
+// Workers Static Assets `_redirects` 不支持 410 状态码（仅 301/302/303/307/308/200，
+// 且 destination 必填），故在 Worker 层直接返回 410（先于 ASSETS 命中）。
+// 将来对应页面恢复上线时，移除相应前缀即可（如 earthfirst）。
+const GONE_PREFIXES = [
+  // FAQ 子页（未开工）
+  '/en/faq/after-sales-warranty', '/es/faq/after-sales-warranty', '/ru/faq/after-sales-warranty', '/pt/faq/after-sales-warranty', '/zh/faq/after-sales-warranty',
+  '/en/faq/orders-shipping', '/es/faq/orders-shipping', '/ru/faq/orders-shipping', '/pt/faq/orders-shipping', '/zh/faq/orders-shipping',
+  '/en/faq/technical-customization', '/es/faq/technical-customization', '/ru/faq/technical-customization', '/pt/faq/technical-customization', '/zh/faq/technical-customization',
+  // earthfirst（ESG 页规划未开工；上线时同 URL 恢复）
+  '/en/news-and-insights/earthfirst', '/es/news-and-insights/earthfirst', '/ru/news-and-insights/earthfirst', '/pt/news-and-insights/earthfirst', '/zh/news-and-insights/earthfirst',
+  // uncategorized（WP 默认垃圾分类归档）
+  '/en/uncategorized', '/es/uncategorized', '/ru/uncategorized', '/pt/uncategorized', '/zh/uncategorized',
+];
+
+function isGonePath(pathname) {
+  return GONE_PREFIXES.some((p) => pathname.startsWith(p));
+}
+
 // Shared CORS headers for /_geo responses
 function geoCorsHeaders(request) {
   const headers = new Headers();
@@ -19,6 +38,11 @@ function geoCorsHeaders(request) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // 旧站垃圾 URL → 410 Gone（详见 GONE_PREFIXES 说明；先于静态资产命中）
+    if (isGonePath(url.pathname)) {
+      return new Response('Gone', { status: 410, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+    }
 
     // Proxy /resources/ to CMS so all images live under the main domain
     if (url.pathname.startsWith('/resources/')) {
