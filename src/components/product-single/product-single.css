@@ -967,7 +967,11 @@ textarea.soeteck-field {
 @media (max-width: 991px) {
     .soeteck-product-hero,
     .soeteck-product-inquiry {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .soeteck-product-hero > * {
+        min-width: 0;
     }
 
     .soeteck-product-related ul.products {

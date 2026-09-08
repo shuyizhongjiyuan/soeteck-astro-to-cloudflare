@@ -156,6 +156,14 @@
   gap: 20px;
 }
 
+@media (max-width: 991px) {
+  .soeteck-cabinet-model-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .soeteck-cabinet-model-grid { grid-template-columns: 1fr; }
+}
+
 .soeteck-cabinet-model-item {
   display: flex;
   flex-direction: column;
@@ -283,7 +291,8 @@
 
 /* Accordion */
 .soeteck-cabinet-accordion {
-  width: 350px;
+  width: 100%;
+  max-width: 350px;
   margin: 0 auto;
   border: 1px solid var(--soeteck-border-soft);
   border-radius: var(--soeteck-radius-md);

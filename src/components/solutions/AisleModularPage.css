@@ -1017,7 +1017,7 @@
 
 @media (max-width: 480px) {
   .soeteck-prefab-solution .soeteck-container { width: min(100% - 32px, 1200px); }
-  .soeteck-prefab-banner__title { font-size: clamp(2rem, 13vw, 3rem); }
+  .soeteck-prefab-banner__title { font-size: clamp(2rem, 13vw, 3rem); white-space: normal; }
   .soeteck-prefab-video__play { width: 62px; height: 62px; }
   .soeteck-prefab-spec-table { min-width: 700px; }
   .soeteck-prefab-spec-table th,
