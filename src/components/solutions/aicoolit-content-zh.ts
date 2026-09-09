@@ -255,7 +255,7 @@ export const AICOOLIT_NAV = {
 export const AICOOLIT_HERO = {
   title: '液冷<br>数据中心',
   subtitle: '交付至<em>任何角落。</em>',
-  intro: '液冷，是 AI 时代数据中心的新一代热管理方案。数益 <strong>AICoolit&trade;</strong> 将冷板式（Direct-to-Chip）或浸没式液冷集成到标准 ISO 集装箱中，单机架密度可达 100kW——跳过冗长的土建周期，数周内让算力集群上线运行。',
+  intro: '液冷，是 AI 时代数据中心的新一代热管理方案。数益科技 <strong>AICoolit&trade;</strong> 将冷板式（Direct-to-Chip）或浸没式液冷集成到标准 ISO 集装箱中，单机架密度可达 100kW——跳过冗长的土建周期，数周内让算力集群上线运行。',
   ctaModels: '查看产品系列',
   ctaWhitepaper: '获取白皮书',
   badgesLabel: '已通过工程验证：',

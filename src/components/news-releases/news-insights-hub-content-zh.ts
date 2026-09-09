@@ -36,7 +36,7 @@ export const NEWS_INSIGHTS_HUB_ZH: NewsInsightsHubContent = {
       eyebrow: '成功案例',
       title: '客户案例',
       description:
-        '真实部署案例与客户成功故事，展示数益解决方案如何应对复杂的电源与冷却挑战。',
+        '真实部署案例与客户成功故事，展示数益科技的解决方案如何应对复杂的电源与冷却挑战。',
       image: '/resources/Qatar-containerized-data-center-768x385.webp',
       alt: '数益客户案例 — 真实部署',
       path: '/news-and-insights/client-case-studies/',

@@ -10,6 +10,13 @@ interface Props {
 
 const { globalConfig, lang = 'en' } = Astro.props
 
+// zh footer 版权行本地化（公司法定全称）；en/ru/pt/es 保持英文注册名
+const footerYear = new Date().getFullYear()
+const footerCopyright =
+  lang === 'zh'
+    ? `© ${footerYear} 合肥数益科技有限公司 版权所有。`
+    : (globalConfig.footer.copyrightText || `&copy; ${footerYear} HEFEI SHUYI DIGITAL POWER CO., LTD. All rights reserved.`)
+
 // 将 API 返回的 /en/ 路径转为当前语言路径
 function localizePath(apiPath: string): string {
   if (lang === 'en') return apiPath;
@@ -213,7 +220,7 @@ const socialLinks = rawSocialLinks
 
   <div class="footer-bottom">
     <div class="footer-bottom-inner">
-      <p class="footer-copyright">{globalConfig.footer.copyrightText || `&copy; ${new Date().getFullYear()} HEFEI SHUYI DIGITAL POWER CO., LTD. All rights reserved.`}</p>
+      <p class="footer-copyright">{footerCopyright}</p>
       <nav class="footer-legal-nav" aria-label="Legal links">
         {legalLinks.map((link, index) => (
           <>

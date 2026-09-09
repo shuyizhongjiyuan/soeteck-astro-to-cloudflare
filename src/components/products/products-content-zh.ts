@@ -12,7 +12,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       description:
         '不间断电源、直流电源系统、配电设备、静态转换开关、母线槽和蓄电池解决方案，确保关键设备的持续运行。',
       image: '/resources/soeteck-critical-power.webp',
-      imageAlt: 'Soeteck 关键电源解决方案 — UPS、直流电源、配电',
+      imageAlt: '合肥数益科技有限公司关键电源解决方案 — UPS、直流电源、配电',
       viewAllUrl: '/products/critical-power/',
       viewAllLabel: '查看全部关键电源',
       subcategories: [
@@ -30,7 +30,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       description:
         '精密空调、液冷、散热和自然冷却解决方案，适用于数据中心、电信机房和高密度计算环境。',
       image: '/resources/soeteck-thermal-management.webp',
-      imageAlt: 'Soeteck 热管理解决方案 — 精密冷却、液冷',
+      imageAlt: '合肥数益科技有限公司热管理解决方案 — 精密冷却、液冷',
       viewAllUrl: '/products/thermal-management/',
       viewAllLabel: '查看全部热管理',
       subcategories: [
@@ -57,7 +57,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       description:
         '服务器机架、户外机柜和集成解决方案，为关键IT和基础设施提供模块化支撑和保护。',
       image: '/resources/soeteck-racks-enclosures.webp',
-      imageAlt: 'Soeteck 机架与机柜 — 服务器机架、户外机柜',
+      imageAlt: '合肥数益科技有限公司机架与机柜 — 服务器机架、户外机柜',
       viewAllUrl: '/products/racks-enclosures/',
       viewAllLabel: '查看全部机架与机柜',
       subcategories: [
@@ -71,7 +71,7 @@ export const PRODUCTS_ZH: ProductsContent = {
       description:
         '基础设施监控、智能控制、环境传感器和集中管理系统，提高设备可用性和效率。',
       image: '/resources/soeteck-monitoring-management.webp',
-      imageAlt: 'Soeteck 监控与管理解决方案',
+      imageAlt: '合肥数益科技有限公司监控与管理解决方案',
       viewAllUrl: '/products/monitoring-management/',
       viewAllLabel: '查看全部监控与管理',
       subcategories: [

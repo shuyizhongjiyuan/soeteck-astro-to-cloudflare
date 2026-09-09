@@ -7,13 +7,13 @@
 export const PREFAB_CLIENT_CASES = [
   {
     imgSrc: '/resources/Qatar-containerized-data-center-768x385.webp',
-    title: 'GRD 卡塔尔通过 Soeteck 定制集装箱式数据中心实现 24/7 稳定数据运行',
+    title: 'GRD 卡塔尔通过数益科技定制集装箱式数据中心实现 24/7 稳定数据运行',
     slug: 'grd-qatar-gets-24-7-stable-data-via-soetecks-custom-containerized-data-center',
     desc: '背景：全球数字化浪潮之下，GRD 公司——一家全面推进数字化转型的企业——将数据视为核心战略资产。为此…',
   },
   {
     imgSrc: '/resources/prefab-modular-data-center-of-Saudi-Telecom-6-768x512.webp',
-    title: '驱动创新：SOETECK 为沙特电信提供先进移动式 OLT 集装箱数据中心解决方案',
+    title: '驱动创新：数益科技为沙特电信提供先进移动式 OLT 集装箱数据中心解决方案',
     slug: 'driving-innovation-soeteck-provides-saudi-telecom-with-advanced-mobile-olt-container-data-center-solutions',
     desc: '沙特电信的 DR 项目旨在设计和实施完全可定制的移动式 OLT（光线路终端）集装箱数据中心，提升中东地区电信运营商的运营能力。这一创新解决方案…',
   },
