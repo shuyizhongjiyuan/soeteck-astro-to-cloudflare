@@ -323,13 +323,13 @@ const productId = String(product.id ?? '').replace(/\D/g, '') || '0';
                     ))}
                   </div>
                 </div>
-              </div>
-              <select name="country" data-country-native hidden aria-hidden="true">
+                <select name="country" data-country-native hidden aria-hidden="true">
                 <option value="">{t('formCountryPlaceholder')}</option>
                 {COUNTRIES.map(c => (
-                  <option value={c.name} data-country-code={c.code}>{c.name}</option>
+                <option value={c.name} data-country-code={c.code}>{c.name}</option>
                 ))}
-              </select>
+                </select>
+              </div>
             </div>
             <label class="soeteck-inquiry-field">
               <span>{t('formPhone')}</span>

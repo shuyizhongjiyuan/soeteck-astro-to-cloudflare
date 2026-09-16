@@ -17,7 +17,7 @@ export class CountrySelect {
   private trigger: HTMLButtonElement;
   private dropdown: HTMLElement;
   private placeholder: HTMLElement;
-  private nativeSelect: HTMLSelectElement;
+  private nativeSelect: HTMLSelectElement | null = null;
   private searchInput: HTMLInputElement;
   private list: HTMLElement;
   private options: HTMLElement[];
@@ -31,7 +31,13 @@ export class CountrySelect {
     this.trigger = root.querySelector<HTMLButtonElement>('[data-country-trigger]')!;
     this.dropdown = root.querySelector<HTMLElement>('[data-country-dropdown]')!;
     this.placeholder = root.querySelector<HTMLElement>('[data-country-placeholder]')!;
-    this.nativeSelect = root.querySelector<HTMLSelectElement>('[data-country-native]')!;
+    this.nativeSelect =
+      root.querySelector<HTMLSelectElement>('[data-country-native]') ??
+      root.parentElement?.querySelector<HTMLSelectElement>('[data-country-native]') ??
+      null;
+    if (!this.nativeSelect) {
+      console.error('[country-select] 找不到 [data-country-native]，国家不会被提交（检查 select 是否在 [data-country-select] 内）');
+    }
     this.searchInput = root.querySelector<HTMLInputElement>('[data-country-search]')!;
     this.list = root.querySelector<HTMLElement>('[data-country-list]')!;
     this.options = Array.from(root.querySelectorAll<HTMLElement>('[data-country-value]'));
@@ -105,7 +111,7 @@ export class CountrySelect {
     this.selectedCode = code;
     this.placeholder.innerHTML = `${flagHtml} ${name}`;
     this.placeholder.classList.add('soeteck-country-select__placeholder--selected');
-    this.nativeSelect.value = name;
+    if (this.nativeSelect) { this.nativeSelect.value = name; }
 
     this.options.forEach(o => o.classList.remove('is-selected'));
     opt.classList.add('is-selected');
