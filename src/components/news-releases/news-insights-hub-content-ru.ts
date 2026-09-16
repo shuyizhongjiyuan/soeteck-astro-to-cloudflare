@@ -11,7 +11,7 @@ export const NEWS_INSIGHTS_HUB_RU: NewsInsightsHubContent = {
     title: 'Новости, аналитика и истории клиентов',
     subtitle:
       'Будьте в курсе событий SOETECK — официальные объявления, технические разборы и реальные развёртывания, питающие дата-центры будущего.',
-    bannerImage: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+    bannerImage: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
   },
   categories: [
     {
@@ -19,7 +19,7 @@ export const NEWS_INSIGHTS_HUB_RU: NewsInsightsHubContent = {
       title: 'Новости и пресс-релизы',
       description:
         'Анонсы продуктов, выставки, корпоративные вехи и партнёрства — прямо из пресс-центра SOETECK.',
-      image: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+      image: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
       alt: 'Пресс-центр SOETECK — официальные объявления и обновления',
       path: '/news-and-insights/news-releases/',
     },

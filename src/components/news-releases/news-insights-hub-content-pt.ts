@@ -11,7 +11,7 @@ export const NEWS_INSIGHTS_HUB_PT: NewsInsightsHubContent = {
     title: 'Notícias, Insights e Histórias de Clientes',
     subtitle:
       'Fique por dentro da SOETECK — anúncios oficiais, análises técnicas e implantações reais que alimentam os data centers do futuro.',
-    bannerImage: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+    bannerImage: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
   },
   categories: [
     {
@@ -19,7 +19,7 @@ export const NEWS_INSIGHTS_HUB_PT: NewsInsightsHubContent = {
       title: 'Comunicados',
       description:
         'Anúncios de produtos, exposições, marcos da empresa e novidades de parcerias — direto da sala de imprensa da SOETECK.',
-      image: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+      image: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
       alt: 'Sala de imprensa SOETECK — anúncios e atualizações oficiais',
       path: '/news-and-insights/news-releases/',
     },

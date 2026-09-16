@@ -47,7 +47,7 @@ export const NEWS_INSIGHTS_HUB_EN: NewsInsightsHubContent = {
     title: 'News, Insights, and Customer Stories',
     subtitle:
       'Stay current with Soeteck — official announcements, technical deep dives, and real-world deployments powering the data centers of tomorrow.',
-    bannerImage: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+    bannerImage: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
   },
   categories: [
     {
@@ -55,7 +55,7 @@ export const NEWS_INSIGHTS_HUB_EN: NewsInsightsHubContent = {
       title: 'News Releases',
       description:
         'Product announcements, exhibitions, company milestones, and partnership news — straight from the Soeteck newsroom.',
-      image: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+      image: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
       alt: 'Soeteck newsroom — official announcements and updates',
       path: '/news-and-insights/news-releases/',
     },

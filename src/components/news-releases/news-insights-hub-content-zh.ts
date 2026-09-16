@@ -11,7 +11,7 @@ export const NEWS_INSIGHTS_HUB_ZH: NewsInsightsHubContent = {
     title: '新闻、洞察与客户故事',
     subtitle:
       '与数益科技保持同步 —— 官方公告、技术深度解析与真实部署案例，为明日数据中心注入动力。',
-    bannerImage: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+    bannerImage: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
   },
   categories: [
     {
@@ -19,7 +19,7 @@ export const NEWS_INSIGHTS_HUB_ZH: NewsInsightsHubContent = {
       title: '新闻动态',
       description:
         '产品发布、展会活动、公司里程碑与合作资讯 —— 来自数益科技新闻中心。',
-      image: '/resources/soeteck-factory-in-Hefei-China-2.webp',
+      image: '/resources/Soeteck-factory-in-Hefei-China-2.webp',
       alt: '数益新闻中心 — 官方公告与动态',
       path: '/news-and-insights/news-releases/',
     },
