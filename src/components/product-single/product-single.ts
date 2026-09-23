@@ -1,6 +1,6 @@
 /**
  * Product single page client-side interactions.
- * 从 new-soeteck-wp/wp-content/themes/soeteck/assets/js/product.js 1:1 移植。
+ * 从 agent_rebuilding_soeteck_wp_backup/wp-content/themes/soeteck/assets/js/product.js 1:1 移植。
  * 交互：Gallery 轮播（点击/触摸滑动）+ Tabs 切换（含滚动指示条）+ Spec 折叠 +
  *      Inquiry 表单占位提交 + UTM 参数捕获 + Anchor 链接映射到 Tab。
  */
