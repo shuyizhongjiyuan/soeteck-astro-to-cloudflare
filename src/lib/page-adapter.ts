@@ -133,7 +133,7 @@ export function adaptPage(content: ContentApiResponse): AdaptedPage {
     contentHtml: content.page?.contentHtml ?? content.article?.contentHtml ?? '',
     media: content.media.map((item) => normalizeImage(item)).filter((item): item is PageImage => item !== null),
     article: adaptArticleSingle(content),
-    articles: (content.articles ?? []).map(adaptArticleCard),
+    articles: sortArticlesByDateDesc((content.articles ?? []).map(adaptArticleCard)),
     featuredArticles: (content.featuredArticles ?? []).map(adaptArticleCard),
     source: content,
     sections: content.sections,
@@ -345,6 +345,27 @@ export function adaptArticleCard(article: ContentApiArticleCard): AdaptedArticle
       path: article.primaryCategory.path,
     } : null,
   };
+}
+
+/**
+ * 按发布日期（card.date）降序稳定排序，作为归档/articles 列表的防御性兜底
+ * （2026-09-24 归档列表倒挂修复，详解见 tracker）。
+ *
+ * - 底层依赖：WP Content API articleCard() 的 date = get_the_date('c')（ISO 8601，
+ *   如 "2026-09-03T00:00:00+08:00"），可直接解析比较。
+ * - 稳健性：解析失败（含 header 用到的 "m/d/Y" 形态）回退字典序；同值返回 0，
+ *   配合 ES2019+ 稳定 sort 保证同日期保持原数组顺序、不产生每次请求抖动。
+ * - 仅对归档/articles 生效：home 等直接消费 content.articles 的页面走 CMS 侧
+ *   orderby=date（WP 侧 2026-09-24 已钉），此处不做双重排序以免依赖本条语义。
+ */
+function sortArticlesByDateDesc(articles: AdaptedArticleCard[]): AdaptedArticleCard[] {
+  return articles.slice().sort((a, b) => sortableDateKey(b.date).localeCompare(sortableDateKey(a.date)));
+}
+
+/** 把 card.date 统一成可按字典序比较的键：可解析日期 → "1|<零填充ms>"；不可解析 → "0|<原始字符串>"。 */
+function sortableDateKey(date: string | null): string {
+  const ms = Date.parse(date ?? '');
+  return Number.isNaN(ms) ? `0|${date ?? ''}` : `1|${String(ms).padStart(15, '0')}`;
 }
 
 function normalizeImage(image: { path?: string; url?: string; alt?: string } | null | undefined): PageImage | null {
